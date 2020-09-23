@@ -6,3 +6,10 @@
 .Rapp.history
 .Rproj.user
 .RData
+
+# Nextflow
+work
+.nextflow
+.nextflow.log*
+
+dev
