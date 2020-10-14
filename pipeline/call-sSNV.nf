@@ -6,9 +6,12 @@ def docker_image_bam_readcount = "blcdsdockerregistry/call-ssnv:bam-readcount-v0
 log.info """\
 
 C A L L - S S N V    P I P E L I N E
+------------------------------------
+    S O M A T I C    S N I P E R
 ====================================
 sample_name: ${params.sample_name}
 tumor: ${params.tumor}
+tumor_index: ${params.tumor_index}
 normal: ${params.normal}
 reference: ${params.reference}
 
@@ -30,9 +33,14 @@ ch_samtools_pileup_reference
     .flatMap { reference -> [reference, reference] }
     .set { ch_samtools_pileup_reference }
 
+// paths are already checked above
 Channel
     .fromList([['tumor', params.tumor], ['normal', params.normal]])
     .set { ch_samtools_pileup_bams }
+
+Channel
+    .fromPath(params.tumor_index, checkIfExists: true)
+    .set { ch_bam_readcount_tumor_index }
 
 process somaticsniper {
     container docker_image_somaticsniper
@@ -139,7 +147,7 @@ process snpfilter_tumor {
     path indel_file from ch_snpfilter.tumor
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter" into ch_prepare_for_readcount
+    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter" into ch_prepare_for_readcount, ch_fpfilter
 
     """
     set -euo pipefail
@@ -174,8 +182,10 @@ process bam_readcount {
     path reference from ch_bam_readcount_reference
     path site_list from ch_bam_readcount
     path tumor from ch_bam_readcount_tumor
+    path tumor_index from ch_bam_readcount_tumor_index
 
     output:
+    path "somaticsniper_${params.sample_name}.readcount" into ch_fpfilter_readcount
 
     """
     set -euo pipefail
@@ -187,5 +197,40 @@ process bam_readcount {
         -l $site_list \
         $tumor \
         > somaticsniper_${params.sample_name}.readcount
+    """
+}
+
+process fpfilter {
+    container docker_image_somaticsniper
+
+    input:
+    path snp_file from ch_fpfilter
+    path readcount_file from ch_fpfilter_readcount
+
+    output:
+    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.fp_pass" into ch_highconfidence
+
+    """
+    set -euo pipefail
+    perl /somaticsniper/src/scripts/fpfilter.pl \
+        --snp-file $snp_file \
+        --readcount-file $readcount_file
+    """
+}
+
+process highconfidence {
+    container docker_image_somaticsniper
+
+    input:
+    path fp_pass from ch_highconfidence
+
+    """
+    set -euo pipefail
+    perl /somaticsniper/src/scripts/highconfidence.pl \
+        --min-mapping-quality 40 \
+        --min-somatic-score 40 \
+        --snp-file $fp_pass \
+        --lq-output "somaticsniper_${params.sample_name}_lc.vcf" \
+        --out-file "somaticsniper_${params.sample_name}_hc.vcf"
     """
 }
