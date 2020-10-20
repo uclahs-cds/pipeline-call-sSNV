@@ -14,7 +14,7 @@ tumor: ${params.tumor}
 tumor_index: ${params.tumor_index}
 normal: ${params.normal}
 reference: ${params.reference}
-
+output_dir: ${params.output_dir}
 """
 
 Channel
@@ -223,6 +223,11 @@ process highconfidence {
 
     input:
     path fp_pass from ch_highconfidence
+
+    output:
+    path "somaticsniper_${params.sample_name}_hc.vcf"
+
+    publishDir params.output_dir, mode: "copy"
 
     """
     set -euo pipefail
