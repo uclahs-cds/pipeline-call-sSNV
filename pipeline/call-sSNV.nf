@@ -187,6 +187,9 @@ process bam_readcount {
     output:
     path "somaticsniper_${params.sample_name}.readcount" into ch_fpfilter_readcount
 
+    // tumor index file not explicitly passed to bam-readcount,
+    // but it needs to be in the working directory otherwise bam-readcount will fail
+
     """
     set -euo pipefail
     bam-readcount \
