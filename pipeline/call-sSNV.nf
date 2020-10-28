@@ -2,6 +2,21 @@
 
 def docker_image_somaticsniper = "blcdsdockerregistry/call-ssnv:somaticsniper-v1.0.5.0"
 def docker_image_bam_readcount = "blcdsdockerregistry/call-ssnv:bam-readcount-v0.8.0"
+def docker_image_validate_params = "blcdsdockerregistry/validate:1.0.0"
+
+def total_cpus = Runtime.getRuntime().availableProcessors()
+def cpus_divided_by_3 = 1
+if( total_cpus >= 3 ) {
+    cpus_divided_by_3 = (total_cpus / 3).intValue()
+}
+
+def total_memory = java.lang.management.ManagementFactory.getOperatingSystemMXBean()
+   .getTotalPhysicalMemorySize() / (1024.0 * 1024.0 * 1024.0)
+def memory_divided_by_3 = total_memory.toString() + " GB"
+if( total_memory >= 3 ) {
+    memory_divided_by_3 = (total_memory / 3).intValue().toString() + " GB"
+}
+total_memory = total_memory.toString() + " GB"
 
 log.info """\
 
@@ -42,7 +57,26 @@ Channel
     .fromPath(params.tumor_index, checkIfExists: true)
     .set { ch_bam_readcount_tumor_index }
 
+Channel
+    .fromList([params.tumor, params.tumor_index, params.normal, params.reference])
+    .set { ch_validate_inputs }
+
+process validate_inputs {
+    container docker_image_validate_params
+
+    input:
+    path file_to_validate from ch_validate_inputs
+
+    """
+    set -euo pipefail
+    python -m validate -t file-input ${file_to_validate}
+    """
+}
+
 process somaticsniper {
+    cpus cpus_divided_by_3
+    memory memory_divided_by_3
+
     container docker_image_somaticsniper
 
     input:
@@ -73,6 +107,9 @@ process somaticsniper {
 
 
 process samtools_pileup {
+    cpus cpus_divided_by_3
+    memory memory_divided_by_3
+
     container docker_image_somaticsniper
 
     input:
@@ -93,6 +130,9 @@ process samtools_pileup {
 
 
 process samtools_varfilter {
+    cpus cpus_divided_by_3
+    memory memory_divided_by_3
+
     container docker_image_somaticsniper
 
     input:
@@ -121,6 +161,9 @@ ch_snpfilter
     .set { ch_snpfilter }
 
 process snpfilter_normal {
+    cpus cpus_divided_by_3
+    memory memory_divided_by_3
+
     container docker_image_somaticsniper
 
     input:
@@ -140,6 +183,9 @@ process snpfilter_normal {
 }
 
 process snpfilter_tumor {
+    cpus total_cpus
+    memory total_memory
+
     container docker_image_somaticsniper
 
     input:
@@ -159,6 +205,9 @@ process snpfilter_tumor {
 }
 
 process prepare_for_readcount {
+    cpus total_cpus
+    memory total_memory
+
     container docker_image_somaticsniper
 
     input:
@@ -176,6 +225,9 @@ process prepare_for_readcount {
 }
 
 process bam_readcount {
+    cpus total_cpus
+    memory total_memory
+
     container docker_image_bam_readcount
 
     input:
@@ -204,6 +256,9 @@ process bam_readcount {
 }
 
 process fpfilter {
+    cpus total_cpus
+    memory total_memory
+
     container docker_image_somaticsniper
 
     input:
@@ -222,13 +277,16 @@ process fpfilter {
 }
 
 process highconfidence {
+    cpus total_cpus
+    memory total_memory
+
     container docker_image_somaticsniper
 
     input:
     path fp_pass from ch_highconfidence
 
     output:
-    path "somaticsniper_${params.sample_name}_hc.vcf"
+    path "somaticsniper_${params.sample_name}_hc.vcf" into ch_sha512sum, ch_validate_outputs
 
     publishDir params.output_dir, mode: "copy"
 
@@ -240,5 +298,31 @@ process highconfidence {
         --snp-file $fp_pass \
         --lq-output "somaticsniper_${params.sample_name}_lc.vcf" \
         --out-file "somaticsniper_${params.sample_name}_hc.vcf"
+    """
+}
+
+process generate_sha512sum {
+    container docker_image_somaticsniper
+
+    input:
+    path outfile from ch_sha512sum
+
+    publishDir params.output_dir, mode: "copy"
+
+    """
+    set -euo pipefail
+    sha512sum ${outfile} > ${outfile}.sha512sum
+    """
+}
+
+process validate_outputs {
+    container docker_image_validate_params
+
+    input:
+    path file_to_validate from ch_validate_outputs
+
+    """
+    set -euo pipefail
+    python -m validate -t file-input ${file_to_validate}
     """
 }
