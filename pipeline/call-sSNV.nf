@@ -10,8 +10,8 @@ if( total_cpus >= 3 ) {
     cpus_divided_by_3 = (total_cpus / 3).intValue()
 }
 
-def total_memory = java.lang.management.ManagementFactory.getOperatingSystemMXBean()
-   .getTotalPhysicalMemorySize() / (1024.0 * 1024.0 * 1024.0)
+def total_memory = (java.lang.management.ManagementFactory.getOperatingSystemMXBean()
+   .getTotalPhysicalMemorySize() / (1024.0 * 1024.0 * 1024.0)).intValue()
 def memory_divided_by_3 = total_memory.toString() + " GB"
 if( total_memory >= 3 ) {
     memory_divided_by_3 = (total_memory / 3).intValue().toString() + " GB"
