@@ -24,12 +24,25 @@ C A L L - S S N V    P I P E L I N E
 ------------------------------------
     S O M A T I C    S N I P E R
 ====================================
-sample_name: ${params.sample_name}
-tumor: ${params.tumor}
-tumor_index: ${params.tumor_index}
-normal: ${params.normal}
-reference: ${params.reference}
-output_dir: ${params.output_dir}
+Parameters:
+- sample_name: ${params.sample_name}
+- tumor:       ${params.tumor}
+- tumor_index: ${params.tumor_index}
+- normal:      ${params.normal}
+- reference:   ${params.reference}
+- output_dir:  ${params.output_dir}
+
+Resources:
+- total_cpus:          ${total_cpus}
+- cpus_divided_by_3:   ${cpus_divided_by_3}
+- total_memory:        ${total_memory}
+- memory_divided_by_3: ${memory_divided_by_3}
+
+Docker Images:
+- docker_image_somaticsniper:   ${docker_image_somaticsniper}
+- docker_image_bam_readcount:   ${docker_image_bam_readcount}
+- docker_image_validate_params: ${docker_image_validate_params}
+
 """
 
 Channel
