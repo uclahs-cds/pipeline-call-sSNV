@@ -86,6 +86,8 @@ process validate_inputs {
     """
 }
 
+
+// Call SomaticSniper
 process somaticsniper {
     cpus cpus_divided_by_3
     memory memory_divided_by_3
@@ -103,12 +105,13 @@ process somaticsniper {
     """
     set -euo pipefail
     bam-somaticsniper \
-        -q 1 \
-        -Q 15 \
-        -T 0.85 \
-        -N 2 \
-        -r 0.001 \
-        -F vcf \
+        -q 1 `# map_qual 1 is recommended` \
+        -Q 15 `# somatic_qual default to 15` \
+        -T 0.85 `# theta default to 0.85` \
+        -N 2 `# haplotypes default to 2` \
+        -r 0.001 `# prior_haplotypes default to 0.001` \
+        -F vcf `# output_format here is vcf` \
+        `# The next 2 lines are included because in the original script 'use_prior_prob' was turned on` \
         -J \
         -s 0.01 \
         -f $reference \
@@ -119,6 +122,11 @@ process somaticsniper {
 }
 
 
+// Generate pileup files using samtools. Include some basic base and mapping
+// quality filters, and output only variants to pileup.
+// We are using a specific older version of samtools packaged with SomaticSniper.
+// This older samtools pileup command has more false positives,
+// which is good since they later get removed from FP somaticsniper results
 process samtools_pileup {
     cpus cpus_divided_by_3
     memory memory_divided_by_3
@@ -142,6 +150,9 @@ process samtools_pileup {
 }
 
 
+// Filter pileup (from both normal.bam and tumor.bam) using vcfutils.pl varFilter,
+// then only keep indels with a QUAL>20
+// We are using samtools.pl which is packaged with SomaticSniper.
 process samtools_varfilter {
     cpus cpus_divided_by_3
     memory memory_divided_by_3
@@ -164,6 +175,7 @@ process samtools_varfilter {
     """
 }
 
+// tumor and normal need to be processed seperately.
 ch_snpfilter
     .branch {
         normal: it[0] == "normal"
@@ -173,6 +185,8 @@ ch_snpfilter
     }
     .set { ch_snpfilter }
 
+
+// Remove indels detected from normal.bam
 process snpfilter_normal {
     cpus cpus_divided_by_3
     memory memory_divided_by_3
@@ -195,6 +209,8 @@ process snpfilter_normal {
     """
 }
 
+
+// Remove indels detected from tumor.bam
 process snpfilter_tumor {
     cpus total_cpus
     memory total_memory
@@ -217,6 +233,8 @@ process snpfilter_tumor {
     """
 }
 
+
+// Adapt the remainder for use with bam-readcount to get SNP positions
 process prepare_for_readcount {
     cpus total_cpus
     memory total_memory
@@ -237,6 +255,8 @@ process prepare_for_readcount {
     """
 }
 
+// Run bam-readcount
+// Recommend to use the same mapping quality -q setting as SomaticSniper
 process bam_readcount {
     cpus total_cpus
     memory total_memory
@@ -258,7 +278,7 @@ process bam_readcount {
     """
     set -euo pipefail
     bam-readcount \
-        -w 1 \
+        -w 1 `# suppresses repeated warnings` \
         -b 15 \
         -q 1 \
         -f $reference \
@@ -268,6 +288,8 @@ process bam_readcount {
     """
 }
 
+
+// Run the false positive filter
 process fpfilter {
     cpus total_cpus
     memory total_memory
@@ -289,6 +311,8 @@ process fpfilter {
     """
 }
 
+
+// To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process highconfidence {
     cpus total_cpus
     memory total_memory
@@ -306,8 +330,8 @@ process highconfidence {
     """
     set -euo pipefail
     perl /somaticsniper/src/scripts/highconfidence.pl \
-        --min-mapping-quality 40 \
-        --min-somatic-score 40 \
+        --min-mapping-quality 40 `# min mapping quality of the reads supporting the variant in the tumor, default 40` \
+        --min-somatic-score 40 `# minimum somatic score, default 40` \
         --snp-file $fp_pass \
         --lq-output "somaticsniper_${params.sample_name}_lc.vcf" \
         --out-file "somaticsniper_${params.sample_name}_hc.vcf"
@@ -319,6 +343,9 @@ process generate_sha512sum {
 
     input:
     path outfile from ch_sha512sum
+
+    output:
+    path "${outfile}.sha512sum"
 
     publishDir params.output_dir, mode: "copy"
 

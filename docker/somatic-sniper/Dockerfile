@@ -24,6 +24,7 @@ RUN cd somatic-sniper-1.0.5.0 \
     && make test \
     && make install
 
+# Use specific samtools included in SomaticSniper
 RUN ln -s /somatic-sniper/somatic-sniper-1.0.5.0/build/vendor/samtools/samtools /usr/local/bin/samtools \
     && ln -s /somatic-sniper/somatic-sniper-1.0.5.0/build/vendor/samtools/misc/samtools.pl /usr/local/bin/samtools.pl
 
