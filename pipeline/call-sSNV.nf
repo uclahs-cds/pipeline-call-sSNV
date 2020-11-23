@@ -170,7 +170,7 @@ process samtools_varfilter {
     samtools.pl varFilter \
         $raw_pileup \
         | awk '\$6>=20' \
-        | grep -P "\t*\t" \
+        | grep -P "\t\\*\t" \
         > ${type}_filt_${params.sample_name}.pileup
     """
 }
