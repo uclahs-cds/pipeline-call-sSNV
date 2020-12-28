@@ -48,9 +48,7 @@ process bam_somaticsniper {
 
 // Generate pileup files using samtools. Include some basic base and mapping
 // quality filters, and output only variants to pileup.
-// We are using a specific older version of samtools packaged with SomaticSniper.
-// This older samtools pileup command has more false positives,
-// which is good since they later get removed from FP somaticsniper results
+// We are using a specific older version of samtools (v0.1.6) packaged with SomaticSniper.
 process samtools_pileup {
     container docker_image_somaticsniper
     publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
@@ -96,7 +94,7 @@ process samtools_varfilter {
 }
 
 
-// Remove indels detected from normal.bam
+// Remove potential false positive SNVs close to Indels detected in the pileup data
 process snpfilter_normal {
     container docker_image_somaticsniper
     publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
@@ -118,7 +116,7 @@ process snpfilter_normal {
 }
 
 
-// Remove indels detected from tumor.bam
+// Remove potential false positive SNVs close to Indels detected in the pileup data
 process snpfilter_tumor {
     container docker_image_somaticsniper
     publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
