@@ -4,19 +4,19 @@ workflow strelka2 {
     main:
         manta(
             params.tumor,
-            params.tumor_index,
+            "${params.tumor_index}.bai",
             params.normal,
-            params.normal_index,
+            "${params.normal_index}.bai",
             params.reference,
-            params.reference_index
+            "${params.reference_index}.fai"
         )
         strelka2_somatic(
             params.tumor,
-            params.tumor_index,
+            "${params.tumor_index}.bai",
             params.normal,
-            params.normal_index,
+            "${params.normal_index}.bai",
             params.reference,
-            params.reference_index,
+            "${params.normal_index}.bai",
             manta.out[0],
             manta.out[1]
         )
