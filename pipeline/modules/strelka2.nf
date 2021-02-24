@@ -1,25 +1,26 @@
-include { strelka2_somatic; manta } from './strelka2-processes'
+include { strelka2_somatic; manta; filter_vcf_pass } from './strelka2-processes'
 
 workflow strelka2 {
     main:
         manta(
             params.tumor,
-            "${params.tumor_index}.bai",
+            "${params.tumor}.bai",
             params.normal,
-            "${params.normal_index}.bai",
+            "${params.normal}.bai",
             params.reference,
-            "${params.reference_index}.fai"
+            "${params.reference}.fai"
         )
         strelka2_somatic(
             params.tumor,
-            "${params.tumor_index}.bai",
+            "${params.tumor}.bai",
             params.normal,
-            "${params.normal_index}.bai",
+            "${params.normal}.bai",
             params.reference,
-            "${params.normal_index}.bai",
+            "${params.reference}.fai",
             manta.out[0],
             manta.out[1]
         )
+        filter_vcf_pass(strelka2_somatic.out)
     emit:
-        strelka2_somatic.out
+        filter_vcf_pass.out
 }

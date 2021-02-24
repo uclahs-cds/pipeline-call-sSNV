@@ -12,7 +12,7 @@ Docker Images:
 
 process manta {
     container docker_image_manta
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir, mode: "copy", pattern: "MantaWorkflow", enabled: params.save_intermediate_files
 
     input:
     path tumor
@@ -39,7 +39,7 @@ process manta {
 
 process strelka2_somatic {
     container docker_image_strelka2
-    publishDir params.output_dir, mode: "copy", pattern: "StrelkaSomaticWorkflow/results"
+    publishDir params.output_dir, mode: "copy", pattern: "StrelkaSomaticWorkflow", enabled: params.save_intermediate_files
 
     input:
     path tumor
@@ -52,7 +52,7 @@ process strelka2_somatic {
     path indel_candidates_index
 
     output:
-    path "StrelkaSomaticWorkflow/results"
+    path "StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"
 
     """
     set -euo pipefail
@@ -64,5 +64,22 @@ process strelka2_somatic {
         --runDir StrelkaSomaticWorkflow
     
     StrelkaSomaticWorkflow/runWorkflow.py -m local -j ${task.cpus}
+    """
+}
+
+process filter_vcf_pass {
+    container docker_image_strelka2
+    publishDir params.output_dir, mode: "copy", pattern: "somatic.snvs.pass.vcf"
+
+    input:
+    path vcf_gz
+
+    output:
+    path "somatic.snvs.pass.vcf"
+
+    // https://www.biostars.org/p/206488/
+    """
+    set -euo pipefail
+    zcat somatic.snvs.vcf.gz | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > somatic.snvs.pass.vcf
     """
 }

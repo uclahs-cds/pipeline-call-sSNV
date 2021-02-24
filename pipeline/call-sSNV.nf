@@ -23,11 +23,11 @@ include { strelka2 } from './modules/strelka2'
 workflow {
     validate_file(channel.fromList([
         params.tumor,
-        "${params.tumor_index}.bai",
+        "${params.tumor}.bai",
         params.normal,
-        "${params.normal_index}.bai",
+        "${params.normal}.bai",
         params.reference,
-        "${params.reference_index}.fai"
+        "${params.reference}.fai"
     ]))
 
     if (params.algorithm == 'somaticsniper') {
