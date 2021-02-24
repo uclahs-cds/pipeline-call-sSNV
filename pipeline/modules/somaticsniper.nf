@@ -21,7 +21,7 @@ workflow somaticsniper {
         snpfilter_normal(bam_somaticsniper.out, ch_snpfilter.normal)
         snpfilter_tumor(snpfilter_normal.out, ch_snpfilter.tumor)
         prepare_for_readcount(snpfilter_tumor.out)
-        bam_readcount(params.reference, prepare_for_readcount.out, params.tumor, params.tumor_index)
+        bam_readcount(params.reference, prepare_for_readcount.out, params.tumor, "${params.tumor_index}.bai")
         fpfilter(snpfilter_tumor.out, bam_readcount.out)
         highconfidence(fpfilter.out.fp_pass)
     emit:
