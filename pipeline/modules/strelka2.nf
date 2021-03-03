@@ -17,10 +17,9 @@ workflow strelka2 {
             "${params.normal}.bai",
             params.reference,
             "${params.reference}.fai",
-            manta.out[0],
-            manta.out[1]
+            manta.out[0]
         )
-        filter_vcf_pass(strelka2_somatic.out)
+        filter_vcf_pass(strelka2_somatic.out[0])
     emit:
         filter_vcf_pass.out
 }

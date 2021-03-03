@@ -12,7 +12,10 @@ Docker Images:
 
 process manta {
     container docker_image_manta
-    publishDir params.output_dir, mode: "copy", pattern: "MantaWorkflow", enabled: params.save_intermediate_files
+    publishDir "${params.output_dir}",
+               mode: "copy",
+               pattern: "MantaWorkflow/results",
+               enabled: params.save_intermediate_files
 
     input:
     path tumor
@@ -23,8 +26,9 @@ process manta {
     path reference_index
 
     output:
-    path "MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"
-    path "MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz.tbi"
+    tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
+          path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz.tbi")
+    path "MantaWorkflow/results"
 
     """
     configManta.py \
@@ -39,7 +43,10 @@ process manta {
 
 process strelka2_somatic {
     container docker_image_strelka2
-    publishDir params.output_dir, mode: "copy", pattern: "StrelkaSomaticWorkflow", enabled: params.save_intermediate_files
+    publishDir params.output_dir,
+               mode: "copy",
+               pattern: "StrelkaSomaticWorkflow/results",
+               enabled: params.save_intermediate_files
 
     input:
     path tumor
@@ -48,11 +55,11 @@ process strelka2_somatic {
     path normal_index
     path reference
     path reference_index
-    path indel_candidates
-    path indel_candidates_index
+    tuple path(indel_candidates), path(indel_candidates_index)
 
     output:
     path "StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"
+    path "StrelkaSomaticWorkflow/results"
 
     """
     set -euo pipefail
