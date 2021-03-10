@@ -41,12 +41,12 @@ Docker image: blcdsdockerregistry/call-ssnv:strelka2-v2.9.10
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 
 ## Outputs
-| Output                                | Type         | Description                   |
-|---------------------------------------|--------------|-------------------------------|
-| somaticsniper_{sample_name}_hc.vcf    | .vcf         | Final VCF file (somaticsniper)|
-| somatic.snvs.pass.vcf                 | .vcf         | Final VCF file (strelka2)     |
-| somatic.indels.pass.vcf               | .vcf         | Indel VCF file (strelka2)     |
-| report.html, timeline.html, trace.txt | .html & .txt | Nextflow logs                 |
+| Output                                         | Type         | Description                   |
+|------------------------------------------------|--------------|-------------------------------|
+| somaticsniper_{sample_name}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
+| strelka2_{sample_name}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
+| strelka2_{sample_name}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
+| report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
 1. Fill in the params section of the config file
