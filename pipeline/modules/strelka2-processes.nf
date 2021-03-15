@@ -63,7 +63,8 @@ process strelka2_somatic {
     tuple path(indel_candidates), path(indel_candidates_index)
 
     output:
-    path "StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"
+    tuple val("somatic_snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
+    tuple val("somatic_indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
     path "StrelkaSomaticWorkflow/results"
 
     script:
@@ -84,17 +85,17 @@ process strelka2_somatic {
 
 process filter_vcf_pass {
     container docker_image_strelka2
-    publishDir params.output_dir, mode: "copy", pattern: "somatic.snvs.pass.vcf"
+    publishDir params.output_dir, mode: "copy"
 
     input:
-    path vcf_gz
+    tuple val(name), path(vcf_gz)
 
     output:
-    path "somatic.snvs.pass.vcf"
+    path "strelka2_${params.sample_name}_${name}_pass.vcf"
 
     // https://www.biostars.org/p/206488/
     """
     set -euo pipefail
-    zcat somatic.snvs.vcf.gz | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > somatic.snvs.pass.vcf
+    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > strelka2_${params.sample_name}_${name}_pass.vcf
     """
 }

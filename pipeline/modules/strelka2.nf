@@ -19,7 +19,7 @@ workflow strelka2 {
             "${params.reference}.fai",
             manta.out[0]
         )
-        filter_vcf_pass(strelka2_somatic.out[0])
+        filter_vcf_pass(strelka2_somatic.out.snvs_vcf.mix(strelka2_somatic.out.indels_vcf))
     emit:
         filter_vcf_pass.out
 }
