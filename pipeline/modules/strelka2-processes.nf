@@ -6,8 +6,10 @@ log.info """\
           S T R E L K A 2
 ====================================
 Docker Images:
-- docker_image_strelka2:   ${docker_image_strelka2}
-- docker_image_manta:      ${docker_image_manta}
+- docker_image_strelka2:  ${docker_image_strelka2}
+- docker_image_manta:     ${docker_image_manta}
+Strelka2 Options:
+- exome:                  ${params.exome}
 """
 
 process manta {
@@ -30,11 +32,14 @@ process manta {
           path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz.tbi")
     path "MantaWorkflow/results"
 
+    script:
+    exome = params.exome ? "--exome" : ""
     """
     configManta.py \
         --normalBam $normal \
         --tumorBam $tumor \
         --referenceFasta $reference \
+        ${exome} \
         --runDir MantaWorkflow
     
     MantaWorkflow/runWorkflow.py -j ${task.cpus}
@@ -62,6 +67,8 @@ process strelka2_somatic {
     tuple val("somatic_indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
     path "StrelkaSomaticWorkflow/results"
 
+    script:
+    exome = params.exome ? "--exome" : ""
     """
     set -euo pipefail
     configureStrelkaSomaticWorkflow.py \
@@ -69,6 +76,7 @@ process strelka2_somatic {
         --tumorBam $tumor \
         --referenceFasta $reference \
         --indelCandidates $indel_candidates \
+        ${exome} \
         --runDir StrelkaSomaticWorkflow
     
     StrelkaSomaticWorkflow/runWorkflow.py -m local -j ${task.cpus}
