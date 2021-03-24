@@ -108,7 +108,7 @@ process snpfilter_normal {
 
     """
     set -euo pipefail
-    perl /somaticsniper/src/scripts/snpfilter.pl \
+    snpfilter.pl \
         --snp-file $snp_file \
         --indel-file $indel_file \
         --out-file somaticsniper_${params.sample_name}.vcf_normal
@@ -130,7 +130,7 @@ process snpfilter_tumor {
 
     """
     set -euo pipefail
-    perl /somaticsniper/src/scripts/snpfilter.pl \
+    snpfilter.pl \
         --snp-file $snp_file \
         --indel-file $indel_file \
         --out-file somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter
@@ -151,7 +151,7 @@ process prepare_for_readcount {
 
     """
     set -euo pipefail
-    perl /somaticsniper/src/scripts/prepare_for_readcount.pl \
+    prepare_for_readcount.pl \
         --snp-file $snp_file \
         --out-file somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos
     """
@@ -204,7 +204,7 @@ process fpfilter {
 
     """
     set -euo pipefail
-    perl /somaticsniper/src/scripts/fpfilter.pl \
+    fpfilter.pl \
         --snp-file $snp_file \
         --readcount-file $readcount_file
     """
@@ -226,7 +226,7 @@ process highconfidence {
 
     """
     set -euo pipefail
-    perl /somaticsniper/src/scripts/highconfidence.pl \
+    highconfidence.pl \
         --min-mapping-quality 40 `# min mapping quality of the reads supporting the variant in the tumor, default 40` \
         --min-somatic-score 40 `# minimum somatic score, default 40` \
         --snp-file $fp_pass \
