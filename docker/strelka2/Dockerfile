@@ -1,8 +1,10 @@
 FROM ubuntu:20.04
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     python \
-    wget
+    wget \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /strelka2
 RUN wget https://github.com/Illumina/strelka/releases/download/v2.9.10/strelka-2.9.10.centos6_x86_64.tar.bz2 \

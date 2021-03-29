@@ -1,13 +1,16 @@
 FROM ubuntu:20.04
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends\
     build-essential \
     git-core \
     cmake \
     zlib1g-dev \
     libncurses-dev \
     patch \
-    wget
+    wget \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
 RUN wget https://github.com/genome/bam-readcount/archive/v0.8.0.tar.gz \
