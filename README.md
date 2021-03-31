@@ -29,16 +29,25 @@ Strelka2 source: https://github.com/Illumina/strelka
 Version: v2.9.10 (Released on Nov 7, 2018)
 Docker image: blcdsdockerregistry/call-ssnv:strelka2-v2.9.10
 
+### Mutect 2
+#### Tools
+##### GATK
+GATK source: https://github.com/broadinstitute/gatk
+Version: 4.2.0.0 (Released on Feb 19, 2021)
+Docker image: broadinstitute/gatk:4.2.0.0
+
 ## Inputs
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | sample_name | string | The name/ID of the sample                 | Config File |
-| algorithm   | string | Algorithm (somaticsniper or strelka2)     | Config File |
+| algorithm   | string | Algorithm (somaticsniper/strelka2/mutect2) | Config File |
 | tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | Config File |
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | Config File |
 | reference   | string | The reference .fa file (.fai file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
+| exome       | string | Adds the '--exome' option (strelka2 only) | Config File |
+| reference_dict | string | Reference dictionary (mutect2 only)    | Config File |
 
 ## Outputs
 | Output                                         | Type         | Description                   |
@@ -46,6 +55,7 @@ Docker image: blcdsdockerregistry/call-ssnv:strelka2-v2.9.10
 | somaticsniper_{sample_name}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
 | strelka2_{sample_name}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
 | strelka2_{sample_name}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
+| mutect2_{sample_name}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
