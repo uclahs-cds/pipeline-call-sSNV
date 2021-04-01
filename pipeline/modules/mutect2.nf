@@ -8,13 +8,13 @@ workflow mutect2 {
             params.normal,
             "${params.normal}.bai",
             params.reference,
-            "${params.reference}.fai",
-            "${params.reference_dict}"
+            params.reference_index,
+            params.reference_dict
         )
         filter_mutect_calls(
             params.reference,
-            "${params.reference}.fai",
-            "${params.reference_dict}",
+            params.reference_index,
+            params.reference_dict,
             m2.out.unfiltered,
             m2.out.unfiltered_index,
             m2.out.unfiltered_stats
