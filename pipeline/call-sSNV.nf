@@ -2,6 +2,9 @@
 
 nextflow.enable.dsl=2
 
+params.reference_index = "${params.reference}.fai"
+params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
+
 log.info """\
 ------------------------------------
 C A L L - S S N V    P I P E L I N E
@@ -12,6 +15,8 @@ Parameters:
 - tumor:                   ${params.tumor}
 - normal:                  ${params.normal}
 - reference:               ${params.reference}
+- reference_index:         ${params.reference_index}
+- reference_dict:          ${params.reference_dict}
 - output_dir:              ${params.output_dir}
 - save_intermediate_files: ${params.save_intermediate_files}
 """
@@ -19,6 +24,7 @@ Parameters:
 include { validate_file } from './modules/validation'
 include { somaticsniper } from './modules/somaticsniper'
 include { strelka2 } from './modules/strelka2'
+include { mutect2 } from './modules/mutect2'
 
 workflow {
     validate_file(channel.fromList([
@@ -27,13 +33,16 @@ workflow {
         params.normal,
         "${params.normal}.bai",
         params.reference,
-        "${params.reference}.fai"
+        params.reference_index,
+        params.reference_dict
     ]))
 
     if (params.algorithm == 'somaticsniper') {
         somaticsniper()
     } else if (params.algorithm == 'strelka2') {
         strelka2()
+    } else if (params.algorithm == 'mutect2') {
+        mutect2()
     } else {
         throw new Exception('ERROR: params.algorithm not recognized')
     }
