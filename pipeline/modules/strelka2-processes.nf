@@ -18,7 +18,7 @@ process manta {
                mode: "copy",
                pattern: "MantaWorkflow/results",
                enabled: params.save_intermediate_files
-    publishDir params.output_logs_dir,
+    publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -57,7 +57,7 @@ process strelka2_somatic {
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow/results",
                enabled: params.save_intermediate_files
-    publishDir params.output_logs_dir,
+    publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -96,7 +96,7 @@ process strelka2_somatic {
 process filter_vcf_pass {
     container docker_image_strelka2
     publishDir params.output_dir, mode: "copy"
-    publishDir params.output_logs_dir,
+    publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
