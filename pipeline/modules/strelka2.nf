@@ -21,5 +21,5 @@ workflow strelka2 {
         )
         filter_vcf_pass(strelka2_somatic.out.snvs_vcf.mix(strelka2_somatic.out.indels_vcf))
     emit:
-        filter_vcf_pass.out
+        filter_vcf_pass.out[0]
 }

@@ -14,10 +14,14 @@ Strelka2 Options:
 
 process manta {
     container docker_image_manta
-    publishDir "${params.output_dir}",
+    publishDir params.output_dir,
                mode: "copy",
                pattern: "MantaWorkflow/results",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -31,6 +35,7 @@ process manta {
     tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
           path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz.tbi")
     path "MantaWorkflow/results"
+    path ".command.*"
 
     script:
     exome = params.exome ? "--exome" : ""
@@ -52,6 +57,10 @@ process strelka2_somatic {
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow/results",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -66,6 +75,7 @@ process strelka2_somatic {
     tuple val("somatic_snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
     tuple val("somatic_indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
     path "StrelkaSomaticWorkflow/results"
+    path ".command.*"
 
     script:
     exome = params.exome ? "--exome" : ""
@@ -86,12 +96,17 @@ process strelka2_somatic {
 process filter_vcf_pass {
     container docker_image_strelka2
     publishDir params.output_dir, mode: "copy"
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     tuple val(name), path(vcf_gz)
 
     output:
     path "strelka2_${params.sample_name}_${name}_pass.vcf"
+    path ".command.*"
 
     // https://www.biostars.org/p/206488/
     """
