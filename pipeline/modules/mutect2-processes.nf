@@ -15,6 +15,7 @@ process m2 {
                enabled: params.save_intermediate_files
 
     input:
+    val chromosome
     path tumor
     path tumor_index
     path normal
@@ -24,12 +25,14 @@ process m2 {
     path reference_dict
 
     output:
-    path "unfiltered.vcf.gz", emit: unfiltered
-    path "unfiltered.vcf.gz.tbi", emit: unfiltered_index
-    path "unfiltered.vcf.gz.stats", emit: unfiltered_stats
+    path "unfiltered_${chromosome}.vcf.gz", emit: unfiltered
+    path "unfiltered_${chromosome}.vcf.gz.tbi", emit: unfiltered_index
+    path "unfiltered_${chromosome}.vcf.gz.stats", emit: unfiltered_stats
 
     script:
     """
+    set -euo pipefail
+
     gatk GetSampleName -I $normal -O normal_name.txt
     normal=`cat normal_name.txt`
 
@@ -37,8 +40,9 @@ process m2 {
         -R $reference \
         -I $tumor \
         -I $normal \
+        -L $chromosome \
         -normal \$normal \
-        -O unfiltered.vcf.gz
+        -O unfiltered_${chromosome}.vcf.gz
     """
 }
 
