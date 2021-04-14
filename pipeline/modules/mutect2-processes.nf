@@ -56,7 +56,8 @@ process merge_vcfs {
     path unfiltered_vcfs
 
     output:
-    path "unfiltered.vcf.gz"
+    path "unfiltered.vcf.gz", emit: unfiltered
+    path "unfiltered.vcf.gz.tbi", emit: unfiltered_index
 
     script:
     unfiltered_vcfs = unfiltered_vcfs.collect { "-I $it" }
@@ -64,6 +65,26 @@ process merge_vcfs {
     """
     set -euo pipefail
     gatk MergeVcfs $unfiltered_vcfs -O unfiltered.vcf.gz
+    """
+}
+
+process merge_mutect_stats {
+    container docker_image_mutect2
+    publishDir params.output_dir,
+               mode: "copy",
+               enabled: params.save_intermediate_files
+    
+    input:
+    path unfiltered_stats
+
+    output:
+    path "unfiltered.vcf.gz.stats"
+
+    script:
+    unfiltered_stats = unfiltered_stats.collect { "-stats $it " }.join(' ')
+    """
+    set -euo pipefail
+    gatk MergeMutectStats $unfiltered_stats -O unfiltered.vcf.gz.stats
     """
 }
 
