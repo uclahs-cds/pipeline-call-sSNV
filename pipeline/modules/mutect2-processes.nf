@@ -12,7 +12,12 @@ process m2 {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "unfiltered*",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     val chromosome
@@ -28,6 +33,7 @@ process m2 {
     path "unfiltered_${chromosome}.vcf.gz", emit: unfiltered
     path "unfiltered_${chromosome}.vcf.gz.tbi", emit: unfiltered_index
     path "unfiltered_${chromosome}.vcf.gz.stats", emit: unfiltered_stats
+    path ".command.*"
 
     script:
     """
@@ -50,7 +56,12 @@ process merge_vcfs {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "unfiltered.vcf.gz*",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path unfiltered_vcfs
@@ -58,6 +69,7 @@ process merge_vcfs {
     output:
     path "unfiltered.vcf.gz", emit: unfiltered
     path "unfiltered.vcf.gz.tbi", emit: unfiltered_index
+    path ".command.*"
 
     script:
     unfiltered_vcfs = unfiltered_vcfs.collect { "-I $it" }
@@ -72,13 +84,19 @@ process merge_mutect_stats {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "unfiltered.vcf.gz.stats",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     
     input:
     path unfiltered_stats
 
     output:
     path "unfiltered.vcf.gz.stats"
+    path ".command.*"
 
     script:
     unfiltered_stats = unfiltered_stats.collect { "-stats $it " }.join(' ')
@@ -92,7 +110,12 @@ process filter_mutect_calls {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "filtered.vcf.gz",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     
     input:
     path reference
@@ -104,6 +127,7 @@ process filter_mutect_calls {
 
     output:
     path "filtered.vcf.gz", emit: filtered
+    path ".command.*"
 
     script:
     """
@@ -118,13 +142,19 @@ process filter_mutect_calls {
 process filter_vcf_pass {
     container "ubuntu:20.04"
     publishDir params.output_dir,
-               mode: "copy"
+               mode: "copy",
+               pattern: "${params.algorithm}_${params.sample_name}_filtered_pass.vcf"
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path filtered
 
     output:
     path "${params.algorithm}_${params.sample_name}_filtered_pass.vcf"
+    path ".command.*"
     
     script:
     """
