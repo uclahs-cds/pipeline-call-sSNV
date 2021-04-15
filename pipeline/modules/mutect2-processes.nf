@@ -99,7 +99,7 @@ process merge_mutect_stats {
     path ".command.*"
 
     script:
-    unfiltered_stats = unfiltered_stats.collect { "-stats $it " }.join(' ')
+    unfiltered_stats = unfiltered_stats.collect { "-stats $it" }.join(' ')
     """
     set -euo pipefail
     gatk MergeMutectStats $unfiltered_stats -O unfiltered.vcf.gz.stats
