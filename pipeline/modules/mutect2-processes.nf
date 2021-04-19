@@ -42,7 +42,7 @@ process m2 {
     gatk GetSampleName -I $normal -O normal_name.txt
     normal=`cat normal_name.txt`
 
-    gatk Mutect2 \
+    gatk --java-options \"-Xmx${(task.memory - 500.MB).getMega()}m\" Mutect2 \
         -R $reference \
         -I $tumor \
         -I $normal \
