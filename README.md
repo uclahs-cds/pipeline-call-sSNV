@@ -3,6 +3,7 @@
 ## Somatic SNV callers:
 * Somatic Sniper
 * Strelka2
+* Mutect2
 
 
 ### SomaticSniper
