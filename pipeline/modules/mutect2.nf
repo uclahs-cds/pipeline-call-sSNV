@@ -24,9 +24,9 @@ workflow mutect2 {
             params.reference_dict,
             merge_vcfs.out.unfiltered,
             merge_vcfs.out.unfiltered_index,
-            merge_mutect_stats.out[0]
+            merge_mutect_stats.out.merged_stats
         )
         filter_vcf_pass(filter_mutect_calls.out.filtered)
     emit:
-        filter_vcf_pass.out[0]
+        filter_vcf_pass.out.vcf
 }

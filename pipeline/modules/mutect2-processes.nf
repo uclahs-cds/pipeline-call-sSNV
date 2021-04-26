@@ -95,7 +95,7 @@ process merge_mutect_stats {
     path unfiltered_stats
 
     output:
-    path "unfiltered.vcf.gz.stats"
+    path "unfiltered.vcf.gz.stats", emit: merged_stats
     path ".command.*"
 
     script:
@@ -153,7 +153,7 @@ process filter_vcf_pass {
     path filtered
 
     output:
-    path "${params.algorithm}_${params.sample_name}_filtered_pass.vcf"
+    path "${params.algorithm}_${params.sample_name}_filtered_pass.vcf", emit: vcf
     path ".command.*"
     
     script:
