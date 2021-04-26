@@ -6,6 +6,9 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_mutect2:   ${docker_image_mutect2}
+Mutect2 Options:
+- gatk_command_mem_diff:  ${params.gatk_command_mem_diff}
+- intervals:              ${params.intervals}
 """
 
 process m2 {
@@ -42,7 +45,7 @@ process m2 {
     gatk GetSampleName -I $normal -O normal_name.txt
     normal=`cat normal_name.txt`
 
-    gatk --java-options \"-Xmx${(task.memory - 500.MB).getMega()}m\" Mutect2 \
+    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
         -I $tumor \
         -I $normal \
