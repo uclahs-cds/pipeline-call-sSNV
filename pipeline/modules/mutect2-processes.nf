@@ -75,8 +75,7 @@ process merge_vcfs {
     path ".command.*"
 
     script:
-    unfiltered_vcfs = unfiltered_vcfs.collect { "-I $it" }
-                                     .join(' ')
+    unfiltered_vcfs = unfiltered_vcfs.collect { "-I '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk MergeVcfs $unfiltered_vcfs -O unfiltered.vcf.gz
@@ -102,7 +101,7 @@ process merge_mutect_stats {
     path ".command.*"
 
     script:
-    unfiltered_stats = unfiltered_stats.collect { "-stats $it" }.join(' ')
+    unfiltered_stats = unfiltered_stats.collect { "-stats '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk MergeMutectStats $unfiltered_stats -O unfiltered.vcf.gz.stats
