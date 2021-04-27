@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.4.0] - 2021-04-27
+### Added
+- Saved logs for the Strelka2 and Mutect2 workflows
+- Created and backfilled CHANGELOG
+
+### Changed
+- Mutect2 calls are now scattered by chromosomes
+
 ## [v1.3.0] - 2021-04-05
 ### Added
 - Added the Mutect2 algorithm.
