@@ -6,15 +6,24 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_mutect2:   ${docker_image_mutect2}
+Mutect2 Options:
+- gatk_command_mem_diff:  ${params.gatk_command_mem_diff}
+- intervals:              ${params.intervals}
 """
 
 process m2 {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "unfiltered*",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
+    val chromosome
     path tumor
     path tumor_index
     path normal
@@ -24,21 +33,78 @@ process m2 {
     path reference_dict
 
     output:
-    path "unfiltered.vcf.gz", emit: unfiltered
-    path "unfiltered.vcf.gz.tbi", emit: unfiltered_index
-    path "unfiltered.vcf.gz.stats", emit: unfiltered_stats
+    path "unfiltered_${chromosome}.vcf.gz", emit: unfiltered
+    path "unfiltered_${chromosome}.vcf.gz.tbi", emit: unfiltered_index
+    path "unfiltered_${chromosome}.vcf.gz.stats", emit: unfiltered_stats
+    path ".command.*"
 
     script:
     """
+    set -euo pipefail
+
     gatk GetSampleName -I $normal -O normal_name.txt
     normal=`cat normal_name.txt`
 
-    gatk Mutect2 \
+    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
         -I $tumor \
         -I $normal \
+        -L $chromosome \
         -normal \$normal \
-        -O unfiltered.vcf.gz
+        -O unfiltered_${chromosome}.vcf.gz
+    """
+}
+
+process merge_vcfs {
+    container docker_image_mutect2
+    publishDir params.output_dir,
+               mode: "copy",
+               pattern: "unfiltered.vcf.gz*",
+               enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path unfiltered_vcfs
+
+    output:
+    path "unfiltered.vcf.gz", emit: unfiltered
+    path "unfiltered.vcf.gz.tbi", emit: unfiltered_index
+    path ".command.*"
+
+    script:
+    unfiltered_vcfs = unfiltered_vcfs.collect { "-I '$it'" }.join(' ')
+    """
+    set -euo pipefail
+    gatk MergeVcfs $unfiltered_vcfs -O unfiltered.vcf.gz
+    """
+}
+
+process merge_mutect_stats {
+    container docker_image_mutect2
+    publishDir params.output_dir,
+               mode: "copy",
+               pattern: "unfiltered.vcf.gz.stats",
+               enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+    
+    input:
+    path unfiltered_stats
+
+    output:
+    path "unfiltered.vcf.gz.stats", emit: merged_stats
+    path ".command.*"
+
+    script:
+    unfiltered_stats = unfiltered_stats.collect { "-stats '$it'" }.join(' ')
+    """
+    set -euo pipefail
+    gatk MergeMutectStats $unfiltered_stats -O unfiltered.vcf.gz.stats
     """
 }
 
@@ -46,7 +112,12 @@ process filter_mutect_calls {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "filtered.vcf.gz",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     
     input:
     path reference
@@ -58,6 +129,7 @@ process filter_mutect_calls {
 
     output:
     path "filtered.vcf.gz", emit: filtered
+    path ".command.*"
 
     script:
     """
@@ -72,13 +144,19 @@ process filter_mutect_calls {
 process filter_vcf_pass {
     container "ubuntu:20.04"
     publishDir params.output_dir,
-               mode: "copy"
+               mode: "copy",
+               pattern: "${params.algorithm}_${params.sample_name}_filtered_pass.vcf"
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path filtered
 
     output:
-    path "${params.algorithm}_${params.sample_name}_filtered_pass.vcf"
+    path "${params.algorithm}_${params.sample_name}_filtered_pass.vcf", emit: vcf
+    path ".command.*"
     
     script:
     """

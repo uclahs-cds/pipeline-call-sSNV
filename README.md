@@ -3,6 +3,7 @@
 ## Somatic SNV callers:
 * Somatic Sniper
 * Strelka2
+* Mutect2
 
 
 ### SomaticSniper
@@ -45,9 +46,10 @@ Docker image: broadinstitute/gatk:4.2.0.0
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | Config File |
 | reference   | string | The reference .fa file (.fai file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
+| output_log_dir | string | The location where log files (.command.*) will be saved | Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 | exome       | string | Adds the '--exome' option (strelka2 only) | Config File |
-| reference_dict | string | Reference dictionary (mutect2 only)    | Config File |
+| intervals   | string | The path to a text file containing intervals to scatter on (mutect2 only) | Config File |
 
 ## Outputs
 | Output                                         | Type         | Description                   |
