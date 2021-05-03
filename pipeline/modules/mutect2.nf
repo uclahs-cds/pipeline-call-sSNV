@@ -1,13 +1,15 @@
-include { m2; merge_vcfs; merge_mutect_stats; filter_mutect_calls; filter_vcf_pass } from './mutect2-processes'
+include { split_intervals; m2; merge_vcfs; merge_mutect_stats; filter_mutect_calls; filter_vcf_pass } from './mutect2-processes'
 
 workflow mutect2 {
     main:
-        intervals = channel.fromPath(params.intervals)
-                           .splitText()
-                           .map { it.trim() }
-
+        split_intervals(
+            params.intervals,
+            params.reference,
+            params.reference_index,
+            params.reference_dict
+        )
         m2(
-            intervals,
+            split_intervals.out.interval_list.flatten(),
             params.tumor,
             "${params.tumor}.bai",
             params.normal,
