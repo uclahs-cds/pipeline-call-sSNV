@@ -8,11 +8,47 @@ Docker Images:
 - docker_image_mutect2:   ${docker_image_mutect2}
 Mutect2 Options:
 - gatk_command_mem_diff:  ${params.gatk_command_mem_diff}
+- scatter_count:          ${params.scatter_count}
 - intervals:              ${params.intervals}
 """
 
+process split_intervals {
+    container docker_image_mutect2
+
+    publishDir params.output_dir,
+               mode: "copy",
+               pattern: "interval-files",
+               enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path intervals
+    path reference
+    path reference_index
+    path reference_dict
+
+    output:
+    path 'interval-files/*-scattered.interval_list', emit: interval_list
+    path ".command.*"
+
+    """
+    set -euo pipefail
+
+    gatk SplitIntervals \
+        -R $reference \
+        -L $intervals \
+        -scatter ${params.scatter_count} \
+        -O interval-files
+    """
+}
+
+
 process m2 {
     container docker_image_mutect2
+
     publishDir params.output_dir,
                mode: "copy",
                pattern: "unfiltered*",
@@ -23,7 +59,7 @@ process m2 {
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
-    val chromosome
+    path interval
     path tumor
     path tumor_index
     path normal
@@ -33,9 +69,9 @@ process m2 {
     path reference_dict
 
     output:
-    path "unfiltered_${chromosome}.vcf.gz", emit: unfiltered
-    path "unfiltered_${chromosome}.vcf.gz.tbi", emit: unfiltered_index
-    path "unfiltered_${chromosome}.vcf.gz.stats", emit: unfiltered_stats
+    path "unfiltered_${interval.baseName}.vcf.gz", emit: unfiltered
+    path "unfiltered_${interval.baseName}.vcf.gz.tbi", emit: unfiltered_index
+    path "unfiltered_${interval.baseName}.vcf.gz.stats", emit: unfiltered_stats
     path ".command.*"
 
     script:
@@ -49,9 +85,10 @@ process m2 {
         -R $reference \
         -I $tumor \
         -I $normal \
-        -L $chromosome \
+        -L $interval \
         -normal \$normal \
-        -O unfiltered_${chromosome}.vcf.gz
+        -O unfiltered_${interval.baseName}.vcf.gz \
+        --tmp-dir \$PWD
     """
 }
 
