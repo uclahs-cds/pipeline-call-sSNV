@@ -17,7 +17,7 @@ process split_intervals {
 
     publishDir params.output_dir,
                mode: "copy",
-               pattern: "interval-files",
+               pattern: "interval-files/*-scattered.interval_list",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
