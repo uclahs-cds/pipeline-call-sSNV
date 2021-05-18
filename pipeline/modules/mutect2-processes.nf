@@ -224,7 +224,7 @@ process filter_mutect_calls {
         -R $reference \
         -V $unfiltered \
         -O filtered.vcf.gz \
-        ${filter_mutect_calls_extra_args}
+        ${params.filter_mutect_calls_extra_args}
     """
 }
 
