@@ -41,6 +41,7 @@ process split_intervals {
         -R $reference \
         -L $intervals \
         -scatter ${params.scatter_count} \
+        "${params.split_intervals_extra_args}" \
         -O interval-files
     """
 }
@@ -88,7 +89,8 @@ process m2 {
         -L $interval \
         -normal \$normal \
         -O unfiltered_${interval.baseName}.vcf.gz \
-        --tmp-dir \$PWD
+        --tmp-dir \$PWD \
+        "${params.mutect2_extra_args}"
     """
 }
 
@@ -134,7 +136,8 @@ process m2_non_canonical {
         -XL $interval \
         -normal \$normal \
         -O unfiltered_non_canonical.vcf.gz \
-        --tmp-dir \$PWD
+        --tmp-dir \$PWD \
+        "${params.mutect2_extra_args}"
     """
 }
 
@@ -220,7 +223,8 @@ process filter_mutect_calls {
     gatk FilterMutectCalls \
         -R $reference \
         -V $unfiltered \
-        -O filtered.vcf.gz
+        -O filtered.vcf.gz \
+        "${filter_mutect_calls_extra_args}"
     """
 }
 
