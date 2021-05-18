@@ -41,15 +41,30 @@ Docker image: broadinstitute/gatk:4.2.0.0
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | sample_name | string | The name/ID of the sample                 | Config File |
-| algorithm   | string | Algorithm (somaticsniper/strelka2/mutect2) | Config File |
+| algorithm   | string | One of: (somaticsniper/strelka2/mutect2) | Config File |
 | tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | Config File |
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | Config File |
 | reference   | string | The reference .fa file (.fai file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
 | output_log_dir | string | The location where log files (.command.*) will be saved | Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
-| exome       | string | Adds the '--exome' option (strelka2 only) | Config File |
-| intervals   | string | The path to a text file containing intervals to scatter on (mutect2 only) | Config File |
+
+
+## Strelka2 Specific Configuration
+| Input       | Type   | Description                               | Location    |
+|-------------|--------|-------------------------------------------|-------------|
+| exome       | string | Adds the '--exome' option when running manta and strelka2 | Config File |
+
+
+## Mutect2 Specific Configuration
+| Input       | Type   | Description                               | Location    |
+|-------------|--------|-------------------------------------------|-------------|
+| split_intervals_extra_args | string | Additional arguments for the SplitIntervals command | Config File |
+| mutect2_extra_args | string | Additional arguments for the Mutect2 command | Config File |
+| filter_mutect_calls_extra_args | string | Additional arguments for the FilterMutectCalls command | Config File |
+| gatk_command_mem_diff | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) | Config File |
+| scatter_count | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. | Config File |
+| intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
 
 ## Outputs
 | Output                                         | Type         | Description                   |
