@@ -92,6 +92,52 @@ process m2 {
     """
 }
 
+process m2_non_canonical {
+    container docker_image_mutect2
+
+    publishDir params.output_dir,
+               mode: "copy",
+               pattern: "unfiltered*",
+               enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path interval // canonical intervals to *exclude*
+    path tumor
+    path tumor_index
+    path normal
+    path normal_index
+    path reference
+    path reference_index
+    path reference_dict
+
+    output:
+    path "unfiltered_non_canonical.vcf.gz", emit: unfiltered
+    path "unfiltered_non_canonical.vcf.gz.tbi", emit: unfiltered_index
+    path "unfiltered_non_canonical.vcf.gz.stats", emit: unfiltered_stats
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+
+    gatk GetSampleName -I $normal -O normal_name.txt
+    normal=`cat normal_name.txt`
+
+    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
+        -R $reference \
+        -I $tumor \
+        -I $normal \
+        -XL $interval \
+        -normal \$normal \
+        -O unfiltered_non_canonical.vcf.gz \
+        --tmp-dir \$PWD
+    """
+}
+
 process merge_vcfs {
     container docker_image_mutect2
     publishDir params.output_dir,
