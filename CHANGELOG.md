@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Mutect2 calls are now scattered by intervals split using GATK SplitIntervals
+- Non-canonical regions will be called by default when using Mutect2
 
 ## [v1.4.0] - 2021-04-27
 ### Added
