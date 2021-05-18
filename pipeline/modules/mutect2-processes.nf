@@ -5,11 +5,14 @@ log.info """\
           M U T E C T 2
 ====================================
 Docker Images:
-- docker_image_mutect2:   ${docker_image_mutect2}
+- docker_image_mutect2:           ${docker_image_mutect2}
 Mutect2 Options:
-- gatk_command_mem_diff:  ${params.gatk_command_mem_diff}
-- scatter_count:          ${params.scatter_count}
-- intervals:              ${params.intervals}
+- split_intervals_extra_args:     ${params.split_intervals_extra_args}
+- mutect2_extra_args:             ${params.mutect2_extra_args}
+- filter_mutect_calls_extra_args: ${params.filter_mutect_calls_extra_args}
+- gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
+- scatter_count:                  ${params.scatter_count}
+- intervals:                      ${params.intervals}
 """
 
 process split_intervals {
