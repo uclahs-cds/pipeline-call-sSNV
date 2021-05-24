@@ -79,6 +79,8 @@ process m2 {
     path ".command.*"
 
     script:
+    // --tmp-dir was added to help resolve potential memory issues
+    // https://gatk.broadinstitute.org/hc/en-us/community/posts/360072844392-Mutect2-tumor-matched-normal-Exception-in-thread-main-java-lang-OutOfMemoryError-Java-heap-space
     """
     set -euo pipefail
 
