@@ -1,13 +1,33 @@
-include { m2; merge_vcfs; merge_mutect_stats; filter_mutect_calls; filter_vcf_pass } from './mutect2-processes'
+include { split_intervals; m2; m2_non_canonical; merge_vcfs; merge_mutect_stats; filter_mutect_calls; filter_vcf_pass } from './mutect2-processes'
 
 workflow mutect2 {
     main:
-        intervals = channel.fromPath(params.intervals)
-                           .splitText()
-                           .map { it.trim() }
+        if (params.intervals) {
+            intervals = params.intervals
+        } else {
+            intervals = "${projectDir}/config/hg38_chromosomes_canonical.list"
 
-        m2(
+            // process non-canonical chromosome regions seperately
+            // as this region requires more memory than the canonical regions
+            m2_non_canonical(
+                intervals, // canonical intervals to *exclude*
+                params.tumor,
+                "${params.tumor}.bai",
+                params.normal,
+                "${params.normal}.bai",
+                params.reference,
+                params.reference_index,
+                params.reference_dict
+            )
+        }
+        split_intervals(
             intervals,
+            params.reference,
+            params.reference_index,
+            params.reference_dict
+        )
+        m2(
+            split_intervals.out.interval_list.flatten(),
             params.tumor,
             "${params.tumor}.bai",
             params.normal,
@@ -16,8 +36,17 @@ workflow mutect2 {
             params.reference_index,
             params.reference_dict
         )
-        merge_vcfs(m2.out.unfiltered.collect())
-        merge_mutect_stats(m2.out.unfiltered_stats.collect())
+
+        if (params.intervals) {
+            merge_vcfs(m2.out.unfiltered.collect())
+            merge_mutect_stats(m2.out.unfiltered_stats.collect())
+        } else {
+            merge_vcfs(m2.out.unfiltered.mix(m2_non_canonical.out.unfiltered).collect())
+            merge_mutect_stats(
+                m2.out.unfiltered_stats.mix(m2_non_canonical.out.unfiltered_stats).collect()
+            )
+        }
+
         filter_mutect_calls(
             params.reference,
             params.reference_index,
