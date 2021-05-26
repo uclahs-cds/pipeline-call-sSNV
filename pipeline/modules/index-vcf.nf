@@ -6,19 +6,18 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_samtools: ${docker_image_samtools}
-- vcf:                   ${params.vcf}
 """
 
-process compress-VCF {
+process compress_vcf {
     container docker_image_samtools
     publishDir params.output_dir,
                mode: "copy"
 
     input:
-        tuple val(name), path(vcf)
+        tuple val(suffix), path(vcf)
     
     output:
-        path "${params.algorithm}_${params.sample_name}_${suffix}.vcf.gz"
+        tuple val("${suffix}"), path("${params.algorithm}_${params.sample_name}_${suffix}.vcf.gz"), emit: vcf_gz
 
     """
     set -euo pipefail
@@ -26,16 +25,16 @@ process compress-VCF {
     """
 }
 
-process index-VCF {
+process index_vcf {
     container docker_image_samtools
     publishDir params.output_dir,
                mode: "copy"
 
     input:
-        tuple val(name), path(vcf_gz)
+        tuple val(suffix), path(vcf_gz)
     
     output:
-        path "{tool_name}_${params.sample_name}_${name}_pass.vcf.gz"
+        path "{tool_name}_${params.sample_name}_${suffix}.vcf.gz.tbi"
 
     """
     set -euo pipefail
