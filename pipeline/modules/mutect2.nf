@@ -1,5 +1,7 @@
 include { split_intervals; m2; m2_non_canonical; merge_vcfs; merge_mutect_stats; filter_mutect_calls; filter_vcf_pass } from './mutect2-processes'
 
+include { compress_vcf; index_vcf } from './index-vcf'
+
 workflow mutect2 {
     main:
         if (params.intervals) {
@@ -56,6 +58,8 @@ workflow mutect2 {
             merge_mutect_stats.out.merged_stats
         )
         filter_vcf_pass(filter_mutect_calls.out.filtered)
+        compress_vcf(filter_vcf_pass.out.mutect2_vcf)
+        index_vcf(compress_vcf.out.vcf_gz)
     emit:
-        filter_vcf_pass.out.vcf
+        index_vcf.out[0]
 }
