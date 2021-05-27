@@ -221,7 +221,7 @@ process highconfidence {
     path fp_pass
 
     output:
-    path "somaticsniper_${params.sample_name}_hc.vcf", emit: hc
+    tuple val("hc"), path("somaticsniper_${params.sample_name}_hc.vcf"), emit: hc
     path "somaticsniper_${params.sample_name}_lc.vcf", emit: lc
 
     """

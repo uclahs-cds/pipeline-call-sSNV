@@ -1,5 +1,7 @@
 include { bam_somaticsniper; samtools_pileup; samtools_varfilter; snpfilter_normal; snpfilter_tumor; prepare_for_readcount; bam_readcount; fpfilter; highconfidence } from './somaticsniper-processes'
 
+include { compress_vcf; index_vcf } from './index-vcf'
+
 workflow somaticsniper {
     main:
         bam_somaticsniper(params.tumor, params.normal, params.reference)
@@ -24,6 +26,8 @@ workflow somaticsniper {
         bam_readcount(params.reference, prepare_for_readcount.out, params.tumor, "${params.tumor}.bai")
         fpfilter(snpfilter_tumor.out, bam_readcount.out)
         highconfidence(fpfilter.out.fp_pass)
+        compress_vcf(highconfidence.out.hc)
+        index_vcf(compress_vcf.out.vcf_gz)
     emit:
-        highconfidence.out.hc
+        index_vcf.out[0]
 }
