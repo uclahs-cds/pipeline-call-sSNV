@@ -38,6 +38,6 @@ process index_vcf {
 
     """
     set -euo pipefail
-    tabix -p vcf ${vcf_gz} > ${params.algorithm}_${params.sample_name}_${suffix}.vcf.gz.tbi
+    tabix -p vcf ${vcf_gz}
     """
 }
