@@ -25,5 +25,5 @@ workflow strelka2 {
         compress_vcf(filter_vcf_pass.out.strelka2_vcf)
         index_vcf(compress_vcf.out.vcf_gz)
     emit:
-        index_vcf.out[0]
+        index_vcf.out
 }
