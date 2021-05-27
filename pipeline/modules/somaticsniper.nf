@@ -1,6 +1,6 @@
 include { bam_somaticsniper; samtools_pileup; samtools_varfilter; snpfilter_normal; snpfilter_tumor; prepare_for_readcount; bam_readcount; fpfilter; highconfidence } from './somaticsniper-processes'
 
-include { compress_vcf; index_vcf } from './index-vcf'
+include { compress_vcf; index_vcf } from './common'
 
 workflow somaticsniper {
     main:

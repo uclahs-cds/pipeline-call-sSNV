@@ -247,7 +247,7 @@ process filter_vcf_pass {
     path filtered
 
     output:
-    tuple val("filtered_pass"), path("${params.algorithm}_${params.sample_name}_filtered_pass.vcf"), emit: mutect2_vcf
+    path "${params.algorithm}_${params.sample_name}_filtered_pass.vcf", emit: mutect2_vcf
     path ".command.*"
     
     script:

@@ -1,6 +1,6 @@
 include { split_intervals; m2; m2_non_canonical; merge_vcfs; merge_mutect_stats; filter_mutect_calls; filter_vcf_pass } from './mutect2-processes'
 
-include { compress_vcf; index_vcf } from './index-vcf'
+include { compress_vcf; index_vcf } from './common'
 
 workflow mutect2 {
     main:

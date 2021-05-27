@@ -1,6 +1,6 @@
 include { strelka2_somatic; manta; filter_vcf_pass } from './strelka2-processes'
 
-include { compress_vcf; index_vcf } from './index-vcf'
+include { compress_vcf; index_vcf } from './common'
 
 workflow strelka2 {
     main:

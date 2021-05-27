@@ -2,7 +2,7 @@ def docker_image_samtools = "blcdsdockerregistry/samtools:1.12"
 
 log.info """\
 ====================================
-          I N D E X - V C F
+          C O M M O N
 ====================================
 Docker Images:
 - docker_image_samtools: ${docker_image_samtools}
@@ -12,16 +12,21 @@ process compress_vcf {
     container docker_image_samtools
     publishDir params.output_dir,
                mode: "copy"
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
-        tuple val(suffix), path(vcf)
+    path(vcf)
     
     output:
-        tuple val("${suffix}"), path("${params.algorithm}_${params.sample_name}_${suffix}.vcf.gz"), emit: vcf_gz
+    path "${vcf}.gz" , emit: vcf_gz
+    path ".command.*"
 
     """
     set -euo pipefail
-    bgzip -c ${vcf} > ${params.algorithm}_${params.sample_name}_${suffix}.vcf.gz
+    bgzip -c ${vcf}
     """
 }
 
@@ -29,12 +34,17 @@ process index_vcf {
     container docker_image_samtools
     publishDir params.output_dir,
                mode: "copy"
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
-        tuple val(suffix), path(vcf_gz)
+    path(vcf_gz)
     
     output:
-        path "${params.algorithm}_${params.sample_name}_${suffix}.vcf.gz.tbi"
+    path "${vcf_gz}.tbi"
+    path ".command.*"
 
     """
     set -euo pipefail
