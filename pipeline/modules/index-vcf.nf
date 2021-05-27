@@ -34,7 +34,7 @@ process index_vcf {
         tuple val(suffix), path(vcf_gz)
     
     output:
-        path "{tool_name}_${params.sample_name}_${suffix}.vcf.gz.tbi"
+        path "${params.algorithm}_${params.sample_name}_${suffix}.vcf.gz.tbi"
 
     """
     set -euo pipefail
