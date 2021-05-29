@@ -43,7 +43,7 @@ process index_vcf {
     path(vcf_gz)
     
     output:
-    path "${vcf_gz}.tbi"
+    path "${vcf_gz}.tbi", emit: vcf_gz_tbi
     path ".command.*"
 
     """
