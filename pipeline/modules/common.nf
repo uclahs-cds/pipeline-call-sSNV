@@ -12,7 +12,8 @@ process compress_vcf {
     container docker_image_samtools
     publishDir params.output_dir,
                mode: "copy",
-               pattern: "*.vcf.gz"
+               pattern: "*.vcf.gz",
+               enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",

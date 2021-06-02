@@ -237,7 +237,8 @@ process filter_vcf_pass {
     container "ubuntu:20.04"
     publishDir params.output_dir,
                mode: "copy",
-               pattern: "${params.algorithm}_${params.sample_name}_filtered_pass.vcf"
+               pattern: "${params.algorithm}_${params.sample_name}_filtered_pass.vcf",
+               enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
