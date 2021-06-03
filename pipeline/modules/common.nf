@@ -13,7 +13,6 @@ process compress_vcf {
     publishDir params.output_dir,
                mode: "copy",
                pattern: "*.vcf.gz",
-               enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
