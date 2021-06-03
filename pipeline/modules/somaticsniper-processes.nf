@@ -236,7 +236,8 @@ process highconfidence {
                enabled: params.save_intermediate_files
     publishDir params.output_dir,
                pattern: "somaticsniper_${params.sample_name}_hc.vcf", 
-               mode: "copy"
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     path fp_pass
