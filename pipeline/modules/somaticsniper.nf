@@ -29,5 +29,6 @@ workflow somaticsniper {
         compress_vcf(highconfidence.out.hc)
         index_vcf(compress_vcf.out.vcf_gz)
     emit:
+        compress_vcf.out.vcf_gz
         index_vcf.out.vcf_gz_tbi
 }
