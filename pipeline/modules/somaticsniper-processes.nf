@@ -16,7 +16,9 @@ Docker Images:
 // Call SomaticSniper
 process bam_somaticsniper {
     container docker_image_somaticsniper
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir,
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     path tumor
@@ -51,7 +53,9 @@ process bam_somaticsniper {
 // We are using a specific older version of samtools (v0.1.6) packaged with SomaticSniper.
 process samtools_pileup {
     container docker_image_somaticsniper
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir,
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     tuple val(type), path(bam)
@@ -75,7 +79,9 @@ process samtools_pileup {
 // We are using samtools.pl which is packaged with SomaticSniper.
 process samtools_varfilter {
     container docker_image_somaticsniper
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir,
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     tuple val(type), path(raw_pileup)
@@ -97,7 +103,9 @@ process samtools_varfilter {
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process snpfilter_normal {
     container docker_image_somaticsniper
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir, 
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     path snp_file
@@ -119,7 +127,9 @@ process snpfilter_normal {
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process snpfilter_tumor {
     container docker_image_somaticsniper
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir,
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     path snp_file
@@ -141,7 +151,9 @@ process snpfilter_tumor {
 // Adapt the remainder for use with bam-readcount to get SNP positions
 process prepare_for_readcount {
     container docker_image_somaticsniper
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir, 
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     path snp_file
@@ -161,7 +173,9 @@ process prepare_for_readcount {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process bam_readcount {
     container docker_image_bam_readcount
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir,
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     path reference
@@ -192,7 +206,9 @@ process bam_readcount {
 // Run the false positive filter
 process fpfilter {
     container docker_image_somaticsniper
-    publishDir params.output_dir, mode: "copy", enabled: params.save_intermediate_files
+    publishDir params.output_dir, 
+               mode: "copy", 
+               enabled: params.save_intermediate_files
 
     input:
     path snp_file
@@ -214,8 +230,10 @@ process fpfilter {
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process highconfidence {
     container docker_image_somaticsniper
-    publishDir params.output_dir, pattern: "somaticsniper_${params.sample_name}_lc.vcf", mode: "copy", enabled: params.save_intermediate_files
-    publishDir params.output_dir, pattern: "somaticsniper_${params.sample_name}_hc.vcf", mode: "copy"
+    publishDir params.output_dir,
+               pattern: "somaticsniper_${params.sample_name}*.vcf",
+               mode: "copy",
+               enabled: params.save_intermediate_files
 
     input:
     path fp_pass

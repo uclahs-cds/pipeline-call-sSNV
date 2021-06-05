@@ -1,5 +1,7 @@
 include { strelka2_somatic; manta; filter_vcf_pass } from './strelka2-processes'
 
+include { compress_vcf; index_vcf } from './common'
+
 workflow strelka2 {
     main:
         manta(
@@ -20,6 +22,9 @@ workflow strelka2 {
             manta.out[0]
         )
         filter_vcf_pass(strelka2_somatic.out.snvs_vcf.mix(strelka2_somatic.out.indels_vcf))
+        compress_vcf(filter_vcf_pass.out.strelka2_vcf)
+        index_vcf(compress_vcf.out.vcf_gz)
     emit:
-        filter_vcf_pass.out[0]
+        compress_vcf.out.vcf_gz
+        index_vcf.out.vcf_gz_tbi
 }

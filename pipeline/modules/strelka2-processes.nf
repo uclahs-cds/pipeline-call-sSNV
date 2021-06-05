@@ -95,7 +95,9 @@ process strelka2_somatic {
 
 process filter_vcf_pass {
     container docker_image_strelka2
-    publishDir params.output_dir, mode: "copy"
+    publishDir params.output_dir,
+               mode: "copy",
+               enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
@@ -105,7 +107,7 @@ process filter_vcf_pass {
     tuple val(name), path(vcf_gz)
 
     output:
-    path "strelka2_${params.sample_name}_${name}_pass.vcf"
+    path "strelka2_${params.sample_name}_${name}_pass.vcf", emit: strelka2_vcf
     path ".command.*"
 
     // https://www.biostars.org/p/206488/
