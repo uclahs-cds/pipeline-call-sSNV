@@ -4,10 +4,10 @@ name: CICD-base
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   CICD-base:
