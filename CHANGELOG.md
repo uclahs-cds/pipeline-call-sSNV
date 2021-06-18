@@ -5,12 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.5.0] - 2021-06-18
 ### Changed
 - Mutect2 calls are now scattered by intervals split using GATK SplitIntervals
 - Non-canonical regions will be called by default when using Mutect2
+- Update branch name in CICD-base.yaml from master to main
 
 ### Added
 - Ability to specify extra arguments for all GATK commands in the Mutect2 workflow
+- Steps to index and compress final VCF files
 
 ## [v1.4.0] - 2021-04-27
 ### Added
