@@ -39,11 +39,11 @@ workflow {
 
     if ('somaticsniper' in params.algorithm) {
         somaticsniper()
-    } else if ('strelka2' in params.algorithm) {
+    }
+    if ('strelka2' in params.algorithm) {
         strelka2()
-    } else if ('mutect2' in params.algorithm) {
+    }
+    if ('mutect2' in params.algorithm) {
         mutect2()
-    } else {
-        throw new Exception('ERROR: params.algorithm not recognized')
     }
 }
