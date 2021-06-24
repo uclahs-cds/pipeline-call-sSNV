@@ -37,11 +37,11 @@ workflow {
         params.reference_dict
     ]))
 
-    if (params.algorithm == 'somaticsniper') {
+    if ('somaticsniper' in params.algorithm) {
         somaticsniper()
-    } else if (params.algorithm == 'strelka2') {
+    } else if ('strelka2' in params.algorithm) {
         strelka2()
-    } else if (params.algorithm == 'mutect2') {
+    } else if ('mutect2' in params.algorithm) {
         mutect2()
     } else {
         throw new Exception('ERROR: params.algorithm not recognized')

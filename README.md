@@ -41,7 +41,7 @@ Docker image: broadinstitute/gatk:4.2.0.0
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | sample_name | string | The name/ID of the sample                 | Config File |
-| algorithm   | string | One of: (somaticsniper/strelka2/mutect2) | Config File |
+| algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2) | Config File |
 | tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | Config File |
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | Config File |
 | reference   | string | The reference .fa file (.fai file must exist in same directory) | Config File |
