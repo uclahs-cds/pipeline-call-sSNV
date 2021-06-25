@@ -97,6 +97,7 @@ process filter_vcf_pass {
     container docker_image_strelka2
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "strelka2_${params.sample_name}_${name}_pass.vcf",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
