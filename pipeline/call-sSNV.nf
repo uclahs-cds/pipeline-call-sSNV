@@ -37,6 +37,20 @@ workflow {
         params.reference_dict
     ]))
 
+    // Validate params.algorithm
+    if (params.algorithm.getClass() != java.util.ArrayList) {
+        throw new Exception("ERROR: params.algorithm ${params.algorithm} must be a list")
+    }
+    if (params.algorithm.isEmpty()) {
+        throw new Exception("ERROR: params.algorithm cannot be empty")
+    }
+    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
+    for (algo in params.algorithm) {
+        if (!(algo in valid_algorithms)) {
+            throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
+        }
+    }
+
     if ('somaticsniper' in params.algorithm) {
         somaticsniper()
     }
