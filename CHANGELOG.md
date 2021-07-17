@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add pattern to strelka2's filter_vcf_pass publishDir
 
+### Fixed
+- nextflow.config throwing Exception: string interpolation required double quotes
+
 ## [v1.5.0] - 2021-06-18
 ### Changed
 - Mutect2 calls are now scattered by intervals split using GATK SplitIntervals
