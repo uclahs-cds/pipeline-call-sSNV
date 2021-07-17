@@ -1,5 +1,8 @@
 # pipeline-call-sSNV
 
+## Overview
+This pipeline performs somatic SNV calling given a pair of tumor/normal BAM. 3 somatic SNV callers are available and described below. Each caller will run independently of each other.
+
 ## Somatic SNV callers:
 * Somatic Sniper
 * Strelka2
@@ -46,7 +49,7 @@ Docker image: broadinstitute/gatk:4.2.0.0
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | Config File |
 | reference   | string | The reference .fa file (.fai file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
-| output_log_dir | string | The location where log files (.command.*) will be saved | Config File |
+| output_log_dir | string | The location where log files (.command.\*) will be saved | Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 
 
