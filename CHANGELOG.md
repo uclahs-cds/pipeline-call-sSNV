@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Allow multiple algorithms to run in one pipeline run
+
+### Added
+- Add pattern to strelka2's filter_vcf_pass publishDir
+
+### Fixed
+- nextflow.config throwing Exception: string interpolation required double quotes
 
 ## [v1.5.0] - 2021-06-18
 ### Changed

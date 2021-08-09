@@ -37,13 +37,27 @@ workflow {
         params.reference_dict
     ]))
 
-    if (params.algorithm == 'somaticsniper') {
+    // Validate params.algorithm
+    if (params.algorithm.getClass() != java.util.ArrayList) {
+        throw new Exception("ERROR: params.algorithm ${params.algorithm} must be a list")
+    }
+    if (params.algorithm.isEmpty()) {
+        throw new Exception("ERROR: params.algorithm cannot be empty")
+    }
+    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
+    for (algo in params.algorithm) {
+        if (!(algo in valid_algorithms)) {
+            throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
+        }
+    }
+
+    if ('somaticsniper' in params.algorithm) {
         somaticsniper()
-    } else if (params.algorithm == 'strelka2') {
+    }
+    if ('strelka2' in params.algorithm) {
         strelka2()
-    } else if (params.algorithm == 'mutect2') {
+    }
+    if ('mutect2' in params.algorithm) {
         mutect2()
-    } else {
-        throw new Exception('ERROR: params.algorithm not recognized')
     }
 }
