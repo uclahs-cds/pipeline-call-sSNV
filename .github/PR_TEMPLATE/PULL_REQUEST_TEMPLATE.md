@@ -30,11 +30,15 @@ Closes #...
 
 ## Testing Results
 
-- Case 1
-    - sample:    <!-- e.g. A-mini S2.T-1, A-mini S2.T-n1 -->
+- Mutect2
+    - sample:    <!-- test datasets -->
     - input csv: <!-- path/to/input.csv -->
     - config:    <!-- path/to/xxx.config -->
-- Case 2
-    - sample:    <!-- e.g. A-mini S2.T-1, A-mini S2.T-n1 -->
+- SomaticSniper
+    - sample:    <!-- test datasets -->
+    - input csv: <!-- path/to/input.csv -->
+    - config:    <!-- path/to/xxx.config -->  
+- Strelka2
+    - sample:    <!-- test datasets -->
     - input csv: <!-- path/to/input.csv -->
     - config:    <!-- path/to/xxx.config -->  
