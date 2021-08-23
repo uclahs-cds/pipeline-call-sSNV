@@ -32,13 +32,10 @@ Closes #...
 
 - Mutect2
     - sample:    <!-- test datasets -->
-    - input csv: <!-- path/to/input.csv -->
     - config:    <!-- path/to/xxx.config -->
 - SomaticSniper
     - sample:    <!-- test datasets -->
-    - input csv: <!-- path/to/input.csv -->
     - config:    <!-- path/to/xxx.config -->  
 - Strelka2
     - sample:    <!-- test datasets -->
-    - input csv: <!-- path/to/input.csv -->
     - config:    <!-- path/to/xxx.config -->  
