@@ -1,10 +1,3 @@
-> This is a template for UCLA-CDS pipeline developers to create a github pull request template. Things should be adjusted for individual pipeline including:
-> 1. additional checklist items sepecific to the pipeline
-> 2. a description of how testing is expected to be done
-> 3. a template list or table for testing results
-> 4. additional notes wrapped in \<!--- ---> (or \<!-- --\> for inline comments) that help PR submitters to fill in.
-> 5. delete this block of instructional text.
-
 <!--- Please read each of the following items and confirm by replacing the [ ] with a [X] --->
 
 - [ ] I have read the [code review guidelines](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Guidelines) and the [code review best practice on GitHub check-list](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Best+Practice+on+GitHub+-+Check+List).
