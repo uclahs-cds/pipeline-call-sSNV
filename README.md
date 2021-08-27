@@ -79,6 +79,17 @@ Docker image: broadinstitute/gatk:4.2.2.0
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
-1. Fill in the params section of the config file
-2. Run the pipeline using the [submission script](https://github.com/uclahs-cds/tool-submit-nf)
-
+1. Download the stable release or the development version by cloning the GitHub repository to your machine.
+2. Fill in the params section of the [config file](https://github.com/uclahs-cds/pipeline-call-sSNV/blob/main/pipeline/nextflow.config). 
+3. Run the pipeline using the [Nextflow submission script](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
+```bash
+python path/to/submit_nextflow_pipeline.py \
+    --nextflow_script path/to/call-sSNV.nf \
+    --nextflow_config path/to/nextflow.config \
+    --pipeline_run_name <sample_name> \
+    --partition_type F72 \
+    --email jdoe@mednet.ucla.edu
+```
+<b><i>Notes:</i></b>
+> When submitting pipeline to cluster, please use F72 nodes. Using F2 nodes will fail the pipeline.  
+> The reference .fa file in config file should be the same with the reference genome that genereates the input bam files.
