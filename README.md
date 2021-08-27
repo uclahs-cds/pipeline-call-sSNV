@@ -91,5 +91,4 @@ python path/to/submit_nextflow_pipeline.py \
     --email jdoe@mednet.ucla.edu
 ```
 <b><i>Notes:</i></b>
-> When submitting pipeline to cluster, please use F72 nodes. Using F2 nodes will fail the pipeline.  
 > The reference .fa file in config file should be the same with the reference genome that genereates the input bam files.
