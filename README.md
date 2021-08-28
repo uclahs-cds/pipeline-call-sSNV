@@ -79,7 +79,7 @@ Docker image: broadinstitute/gatk:4.2.2.0
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
-1. Download the stable release or the development version by cloning the GitHub repository to your machine.
+1. Download the stable release [here](https://github.com/uclahs-cds/pipeline-call-sSNV/releases) or the development version by cloning the GitHub repository to your machine.
 2. Fill in the params section of the [config file](https://github.com/uclahs-cds/pipeline-call-sSNV/blob/main/pipeline/nextflow.config). 
 3. Run the pipeline using the [Nextflow submission script](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
 ```bash
