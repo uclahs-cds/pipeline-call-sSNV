@@ -19,7 +19,10 @@ process bam_somaticsniper {
     publishDir params.output_dir,
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     path tumor
     path normal
