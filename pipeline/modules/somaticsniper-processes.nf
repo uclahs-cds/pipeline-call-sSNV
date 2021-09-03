@@ -30,6 +30,7 @@ process bam_somaticsniper {
 
     output:
     path "somaticsniper_${params.sample_name}.vcf"
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -69,6 +70,7 @@ process samtools_pileup {
 
     output:
     tuple val(type), path("raw_${type}_${params.sample_name}.pileup")
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -97,6 +99,7 @@ process samtools_varfilter {
 
     output:
     tuple val(type), path("${type}_filt_${params.sample_name}.pileup")
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -125,6 +128,7 @@ process snpfilter_normal {
 
     output:
     path "somaticsniper_${params.sample_name}.vcf_normal"
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -152,6 +156,7 @@ process snpfilter_tumor {
 
     output:
     path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter"
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -178,6 +183,7 @@ process prepare_for_readcount {
 
     output:
     path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos"
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -206,6 +212,7 @@ process bam_readcount {
 
     output:
     path "somaticsniper_${params.sample_name}.readcount"
+    path ".command.*"
 
     // tumor index file not explicitly passed to bam-readcount,
     // but it needs to be in the working directory otherwise bam-readcount will fail
@@ -241,6 +248,7 @@ process fpfilter {
     output:
     path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.fp_pass", emit: fp_pass
     path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.fp_fail", emit: fp_fail
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -268,6 +276,7 @@ process highconfidence {
     output:
     path "somaticsniper_${params.sample_name}_hc.vcf", emit: hc
     path "somaticsniper_${params.sample_name}_lc.vcf", emit: lc
+    path ".command.*"
 
     """
     set -euo pipefail
