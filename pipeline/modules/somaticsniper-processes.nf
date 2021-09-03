@@ -59,7 +59,10 @@ process samtools_pileup {
     publishDir params.output_dir,
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     tuple val(type), path(bam)
     path reference
@@ -85,7 +88,10 @@ process samtools_varfilter {
     publishDir params.output_dir,
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     tuple val(type), path(raw_pileup)
 
@@ -109,7 +115,10 @@ process snpfilter_normal {
     publishDir params.output_dir, 
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     path snp_file
     path indel_file
@@ -133,7 +142,10 @@ process snpfilter_tumor {
     publishDir params.output_dir,
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     path snp_file
     path indel_file
@@ -157,7 +169,10 @@ process prepare_for_readcount {
     publishDir params.output_dir, 
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     path snp_file
 
@@ -179,7 +194,10 @@ process bam_readcount {
     publishDir params.output_dir,
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     path reference
     path site_list
@@ -212,7 +230,10 @@ process fpfilter {
     publishDir params.output_dir, 
                mode: "copy", 
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     path snp_file
     path readcount_file
@@ -237,7 +258,10 @@ process highconfidence {
                pattern: "somaticsniper_${params.sample_name}*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
-
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
     input:
     path fp_pass
 
