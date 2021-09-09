@@ -18,18 +18,20 @@ process bam_somaticsniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "somaticsniper_${params.sample_name}.vcf",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     path tumor
     path normal
     path reference
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf"
+    path "somaticsniper_${params.sample_name}.vcf", emit: bam_somaticsniper
     path ".command.*"
 
     """
@@ -59,17 +61,19 @@ process samtools_pileup {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "raw_${type}_${params.sample_name}.pileup",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     tuple val(type), path(bam)
     path reference
 
     output:
-    tuple val(type), path("raw_${type}_${params.sample_name}.pileup")
+    tuple val(type), path("raw_${type}_${params.sample_name}.pileup"), emit: raw_pileup
     path ".command.*"
 
     """
@@ -94,11 +98,12 @@ process samtools_varfilter {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     tuple val(type), path(raw_pileup)
 
     output:
-    tuple val(type), path("${type}_filt_${params.sample_name}.pileup")
+    tuple val(type), path("${type}_filt_${params.sample_name}.pileup"), emit: filtered_pileup
     path ".command.*"
 
     """
@@ -122,12 +127,13 @@ process snpfilter_normal {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     path snp_file
     path indel_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal"
+    path "somaticsniper_${params.sample_name}.vcf_normal", emit: vcf_normal
     path ".command.*"
 
     """
@@ -150,12 +156,13 @@ process snpfilter_tumor {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     path snp_file
     path indel_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter"
+    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter", emit: vcf_tumor
     path ".command.*"
 
     """
@@ -178,11 +185,12 @@ process prepare_for_readcount {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     path snp_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos"
+    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos", emit: SNPfilter
     path ".command.*"
 
     """
@@ -204,6 +212,7 @@ process bam_readcount {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     path reference
     path site_list
@@ -211,7 +220,7 @@ process bam_readcount {
     path tumor_index
 
     output:
-    path "somaticsniper_${params.sample_name}.readcount"
+    path "somaticsniper_${params.sample_name}.readcount", emit: readcount
     path ".command.*"
 
     // tumor index file not explicitly passed to bam-readcount,
@@ -241,6 +250,7 @@ process fpfilter {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     path snp_file
     path readcount_file
@@ -270,6 +280,7 @@ process highconfidence {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
     input:
     path fp_pass
 
@@ -288,3 +299,4 @@ process highconfidence {
         --out-file "somaticsniper_${params.sample_name}_hc.vcf"
     """
 }
+

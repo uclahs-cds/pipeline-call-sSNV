@@ -5,13 +5,12 @@ include { compress_vcf; index_vcf } from './common'
 workflow somaticsniper {
     main:
         bam_somaticsniper(params.tumor, params.normal, params.reference)
-
         ch_samtools_pileup_bams = channel.fromList([['tumor', params.tumor], ['normal', params.normal]])
         samtools_pileup(ch_samtools_pileup_bams, params.reference)
-        samtools_varfilter(samtools_pileup.out)
+        samtools_varfilter(samtools_pileup.out.raw_pileup)
 
         // tumor and normal need to be processed seperately.
-        samtools_varfilter.out
+        samtools_varfilter.out.filtered_pileup
             .branch {
                 normal: it[0] == "normal"
                         return it[1]
@@ -20,11 +19,11 @@ workflow somaticsniper {
             }
             .set { ch_snpfilter }
         
-        snpfilter_normal(bam_somaticsniper.out, ch_snpfilter.normal)
-        snpfilter_tumor(snpfilter_normal.out, ch_snpfilter.tumor)
-        prepare_for_readcount(snpfilter_tumor.out)
-        bam_readcount(params.reference, prepare_for_readcount.out, params.tumor, "${params.tumor}.bai")
-        fpfilter(snpfilter_tumor.out, bam_readcount.out)
+        snpfilter_normal(bam_somaticsniper.out.bam_somaticsniper, ch_snpfilter.normal)
+        snpfilter_tumor(snpfilter_normal.out.vcf_normal, ch_snpfilter.tumor)
+        prepare_for_readcount(snpfilter_tumor.out.vcf_tumor)
+        bam_readcount(params.reference, prepare_for_readcount.out.SNPfilter, params.tumor, "${params.tumor}.bai")
+        fpfilter(snpfilter_tumor.out.vcf_tumor, bam_readcount.out.readcount)
         highconfidence(fpfilter.out.fp_pass)
         compress_vcf(highconfidence.out.hc)
         index_vcf(compress_vcf.out.vcf_gz)
