@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated the GATK version from v4.2.0 to v4.2.2 
 
+### Added
+- Saved logs for the Somaticsniper workflows
+
 ## [v2.0.0] - 2021-08-19
 ### Changed
 - Allow multiple algorithms to run in one pipeline run
