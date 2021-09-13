@@ -22,7 +22,7 @@ workflow somaticsniper {
         snpfilter_normal(bam_somaticsniper.out.bam_somaticsniper, ch_snpfilter.normal)
         snpfilter_tumor(snpfilter_normal.out.vcf_normal, ch_snpfilter.tumor)
         prepare_for_readcount(snpfilter_tumor.out.vcf_tumor)
-        bam_readcount(params.reference, prepare_for_readcount.out.SNPfilter, params.tumor, "${params.tumor}.bai")
+        bam_readcount(params.reference, prepare_for_readcount.out.snp_positions, params.tumor, "${params.tumor}.bai")
         fpfilter(snpfilter_tumor.out.vcf_tumor, bam_readcount.out.readcount)
         highconfidence(fpfilter.out.fp_pass)
         compress_vcf(highconfidence.out.hc)

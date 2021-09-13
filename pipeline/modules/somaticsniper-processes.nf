@@ -18,7 +18,7 @@ process bam_somaticsniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
-               pattern: "somaticsniper_${params.sample_name}.vcf",
+               pattern: "somaticsniper_*",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -61,7 +61,7 @@ process samtools_pileup {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
-               pattern: "raw_${type}_${params.sample_name}.pileup",
+               pattern: "raw_*",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -93,6 +93,7 @@ process samtools_varfilter {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.pileup",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -122,6 +123,7 @@ process snpfilter_normal {
     container docker_image_somaticsniper
     publishDir params.output_dir, 
                mode: "copy",
+               pattern: "*.vcf_normal",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -151,6 +153,7 @@ process snpfilter_tumor {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.vcf_normal_tumor.SNPfilter",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -178,8 +181,9 @@ process snpfilter_tumor {
 // Adapt the remainder for use with bam-readcount to get SNP positions
 process prepare_for_readcount {
     container docker_image_somaticsniper
-    publishDir params.output_dir, 
+    publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.vcf_normal_tumor.SNPfilter.pos",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -190,7 +194,7 @@ process prepare_for_readcount {
     path snp_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos", emit: SNPfilter
+    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos", emit: snp_positions
     path ".command.*"
 
     """
@@ -207,6 +211,7 @@ process bam_readcount {
     container docker_image_bam_readcount
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.readcount",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -243,8 +248,9 @@ process bam_readcount {
 // Run the false positive filter
 process fpfilter {
     container docker_image_somaticsniper
-    publishDir params.output_dir, 
-               mode: "copy", 
+    publishDir params.output_dir,
+               mode: "copy",
+               pattern: "*.vcf_normal_tumor.SNPfilter.*",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
                mode: "copy",
@@ -273,7 +279,7 @@ process fpfilter {
 process highconfidence {
     container docker_image_somaticsniper
     publishDir params.output_dir,
-               pattern: "somaticsniper_${params.sample_name}*.vcf",
+               pattern: "somaticsniper_confidence_*",
                mode: "copy",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
@@ -285,8 +291,8 @@ process highconfidence {
     path fp_pass
 
     output:
-    path "somaticsniper_${params.sample_name}_hc.vcf", emit: hc
-    path "somaticsniper_${params.sample_name}_lc.vcf", emit: lc
+    path "somaticsniper_confidence_${params.sample_name}_hc.vcf", emit: hc
+    path "somaticsniper_confidence_${params.sample_name}_lc.vcf", emit: lc
     path ".command.*"
 
     """
@@ -295,8 +301,8 @@ process highconfidence {
         --min-mapping-quality 40 `# min mapping quality of the reads supporting the variant in the tumor, default 40` \
         --min-somatic-score 40 `# minimum somatic score, default 40` \
         --snp-file $fp_pass \
-        --lq-output "somaticsniper_${params.sample_name}_lc.vcf" \
-        --out-file "somaticsniper_${params.sample_name}_hc.vcf"
+        --lq-output "somaticsniper_confidence_${params.sample_name}_lc.vcf" \
+        --out-file "somaticsniper_confidence_${params.sample_name}_hc.vcf"
     """
 }
 
