@@ -7,15 +7,15 @@ log.info """\
 Docker Images:
 - docker_image_mutect2:           ${docker_image_mutect2}
 Mutect2 Options:
-- split_intervals_extra_args:     ${params.split_intervals_extra_args}
+- run_SplitIntervals_GATK_extra_args:     ${params.run_SplitIntervals_GATK_extra_args}
 - mutect2_extra_args:             ${params.mutect2_extra_args}
-- filter_mutect_calls_extra_args: ${params.filter_mutect_calls_extra_args}
+- run_FilterMutectCalls_GATK_extra_args: ${params.run_FilterMutectCalls_GATK_extra_args}
 - gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
 - scatter_count:                  ${params.scatter_count}
 - intervals:                      ${params.intervals}
 """
 
-process split_intervals {
+process run_SplitIntervals_GATK {
     container docker_image_mutect2
 
     publishDir params.output_dir,
@@ -44,13 +44,13 @@ process split_intervals {
         -R $reference \
         -L $intervals \
         -scatter ${params.scatter_count} \
-        ${params.split_intervals_extra_args} \
+        ${params.run_SplitIntervals_GATK_extra_args} \
         -O interval-files
     """
 }
 
 
-process m2 {
+process call_sSNVInAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
     publishDir params.output_dir,
@@ -99,7 +99,7 @@ process m2 {
     """
 }
 
-process m2_non_canonical {
+process call_sSNVInNonAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
     publishDir params.output_dir,
@@ -146,7 +146,7 @@ process m2_non_canonical {
     """
 }
 
-process merge_vcfs {
+process run_MergeVcfs_GATK {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
@@ -173,7 +173,7 @@ process merge_vcfs {
     """
 }
 
-process merge_mutect_stats {
+process run_MergeMutectStats_GATK {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
@@ -199,7 +199,7 @@ process merge_mutect_stats {
     """
 }
 
-process filter_mutect_calls {
+process run_FilterMutectCalls_GATK {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
@@ -229,11 +229,11 @@ process filter_mutect_calls {
         -R $reference \
         -V $unfiltered \
         -O filtered.vcf.gz \
-        ${params.filter_mutect_calls_extra_args}
+        ${params.run_FilterMutectCalls_GATK_extra_args}
     """
 }
 
-process filter_vcf_pass {
+process filter_VCF {
     container "ubuntu:20.04"
     publishDir params.output_dir,
                mode: "copy",

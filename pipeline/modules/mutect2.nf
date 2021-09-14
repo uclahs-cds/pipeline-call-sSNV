@@ -1,6 +1,6 @@
-include { split_intervals; m2; m2_non_canonical; merge_vcfs; merge_mutect_stats; filter_mutect_calls; filter_vcf_pass } from './mutect2-processes'
+include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
 
-include { compress_vcf; index_vcf } from './common'
+include { compress_VCF_bgzip; index_VCF_tabix } from './common'
 
 workflow mutect2 {
     main:
@@ -11,7 +11,7 @@ workflow mutect2 {
 
             // process non-canonical chromosome regions seperately
             // as this region requires more memory than the canonical regions
-            m2_non_canonical(
+            call_sSNVInNonAssembledChromosomes_Mutect2(
                 intervals, // canonical intervals to *exclude*
                 params.tumor,
                 "${params.tumor}.bai",
@@ -22,14 +22,14 @@ workflow mutect2 {
                 params.reference_dict
             )
         }
-        split_intervals(
+        run_SplitIntervals_GATK(
             intervals,
             params.reference,
             params.reference_index,
             params.reference_dict
         )
-        m2(
-            split_intervals.out.interval_list.flatten(),
+        call_sSNVInAssembledChromosomes_Mutect2(
+            run_SplitIntervals_GATK.out.interval_list.flatten(),
             params.tumor,
             "${params.tumor}.bai",
             params.normal,
@@ -40,27 +40,27 @@ workflow mutect2 {
         )
 
         if (params.intervals) {
-            merge_vcfs(m2.out.unfiltered.collect())
-            merge_mutect_stats(m2.out.unfiltered_stats.collect())
+            run_MergeVcfs_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.collect())
+            run_MergeMutectStats_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.collect())
         } else {
-            merge_vcfs(m2.out.unfiltered.mix(m2_non_canonical.out.unfiltered).collect())
-            merge_mutect_stats(
-                m2.out.unfiltered_stats.mix(m2_non_canonical.out.unfiltered_stats).collect()
+            run_MergeVcfs_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.mix(call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered).collect())
+            run_MergeMutectStats_GATK(
+                call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.mix(call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered_stats).collect()
             )
         }
 
-        filter_mutect_calls(
+        run_FilterMutectCalls_GATK(
             params.reference,
             params.reference_index,
             params.reference_dict,
-            merge_vcfs.out.unfiltered,
-            merge_vcfs.out.unfiltered_index,
-            merge_mutect_stats.out.merged_stats
+            run_MergeVcfs_GATK.out.unfiltered,
+            run_MergeVcfs_GATK.out.unfiltered_index,
+            run_MergeMutectStats_GATK.out.merged_stats
         )
-        filter_vcf_pass(filter_mutect_calls.out.filtered)
-        compress_vcf(filter_vcf_pass.out.mutect2_vcf)
-        index_vcf(compress_vcf.out.vcf_gz)
+        filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
+        compress_VCF_bgzip(filter_VCF.out.mutect2_vcf)
+        index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
     emit:
-        compress_vcf.out.vcf_gz
-        index_vcf.out.vcf_gz_tbi
+        compress_VCF_bgzip.out.vcf_gz
+        index_VCF_tabix.out.vcf_gz_tbi
 }

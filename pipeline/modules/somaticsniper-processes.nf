@@ -14,7 +14,7 @@ Docker Images:
 """
 
 // Call SomaticSniper
-process bam_somaticsniper {
+process call_sSNV_SomaticSniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
@@ -57,7 +57,7 @@ process bam_somaticsniper {
 // Generate pileup files using samtools. Include some basic base and mapping
 // quality filters, and output only variants to pileup.
 // We are using a specific older version of samtools (v0.1.6) packaged with SomaticSniper.
-process samtools_pileup {
+process convert_BAM2Pileup_SAMtools {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
@@ -89,7 +89,7 @@ process samtools_pileup {
 // Filter pileup (from both normal.bam and tumor.bam) using vcfutils.pl varFilter,
 // then only keep indels with a QUAL>20
 // We are using samtools.pl which is packaged with SomaticSniper.
-process samtools_varfilter {
+process create_IndelCandidate_SAMtools {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
@@ -119,7 +119,7 @@ process samtools_varfilter {
 
 
 // Remove potential false positive SNVs close to Indels detected in the pileup data
-process snpfilter_normal {
+process apply_NormalIndelFilter_SomaticSniper {
     container docker_image_somaticsniper
     publishDir params.output_dir, 
                mode: "copy",
@@ -149,7 +149,7 @@ process snpfilter_normal {
 
 
 // Remove potential false positive SNVs close to Indels detected in the pileup data
-process snpfilter_tumor {
+process apply_TumorIndelFilter_SomaticSniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
@@ -179,7 +179,7 @@ process snpfilter_tumor {
 
 
 // Adapt the remainder for use with bam-readcount to get SNP positions
-process prepare_for_readcount {
+process create_ReadCountPosition_SomaticSniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
@@ -207,7 +207,7 @@ process prepare_for_readcount {
 
 // Run bam-readcount
 // Recommend to use the same mapping quality -q setting as SomaticSniper
-process bam_readcount {
+process generate_ReadCount_bam_readcount {
     container docker_image_bam_readcount
     publishDir params.output_dir,
                mode: "copy",
@@ -246,7 +246,7 @@ process bam_readcount {
 
 
 // Run the false positive filter
-process fpfilter {
+process filter_FalsePositive_SomaticSniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
@@ -276,7 +276,7 @@ process fpfilter {
 
 
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
-process highconfidence {
+process call_HighConfidenceSNV_SomaticSniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                pattern: "somaticsniper_confidence_*",

@@ -13,7 +13,7 @@ Strelka2 Options:
 """
 
 process manta {
-    container docker_image_manta
+    container docker_image_call_sIndel_Manta
     publishDir params.output_dir,
                mode: "copy",
                pattern: "MantaWorkflow/results",
@@ -51,7 +51,7 @@ process manta {
     """
 }
 
-process strelka2_somatic {
+process call_sSNV_Strelka2 {
     container docker_image_strelka2
     publishDir params.output_dir,
                mode: "copy",
@@ -93,7 +93,7 @@ process strelka2_somatic {
     """
 }
 
-process filter_vcf_pass {
+process filter_VCF {
     container docker_image_strelka2
     publishDir params.output_dir,
                mode: "copy",
