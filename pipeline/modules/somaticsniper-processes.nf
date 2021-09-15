@@ -18,7 +18,12 @@ process bam_somaticsniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "somaticsniper_*",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -26,7 +31,8 @@ process bam_somaticsniper {
     path reference
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf"
+    path "somaticsniper_${params.sample_name}.vcf", emit: bam_somaticsniper
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -55,14 +61,20 @@ process samtools_pileup {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "raw_*",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     tuple val(type), path(bam)
     path reference
 
     output:
-    tuple val(type), path("raw_${type}_${params.sample_name}.pileup")
+    tuple val(type), path("raw_${type}_${params.sample_name}.pileup"), emit: raw_pileup
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -81,13 +93,19 @@ process samtools_varfilter {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.pileup",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     tuple val(type), path(raw_pileup)
 
     output:
-    tuple val(type), path("${type}_filt_${params.sample_name}.pileup")
+    tuple val(type), path("${type}_filt_${params.sample_name}.pileup"), emit: filtered_pileup
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -105,14 +123,20 @@ process snpfilter_normal {
     container docker_image_somaticsniper
     publishDir params.output_dir, 
                mode: "copy",
+               pattern: "*.vcf_normal",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
     path indel_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal"
+    path "somaticsniper_${params.sample_name}.vcf_normal", emit: vcf_normal
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -129,14 +153,20 @@ process snpfilter_tumor {
     container docker_image_somaticsniper
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.vcf_normal_tumor.SNPfilter",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
     path indel_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter"
+    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter", emit: vcf_tumor
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -151,15 +181,21 @@ process snpfilter_tumor {
 // Adapt the remainder for use with bam-readcount to get SNP positions
 process prepare_for_readcount {
     container docker_image_somaticsniper
-    publishDir params.output_dir, 
+    publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.vcf_normal_tumor.SNPfilter.pos",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos"
+    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos", emit: snp_positions
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -175,7 +211,12 @@ process bam_readcount {
     container docker_image_bam_readcount
     publishDir params.output_dir,
                mode: "copy",
+               pattern: "*.readcount",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path reference
@@ -184,7 +225,8 @@ process bam_readcount {
     path tumor_index
 
     output:
-    path "somaticsniper_${params.sample_name}.readcount"
+    path "somaticsniper_${params.sample_name}.readcount", emit: readcount
+    path ".command.*"
 
     // tumor index file not explicitly passed to bam-readcount,
     // but it needs to be in the working directory otherwise bam-readcount will fail
@@ -206,9 +248,14 @@ process bam_readcount {
 // Run the false positive filter
 process fpfilter {
     container docker_image_somaticsniper
-    publishDir params.output_dir, 
-               mode: "copy", 
+    publishDir params.output_dir,
+               mode: "copy",
+               pattern: "*.vcf_normal_tumor.SNPfilter.*",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -217,6 +264,7 @@ process fpfilter {
     output:
     path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.fp_pass", emit: fp_pass
     path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.fp_fail", emit: fp_fail
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -234,6 +282,10 @@ process highconfidence {
                pattern: "somaticsniper_${params.sample_name}*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
+    publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
     input:
     path fp_pass
@@ -241,6 +293,7 @@ process highconfidence {
     output:
     path "somaticsniper_${params.sample_name}_hc.vcf", emit: hc
     path "somaticsniper_${params.sample_name}_lc.vcf", emit: lc
+    path ".command.*"
 
     """
     set -euo pipefail
@@ -252,3 +305,4 @@ process highconfidence {
         --out-file "somaticsniper_${params.sample_name}_hc.vcf"
     """
 }
+
