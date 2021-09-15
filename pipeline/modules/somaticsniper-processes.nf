@@ -279,7 +279,7 @@ process fpfilter {
 process highconfidence {
     container docker_image_somaticsniper
     publishDir params.output_dir,
-               pattern: "somaticsniper_confidence_*",
+               pattern: "somaticsniper_${params.sample_name}*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
@@ -291,8 +291,8 @@ process highconfidence {
     path fp_pass
 
     output:
-    path "somaticsniper_confidence_${params.sample_name}_hc.vcf", emit: hc
-    path "somaticsniper_confidence_${params.sample_name}_lc.vcf", emit: lc
+    path "somaticsniper_${params.sample_name}_hc.vcf", emit: hc
+    path "somaticsniper_${params.sample_name}_lc.vcf", emit: lc
     path ".command.*"
 
     """
