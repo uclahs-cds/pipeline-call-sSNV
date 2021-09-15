@@ -301,8 +301,8 @@ process highconfidence {
         --min-mapping-quality 40 `# min mapping quality of the reads supporting the variant in the tumor, default 40` \
         --min-somatic-score 40 `# minimum somatic score, default 40` \
         --snp-file $fp_pass \
-        --lq-output "somaticsniper_confidence_${params.sample_name}_lc.vcf" \
-        --out-file "somaticsniper_confidence_${params.sample_name}_hc.vcf"
+        --lq-output "somaticsniper_${params.sample_name}_lc.vcf" \
+        --out-file "somaticsniper_${params.sample_name}_hc.vcf"
     """
 }
 
