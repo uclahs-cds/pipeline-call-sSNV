@@ -42,10 +42,10 @@ log.info """\
         
     Tools Used:
     - samtools: docker_image_samtools: ${docker_image_samtools}
-    - docker_image_somaticsniper:   ${docker_image_somaticsniper}
-    - docker_image_bam_readcount:   ${docker_image_bam_readcount}
-    - docker_image_strelka2:  ${docker_image_strelka2}
-    - docker_image_manta:     ${docker_image_manta}
+    - docker_image_somaticsniper: ${docker_image_somaticsniper}
+    - docker_image_bam_readcount: ${docker_image_bam_readcount}
+    - docker_image_strelka2: ${docker_image_strelka2}
+    - docker_image_manta: ${docker_image_manta}
     
 """
 
