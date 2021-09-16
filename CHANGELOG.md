@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Saved logs for the Somaticsniper workflows
+- Add GPL2 license.
 
 ## [v2.0.0] - 2021-08-19
 ### Changed
