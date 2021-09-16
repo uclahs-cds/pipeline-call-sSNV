@@ -279,7 +279,7 @@ process filter_FalsePositive_SomaticSniper {
 process call_HighConfidenceSNV_SomaticSniper {
     container docker_image_somaticsniper
     publishDir params.output_dir,
-               pattern: "somaticsniper_confidence_*",
+               pattern: "somaticsniper_${params.sample_name}*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
     publishDir params.output_log_dir,
@@ -291,8 +291,8 @@ process call_HighConfidenceSNV_SomaticSniper {
     path fp_pass
 
     output:
-    path "somaticsniper_confidence_${params.sample_name}_hc.vcf", emit: hc
-    path "somaticsniper_confidence_${params.sample_name}_lc.vcf", emit: lc
+    path "somaticsniper_${params.sample_name}_hc.vcf", emit: hc
+    path "somaticsniper_${params.sample_name}_lc.vcf", emit: lc
     path ".command.*"
 
     """
@@ -301,8 +301,8 @@ process call_HighConfidenceSNV_SomaticSniper {
         --min-mapping-quality 40 `# min mapping quality of the reads supporting the variant in the tumor, default 40` \
         --min-somatic-score 40 `# minimum somatic score, default 40` \
         --snp-file $fp_pass \
-        --lq-output "somaticsniper_confidence_${params.sample_name}_lc.vcf" \
-        --out-file "somaticsniper_confidence_${params.sample_name}_hc.vcf"
+        --lq-output "somaticsniper_${params.sample_name}_lc.vcf" \
+        --out-file "somaticsniper_${params.sample_name}_hc.vcf"
     """
 }
 

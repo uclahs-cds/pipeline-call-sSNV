@@ -7,9 +7,9 @@ log.info """\
 Docker Images:
 - docker_image_mutect2:           ${docker_image_mutect2}
 Mutect2 Options:
-- run_SplitIntervals_GATK_extra_args:     ${params.run_SplitIntervals_GATK_extra_args}
+- split_intervals_extra_args:     ${params.split_intervals_extra_args}
 - mutect2_extra_args:             ${params.mutect2_extra_args}
-- run_FilterMutectCalls_GATK_extra_args: ${params.run_FilterMutectCalls_GATK_extra_args}
+- filter_mutect_calls_extra_args: ${params.filter_mutect_calls_extra_args}
 - gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
 - scatter_count:                  ${params.scatter_count}
 - intervals:                      ${params.intervals}
@@ -44,7 +44,7 @@ process run_SplitIntervals_GATK {
         -R $reference \
         -L $intervals \
         -scatter ${params.scatter_count} \
-        ${params.run_SplitIntervals_GATK_extra_args} \
+        ${params.split_intervals_extra_args} \
         -O interval-files
     """
 }
@@ -229,7 +229,7 @@ process run_FilterMutectCalls_GATK {
         -R $reference \
         -V $unfiltered \
         -O filtered.vcf.gz \
-        ${params.run_FilterMutectCalls_GATK_extra_args}
+        ${params.filter_mutect_calls_extra_args}
     """
 }
 
