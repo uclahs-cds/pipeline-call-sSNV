@@ -13,7 +13,7 @@ Strelka2 Options:
 """
 
 process manta {
-    container docker_image_call_sIndel_Manta
+    container docker_image_manta
     publishDir params.output_dir,
                mode: "copy",
                pattern: "MantaWorkflow/results",

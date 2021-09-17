@@ -8,7 +8,7 @@ Docker Images:
 - docker_image_validate_params: ${docker_image_validate_params}
 """
 
-process validate_file {
+process run_validate {
     container docker_image_validate_params
 
     input:
