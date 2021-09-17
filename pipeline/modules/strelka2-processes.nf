@@ -12,7 +12,7 @@ Strelka2 Options:
 - exome:                  ${params.exome}
 """
 
-process manta {
+process call_sIndel_Manta {
     container docker_image_manta
     publishDir params.output_dir,
                mode: "copy",
