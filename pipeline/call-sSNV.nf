@@ -26,26 +26,7 @@ log.info """\
         reference_dict: ${params.reference_dict}
 
     - output:
-        output_dir: ${params.output_dir}
-        
-    - options:
-        save_intermediate_files = ${params.save_intermediate_files}
-        // Strelka2 options
-        exome = false // adds the '--exome' option when running manta and strelka2
-        // Mutect2 options
-        split_intervals_extra_args: ${params.split_intervals_extra_args}
-        mutect2_extra_args: ${params.mutect2_extra_args}
-        filter_mutect_calls_extra_args: ${params.filter_mutect_calls_extra_args}
-        gatk_command_mem_diff: ${params.gatk_command_mem_diff}
-        scatter_count: ${params.scatter_count}
-        intervals: ${params.intervals}
-        
-    Tools Used:
-    - docker_image_samtools: ${docker_image_samtools}
-    - docker_image_somaticsniper: ${docker_image_somaticsniper}
-    - docker_image_bam_readcount: ${docker_image_bam_readcount}
-    - docker_image_strelka2: ${docker_image_strelka2}
-    - docker_image_manta: ${docker_image_manta}
+        output_dir: ${params.output_dir}      
     
 """
 
