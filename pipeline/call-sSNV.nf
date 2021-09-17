@@ -25,7 +25,7 @@ log.info """\
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
 
-    - ouput:
+    - output:
         output_dir: ${params.output_dir}
         
     - options:
@@ -41,7 +41,7 @@ log.info """\
         intervals: ${params.intervals}
         
     Tools Used:
-    - samtools: docker_image_samtools: ${docker_image_samtools}
+    - docker_image_samtools: ${docker_image_samtools}
     - docker_image_somaticsniper: ${docker_image_somaticsniper}
     - docker_image_bam_readcount: ${docker_image_bam_readcount}
     - docker_image_strelka2: ${docker_image_strelka2}
