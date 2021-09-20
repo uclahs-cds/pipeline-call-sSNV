@@ -1,3 +1,5 @@
+#!/usr/bin/env nextflow
+
 def docker_image_strelka2 = "blcdsdockerregistry/call-ssnv:strelka2-v2.9.10"
 def docker_image_manta = "blcdsdockerregistry/call-ssnv:manta-v1.6.0"
 
