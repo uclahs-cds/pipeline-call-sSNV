@@ -26,8 +26,10 @@ log.info """\
         reference_dict: ${params.reference_dict}
 
     - output:
-        output_dir: ${params.output_dir}      
-    
+        output_dir: ${params.output_dir}  
+
+    - option:
+        save_intermediate_files: ${params.save_intermediate_files}    
 """
 
 include { validate_file } from './modules/validation'
