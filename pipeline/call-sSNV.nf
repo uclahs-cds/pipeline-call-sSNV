@@ -6,19 +6,30 @@ params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
 log.info """\
-------------------------------------
-C A L L - S S N V    P I P E L I N E
-------------------------------------
-Parameters:
-- sample_name:             ${params.sample_name}
-- algorithm:               ${params.algorithm}
-- tumor:                   ${params.tumor}
-- normal:                  ${params.normal}
-- reference:               ${params.reference}
-- reference_index:         ${params.reference_index}
-- reference_dict:          ${params.reference_dict}
-- output_dir:              ${params.output_dir}
-- save_intermediate_files: ${params.save_intermediate_files}
+    ------------------------------------
+    C A L L - S S N V    P I P E L I N E
+    ------------------------------------
+    Boutros Lab
+
+    Current Configuration:
+    - pipeline:
+        name: ${workflow.manifest.name}
+        version: ${workflow.manifest.version}
+    
+    - input:
+        sample_name: ${params.sample_name}
+        algorithm: ${params.algorithm}
+        tumor: ${params.tumor}
+        normal: ${params.normal}
+        reference: ${params.reference}
+        reference_index: ${params.reference_index}
+        reference_dict: ${params.reference_dict}
+
+    - output:
+        output_dir: ${params.output_dir}  
+
+    - option:
+        save_intermediate_files: ${params.save_intermediate_files}    
 """
 
 include { validate_file } from './modules/validation'
