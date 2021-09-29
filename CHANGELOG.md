@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Updated the GATK version from v4.2.0 to v4.2.2 
+- Standardizedr process names.
 
 ### Added
 - Saved logs for the Somaticsniper workflows
