@@ -1,4 +1,5 @@
 def docker_image_samtools = "blcdsdockerregistry/samtools:1.12"
+def docker_image_sha512sum = "blcdsdockerregistry/align-dna:sha512sum-1.0"
 
 log.info """\
 ====================================
@@ -53,3 +54,22 @@ process index_VCF_tabix {
     tabix -p vcf ${vcf_gz}
     """
 }
+
+process generate_sha512sum {    
+   container params.docker_image_sha512sum
+
+   publishDir path: "${checksum_output_dir}", mode: 'copy'
+
+   input:
+      file(input_file)
+      val(checksum_output_dir)
+
+   output:
+      file("${input_file.getName()}.sha512")
+
+   script:
+   """
+   set -euo pipefail
+   sha512sum ${input_file} > ${input_file.getName()}.sha512
+   """
+   }
