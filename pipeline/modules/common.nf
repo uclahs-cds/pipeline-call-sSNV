@@ -7,6 +7,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_samtools: ${docker_image_samtools}
+- docker_image_sha512sum: ${docker_image_sha512sum}
 """
 
 process compress_VCF_bgzip {
@@ -57,19 +58,23 @@ process index_VCF_tabix {
 
 process generate_sha512sum {    
    container params.docker_image_sha512sum
-
-   publishDir path: "${checksum_output_dir}", mode: 'copy'
+   publishDir params.output_dir,
+               mode: "copy",
+               pattern: "*.sha512"
+   publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
    input:
-      file(input_file)
-      val(checksum_output_dir)
-
+    path vcf_gz
+    
    output:
-      file("${input_file.getName()}.sha512")
+    path"${vcf_gz}.sha512", emit:sha512
 
    script:
    """
    set -euo pipefail
-   sha512sum ${input_file} > ${input_file.getName()}.sha512
+   sha512sum ${vcf_gz} > ${vcf_gz}.sha512
    """
    }
