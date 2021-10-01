@@ -20,9 +20,15 @@ Closes #...
 - Mutect2
     - sample:    <!-- test datasets -->
     - config:    <!-- path/to/xxx.config -->
+    - output log: <!-- path/to/xxx.log -->
+    - output directory: <!-- path -->
 - SomaticSniper
     - sample:    <!-- test datasets -->
-    - config:    <!-- path/to/xxx.config -->  
+    - config:    <!-- path/to/xxx.config -->
+    - output log: <!-- path/to/xxx.log -->
+    - output directory: <!-- path -->
 - Strelka2
     - sample:    <!-- test datasets -->
-    - config:    <!-- path/to/xxx.config -->  
+    - config:    <!-- path/to/xxx.config -->
+    - output log: <!-- path/to/xxx.log -->
+    - output directory: <!-- path -->
