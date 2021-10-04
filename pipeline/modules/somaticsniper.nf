@@ -22,8 +22,13 @@ workflow somaticsniper {
         apply_NormalIndelFilter_SomaticSniper(call_sSNV_SomaticSniper.out.bam_somaticsniper, ch_snpfilter.normal)
         apply_TumorIndelFilter_SomaticSniper(apply_NormalIndelFilter_SomaticSniper.out.vcf_normal, ch_snpfilter.tumor)
         create_ReadCountPosition_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor)
-        generate_ReadCount_bam_readcount(params.reference, create_ReadCountPosition_SomaticSniper.out.snp_positions, params.tumor, "${params.tumor}.bai")
-        filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
+        generate_ReadCount_bam_readcount(
+            params.reference,
+            create_ReadCountPosition_SomaticSniper.out.snp_positions,
+            params.tumor, "${params.tumor}.bai")
+        filter_FalsePositive_SomaticSniper(
+            apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, 
+            generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
         compress_VCF_bgzip(call_HighConfidenceSNV_SomaticSniper.out.hc)
         index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)

@@ -41,11 +41,16 @@ workflow mutect2 {
 
         if (params.intervals) {
             run_MergeVcfs_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.collect())
-            run_MergeMutectStats_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.collect())
-        } else {
-            run_MergeVcfs_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.mix(call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered).collect())
             run_MergeMutectStats_GATK(
-                call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.mix(call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered_stats).collect()
+                call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.collect())
+        } else {
+            run_MergeVcfs_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.mix(
+                call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered
+                ).collect())
+            run_MergeMutectStats_GATK(
+                call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.mix(
+                    call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered_stats
+                    ).collect()
             )
         }
 
