@@ -32,13 +32,13 @@ log.info """\
         save_intermediate_files: ${params.save_intermediate_files}    
 """
 
-include { validate_file } from './modules/validation'
+include { run_validate_PipeVal } from './modules/validation'
 include { somaticsniper } from './modules/somaticsniper'
 include { strelka2 } from './modules/strelka2'
 include { mutect2 } from './modules/mutect2'
 
 workflow {
-    validate_file(channel.fromList([
+    run_validate_PipeVal(channel.fromList([
         params.tumor,
         "${params.tumor}.bai",
         params.normal,

@@ -1,10 +1,10 @@
-include { strelka2_somatic; manta; filter_vcf_pass } from './strelka2-processes'
+include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
 
-include { compress_vcf; index_vcf } from './common'
+include { compress_VCF_bgzip; index_VCF_tabix } from './common'
 
 workflow strelka2 {
     main:
-        manta(
+        call_sIndel_Manta(
             params.tumor,
             "${params.tumor}.bai",
             params.normal,
@@ -12,19 +12,19 @@ workflow strelka2 {
             params.reference,
             "${params.reference}.fai"
         )
-        strelka2_somatic(
+        call_sSNV_Strelka2(
             params.tumor,
             "${params.tumor}.bai",
             params.normal,
             "${params.normal}.bai",
             params.reference,
             "${params.reference}.fai",
-            manta.out[0]
+            call_sIndel_Manta.out[0]
         )
-        filter_vcf_pass(strelka2_somatic.out.snvs_vcf.mix(strelka2_somatic.out.indels_vcf))
-        compress_vcf(filter_vcf_pass.out.strelka2_vcf)
-        index_vcf(compress_vcf.out.vcf_gz)
+        filter_VCF(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
+        compress_VCF_bgzip(filter_VCF.out.strelka2_vcf)
+        index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
     emit:
-        compress_vcf.out.vcf_gz
-        index_vcf.out.vcf_gz_tbi
+        compress_VCF_bgzip.out.vcf_gz
+        index_VCF_tabix.out.vcf_gz_tbi
 }

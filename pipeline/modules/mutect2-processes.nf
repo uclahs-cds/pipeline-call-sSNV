@@ -15,7 +15,7 @@ Mutect2 Options:
 - intervals:                      ${params.intervals}
 """
 
-process split_intervals {
+process run_SplitIntervals_GATK {
     container docker_image_mutect2
 
     publishDir params.output_dir,
@@ -50,7 +50,7 @@ process split_intervals {
 }
 
 
-process m2 {
+process call_sSNVInAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
     publishDir params.output_dir,
@@ -99,7 +99,7 @@ process m2 {
     """
 }
 
-process m2_non_canonical {
+process call_sSNVInNonAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
     publishDir params.output_dir,
@@ -146,7 +146,7 @@ process m2_non_canonical {
     """
 }
 
-process merge_vcfs {
+process run_MergeVcfs_GATK {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
@@ -173,7 +173,7 @@ process merge_vcfs {
     """
 }
 
-process merge_mutect_stats {
+process run_MergeMutectStats_GATK {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
@@ -199,7 +199,7 @@ process merge_mutect_stats {
     """
 }
 
-process filter_mutect_calls {
+process run_FilterMutectCalls_GATK {
     container docker_image_mutect2
     publishDir params.output_dir,
                mode: "copy",
@@ -233,7 +233,7 @@ process filter_mutect_calls {
     """
 }
 
-process filter_vcf_pass {
+process filter_VCF {
     container "ubuntu:20.04"
     publishDir params.output_dir,
                mode: "copy",

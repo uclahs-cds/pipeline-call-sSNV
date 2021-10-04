@@ -8,7 +8,7 @@ Docker Images:
 - docker_image_samtools: ${docker_image_samtools}
 """
 
-process compress_vcf {
+process compress_VCF_bgzip {
     container docker_image_samtools
     publishDir params.output_dir,
                mode: "copy",
@@ -31,7 +31,7 @@ process compress_vcf {
     """
 }
 
-process index_vcf {
+process index_VCF_tabix {
     container docker_image_samtools
     publishDir params.output_dir,
                mode: "copy",

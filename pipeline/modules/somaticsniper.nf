@@ -1,16 +1,16 @@
-include { bam_somaticsniper; samtools_pileup; samtools_varfilter; snpfilter_normal; snpfilter_tumor; prepare_for_readcount; bam_readcount; fpfilter; highconfidence } from './somaticsniper-processes'
+include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
 
-include { compress_vcf; index_vcf } from './common'
+include { compress_VCF_bgzip; index_VCF_tabix } from './common'
 
 workflow somaticsniper {
     main:
-        bam_somaticsniper(params.tumor, params.normal, params.reference)
-        ch_samtools_pileup_bams = channel.fromList([['tumor', params.tumor], ['normal', params.normal]])
-        samtools_pileup(ch_samtools_pileup_bams, params.reference)
-        samtools_varfilter(samtools_pileup.out.raw_pileup)
+        call_sSNV_SomaticSniper(params.tumor, params.normal, params.reference)
+        ch_convert_BAM2Pileup_SAMtools_bams = channel.fromList([['tumor', params.tumor], ['normal', params.normal]])
+        convert_BAM2Pileup_SAMtools(ch_convert_BAM2Pileup_SAMtools_bams, params.reference)
+        create_IndelCandidate_SAMtools(convert_BAM2Pileup_SAMtools.out.raw_pileup)
 
         // tumor and normal need to be processed seperately.
-        samtools_varfilter.out.filtered_pileup
+        create_IndelCandidate_SAMtools.out.filtered_pileup
             .branch {
                 normal: it[0] == "normal"
                         return it[1]
@@ -19,15 +19,20 @@ workflow somaticsniper {
             }
             .set { ch_snpfilter }
         
-        snpfilter_normal(bam_somaticsniper.out.bam_somaticsniper, ch_snpfilter.normal)
-        snpfilter_tumor(snpfilter_normal.out.vcf_normal, ch_snpfilter.tumor)
-        prepare_for_readcount(snpfilter_tumor.out.vcf_tumor)
-        bam_readcount(params.reference, prepare_for_readcount.out.snp_positions, params.tumor, "${params.tumor}.bai")
-        fpfilter(snpfilter_tumor.out.vcf_tumor, bam_readcount.out.readcount)
-        highconfidence(fpfilter.out.fp_pass)
-        compress_vcf(highconfidence.out.hc)
-        index_vcf(compress_vcf.out.vcf_gz)
+        apply_NormalIndelFilter_SomaticSniper(call_sSNV_SomaticSniper.out.bam_somaticsniper, ch_snpfilter.normal)
+        apply_TumorIndelFilter_SomaticSniper(apply_NormalIndelFilter_SomaticSniper.out.vcf_normal, ch_snpfilter.tumor)
+        create_ReadCountPosition_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor)
+        generate_ReadCount_bam_readcount(
+            params.reference,
+            create_ReadCountPosition_SomaticSniper.out.snp_positions,
+            params.tumor, "${params.tumor}.bai")
+        filter_FalsePositive_SomaticSniper(
+            apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, 
+            generate_ReadCount_bam_readcount.out.readcount)
+        call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
+        compress_VCF_bgzip(call_HighConfidenceSNV_SomaticSniper.out.hc)
+        index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
     emit:
-        compress_vcf.out.vcf_gz
-        index_vcf.out.vcf_gz_tbi
+        compress_VCF_bgzip.out.vcf_gz
+        index_VCF_tabix.out.vcf_gz_tbi
 }
