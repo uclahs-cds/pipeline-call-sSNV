@@ -68,13 +68,17 @@ process generate_sha512sum {
 
    input:
     path vcf_gz
+    path vcf_gz_tbi
     
    output:
-    path"${vcf_gz}.sha512", emit:sha512
+    path "${vcf_gz}.sha512", emit:vcf_sha512
+    path "${vcf_gz_tbi}.sha512", emit: tbi_sha512
+    path ".command.*"
 
    script:
    """
    set -euo pipefail
    sha512sum ${vcf_gz} > ${vcf_gz}.sha512
+   sha512sum ${vcf_gz_tbi} > ${vcf_gz_tbi}.sha512
    """
    }
