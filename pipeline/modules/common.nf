@@ -67,18 +67,15 @@ process generate_sha512sum {
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
    input:
-    path vcf_gz
-    path vcf_gz_tbi
+    path (file_for_sha512)
     
    output:
-    path "${vcf_gz}.sha512", emit:vcf_sha512
-    path "${vcf_gz_tbi}.sha512", emit: tbi_sha512
+    path("*.sha512"), emit: sha512sum
     path ".command.*"
 
    script:
    """
    set -euo pipefail
-   sha512sum ${vcf_gz} > ${vcf_gz}.sha512
-   sha512sum ${vcf_gz_tbi} > ${vcf_gz_tbi}.sha512
+   sha512sum ${file_for_sha512} > ${file_for_sha512}.sha512
    """
    }

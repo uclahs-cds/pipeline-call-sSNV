@@ -24,11 +24,10 @@ workflow strelka2 {
         filter_VCF(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
         compress_VCF_bgzip(filter_VCF.out.strelka2_vcf)
         index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
-        generate_sha512sum(compress_VCF_bgzip.out.vcf_gz, index_VCF_tabix.out.vcf_gz_tbi)
-        
+        file_for_sha512 = compress_VCF_bgzip.out.vcf_gz.mix(index_VCF_tabix.out.vcf_gz_tbi)
+        generate_sha512sum(file_for_sha512)
     emit:
         compress_VCF_bgzip.out.vcf_gz
         index_VCF_tabix.out.vcf_gz_tbi
-        generate_sha512sum.out.vcf_sha512
-        generate_sha512sum.out.tbi_sha512
+        generate_sha512sum.out.sha512sum
 }
