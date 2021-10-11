@@ -71,5 +71,4 @@ workflow mutect2 {
     emit:
         compress_VCF_bgzip.out.vcf_gz
         index_VCF_tabix.out.vcf_gz_tbi
-        generate_sha512sum.out.sha512sum
 }

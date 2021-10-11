@@ -60,7 +60,7 @@ process generate_sha512sum {
    container params.docker_image_sha512sum
    publishDir params.output_dir,
                mode: "copy",
-               pattern: "*.sha512"
+               pattern: "${file_for_sha512}.sha512"
    publishDir params.output_log_dir,
                mode: "copy",
                pattern: ".command.*",
@@ -70,7 +70,7 @@ process generate_sha512sum {
     path (file_for_sha512)
     
    output:
-    path("*.sha512"), emit: sha512sum
+    path("${file_for_sha512}.sha512"), emit: sha512sum
     path ".command.*"
 
    script:
