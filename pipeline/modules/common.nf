@@ -1,4 +1,5 @@
 def docker_image_samtools = "blcdsdockerregistry/samtools:1.12"
+def docker_image_sha512sum = "blcdsdockerregistry/align-dna:sha512sum-1.0"
 
 log.info """\
 ====================================
@@ -6,6 +7,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_samtools: ${docker_image_samtools}
+- docker_image_sha512sum: ${docker_image_sha512sum}
 """
 
 process compress_VCF_bgzip {
@@ -53,3 +55,27 @@ process index_VCF_tabix {
     tabix -p vcf ${vcf_gz}
     """
 }
+
+process generate_sha512sum {    
+   container params.docker_image_sha512sum
+   publishDir params.output_dir,
+               mode: "copy",
+               pattern: "${file_for_sha512}.sha512"
+   publishDir params.output_log_dir,
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+
+   input:
+    path (file_for_sha512)
+    
+   output:
+    path("${file_for_sha512}.sha512"), emit: sha512sum
+    path ".command.*"
+
+   script:
+   """
+   set -euo pipefail
+   sha512sum ${file_for_sha512} > ${file_for_sha512}.sha512
+   """
+   }

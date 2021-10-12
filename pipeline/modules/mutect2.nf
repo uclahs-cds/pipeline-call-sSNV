@@ -1,6 +1,6 @@
 include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
 
-include { compress_VCF_bgzip; index_VCF_tabix } from './common'
+include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
 workflow mutect2 {
     main:
@@ -65,6 +65,9 @@ workflow mutect2 {
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
         compress_VCF_bgzip(filter_VCF.out.mutect2_vcf)
         index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
+
+        file_for_sha512 = compress_VCF_bgzip.out.vcf_gz.mix(index_VCF_tabix.out.vcf_gz_tbi)
+        generate_sha512sum(file_for_sha512)
     emit:
         compress_VCF_bgzip.out.vcf_gz
         index_VCF_tabix.out.vcf_gz_tbi
