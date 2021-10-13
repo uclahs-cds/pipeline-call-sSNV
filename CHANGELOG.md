@@ -14,11 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Saved logs for the Somaticsniper workflows
 - Add GPL2 license.
 - Add pipeline information to the main script.
-<<<<<<< HEAD
-- Add F32.config.
-=======
 - Add the checksum file for the final output.
->>>>>>> main
 
 ## [v2.0.0] - 2021-08-19
 ### Changed
