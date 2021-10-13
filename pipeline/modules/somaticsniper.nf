@@ -32,6 +32,8 @@ workflow somaticsniper {
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
         compress_VCF_bgzip(call_HighConfidenceSNV_SomaticSniper.out.hc)
         index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
+        file_for_sha512 = compress_VCF_bgzip.out.vcf_gz.mix(index_VCF_tabix.out.vcf_gz_tbi)
+        generate_sha512sum(file_for_sha512)
     emit:
         compress_VCF_bgzip.out.vcf_gz
         index_VCF_tabix.out.vcf_gz_tbi
