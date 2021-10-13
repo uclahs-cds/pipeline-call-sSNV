@@ -1,6 +1,6 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
 
-include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
+include { compress_VCF_bgzip; index_VCF_tabix } from './common'
 
 workflow strelka2 {
     main:

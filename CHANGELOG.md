@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated the GATK version from v4.2.0 to v4.2.2 
 - Standardized process names.
+- Changed config filenames to F2, F72, and M64.
 
 ### Added
 - Saved logs for the Somaticsniper workflows
 - Add GPL2 license.
 - Add pipeline information to the main script.
 - Add the checksum file for the final output.
+- Add config file for F32 node.
 
 ## [v2.0.0] - 2021-08-19
 ### Changed
