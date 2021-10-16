@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Added
-- Add groups to docker option.
+- Add groups to docker run options.
 
 ### Fixed
 - Add missing lines of checksum process.
@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.0] - 2021-10-13 
 ### Changed
-- Update the GATK version from v4.2.0 to v4.2.2.
+- Update the GATK version from 4.2.0 to 4.2.2.
 - Standardize process names.
 - Change config filenames to F2, F72, and M64.
 
@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add GPL2 license.
 - Add pipeline information to the main script.
 - Add the checksum file for the final output.
-- Add config file for F32 node.
+- Add the config file for F32 node.
 
 ## [v2.0.0] - 2021-08-19
 ### Changed
@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add pattern to strelka2's filter_vcf_pass publishDir.
 
 ### Fixed
-- nextflow.config throwing Exception: string interpolation required double quotes.
+- Fix nextflow.config throwing Exception: string interpolation required double quotes.
 
 ## [v1.5.0] - 2021-06-18
 ### Changed
@@ -51,13 +51,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update branch name in CICD-base.yaml from master to main.
 
 ### Added
-- Ability to specify extra arguments for all GATK commands in the Mutect2 workflow.
-- Steps to index and compress final VCF files.
+- Specify extra arguments for all GATK commands in the Mutect2 workflow.
+- Add steps to index and compress final VCF files.
 
 ## [v1.4.0] - 2021-04-27
 ### Added
-- Saved logs for the Strelka2 and Mutect2 workflows.
-- Created and backfilled CHANGELOG.
+- Save logs for the Strelka2 and Mutect2 workflows.
+- Create and backfill CHANGELOG.
 
 ### Changed
 - Mutect2 calls are now scattered by chromosomes.
@@ -80,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2020-11-24
 ### Fixed
-- Fixed bug to correctly filter pileup file in varFilter step.
+- Fix bug to correctly filter pileup file in varFilter step.
 
 ## [0.0.1-beta] - 2020-11-12
 ### Added
