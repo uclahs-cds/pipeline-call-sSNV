@@ -10,10 +10,10 @@ Docker Images:
 
 process compress_VCF_bgzip {
     container docker_image_samtools
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/output",
                mode: "copy",
                pattern: "*.vcf.gz"
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -33,10 +33,10 @@ process compress_VCF_bgzip {
 
 process index_VCF_tabix {
     container docker_image_samtools
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/output",
                mode: "copy",
                pattern: "*.vcf.gz.tbi"
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -56,13 +56,13 @@ process index_VCF_tabix {
 
 process generate_sha512sum {    
    container params.docker_image_sha512sum
-   publishDir params.output_dir,
-               mode: "copy",
-               pattern: "${file_for_sha512}.sha512"
-   publishDir params.output_log_dir,
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+   publishDir path: "${params.output_dir}/output",
+              mode: "copy",
+              pattern: "${file_for_sha512}.sha512"
+   publishDir path: "${params.output_log_dir}/process-log",
+              mode: "copy",
+              pattern: ".command.*",
+              saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
 
    input:
     path (file_for_sha512)
