@@ -14,11 +14,11 @@ Strelka2 Options:
 
 process call_sIndel_Manta {
     container docker_image_manta
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "MantaWorkflow/results",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -53,11 +53,11 @@ process call_sIndel_Manta {
 
 process call_sSNV_Strelka2 {
     container docker_image_strelka2
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow/results",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -95,11 +95,11 @@ process call_sSNV_Strelka2 {
 
 process filter_VCF {
     container docker_image_strelka2
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/output",
                mode: "copy",
                pattern: "strelka2_${params.sample_name}_${name}_pass.vcf",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }

@@ -16,11 +16,11 @@ Docker Images:
 // Call SomaticSniper
 process call_sSNV_SomaticSniper {
     container docker_image_somaticsniper
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "somaticsniper_*",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -59,11 +59,11 @@ process call_sSNV_SomaticSniper {
 // We are using a specific older version of samtools (v0.1.6) packaged with SomaticSniper.
 process convert_BAM2Pileup_SAMtools {
     container docker_image_somaticsniper
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "raw_*",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -91,11 +91,11 @@ process convert_BAM2Pileup_SAMtools {
 // We are using samtools.pl which is packaged with SomaticSniper.
 process create_IndelCandidate_SAMtools {
     container docker_image_somaticsniper
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "*.pileup",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -121,11 +121,11 @@ process create_IndelCandidate_SAMtools {
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process apply_NormalIndelFilter_SomaticSniper {
     container docker_image_somaticsniper
-    publishDir params.output_dir, 
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "*.vcf_normal",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -151,11 +151,11 @@ process apply_NormalIndelFilter_SomaticSniper {
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process apply_TumorIndelFilter_SomaticSniper {
     container docker_image_somaticsniper
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "*.vcf_normal_tumor.SNPfilter",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -181,11 +181,11 @@ process apply_TumorIndelFilter_SomaticSniper {
 // Adapt the remainder for use with bam-readcount to get SNP positions
 process create_ReadCountPosition_SomaticSniper {
     container docker_image_somaticsniper
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "*.vcf_normal_tumor.SNPfilter.pos",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -209,11 +209,11 @@ process create_ReadCountPosition_SomaticSniper {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
     container docker_image_bam_readcount
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "*.readcount",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -248,11 +248,11 @@ process generate_ReadCount_bam_readcount {
 // Run the false positive filter
 process filter_FalsePositive_SomaticSniper {
     container docker_image_somaticsniper
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/intermediate/${task.process)}",
                mode: "copy",
                pattern: "*.vcf_normal_tumor.SNPfilter.*",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -278,11 +278,11 @@ process filter_FalsePositive_SomaticSniper {
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process call_HighConfidenceSNV_SomaticSniper {
     container docker_image_somaticsniper
-    publishDir params.output_dir,
+    publishDir path: "${params.output_dir}/output",
                pattern: "somaticsniper_${params.sample_name}*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.output_log_dir}/process-log",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
