@@ -235,7 +235,7 @@ process run_FilterMutectCalls_GATK {
 
 process filter_VCF {
     container "ubuntu:20.04"
-    publishDir path: "${params.output_path}/output",
+    publishDir path: "${params.output_dir}/${params.mutect2_version}/output",
                mode: "copy",
                pattern: "mutect2_${params.sample_name}_filtered_pass.vcf",
                enabled: params.save_intermediate_files

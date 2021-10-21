@@ -95,7 +95,7 @@ process call_sSNV_Strelka2 {
 
 process filter_VCF {
     container docker_image_strelka2
-    publishDir path: "${params.output_path}/output",
+    publishDir path: "${params.output_dir}/${params.strelka2_version}/output",
                mode: "copy",
                pattern: "strelka2_${params.sample_name}_${name}_pass.vcf",
                enabled: params.save_intermediate_files
