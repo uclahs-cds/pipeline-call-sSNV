@@ -278,7 +278,7 @@ process filter_FalsePositive_SomaticSniper {
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process call_HighConfidenceSNV_SomaticSniper {
     container docker_image_somaticsniper
-    publishDir path: "${params.output_dir}/output",
+    publishDir path: "${params.output_path}/output",
                pattern: "somaticsniper_${params.sample_name}*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
