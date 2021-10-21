@@ -18,7 +18,7 @@ Mutect2 Options:
 process run_SplitIntervals_GATK {
     container docker_image_mutect2
 
-    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "interval-files/*-scattered.interval_list",
                enabled: params.save_intermediate_files
@@ -53,7 +53,7 @@ process run_SplitIntervals_GATK {
 process call_sSNVInAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
-    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "unfiltered*",
                enabled: params.save_intermediate_files
@@ -102,7 +102,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 process call_sSNVInNonAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
-    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "unfiltered*",
                enabled: params.save_intermediate_files
@@ -148,7 +148,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
 
 process run_MergeVcfs_GATK {
     container docker_image_mutect2
-    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz*",
                enabled: params.save_intermediate_files
@@ -175,7 +175,7 @@ process run_MergeVcfs_GATK {
 
 process run_MergeMutectStats_GATK {
     container docker_image_mutect2
-    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz.stats",
                enabled: params.save_intermediate_files
@@ -201,7 +201,7 @@ process run_MergeMutectStats_GATK {
 
 process run_FilterMutectCalls_GATK {
     container docker_image_mutect2
-    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.mutect2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "filtered.vcf.gz",
                enabled: params.save_intermediate_files

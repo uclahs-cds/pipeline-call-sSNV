@@ -14,7 +14,7 @@ Strelka2 Options:
 
 process call_sIndel_Manta {
     container docker_image_manta
-    publishDir path: "${params.output_dir}/${params.strelka2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.strelka2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "MantaWorkflow/results",
                enabled: params.save_intermediate_files
@@ -53,7 +53,7 @@ process call_sIndel_Manta {
 
 process call_sSNV_Strelka2 {
     container docker_image_strelka2
-    publishDir path: "${params.output_dir}/${params.strelka2_version}/intermediate/${task.process)}",
+    publishDir path: "${params.output_dir}/${params.strelka2_version}/intermediate/${task.process}",
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow/results",
                enabled: params.save_intermediate_files
