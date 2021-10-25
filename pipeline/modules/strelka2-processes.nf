@@ -14,14 +14,14 @@ Strelka2 Options:
 
 process call_sIndel_Manta {
     container docker_image_manta
-    publishDir path: "${params.output_dir}/${params.strelka2_version}/intermediate/${task.process}",
+    publishDir path: "$${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "MantaWorkflow/results",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.output_log_dir}/process-log/${params.strelka2_version}",
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -53,14 +53,14 @@ process call_sIndel_Manta {
 
 process call_sSNV_Strelka2 {
     container docker_image_strelka2
-    publishDir path: "${params.output_dir}/${params.strelka2_version}/intermediate/${task.process}",
+    publishDir path: "$${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow/results",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.output_log_dir}/process-log/${params.strelka2_version}",
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -95,14 +95,14 @@ process call_sSNV_Strelka2 {
 
 process filter_VCF {
     container docker_image_strelka2
-    publishDir path: "${params.output_dir}/${params.strelka2_version}/output",
+    publishDir path: "$${params.workflow_output_dir}/output",
                mode: "copy",
                pattern: "strelka2_${params.sample_name}_${name}_pass.vcf",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.output_log_dir}/process-log/${params.strelka2_version}",
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     tuple val(name), path(vcf_gz)

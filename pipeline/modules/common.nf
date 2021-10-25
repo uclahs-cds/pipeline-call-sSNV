@@ -10,10 +10,10 @@ Docker Images:
 
 process compress_VCF_bgzip {
     container docker_image_samtools
-    publishDir path: "${params.output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/output",
                mode: "copy",
                pattern: "*.vcf.gz"
-    publishDir path: "${params.output_log_dir}/process-log",
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -36,7 +36,7 @@ process index_VCF_tabix {
     publishDir path: "${params.output_dir}/output",
                mode: "copy",
                pattern: "*.vcf.gz.tbi"
-    publishDir path: "${params.output_log_dir}/process-log",
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
@@ -59,7 +59,7 @@ process generate_sha512sum {
    publishDir path: "${params.output_dir}/output",
               mode: "copy",
               pattern: "${file_for_sha512}.sha512"
-   publishDir path: "${params.output_log_dir}/process-log",
+   publishDir path: "${params.workflow_output_log_dir}",
               mode: "copy",
               pattern: ".command.*",
               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
