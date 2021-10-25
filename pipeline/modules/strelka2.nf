@@ -1,7 +1,6 @@
-params{
-    workflow_output_dir = "${params.output_dir}/${params.strelka2_version}"
-    workflow_output_log_dir = "${params.output_log_dir}/process-log/${params.strelka2_version}"
-}
+params.workflow_output_dir = "${params.output_dir}/${params.strelka2_version}"
+params.workflow_output_log_dir = "${params.output_log_dir}/process-log/${params.strelka2_version}"
+
 
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
 
