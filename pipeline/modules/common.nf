@@ -16,7 +16,7 @@ process compress_VCF_bgzip {
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path vcf
@@ -39,7 +39,7 @@ process index_VCF_tabix {
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path vcf_gz
@@ -62,7 +62,7 @@ process generate_sha512sum {
    publishDir path: "${params.workflow_output_log_dir}",
               mode: "copy",
               pattern: ".command.*",
-              saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+              saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
    input:
     path (file_for_sha512)
