@@ -1,4 +1,4 @@
-params.workflow_output_dir = "${params.output_dir}/${params.somaticsniper_version}"
+params.workflow_output_dir = "${params.output_dir}/${manifest.name}-${manifest.version}/${params.sample_name}/${params.somaticsniper_version}"
 params.workflow_output_log_dir = "${params.output_log_dir}/process-log/${params.somaticsniper_version}"
 
 

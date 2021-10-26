@@ -1,4 +1,4 @@
-params.workflow_output_dir = "${params.output_dir}/${params.mutect2_version}"
+params.workflow_output_dir = "${params.output_dir}/${manifest.name}-${manifest.version}/${params.sample_name}/${params.mutect2_version}"
 params.workflow_output_log_dir = "${params.output_log_dir}/process-log/${params.mutect2_version}"
 
 include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
