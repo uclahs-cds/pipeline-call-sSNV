@@ -1,6 +1,3 @@
-params.workflow_output_dir = "${params.output_path}/${params.somaticsniper_version}"
-params.workflow_output_log_dir = "${params.output_log_dir}/process-log/${params.somaticsniper_version}"
-
 include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
 
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'

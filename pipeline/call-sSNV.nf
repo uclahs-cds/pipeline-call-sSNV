@@ -5,6 +5,7 @@ nextflow.enable.dsl=2
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
+
 log.info """\
     ------------------------------------
     C A L L - S S N V    P I P E L I N E
@@ -33,10 +34,10 @@ log.info """\
         save_intermediate_files: ${params.save_intermediate_files}    
 """
 
-include { run_validate_PipeVal } from './modules/validation'
-include { somaticsniper } from './modules/somaticsniper'
-include { strelka2 } from './modules/strelka2'
-include { mutect2 } from './modules/mutect2'
+include { run_validate_PipeVal } from './modules/validation' 
+include { somaticsniper } from './modules/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/${params.somaticsniper_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.somaticsniper_version}")
+include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "${params.output_dir}/${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.strelka2_version}")
+include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/${params.mutect2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.mutect2_version}")
 
 workflow {
     run_validate_PipeVal(channel.fromList([
