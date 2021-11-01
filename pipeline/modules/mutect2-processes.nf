@@ -18,14 +18,14 @@ Mutect2 Options:
 process run_SplitIntervals_GATK {
     container docker_image_mutect2
 
-    publishDir params.output_dir,
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "interval-files/*-scattered.interval_list",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path intervals
@@ -53,14 +53,14 @@ process run_SplitIntervals_GATK {
 process call_sSNVInAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
-    publishDir params.output_dir,
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered*",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path interval
@@ -102,14 +102,14 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 process call_sSNVInNonAssembledChromosomes_Mutect2 {
     container docker_image_mutect2
 
-    publishDir params.output_dir,
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered*",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path interval // canonical intervals to *exclude*
@@ -148,14 +148,14 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
 
 process run_MergeVcfs_GATK {
     container docker_image_mutect2
-    publishDir params.output_dir,
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz*",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path unfiltered_vcfs
@@ -175,14 +175,14 @@ process run_MergeVcfs_GATK {
 
 process run_MergeMutectStats_GATK {
     container docker_image_mutect2
-    publishDir params.output_dir,
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz.stats",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
     
     input:
     path unfiltered_stats
@@ -201,14 +201,14 @@ process run_MergeMutectStats_GATK {
 
 process run_FilterMutectCalls_GATK {
     container docker_image_mutect2
-    publishDir params.output_dir,
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "filtered.vcf.gz",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
     
     input:
     path reference
@@ -235,14 +235,14 @@ process run_FilterMutectCalls_GATK {
 
 process filter_VCF {
     container "ubuntu:20.04"
-    publishDir params.output_dir,
+    publishDir path: "path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "mutect2_${params.sample_name}_filtered_pass.vcf",
                enabled: params.save_intermediate_files
-    publishDir params.output_log_dir,
+    publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path filtered
