@@ -1,4 +1,4 @@
-def docker_image_validate_params = "blcdsdockerregistry/validate:1.0.0"
+def docker_image_validate_params = "blcdsdockerregistry/pipeval:2.1.6"
 
 log.info """\
 ------------------------------------
