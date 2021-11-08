@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Standardize the output directory.
+- Standardize timestamp according to ISO8601.
 
 ### Added
 ### Fixed
