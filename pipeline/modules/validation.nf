@@ -10,9 +10,11 @@ Docker Images:
 
 process run_validate_PipeVal {
     container docker_image_validate_params
-    publishDir path: "${params.output_dir}/validation/${task.process.replace(':', '/')}",
+
+    publishDir path: "${params.output_dir}/validation/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "*.txt"
+               pattern: "*.txt",
+               enabled: params.save_intermediate_files   
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
@@ -22,10 +24,10 @@ process run_validate_PipeVal {
 
     output:
     path(".command.*")
-    path("input_validation.txt"), emit: val_file
+    path("validation_${file_to_validate}.txt"), emit: val_file
 
     """
     set -euo pipefail
-    python -m validate -t file-input ${file_to_validate} > 'input_validation.txt'
+    python -m validate -t file-input ${file_to_validate} > 'validation_${file_to_validate}.txt'
     """
 }
