@@ -49,10 +49,12 @@ workflow {
         params.reference_index,
         params.reference_dict
     )
+
     run_validate_PipeVal(file_to_validate)
+
     run_validate_PipeVal.out.val_file.collectFile(
         name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.output_dir}/validation"
+        storeDir: "${params.workflow_output_dir}/validation"
         )
 
     // Validate params.algorithm

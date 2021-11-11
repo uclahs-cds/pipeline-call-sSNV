@@ -11,7 +11,7 @@ Docker Images:
 process run_validate_PipeVal {
     container docker_image_validate_params
 
-    publishDir path: "${params.output_dir}/validation/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/validation/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.txt",
                enabled: params.save_intermediate_files   
