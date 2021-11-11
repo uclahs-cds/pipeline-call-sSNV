@@ -1,5 +1,4 @@
 def docker_image_samtools = "blcdsdockerregistry/samtools:1.12"
-def docker_image_sha512sum = "blcdsdockerregistry/align-dna:sha512sum-1.0"
 
 log.info """\
 ====================================
@@ -7,7 +6,6 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_samtools: ${docker_image_samtools}
-- docker_image_sha512sum: ${docker_image_sha512sum}
 """
 
 process compress_VCF_bgzip {
@@ -56,8 +54,7 @@ process index_VCF_tabix {
     """
 }
 
-process generate_sha512sum {    
-   container params.docker_image_sha512sum
+process generate_sha512sum {
    publishDir path: "${params.workflow_output_dir}/output",
               mode: "copy",
               pattern: "${file_for_sha512}.sha512"
