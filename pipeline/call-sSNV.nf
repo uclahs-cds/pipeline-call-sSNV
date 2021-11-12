@@ -34,10 +34,10 @@ log.info """\
         save_intermediate_files: ${params.save_intermediate_files}    
 """
 
-include { run_validate_PipeVal } from './modules/validation' addParams(workflow_output_log_dir: "${params.output_log_dir}/process-log/validation")
-include { somaticsniper } from './modules/somaticsniper' addParams(workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.somaticsniper_version}")
-include { strelka2 } from './modules/strelka2' addParams(workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.strelka2_version}")
-include { mutect2 } from './modules/mutect2' addParams(workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.mutect2_version}")
+include { run_validate_PipeVal } from './modules/validation' 
+include { somaticsniper } from './modules/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/${params.somaticsniper_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.somaticsniper_version}")
+include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "${params.output_dir}/${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.strelka2_version}")
+include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/${params.mutect2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.mutect2_version}")
 
 workflow {
     file_to_validate = Channel.from(
@@ -54,7 +54,7 @@ workflow {
 
     run_validate_PipeVal.out.val_file.collectFile(
         name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.workflow_output_dir}/validation"
+        storeDir: "${params.output_dir}/validation"
         )
 
     // Validate params.algorithm
