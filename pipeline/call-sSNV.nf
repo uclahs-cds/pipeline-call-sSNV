@@ -40,7 +40,7 @@ include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "$
 include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/${params.mutect2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/${params.mutect2_version}")
 
 workflow {
-    run_validate_PipeVal(channel.fromList([
+    file_to_validate = Channel.from(
         params.tumor,
         "${params.tumor}.bai",
         params.normal,
@@ -48,7 +48,14 @@ workflow {
         params.reference,
         params.reference_index,
         params.reference_dict
-    ]))
+    )
+
+    run_validate_PipeVal(file_to_validate)
+
+    run_validate_PipeVal.out.val_file.collectFile(
+        name: 'input_validation.txt', newLine: true,
+        storeDir: "${params.output_dir}/validation"
+        )
 
     // Validate params.algorithm
     if (params.algorithm.getClass() != java.util.ArrayList) {

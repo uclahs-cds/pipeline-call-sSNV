@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Standardize the output directory.
 - Standardize timestamp according to ISO8601.
+- Update PipeVal to 2.1.6.
 
 ### Added
 ### Fixed

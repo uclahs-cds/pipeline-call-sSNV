@@ -1,4 +1,5 @@
 def docker_image_samtools = "blcdsdockerregistry/samtools:1.12"
+def docker_image_validate_params = "blcdsdockerregistry/pipeval:2.1.6"
 
 log.info """\
 ====================================
@@ -54,8 +55,8 @@ process index_VCF_tabix {
     """
 }
 
-process generate_sha512sum {    
-   container params.docker_image_sha512sum
+process generate_sha512sum {
+    container docker_image_validate_params
    publishDir path: "${params.workflow_output_dir}/output",
               mode: "copy",
               pattern: "${file_for_sha512}.sha512"
