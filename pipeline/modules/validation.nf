@@ -11,7 +11,7 @@ Docker Images:
 process run_validate_PipeVal {
     container docker_image_validate_params
 
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.output_log_dir}/process-log/validation",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
