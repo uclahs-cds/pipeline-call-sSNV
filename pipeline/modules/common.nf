@@ -75,6 +75,6 @@ process generate_sha512sum {
    script:
    """
    set -euo pipefail
-   python3 -m validate -t sha512-gen ${file_for_sha512}
+   sha512sum ${file_for_sha512} > ${file_for_sha512}.sha512
    """
    }
