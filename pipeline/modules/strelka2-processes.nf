@@ -1,6 +1,3 @@
-def docker_image_strelka2 = "blcdsdockerregistry/strelka2:2.9.10"
-def docker_image_manta = "blcdsdockerregistry/manta:1.6.0"
-
 log.info """\
 ====================================
           S T R E L K A 2

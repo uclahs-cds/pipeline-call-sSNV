@@ -1,8 +1,5 @@
 #!/usr/bin/env nextflow
 
-def docker_image_somaticsniper = "blcdsdockerregistry/somaticsniper:1.0.5.0"
-def docker_image_bam_readcount = "blcdsdockerregistry/bam-readcount:0.8.0"
-
 log.info """\
 ====================================
     S O M A T I C    S N I P E R
