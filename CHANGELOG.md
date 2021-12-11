@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standardize timestamp according to ISO8601.
 - Update PipeVal to 2.1.6.
 - Rename Docker images and remove Dockerfiles.
+- Apply the config file standardization.
 
 ### Added
 ### Fixed

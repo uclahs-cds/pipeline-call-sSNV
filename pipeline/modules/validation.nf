@@ -1,5 +1,3 @@
-def docker_image_validate_params = "blcdsdockerregistry/pipeval:2.1.6"
-
 log.info """\
 ------------------------------------
          V A L I D A T I O N

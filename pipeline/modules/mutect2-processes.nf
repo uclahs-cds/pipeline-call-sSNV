@@ -1,5 +1,3 @@
-def docker_image_mutect2 = "broadinstitute/gatk:4.2.2.0"
-
 log.info """\
 ====================================
           M U T E C T 2

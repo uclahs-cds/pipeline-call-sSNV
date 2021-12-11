@@ -47,11 +47,12 @@ Docker image: broadinstitute/gatk:4.2.2.0
 | algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
 | tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | Config File |
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | Config File |
-| reference   | string | The reference .fa file (.fai file must exist in same directory) | Config File |
+| reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
-| output_log_dir | string | The location where log files (.command.\*) will be saved | Config File |
+| output_log_dir | string | The location where log files (.command.\*) will be saved | 
+Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
-
+| workdir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File | 
 
 ## Strelka2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
