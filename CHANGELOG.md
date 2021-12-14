@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apply the config file standardization.
 
 ### Added
+- Add GATK mutect2 tumor only mode.
+
 ### Fixed
 
 ## [2.1.1] - 2021-10-15
