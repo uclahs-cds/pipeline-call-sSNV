@@ -2,7 +2,7 @@
 nextflow.enable.dsl=2 
 include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2tumor-processes'
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
-workflow mutect2 {
+workflow mutect2tumor {
     main:
         if (params.intervals) {
             intervals = params.intervals
