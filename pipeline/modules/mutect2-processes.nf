@@ -3,7 +3,7 @@ log.info """\
           M U T E C T 2
 ====================================
 Docker Images:
-- docker_image_mutect2:           ${docker_image_mutect2}
+- docker_image_mutect2:           ${params.docker_image_mutect2}
 Mutect2 Options:
 - split_intervals_extra_args:     ${params.split_intervals_extra_args}
 - mutect2_extra_args:             ${params.mutect2_extra_args}
@@ -14,7 +14,7 @@ Mutect2 Options:
 """
 
 process run_SplitIntervals_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
@@ -49,7 +49,7 @@ process run_SplitIntervals_GATK {
 
 
 process call_sSNVInAssembledChromosomes_Mutect2 {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
@@ -98,7 +98,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 }
 
 process call_sSNVInNonAssembledChromosomes_Mutect2 {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
@@ -145,7 +145,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
 }
 
 process run_MergeVcfs_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz*",
@@ -172,7 +172,7 @@ process run_MergeVcfs_GATK {
 }
 
 process run_MergeMutectStats_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz.stats",
@@ -198,7 +198,7 @@ process run_MergeMutectStats_GATK {
 }
 
 process run_FilterMutectCalls_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "filtered.vcf.gz",

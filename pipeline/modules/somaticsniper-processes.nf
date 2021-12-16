@@ -5,14 +5,14 @@ log.info """\
     S O M A T I C    S N I P E R
 ====================================
 Docker Images:
-- docker_image_somaticsniper:   ${docker_image_somaticsniper}
-- docker_image_bam_readcount:   ${docker_image_bam_readcount}
+- docker_image_somaticsniper:   ${params.docker_image_somaticsniper}
+- docker_image_bam_readcount:   ${params.docker_image_bam_readcount}
 
 """
 
 // Call SomaticSniper
 process call_sSNV_SomaticSniper {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "somaticsniper_*",
@@ -55,7 +55,7 @@ process call_sSNV_SomaticSniper {
 // quality filters, and output only variants to pileup.
 // We are using a specific older version of samtools (v0.1.6) packaged with SomaticSniper.
 process convert_BAM2Pileup_SAMtools {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "raw_*",
@@ -87,7 +87,7 @@ process convert_BAM2Pileup_SAMtools {
 // then only keep indels with a QUAL>20
 // We are using samtools.pl which is packaged with SomaticSniper.
 process create_IndelCandidate_SAMtools {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.pileup",
@@ -117,7 +117,7 @@ process create_IndelCandidate_SAMtools {
 
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process apply_NormalIndelFilter_SomaticSniper {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.vcf_normal",
@@ -147,7 +147,7 @@ process apply_NormalIndelFilter_SomaticSniper {
 
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process apply_TumorIndelFilter_SomaticSniper {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.vcf_normal_tumor.SNPfilter",
@@ -177,7 +177,7 @@ process apply_TumorIndelFilter_SomaticSniper {
 
 // Adapt the remainder for use with bam-readcount to get SNP positions
 process create_ReadCountPosition_SomaticSniper {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.vcf_normal_tumor.SNPfilter.pos",
@@ -205,7 +205,7 @@ process create_ReadCountPosition_SomaticSniper {
 // Run bam-readcount
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
-    container docker_image_bam_readcount
+    container params.docker_image_bam_readcount
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.readcount",
@@ -244,7 +244,7 @@ process generate_ReadCount_bam_readcount {
 
 // Run the false positive filter
 process filter_FalsePositive_SomaticSniper {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.vcf_normal_tumor.SNPfilter.*",
@@ -274,7 +274,7 @@ process filter_FalsePositive_SomaticSniper {
 
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process call_HighConfidenceSNV_SomaticSniper {
-    container docker_image_somaticsniper
+    container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                pattern: "somaticsniper_${params.sample_name}*.vcf",
                mode: "copy",
