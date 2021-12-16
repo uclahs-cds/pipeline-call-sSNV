@@ -3,7 +3,7 @@ log.info """\
           M U T E C T 2
 ====================================
 Docker Images:
-- docker_image_mutect2:           ${docker_image_mutect2}
+- docker_image_mutect2:           ${params.docker_image_mutect2}
 Mutect2 Options:
 - split_intervals_extra_args:     ${params.split_intervals_extra_args}
 - mutect2_extra_args:             ${params.mutect2_extra_args}
@@ -11,10 +11,11 @@ Mutect2 Options:
 - gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
 - scatter_count:                  ${params.scatter_count}
 - intervals:                      ${params.intervals}
+- tumor_only_mode:                ${params.tumor_only_mode}
 """
 
 process run_SplitIntervals_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
@@ -49,7 +50,7 @@ process run_SplitIntervals_GATK {
 
 
 process call_sSNVInAssembledChromosomes_Mutect2 {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
@@ -79,26 +80,39 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     script:
     // --tmp-dir was added to help resolve potential memory issues
     // https://gatk.broadinstitute.org/hc/en-us/community/posts/360072844392-Mutect2-tumor-matched-normal-Exception-in-thread-main-java-lang-OutOfMemoryError-Java-heap-space
-    """
-    set -euo pipefail
+    if (params.tumor_only_mode = false)
+        """
+        set -euo pipefail
 
-    gatk GetSampleName -I $normal -O normal_name.txt
-    normal=`cat normal_name.txt`
+        gatk GetSampleName -I $normal -O normal_name.txt
+        normal=`cat normal_name.txt`
 
-    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
-        -R $reference \
-        -I $tumor \
-        -I $normal \
-        -L $interval \
-        -normal \$normal \
-        -O unfiltered_${interval.baseName}.vcf.gz \
-        --tmp-dir \$PWD \
-        ${params.mutect2_extra_args}
-    """
+        gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
+            -R $reference \
+            -I $tumor \
+            -I $normal \
+            -L $interval \
+            -normal \$normal \
+            -O unfiltered_${interval.baseName}.vcf.gz \
+            --tmp-dir \$PWD \
+            ${params.mutect2_extra_args}
+        """
+    else
+        """
+        set -euo pipefail
+
+        gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
+            -R $reference \
+            -I $tumor \
+            -L $interval \
+            -O unfiltered_${interval.baseName}.vcf.gz \
+            --tmp-dir \$PWD \
+            ${params.mutect2_extra_args}
+        """
 }
 
 process call_sSNVInNonAssembledChromosomes_Mutect2 {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
@@ -126,26 +140,39 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    """
-    set -euo pipefail
+    if (params.tumor_only_mode = false)
+        """
+        set -euo pipefail
 
-    gatk GetSampleName -I $normal -O normal_name.txt
-    normal=`cat normal_name.txt`
+        gatk GetSampleName -I $normal -O normal_name.txt
+        normal=`cat normal_name.txt`
 
-    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
-        -R $reference \
-        -I $tumor \
-        -I $normal \
-        -XL $interval \
-        -normal \$normal \
-        -O unfiltered_non_canonical.vcf.gz \
-        --tmp-dir \$PWD \
-        ${params.mutect2_extra_args}
-    """
+        gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
+            -R $reference \
+            -I $tumor \
+            -I $normal \
+            -XL $interval \
+            -normal \$normal \
+            -O unfiltered_non_canonical.vcf.gz \
+            --tmp-dir \$PWD \
+            ${params.mutect2_extra_args}
+        """
+    else
+        """
+        set -euo pipefail
+
+        gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
+            -R $reference \
+            -I $tumor \
+            -XL $interval \
+            -O unfiltered_non_canonical.vcf.gz \
+            --tmp-dir \$PWD \
+            ${params.mutect2_extra_args}
+        """
 }
 
 process run_MergeVcfs_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz*",
@@ -172,7 +199,7 @@ process run_MergeVcfs_GATK {
 }
 
 process run_MergeMutectStats_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "unfiltered.vcf.gz.stats",
@@ -198,7 +225,7 @@ process run_MergeMutectStats_GATK {
 }
 
 process run_FilterMutectCalls_GATK {
-    container docker_image_mutect2
+    container params.docker_image_mutect2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "filtered.vcf.gz",
