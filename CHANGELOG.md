@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update PipeVal to 2.1.6.
 - Rename Docker images and remove Dockerfiles.
 - Apply the config file standardization.
-- Update GATK to 4.2.4.0.
+- Update GATK to 4.2.4.0 to address Log4j critical vulnerability [GHSA-jfh8-c2jp-5v3q](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q).
 
 ### Added
 ### Fixed
