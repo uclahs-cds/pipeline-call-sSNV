@@ -3,14 +3,14 @@ log.info """\
           S T R E L K A 2
 ====================================
 Docker Images:
-- docker_image_strelka2:  ${docker_image_strelka2}
-- docker_image_manta:     ${docker_image_manta}
+- docker_image_strelka2:  ${params.docker_image_strelka2}
+- docker_image_manta:     ${params.docker_image_manta}
 Strelka2 Options:
 - exome:                  ${params.exome}
 """
 
 process call_sIndel_Manta {
-    container docker_image_manta
+    container params.docker_image_manta
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "MantaWorkflow/results",
@@ -49,7 +49,7 @@ process call_sIndel_Manta {
 }
 
 process call_sSNV_Strelka2 {
-    container docker_image_strelka2
+    container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow/results",
@@ -91,7 +91,7 @@ process call_sSNV_Strelka2 {
 }
 
 process filter_VCF {
-    container docker_image_strelka2
+    container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "strelka2_${params.sample_name}_${name}_pass.vcf",
