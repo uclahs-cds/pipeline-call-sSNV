@@ -1,16 +1,13 @@
-def docker_image_samtools = "blcdsdockerregistry/samtools:1.12"
-def docker_image_validate_params = "blcdsdockerregistry/pipeval:2.1.6"
-
 log.info """\
 ====================================
           C O M M O N
 ====================================
 Docker Images:
-- docker_image_samtools: ${docker_image_samtools}
+- docker_image_samtools: ${params.docker_image_samtools}
 """
 
 process compress_VCF_bgzip {
-    container docker_image_samtools
+    container params.docker_image_samtools
     publishDir path: "${params.workflow_output_dir}/output",
                mode: "copy",
                pattern: "*.vcf.gz"
@@ -33,7 +30,7 @@ process compress_VCF_bgzip {
 }
 
 process index_VCF_tabix {
-    container docker_image_samtools
+    container params.docker_image_samtools
     publishDir path: "${params.workflow_output_dir}/output",
                mode: "copy",
                pattern: "*.vcf.gz.tbi"
@@ -56,7 +53,7 @@ process index_VCF_tabix {
 }
 
 process generate_sha512sum {
-    container docker_image_validate_params
+    container params.docker_image_validate_params
    publishDir path: "${params.workflow_output_dir}/output",
               mode: "copy",
               pattern: "${file_for_sha512}.sha512"

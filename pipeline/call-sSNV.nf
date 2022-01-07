@@ -37,7 +37,7 @@ log.info """\
 include { run_validate_PipeVal } from './modules/validation' 
 include { somaticsniper } from './modules/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/somaticsniper-${params.somaticsniper_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/somaticsniper-${params.somaticsniper_version}")
 include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/strelka2-${params.strelka2_version}")
-include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.gatk_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.gatk_version}")
+include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
 
 workflow {
     file_to_validate = Channel.from(
