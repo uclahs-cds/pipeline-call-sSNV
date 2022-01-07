@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Added
 ### Fixed
+- Update GATK to 4.2.4.1 to address more newly discovered log4j2 vulnerabilities.
 
 ## [3.0.0-rc.1] - 2022-01-03
 ### Changed
