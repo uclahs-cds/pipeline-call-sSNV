@@ -8,16 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Added
 ### Fixed
-- Update GATK to 4.2.4.1 to address more newly discovered log4j2 vulnerabilities.
 
-## [3.0.0-rc.1] - 2022-01-03
+## [3.0.0-rc.1] - 2022-01-07
 ### Changed
 - Standardize the output directory.
 - Standardize timestamp according to ISO8601.
 - Update PipeVal to 2.1.6.
 - Rename Docker images and remove Dockerfiles.
 - Apply the config file standardization.
-- Update GATK to 4.2.4.0 to address Log4j critical vulnerability [GHSA-jfh8-c2jp-5v3q](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q).
+- Update GATK to 4.2.4.1 to address Log4j critical vulnerability [GHSA-jfh8-c2jp-5v3q](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q) and other newly discovered log4j2 vulnerabilities.
 
 ## [2.1.1] - 2021-10-15
 ### Changed
