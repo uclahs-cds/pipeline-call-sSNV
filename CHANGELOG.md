@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 ### Fixed
 
-## [3.0.0] - 2021-12-23
+## [3.0.0-rc.1] - 2022-01-03
 ### Changed
 - Standardize the output directory.
 - Standardize timestamp according to ISO8601.
