@@ -95,7 +95,20 @@ python path/to/submit_nextflow_pipeline.py \
 > The reference .fa file in config file should be the same with the reference genome that genereates the input bam files.
 
 ---
-## Performance Validation
+
+
+
+## Testing and Validation
+
+Testing was performed primarily in the Boutros Lab SLURM Development cluster using F72 node. Metrics below will be updated where relevant with additional testing and tuning outputs.
+
+### Test Data Set
+
+| Data Set | Run Configuration | Output Dir | Control Sample | Tumor Sample |  
+| ------ | ------ | ------- | ------ | ------- |
+| A-full-P2 |/hot/users/maotian/analysis/call-sSNV/all/A-full/nextflow.config | /hot/users/maotian/analysis/call-sSNV/all/A-full/output | HG002.N | P2 |  
+
+### Performance Validation
 
 |process_name                                         |max_duration           |max_cpu |max_peak_rss |max_peak_vmem |
 |:----------------------------------------------------|:----------------------|:-------|:------------|:-------------|
