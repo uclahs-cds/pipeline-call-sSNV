@@ -110,27 +110,38 @@ Testing was performed primarily in the Boutros Lab SLURM Development cluster usi
 
 ### Performance Validation
 
-|process_name                                         |max_duration           |max_cpu |max_peak_rss |max_peak_vmem |
-|:----------------------------------------------------|:----------------------|:-------|:------------|:-------------|
-|somaticsniper:convert_BAM2Pileup_SAMtools            |44694s (~12.41 hours)  |91.7%   |833 MB       |838.9 MB      |
-|strelka2:call_sIndel_Manta                           |5086s (~1.41 hours)    |2724.2% |14 GB        |23.2 GB       |
-|mutect2:call_sSNVInNonAssembledChromosomes_Mutect2   |19820s (~5.51 hours)   |155.4%  |19.7 GB      |33.2 GB       |
-|mutect2:run_SplitIntervals_GATK                      |124s (~2.07 minutes)   |83.1%   |654.1 MB     |32.1 GB       |
-|somaticsniper:call_sSNV_SomaticSniper                |43396s (~12.05 hours)  |98.5%   |906.1 MB     |916.1 MB      |
-|mutect2:call_sSNVInAssembledChromosomes_Mutect2      |9874s (~2.74 hours)    |152.8%  |2.2 GB       |7.1 GB        |
-|somaticsniper:create_IndelCandidate_SAMtools         |56.8s                  |95.3%   |43.5 MB      |56.6 MB       |
-|mutect2:run_MergeMutectStats_GATK                    |7.4s                   |90.9%   |541.3 MB     |32.1 GB       |
-|mutect2:run_MergeVcfs_GATK                           |26.4s                  |94%     |978.7 MB     |32.1 GB       |
-|mutect2:run_FilterMutectCalls_GATK                   |538s (~8.97 minutes)   |97.9%   |1.3 GB       |32.1 GB       |
-|mutect2:filter_VCF                                   |9.4s                   |90.1%   |3.1 MB       |11.1 MB       |
-|somaticsniper:apply_NormalIndelFilter_SomaticSniper  |6.6s                   |92%     |147.6 MB     |154.7 MB      |
-|strelka2:call_sSNV_Strelka2                          |81161s (~22.54 hours)  |511.3%  |11.2 GB      |17.4 GB       |
-|somaticsniper:apply_TumorIndelFilter_SomaticSniper   |5.1s                   |90.3%   |5.3 MB       |12.5 MB       |
-|strelka2:filter_VCF                                  |6.3s                   |92.4%   |2.9 MB       |11.1 MB       |
-|somaticsniper:create_ReadCountPosition_SomaticSniper |5.5s                   |38.8%   |1.2 MB       |3.9 MB        |
-|somaticsniper:generate_ReadCount_bam_readcount       |1773s (~29.55 minutes) |80.7%   |534 MB       |542.8 MB      |
-|somaticsniper:filter_FalsePositive_SomaticSniper     |2.8s                   |86.9%   |10.6 MB      |17.9 MB       |
-|somaticsniper:call_HighConfidenceSNV_SomaticSniper   |2.3s                   |66.2%   |7 MB         |14.3 MB       |
+#### Mutect2
+
+|process_name                                 |max_duration           |max_cpu |max_peak_rss |max_peak_vmem |
+|:--------------------------------------------|:----------------------|:-------|:------------|:-------------|
+|call_sSNVInNonAssembledChromosomes_Mutect2   |5.51 hours             |155.4%  |19.7 GB      |33.2 GB       |
+|run_SplitIntervals_GATK                      |2.07 minutes           |83.1%   |654.1 MB     |32.1 GB       |
+|call_sSNVInAssembledChromosomes_Mutect2      |2.74 hours             |152.8%  |2.2 GB       |7.1 GB        |
+|run_MergeMutectStats_GATK                    |7.4s                   |90.9%   |541.3 MB     |32.1 GB       |
+|run_MergeVcfs_GATK                           |26.4s                  |94%     |978.7 MB     |32.1 GB       |
+|run_FilterMutectCalls_GATK                   |8.97 minutes           |97.9%   |1.3 GB       |32.1 GB       |
+|filter_VCF                                   |9.4s                   |90.1%   |3.1 MB       |11.1 MB       |
+
+#### SomaticSniper
+|process_name                           |max_duration           |max_cpu |max_peak_rss |max_peak_vmem |
+|:--------------------------------------|:----------------------|:-------|:------------|:-------------|
+|convert_BAM2Pileup_SAMtools            |12.41 hours            |91.7%   |833 MB       |838.9 MB      |
+|call_sSNV_SomaticSniper                |12.05 hours            |98.5%   |906.1 MB     |916.1 MB      |
+|create_IndelCandidate_SAMtools         |56.8s                  |95.3%   |43.5 MB      |56.6 MB       |
+|apply_NormalIndelFilter_SomaticSniper  |6.6s                   |92%     |147.6 MB     |154.7 MB      |
+|apply_TumorIndelFilter_SomaticSniper   |5.1s                   |90.3%   |5.3 MB       |12.5 MB       |
+|create_ReadCountPosition_SomaticSniper |5.5s                   |38.8%   |1.2 MB       |3.9 MB        |
+|generate_ReadCount_bam_readcount       |29.55 minutes          |80.7%   |534 MB       |542.8 MB      |
+|filter_FalsePositive_SomaticSniper     |2.8s                   |86.9%   |10.6 MB      |17.9 MB       |
+|call_HighConfidenceSNV_SomaticSniper   |2.3s                   |66.2%   |7 MB         |14.3 MB       |
+
+#### Strelka2
+
+|process_name                                |max_duration           |max_cpu |max_peak_rss |max_peak_vmem |
+|:-------------------------------------------|:----------------------|:-------|:------------|:-------------|
+|call_sIndel_Manta                           |1.41 hours             |2724.2% |14 GB        |23.2 GB       |
+|call_sSNV_Strelka2                          |22.54 hours            |511.3%  |11.2 GB      |17.4 GB       |
+|filter_VCF                                  |6.3s                   |92.4%   |2.9 MB       |11.1 MB       |
 
 ---
 
