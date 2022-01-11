@@ -37,8 +37,8 @@ Docker image: blcdsdockerregistry/call-ssnv:strelka2-v2.9.10
 #### Tools
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
-Version: 4.2.4.0 (Released on Dec 15, 2021)
-Docker image: broadinstitute/gatk:4.2.4.0
+Version: 4.2.4.1 (Released on Jan 4, 2022)
+Docker image: broadinstitute/gatk:4.2.4.1
 
 ## Inputs
 | Input       | Type   | Description                               | Location    |
