@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Update the .gitignore file to avoid accidently adding large files to github.
+- Update .gitignore to exclude molecular file s.
 ### Added
 ### Fixed
 
