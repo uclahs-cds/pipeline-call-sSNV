@@ -40,15 +40,24 @@ include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "$
 include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
 
 workflow {
-    file_to_validate = Channel.from(
-        params.tumor,
-        "${params.tumor}.bai",
-        params.normal,
-        "${params.normal}.bai",
-        params.reference,
-        params.reference_index,
-        params.reference_dict
-    )
+    if (params.tumor_only_mode)
+        file_to_validate = Channel.from(
+            params.tumor,
+            "${params.tumor}.bai",
+            params.reference,
+            params.reference_index,
+            params.reference_dict
+        )
+    else
+        file_to_validate = Channel.from(
+            params.tumor,
+            "${params.tumor}.bai",
+            params.normal,
+            "${params.normal}.bai",
+            params.reference,
+            params.reference_index,
+            params.reference_dict
+        )
 
     run_validate_PipeVal(file_to_validate)
 
@@ -64,10 +73,21 @@ workflow {
     if (params.algorithm.isEmpty()) {
         throw new Exception("ERROR: params.algorithm cannot be empty")
     }
-    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
+    
+    if (params.tumor_only_mode) {
+        Set valid_algorithms = ['mutect2']
+    } else {
+        Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
+    }
+    
     for (algo in params.algorithm) {
         if (!(algo in valid_algorithms)) {
-            throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
+            if (params.tumor_only_mode) {
+                throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value. Tumor-only mode is only applied to Mutect2 algorithm.")
+                } else {
+                    throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
+                    }
+            
         }
     }
 
