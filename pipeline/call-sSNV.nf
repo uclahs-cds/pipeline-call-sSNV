@@ -74,10 +74,9 @@ workflow {
         throw new Exception("ERROR: params.algorithm cannot be empty")
     }
     
+    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
     if (params.tumor_only_mode) {
-        Set valid_algorithms = ['mutect2']
-    } else {
-        Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
+        valid_algorithms = ['mutect2']
     }
     
     for (algo in params.algorithm) {
