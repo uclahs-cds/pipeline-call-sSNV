@@ -106,7 +106,7 @@ Testing was performed primarily in the Boutros Lab SLURM Development cluster usi
 
 | Data Set | Run Configuration | Output Dir | Control Sample | Tumor Sample |  
 | ------ | ------ | ------- | ------ | ------- |
-| A-full-P2 |/hot/users/maotian/analysis/call-sSNV/all/A-full/nextflow.config | /hot/users/maotian/analysis/call-sSNV/all/A-full/output | HG002.N | P2 |  
+| A-full-P2 |/hot/pipeline/development/slurm/call-sSNV/unreleased/maotian-update-README/analysis/all/A-full/nextflow.config | /hot/pipeline/development/slurm/call-sSNV/unreleased/maotian-update-README/analysis/all/A-full/output | HG002.N | P2 |  
 
 ### Performance Validation
 
