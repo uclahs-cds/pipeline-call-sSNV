@@ -148,7 +148,7 @@ Call-sSNV is licensed under the GNU General Public License version 2. See the fi
 
 This pipeline performs somatic SNV calling on a pair of normal/tumor BAMs. Mutect2, SomaticSniper, and Strelka2 are currently available in this pipeline.
 
-Copyright (C) 2021 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2020-2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
