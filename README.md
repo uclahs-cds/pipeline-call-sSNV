@@ -109,7 +109,7 @@ Testing was performed primarily in the Boutros Lab SLURM Development cluster usi
 | A-full-P2 |/hot/pipeline/development/slurm/call-sSNV/unreleased/maotian-update-README/analysis/all/A-full/nextflow.config | /hot/pipeline/development/slurm/call-sSNV/unreleased/maotian-update-README/analysis/all/A-full/output | HG002.N | P2 |  
 
 ### Performance Validation
-Pipeline versiion: call-sSNV v2.1.1
+Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline versiion used here is call-sSNV v2.1.1.
 
 #### Mutect2
 
