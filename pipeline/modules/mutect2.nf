@@ -14,9 +14,9 @@ workflow mutect2 {
             call_sSNVInNonAssembledChromosomes_Mutect2(
                 intervals, // canonical intervals to *exclude*
                 params.tumor,
-                "${params.tumor}.bai",
+                params.tumor_index,
                 params.normal,
-                "${params.normal}.bai",
+                params.normal_index,
                 params.reference,
                 params.reference_index,
                 params.reference_dict
@@ -31,9 +31,9 @@ workflow mutect2 {
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
             params.tumor,
-            "${params.tumor}.bai",
+            params.tumor_index,
             params.normal,
-            "${params.normal}.bai",
+            params.normal_index,
             params.reference,
             params.reference_index,
             params.reference_dict

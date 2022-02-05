@@ -69,6 +69,7 @@ Config File |
 | gatk_command_mem_diff | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) | Config File |
 | scatter_count | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. | Config File |
 | intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
+| tumor_only_mode | boolean | An option to use the mutect2 algorithm when no normal control samples exist in the datasets |
 
 ## Outputs
 | Output                                         | Type         | Description                   |
