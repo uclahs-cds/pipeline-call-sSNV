@@ -252,8 +252,8 @@ process run_LearnReadOrientationModel_GATK {
     f1r2 = f1r2.collect { "-I '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk LearnReadOrientationMdoel \
-    -I  $f1r2 \
+    gatk LearnReadOrientationModel \
+    $f1r2 \
     -O read-orientation-model.tar.gz
     """
 }
