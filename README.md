@@ -97,50 +97,6 @@ python path/to/submit_nextflow_pipeline.py \
 
 ---
 
-
-
-## Testing and Validation
-
-Testing was performed primarily in the Boutros Lab SLURM Development cluster using F72 node. Metrics below will be updated where relevant with additional testing and tuning outputs.
-
-### Test Data Set
-
-| Data Set | Run Configuration | Output Dir | Control Sample | Tumor Sample |  
-| ------ | ------ | ------- | ------ | ------- |
-| A-full-P2 |/hot/users/maotian/analysis/call-sSNV/all/A-full/nextflow.config | /hot/users/maotian/analysis/call-sSNV/all/A-full/output | HG002.N | P2 |  
-
-### Performance Validation
-
-#### Mutect2
-
-|process_name                                 |max_duration     |max_cpu |max_peak_vmem |
-|:--------------------------------------------|:----------------|:-------|:-------------|
-|call_sSNVInNonAssembledChromosomes_Mutect2   |5.51 hours       |155.4%  |33.2 GB       |
-|run_SplitIntervals_GATK                      |2.07 minutes     |83.1%   |32.1 GB       |
-|call_sSNVInAssembledChromosomes_Mutect2      |2.74 hours       |152.8%  |7.1 GB        |
-|run_MergeMutectStats_GATK                    |7.4s             |90.9%   |32.1 GB       |
-|run_MergeVcfs_GATK                           |26.4s            |94%     |32.1 GB       |
-|run_FilterMutectCalls_GATK                   |8.97 minutes     |97.9%   |32.1 GB       |
-
-#### SomaticSniper
-|process_name                           |max_duration           |max_cpu |max_peak_vmem |
-|:--------------------------------------|:----------------------|:-------|:-------------|
-|convert_BAM2Pileup_SAMtools            |12.41 hours            |91.7%   |838.9 MB      |
-|call_sSNV_SomaticSniper                |12.05 hours            |98.5%   |916.1 MB      |
-|create_IndelCandidate_SAMtools         |56.8s                  |95.3%   |56.6 MB       |
-|apply_NormalIndelFilter_SomaticSniper  |6.6s                   |92%     |154.7 MB      |
-|generate_ReadCount_bam_readcount       |29.55 minutes          |80.7%   |542.8 MB      |
-
-
-#### Strelka2
-|process_name                                |max_duration        |max_cpu |max_peak_vmem |
-|:-------------------------------------------|:-------------------|:-------|:-------------|
-|call_sIndel_Manta                           |1.41 hours          |2724.2% |23.2 GB       |
-|call_sSNV_Strelka2                          |22.54 hours         |511.3%  |17.4 GB       |
-|filter_VCF                                  |6.3s                |92.4%   |11.1 MB       |
-
----
-
 ## License
 
 Authors: Bugh Caden (YBugh@mednet.ucla.edu), Helena Winata (HWinata@mednet.ucla.edu), Mao Tian (maotian@mednet.ucla.edu).
