@@ -254,6 +254,7 @@ process run_LearnReadOrientationModel_GATK {
     set -euo pipefail
     gatk LearnReadOrientationModel \
     $f1r2 \
+    --tmp-dir $params.work_dir \
     -O read-orientation-model.tar.gz
     """
 }
