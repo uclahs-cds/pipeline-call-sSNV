@@ -252,7 +252,7 @@ process run_LearnReadOrientationModel_GATK {
     f1r2 = f1r2.collect { "-I '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk LearnReadOrientationModel \
+    gatk LearnReadOrientationModel --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
     $f1r2 \
     --tmp-dir $params.work_dir \
     -O read-orientation-model.tar.gz
