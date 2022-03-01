@@ -63,10 +63,8 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 
     input:
     path interval
-    path tumor_id
     path tumor
     path tumor_index
-    path normal_id
     path normal
     path normal_index
     path reference
@@ -86,12 +84,15 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
         """
         set -euo pipefail
 
+        gatk GetSampleName -I $normal -O normal_name.txt
+        normal=`cat normal_name.txt`
+
         gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
             -R $reference \
             -I $tumor \
             -I $normal \
             -L $interval \
-            -normal $normal_id \
+            -normal \$normal \
             -O unfiltered_${interval.baseName}.vcf.gz \
             --tmp-dir \$PWD \
             ${params.mutect2_extra_args}
@@ -124,10 +125,8 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
 
     input:
     path interval // canonical intervals to *exclude*
-    path tumor_id
     path tumor
     path tumor_index
-    path normal_id
     path normal
     path normal_index
     path reference
@@ -145,12 +144,15 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
         """
         set -euo pipefail
 
+        gatk GetSampleName -I $normal -O normal_name.txt
+        normal=`cat normal_name.txt`
+
         gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
             -R $reference \
             -I $tumor \
             -I $normal \
             -XL $interval \
-            -normal $normal_id \
+            -normal \$normal \
             -O unfiltered_non_canonical.vcf.gz \
             --tmp-dir \$PWD \
             ${params.mutect2_extra_args}

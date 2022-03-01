@@ -1,13 +1,13 @@
+nextflow.enable.dsl=2
+
 include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
 
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
 workflow mutect2 {
-    take
-    tumor_id
+    take:
     tumor_bam
     tumor_index
-    normal_id
     normal_bam
     normal_index
 
@@ -21,12 +21,10 @@ workflow mutect2 {
             // as this region requires more memory than the canonical regions
             call_sSNVInNonAssembledChromosomes_Mutect2(
                 intervals, // canonical intervals to *exclude*
-                tumor_id
-                tumor_bam
-                tumor_index
-                normal_id
-                normal_bam
-                normal_index
+                tumor_bam,
+                tumor_index,
+                normal_bam,
+                normal_index,
                 params.reference,
                 params.reference_index,
                 params.reference_dict
@@ -40,12 +38,10 @@ workflow mutect2 {
         )
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
-                tumor_id
-                tumor_bam
-                tumor_index
-                normal_id
-                normal_bam
-                normal_index
+                tumor_bam,
+                tumor_index,
+                normal_bam,
+                normal_index,
                 params.reference,
                 params.reference_index,
                 params.reference_dict
@@ -80,6 +76,7 @@ workflow mutect2 {
 
         file_for_sha512 = compress_VCF_bgzip.out.vcf_gz.mix(index_VCF_tabix.out.vcf_gz_tbi)
         generate_sha512sum(file_for_sha512)
+    
     emit:
         compress_VCF_bgzip.out.vcf_gz
         index_VCF_tabix.out.vcf_gz_tbi
