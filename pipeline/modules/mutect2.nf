@@ -27,6 +27,9 @@ workflow mutect2 {
                 normal_id
                 normal_bam
                 normal_index
+                params.reference,
+                params.reference_index,
+                params.reference_dict
             )
         }
         run_SplitIntervals_GATK(
@@ -43,9 +46,9 @@ workflow mutect2 {
                 normal_id
                 normal_bam
                 normal_index
-            params.reference,
-            params.reference_index,
-            params.reference_dict
+                params.reference,
+                params.reference_index,
+                params.reference_dict
         )
 
         if (params.intervals) {
