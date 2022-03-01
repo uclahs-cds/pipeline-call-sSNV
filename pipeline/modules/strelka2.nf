@@ -11,18 +11,18 @@ workflow strelka2 {
     
     main:
         call_sIndel_Manta(
-            tumor_bam
-            tumor_index
-            normal_bam
-            normal_index
+            tumor_bam,
+            tumor_index,
+            normal_bam,
+            normal_index,
             params.reference,
             "${params.reference}.fai"
         )
         call_sSNV_Strelka2(
-            tumor_bam
-            tumor_index
-            normal_bam
-            normal_index
+            tumor_bam,
+            tumor_index,
+            normal_bam,
+            normal_index,
             params.reference,
             "${params.reference}.fai",
             call_sIndel_Manta.out[0]

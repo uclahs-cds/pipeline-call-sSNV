@@ -123,7 +123,12 @@ workflow {
         somaticsniper()
     }
     if ('strelka2' in params.algorithm) {
-        strelka2()
+        strelka2(
+            tumor_input.tumor_bam.collect(),
+            tumor_input.tumor_index.collect(),
+            normal_input.normal_bam.collect(),
+            normal_input.normal_index.collect()
+        )
     }
     if ('mutect2' in params.algorithm) {
         mutect2(
