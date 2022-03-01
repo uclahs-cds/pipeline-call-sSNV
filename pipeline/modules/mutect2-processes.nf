@@ -63,8 +63,10 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 
     input:
     path interval
+    path tumor_id
     path tumor
     path tumor_index
+    path normal_id
     path normal
     path normal_index
     path reference
@@ -125,9 +127,10 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
 
     input:
     path interval // canonical intervals to *exclude*
+    path
     path tumor
     path tumor_index
-    path normal
+    path normal_bam
     path normal_index
     path reference
     path reference_index

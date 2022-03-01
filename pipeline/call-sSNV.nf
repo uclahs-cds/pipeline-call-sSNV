@@ -39,25 +39,54 @@ include { somaticsniper } from './modules/somaticsniper' addParams(workflow_outp
 include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/strelka2-${params.strelka2_version}")
 include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
 
+// Returns the index file for the given bam or vcf
+def indexFile(bam_or_vcf) {
+  if(bam_or_vcf.endsWith('.bam')) {
+    return "${bam_or_vcf}.bai"
+  }
+  else if(bam_or_vcf.endsWith('vcf.gz')) {
+    return "${bam_or_vcf}.tbi"
+  }
+  else {
+    throw new Exception("Index file for ${bam_or_vcf} file type not supported. Use .bam or .vcf.gz files.")
+  }
+}
+
+Channel
+    .from( params.tumor )
+    .multiMap{ it ->
+        tumor_id: it['id']
+        tumor_bam: it['bam']
+        tumor_index: indexFile(it['bam'])
+    }
+    .set { tumor_input }
+
+Channel
+    .from( params.normal )
+    .multiMap{ it ->
+        normal_id: it['id']
+        normal_bam: it['bam']
+        normal_index: indexFile(it['bam'])
+    }
+    .set { normal_input }
+
+
 workflow {
     if (params.tumor_only_mode)
         file_to_validate = Channel.from(
-            params.tumor,
-            "${params.tumor}.bai",
             params.reference,
             params.reference_index,
             params.reference_dict
         )
+        .combine (tumor_input)
+    
     else
         file_to_validate = Channel.from(
-            params.tumor,
-            "${params.tumor}.bai",
-            params.normal,
-            "${params.normal}.bai",
             params.reference,
             params.reference_index,
             params.reference_dict
         )
+        .mix (tumor_input, normal_input)
 
     run_validate_PipeVal(file_to_validate)
 
@@ -97,6 +126,7 @@ workflow {
         strelka2()
     }
     if ('mutect2' in params.algorithm) {
-        mutect2()
+        mutect2(tumor_input.tumor_bam.collect(),
+        )
     }
 }

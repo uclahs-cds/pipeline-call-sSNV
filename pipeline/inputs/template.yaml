@@ -1,0 +1,19 @@
+---
+# Sample inputs
+sample_name: ''
+# path to BAMs
+normal:
+  - id: <id1>
+    bam: </path/bam>
+  - id: <id2>
+    bam: </path/bam>
+tumor:
+  - id: <id1>
+    bam: </path/bam>
+  - id: <id2>
+    bam: </path/bam>
+# algorithm and reference used
+algorithm : [] // 'somaticsniper', 'strelka2', 'mutect2'
+reference : ''
+# options for specical tumor mode
+tumor_only_mode: false
