@@ -6,6 +6,6 @@ normal:
 tumor:
   - id: <id1>
     bam: </path/bam>
-algorithm: [] 
+algorithm: []
 reference: ''
 tumor_only_mode: false
