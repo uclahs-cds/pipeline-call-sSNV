@@ -6,9 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+### Added
+
+## [3.0.0] - 2022-03-01
+### Changed
 - Update .gitignore to exclude molecular files.
+- Update F72.config to increase the compute efficiency.
 ### Added
 - Add tumor_only_mode in mutect2 options.
+- Add Mutect2's orientation bias filter.
 ### Fixed
 
 ## [3.0.0-rc.1] - 2022-01-07
