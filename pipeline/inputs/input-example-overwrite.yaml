@@ -1,0 +1,11 @@
+---
+sample_name: ''
+normal:
+  - id: <id1>
+    bam: </path/bam>
+tumor:
+  - id: <id1>
+    bam: </path/bam>
+algorithm : [] 
+reference : ''
+tumor_only_mode: false

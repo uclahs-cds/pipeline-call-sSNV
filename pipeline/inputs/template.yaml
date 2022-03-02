@@ -1,19 +1,11 @@
 ---
-# Sample inputs
-sample_name: ''
-# path to BAMs
+sample_name: 'A-mini-n2'
 normal:
-  - id: <id1>
-    bam: </path/bam>
-  - id: <id2>
-    bam: </path/bam>
+  - id: HG002.N-n2
+    bam: /hot/resources/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
 tumor:
-  - id: <id1>
-    bam: </path/bam>
-  - id: <id2>
-    bam: </path/bam>
-# algorithm and reference used
-algorithm : [] // 'somaticsniper', 'strelka2', 'mutect2'
-reference : ''
-# options for specical tumor mode
+  - id: S2.T-n2
+    bam: /hot/resources/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
+algorithm : ['mutect2', 'strelka2', 'somaticsniper'] 
+reference : '/hot/ref/reference/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta'
 tumor_only_mode: false
