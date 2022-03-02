@@ -1,4 +1,4 @@
-include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
+include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
 
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
@@ -53,14 +53,19 @@ workflow mutect2 {
                     ).collect()
             )
         }
-
+        run_LearnReadOrientationModel_GATK(
+            call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.mix(
+                call_sSNVInNonAssembledChromosomes_Mutect2.out.f1r2
+                ).collect()
+        )
         run_FilterMutectCalls_GATK(
             params.reference,
             params.reference_index,
             params.reference_dict,
             run_MergeVcfs_GATK.out.unfiltered,
             run_MergeVcfs_GATK.out.unfiltered_index,
-            run_MergeMutectStats_GATK.out.merged_stats
+            run_MergeMutectStats_GATK.out.merged_stats,
+            run_LearnReadOrientationModel_GATK.out.read_orientation_model
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
         compress_VCF_bgzip(filter_VCF.out.mutect2_vcf)

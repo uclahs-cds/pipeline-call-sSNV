@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update F72.config to increase the compute efficiency.
 ### Added
 - Add tumor_only_mode in mutect2 options.
+- Add Mutect2's orientation bias filter.
 ### Fixed
 
 ## [3.0.0-rc.1] - 2022-01-07

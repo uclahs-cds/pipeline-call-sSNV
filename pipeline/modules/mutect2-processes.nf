@@ -75,6 +75,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path "unfiltered_${interval.baseName}.vcf.gz", emit: unfiltered
     path "unfiltered_${interval.baseName}.vcf.gz.tbi", emit: unfiltered_index
     path "unfiltered_${interval.baseName}.vcf.gz.stats", emit: unfiltered_stats
+    path "unfiltered_${interval.baseName}_f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -93,6 +94,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
             -I $normal \
             -L $interval \
             -normal \$normal \
+            --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
             -O unfiltered_${interval.baseName}.vcf.gz \
             --tmp-dir \$PWD \
             ${params.mutect2_extra_args}
@@ -105,6 +107,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
             -R $reference \
             -I $tumor \
             -L $interval \
+            --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
             -O unfiltered_${interval.baseName}.vcf.gz \
             --tmp-dir \$PWD \
             ${params.mutect2_extra_args}
@@ -137,6 +140,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path "unfiltered_non_canonical.vcf.gz", emit: unfiltered
     path "unfiltered_non_canonical.vcf.gz.tbi", emit: unfiltered_index
     path "unfiltered_non_canonical.vcf.gz.stats", emit: unfiltered_stats
+    path "unfiltered_${interval.baseName}_f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -153,6 +157,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
             -I $normal \
             -XL $interval \
             -normal \$normal \
+            --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
             -O unfiltered_non_canonical.vcf.gz \
             --tmp-dir \$PWD \
             ${params.mutect2_extra_args}
@@ -165,6 +170,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
             -R $reference \
             -I $tumor \
             -XL $interval \
+            --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
             -O unfiltered_non_canonical.vcf.gz \
             --tmp-dir \$PWD \
             ${params.mutect2_extra_args}
@@ -224,6 +230,35 @@ process run_MergeMutectStats_GATK {
     """
 }
 
+process run_LearnReadOrientationModel_GATK {
+    container params.docker_image_GATK
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+               mode: "copy",
+               pattern: "read-orientation-model.tar.gz",
+               enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_output_log_dir}",
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path f1r2
+
+    output:
+    path "read-orientation-model.tar.gz", emit: read_orientation_model
+    path ".command.*"
+
+    script:
+    f1r2 = f1r2.collect { "-I '$it'" }.join(' ')
+    """
+    set -euo pipefail
+    gatk LearnReadOrientationModel --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
+    $f1r2 \
+    --tmp-dir $params.work_dir \
+    -O read-orientation-model.tar.gz
+    """
+}
+
 process run_FilterMutectCalls_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
@@ -242,6 +277,7 @@ process run_FilterMutectCalls_GATK {
     path unfiltered
     path unfiltered_index
     path unfiltered_stats
+    path read_orientation_model
 
     output:
     path "filtered.vcf.gz", emit: filtered
@@ -253,6 +289,7 @@ process run_FilterMutectCalls_GATK {
     gatk FilterMutectCalls \
         -R $reference \
         -V $unfiltered \
+        --ob-priors $read_orientation_model \
         -O filtered.vcf.gz \
         ${params.filter_mutect_calls_extra_args}
     """
