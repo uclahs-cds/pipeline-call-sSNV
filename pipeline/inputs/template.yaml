@@ -8,7 +8,7 @@ tumor:
     bam: /hot/resources/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
 algorithm:
   - mutect2
-  - strelka2 
+  - strelka2
   - somaticsniper
 reference: '/hot/ref/reference/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta'
 tumor_only_mode: false
