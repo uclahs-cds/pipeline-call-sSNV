@@ -36,13 +36,13 @@ workflow mutect2 {
         )
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
-                tumor_bam,
-                tumor_index,
-                normal_bam,
-                normal_index,
-                params.reference,
-                params.reference_index,
-                params.reference_dict
+            tumor_bam,
+            tumor_index,
+            normal_bam,
+            normal_index,
+            params.reference,
+            params.reference_index,
+            params.reference_dict
         )
 
         if (params.intervals) {
