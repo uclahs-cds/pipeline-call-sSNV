@@ -10,6 +10,13 @@ workflow mutect2 {
     normal_index
 
     main:
+        run_GetSampleName_Mutect2(normal_bam)
+
+        run_GetSampleName_Mutect2.out.name
+        .collectFile(name: 'normal_name.txt', newLine: true,
+        storeDir: "${params.output_dir}/intermediate/${task.process.replace(':', '/')}")
+        .set(normal_name)
+
         if (params.intervals) {
             intervals = params.intervals
         } else {
@@ -25,7 +32,8 @@ workflow mutect2 {
                 normal_index,
                 params.reference,
                 params.reference_index,
-                params.reference_dict
+                params.reference_dict,
+                normal_name
             )
         }
         run_SplitIntervals_GATK(
@@ -42,7 +50,8 @@ workflow mutect2 {
             normal_index,
             params.reference,
             params.reference_index,
-            params.reference_dict
+            params.reference_dict,
+            normal_name
         )
 
         if (params.intervals) {

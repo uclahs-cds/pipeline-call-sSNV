@@ -49,6 +49,35 @@ process run_SplitIntervals_GATK {
 }
 
 
+process run_GetSampleName_Mutect2 {
+    container params.docker_image_GATK
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+               mode: "copy",
+               pattern: "*.txt",
+               enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_output_log_dir}",
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+    input:
+    path normal
+
+    output:
+    path "*.txt",, emit: normal_name
+    path("sampleName_${normal}.txt"), emit: name
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+
+    gatk GetSampleName -I ${normal} -O sampleName_${normal}.txt
+    
+    normal_name=`cat normal_name.txt`
+
+    """                    
+}
+
 process call_sSNVInAssembledChromosomes_Mutect2 {
     container params.docker_image_GATK
 
@@ -70,6 +99,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path reference
     path reference_index
     path reference_dict
+    path normal_name
 
     output:
     path "unfiltered_${interval.baseName}.vcf.gz", emit: unfiltered
@@ -79,21 +109,21 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
+    $tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
+    $normal_scr = normal.collect { "-I '$it'" }.join(' ')
+    $normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
     // --tmp-dir was added to help resolve potential memory issues
     // https://gatk.broadinstitute.org/hc/en-us/community/posts/360072844392-Mutect2-tumor-matched-normal-Exception-in-thread-main-java-lang-OutOfMemoryError-Java-heap-space
     if (params.tumor_only_mode == false)
         """
         set -euo pipefail
-
-        gatk GetSampleName -I $normal -O normal_name.txt
-        normal=`cat normal_name.txt`
-
+        
         gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
             -R $reference \
-            -I $tumor \
-            -I $normal \
+            $tumor_scr \
+            $normal_scr \
             -L $interval \
-            -normal \$normal \
+            $normal_name_scr \
             --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
             -O unfiltered_${interval.baseName}.vcf.gz \
             --tmp-dir \$PWD \
@@ -105,7 +135,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 
         gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
             -R $reference \
-            -I $tumor \
+            $tumor_scr \
             -L $interval \
             --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
             -O unfiltered_${interval.baseName}.vcf.gz \
@@ -135,6 +165,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path reference
     path reference_index
     path reference_dict
+    path normal_name
 
     output:
     path "unfiltered_non_canonical.vcf.gz", emit: unfiltered
@@ -144,19 +175,19 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
+    $tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
+    $normal_scr = normal.collect { "-I '$it'" }.join(' ')
+    $normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
     if (params.tumor_only_mode == false)
         """
         set -euo pipefail
 
-        gatk GetSampleName -I $normal -O normal_name.txt
-        normal=`cat normal_name.txt`
-
         gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
             -R $reference \
-            -I $tumor \
-            -I $normal \
-            -XL $interval \
-            -normal \$normal \
+            $tumor_scr \
+            $normal_scr \
+            -L $interval \
+            $normal_name_scr \
             --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
             -O unfiltered_non_canonical.vcf.gz \
             --tmp-dir \$PWD \
