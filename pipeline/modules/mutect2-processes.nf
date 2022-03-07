@@ -109,9 +109,8 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    $tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
-    $normal_scr = normal.collect { "-I '$it'" }.join(' ')
-    $normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
+    tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
+    normal_scr = normal.collect { "-I '$it'" }.join(' ')
     // --tmp-dir was added to help resolve potential memory issues
     // https://gatk.broadinstitute.org/hc/en-us/community/posts/360072844392-Mutect2-tumor-matched-normal-Exception-in-thread-main-java-lang-OutOfMemoryError-Java-heap-space
     if (params.tumor_only_mode == false)
@@ -175,9 +174,9 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    $tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
-    $normal_scr = normal.collect { "-I '$it'" }.join(' ')
-    $normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
+    tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
+    normal_scr = normal.collect { "-I '$it'" }.join(' ')
+    normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
     if (params.tumor_only_mode == false)
         """
         set -euo pipefail
