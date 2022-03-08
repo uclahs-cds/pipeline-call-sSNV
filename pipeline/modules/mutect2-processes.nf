@@ -60,21 +60,20 @@ process run_GetSampleName_Mutect2 {
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
     input:
-    path normal
+    path normal_bam
 
     output:
-    path "*.txt",, emit: normal_name
-    path("sampleName_${normal}.txt"), emit: name
+    env normal_name, emit: name_ch
+    path "sampleName.txt"
     path ".command.*"
 
     script:
     """
     set -euo pipefail
 
-    gatk GetSampleName -I ${normal} -O sampleName_${normal}.txt
+    gatk GetSampleName -I $normal_bam -O sampleName.txt
+    normal_name=`cat sampleName.txt`
     
-    normal_name=`cat normal_name.txt`
-
     """                    
 }
 
@@ -99,7 +98,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path reference
     path reference_index
     path reference_dict
-    path normal_name
+    val normal_name
 
     output:
     path "unfiltered_${interval.baseName}.vcf.gz", emit: unfiltered
@@ -111,6 +110,11 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     script:
     tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
     normal_scr = normal.collect { "-I '$it'" }.join(' ')
+    if (params.multi_normal_sample) {
+        normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
+    } else {
+        normal_name_scr = "-normal $normal_name"
+    }
     // --tmp-dir was added to help resolve potential memory issues
     // https://gatk.broadinstitute.org/hc/en-us/community/posts/360072844392-Mutect2-tumor-matched-normal-Exception-in-thread-main-java-lang-OutOfMemoryError-Java-heap-space
     if (params.tumor_only_mode == false)
@@ -164,7 +168,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path reference
     path reference_index
     path reference_dict
-    path normal_name
+    val normal_name
 
     output:
     path "unfiltered_non_canonical.vcf.gz", emit: unfiltered
@@ -176,7 +180,11 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     script:
     tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
     normal_scr = normal.collect { "-I '$it'" }.join(' ')
-    normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
+    if (params.multi_normal_sample) {
+        normal_name_scr = normal_name.collect { "-normal '$it'" }.join(' ')
+    } else {
+        normal_name_scr = "-normal $normal_name"
+    }
     if (params.tumor_only_mode == false)
         """
         set -euo pipefail

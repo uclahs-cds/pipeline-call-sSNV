@@ -1,4 +1,4 @@
-include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
 
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
@@ -11,11 +11,10 @@ workflow mutect2 {
 
     main:
         run_GetSampleName_Mutect2(normal_bam)
-
-        run_GetSampleName_Mutect2.out.name
-        .collectFile(name: 'normal_name.txt', newLine: true,
-        storeDir: "${params.output_dir}/intermediate/${task.process.replace(':', '/')}")
-        .set(normal_name)
+        normal_name_ch = run_GetSampleName_Mutect2.out.name_ch
+            .map{
+                normal_name = it
+            }
 
         if (params.intervals) {
             intervals = params.intervals
@@ -33,7 +32,7 @@ workflow mutect2 {
                 params.reference,
                 params.reference_index,
                 params.reference_dict,
-                normal_name
+                normal_name_ch
             )
         }
         run_SplitIntervals_GATK(
@@ -51,7 +50,7 @@ workflow mutect2 {
             params.reference,
             params.reference_index,
             params.reference_dict,
-            normal_name
+            normal_name_ch
         )
 
         if (params.intervals) {
