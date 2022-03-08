@@ -10,11 +10,10 @@ workflow mutect2 {
     normal_index
 
     main:
-        run_GetSampleName_Mutect2(normal_bam)
+        run_GetSampleName_Mutect2(normal_bam.flatten())
         normal_name_ch = run_GetSampleName_Mutect2.out.name_ch
-            .map{
-                normal_name = it
-            }
+            .map{normal_name = it}
+            .collect()
 
         if (params.intervals) {
             intervals = params.intervals
