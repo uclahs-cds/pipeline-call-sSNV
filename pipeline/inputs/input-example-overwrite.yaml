@@ -1,14 +1,6 @@
 ---
 sample_name: ''
 normal:
-  - id: <id1>
-    bam: </path/bam>
+  - bam: /path/to/normal/bam
 tumor:
-  - id: <id1>
-    bam: </path/bam>
-algorithm:
-  - mutect2
-  - strelka2
-  - somaticsniper
-reference: ''
-tumor_only_mode: false
+  - bam: /path/to/tumor/bam
