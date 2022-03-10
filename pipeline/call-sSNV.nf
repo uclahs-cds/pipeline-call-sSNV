@@ -55,7 +55,6 @@ def indexFile(bam_or_vcf) {
 Channel
     .from( params.tumor )
     .multiMap{ it ->
-        tumor_id: it['id']
         tumor_bam: it['bam']
         tumor_index: indexFile(it['bam'])
     }
@@ -64,7 +63,6 @@ Channel
 Channel
     .from( params.normal )
     .multiMap{ it ->
-        normal_id: it['id']
         normal_bam: it['bam']
         normal_index: indexFile(it['bam'])
     }
