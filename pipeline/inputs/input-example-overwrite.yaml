@@ -1,6 +1,6 @@
 ---
 sample_name: ''
 normal:
-  - bam: /path/to/normal/bam
+  - /path/to/normal/bam
 tumor:
-  - bam: /path/to/tumor/bam
+  - /path/to/tumor/bam
