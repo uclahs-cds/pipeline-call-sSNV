@@ -45,7 +45,6 @@ workflow mutect2 {
             params.reference_index,
             params.reference_dict
         )
-        run_SplitIntervals_GATK.out.interval_list.view()
 
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
