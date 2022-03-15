@@ -108,9 +108,9 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor_scr = tumor.collect { "-I $it" }.join(' ')
-    normal_scr = normal.collect { "-I $it" }.join(' ')
-    normal_name_scr = params.multi_normal_sample ? normal_name.collect { "-normal $it" }.join(' ') :  "-normal $normal_name"
+    tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
+    normal_scr = normal.collect { "-I '$it'" }.join(' ')
+    normal_name_scr = params.multi_normal_sample ? normal_name.collect { "-normal '$it'" }.join(' ') :  "-normal $normal_name"
     // --tmp-dir was added to help resolve potential memory issues
     // https://gatk.broadinstitute.org/hc/en-us/community/posts/360072844392-Mutect2-tumor-matched-normal-Exception-in-thread-main-java-lang-OutOfMemoryError-Java-heap-space
     bam_scr = params.tumor_only_mode ? "$tumor_scr" : "$tumor_scr $normal_scr $normal_name_scr"
@@ -159,19 +159,19 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor_scr = tumor.collect { "-I $it" }.join(' ')
-    normal_scr = normal.collect { "-I $it" }.join(' ')
-    normal_name_scr = params.multi_normal_sample ? normal_name.collect { "-normal $it" }.join(' ') :  "-normal $normal_name"
+    tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
+    normal_scr = normal.collect { "-I '$it'" }.join(' ')
+    normal_name_scr = params.multi_normal_sample ? normal_name.collect { "-normal '$it'" }.join(' ') :  "-normal $normal_name"
     bam_scr = params.tumor_only_mode ? "$tumor_scr" : "$tumor_scr $normal_scr $normal_name_scr"
     """
     set -euo pipefail
         
     gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
+        -XL $interval \
         $bam_scr \
-        -L $interval \
         --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
-        -O unfiltered_${interval.baseName}.vcf.gz \
+        -O unfiltered_non_canonical.vcf.gz \
         --tmp-dir \$PWD \
         ${params.mutect2_extra_args}
     """

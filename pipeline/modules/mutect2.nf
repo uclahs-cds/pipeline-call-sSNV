@@ -45,16 +45,32 @@ workflow mutect2 {
             params.reference_index,
             params.reference_dict
         )
+        run_SplitIntervals_GATK.out.interval_list.view()
+
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
-            tumor_bam,
-            tumor_index,
-            normal_bam,
-            normal_index,
+            tumor_bam
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
+            tumor_index
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
+            normal_bam
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
+            normal_index
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
             params.reference,
             params.reference_index,
             params.reference_dict,
             normal_name_ch
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
         )
 
         if (params.intervals) {
