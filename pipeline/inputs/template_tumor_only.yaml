@@ -1,5 +1,4 @@
 ---
 sample_name: 'A-mini-n2'
-normal:
 tumor:
   - /hot/resources/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
