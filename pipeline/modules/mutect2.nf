@@ -14,7 +14,8 @@ workflow mutect2 {
             normal_name_ch = Channel.from('normal_name')
         } else {
             run_GetSampleName_Mutect2(normal_bam.flatten())
-            normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect().toList()
+            normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
+                .map{return (it in List) ? it : [it]}
         }
 
         if (params.intervals) {
@@ -42,22 +43,26 @@ workflow mutect2 {
             params.reference_index,
             params.reference_dict
         )
-
+  
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
             tumor_bam
+                .map { [it] }
                 .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
                 .map { it[0] }
             ,
             tumor_index
+                .map { [it] }
                 .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
                 .map { it[0] }
             ,
             normal_bam
+                .map { [it] }
                 .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
                 .map { it[0] }
             ,
             normal_index
+                .map { [it] }
                 .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
                 .map { it[0] }
             ,
@@ -65,6 +70,7 @@ workflow mutect2 {
             params.reference_index,
             params.reference_dict,
             normal_name_ch
+                .map { [it] }
                 .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
                 .map { it[0] }
         )
