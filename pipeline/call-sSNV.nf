@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
-params.callable_region_index = "${params.callable_region_index}.tbi"
+params.callable_region_index = "${params.callable_region}.tbi"
 
 
 log.info """\
