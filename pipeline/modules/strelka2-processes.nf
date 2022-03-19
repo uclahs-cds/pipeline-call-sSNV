@@ -67,6 +67,7 @@ process call_sSNV_Strelka2 {
     path reference
     path reference_index
     tuple path(indel_candidates), path(indel_candidates_index)
+    path callable_region
 
     output:
     tuple val("somatic_snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
@@ -82,6 +83,7 @@ process call_sSNV_Strelka2 {
         --normalBam $normal \
         --tumorBam $tumor \
         --referenceFasta $reference \
+	--callRegions $callable_region \
         --indelCandidates $indel_candidates \
         ${exome} \
         --runDir StrelkaSomaticWorkflow

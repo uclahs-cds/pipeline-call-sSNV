@@ -19,7 +19,8 @@ workflow strelka2 {
             "${params.normal}.bai",
             params.reference,
             "${params.reference}.fai",
-            call_sIndel_Manta.out[0]
+            call_sIndel_Manta.out[0],
+	    params.callable_region
         )
         filter_VCF(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
         compress_VCF_bgzip(filter_VCF.out.strelka2_vcf)
