@@ -4,6 +4,7 @@ nextflow.enable.dsl=2
 
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
+params.callable_region_index = "${params.callable_region_index}.tbi"
 
 
 log.info """\
@@ -40,7 +41,7 @@ include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "$
 include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
 
 workflow {
-    if (params.tumor_only_mode)
+    if (params.tumor_only_mode){
         file_to_validate = Channel.from(
             params.tumor,
             "${params.tumor}.bai",
@@ -48,7 +49,7 @@ workflow {
             params.reference_index,
             params.reference_dict
         )
-    else
+     } else if ('strelka2' in params.algorithm) {
         file_to_validate = Channel.from(
             params.tumor,
             "${params.tumor}.bai",
@@ -56,8 +57,20 @@ workflow {
             "${params.normal}.bai",
             params.reference,
             params.reference_index,
-            params.reference_dict
+            params.reference_dict,
+	    params.callable_region,
+	    params.callable_region_index
         )
+     } else {
+        file_to_validate = Channel.from(
+            params.tumor,
+            "${params.tumor}.bai",
+            params.normal,
+            "${params.normal}.bai",
+            params.reference,
+            params.reference_index,
+            params.reference_dict)
+     }
 
     run_validate_PipeVal(file_to_validate)
 
