@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
-params.callable_region_index = "${params.callable_region}.tbi"
+params.call_region_index = "${params.call_region}.tbi"
 
 
 log.info """\
@@ -58,8 +58,8 @@ workflow {
             params.reference,
             params.reference_index,
             params.reference_dict,
-	    params.callable_region,
-	    params.callable_region_index
+	    params.call_region,
+	    params.call_region_index
         )
      } else {
         file_to_validate = Channel.from(

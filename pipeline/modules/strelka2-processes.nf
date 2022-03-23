@@ -27,6 +27,8 @@ process call_sIndel_Manta {
     path normal_index
     path reference
     path reference_index
+    path call_region
+    path call_region_index
 
     output:
     tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
@@ -42,6 +44,7 @@ process call_sIndel_Manta {
         --tumorBam $tumor \
         --referenceFasta $reference \
         ${exome} \
+        --callRegions $call_region \
         --runDir MantaWorkflow
     
     MantaWorkflow/runWorkflow.py -j ${task.cpus}
@@ -67,8 +70,9 @@ process call_sSNV_Strelka2 {
     path reference
     path reference_index
     tuple path(indel_candidates), path(indel_candidates_index)
-    path callable_region
-    path callable_region_index
+    path call_region
+    path call_region_index
+
     output:
     tuple val("somatic_snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
     tuple val("somatic_indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
@@ -83,7 +87,7 @@ process call_sSNV_Strelka2 {
         --normalBam $normal \
         --tumorBam $tumor \
         --referenceFasta $reference \
-	--callRegions $callable_region \
+	    --callRegions $call_region \
         --indelCandidates $indel_candidates \
         ${exome} \
         --runDir StrelkaSomaticWorkflow
