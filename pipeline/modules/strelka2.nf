@@ -10,7 +10,7 @@ workflow strelka2 {
             params.normal,
             "${params.normal}.bai",
             params.reference,
-            "${params.reference}.fai"
+            "${params.reference}.fai",
             params.call_region,
             params.call_region_index
         )
