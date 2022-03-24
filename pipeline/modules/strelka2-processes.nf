@@ -38,7 +38,7 @@ process call_sIndel_Manta {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region = params.use_call_region ? "--callRegions ${call_region}" : ""
+    call_region_scr = params.use_call_region ? "--callRegions ${call_region}" : ""
     """
     configManta.py \
         --normalBam $normal \
