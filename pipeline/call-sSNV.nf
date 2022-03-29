@@ -39,25 +39,52 @@ include { somaticsniper } from './modules/somaticsniper' addParams(workflow_outp
 include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/strelka2-${params.strelka2_version}")
 include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
 
+// Returns the index file for the given bam or vcf
+def indexFile(bam_or_vcf) {
+  if(bam_or_vcf.endsWith('.bam')) {
+    return "${bam_or_vcf}.bai"
+  }
+  else if(bam_or_vcf.endsWith('vcf.gz')) {
+    return "${bam_or_vcf}.tbi"
+  }
+  else {
+    throw new Exception("Index file for ${bam_or_vcf} file type not supported. Use .bam or .vcf.gz files.")
+  }
+}
+
+Channel
+    .from( params.tumor )
+    .multiMap{ it ->
+        tumor_bam: it
+        tumor_index: indexFile(it)
+    }
+    .set { tumor_input }
+
+Channel
+    .from( params.normal )
+    .multiMap{ it ->
+        normal_bam: it
+        normal_index: indexFile(it)
+    }
+    .set { normal_input }
+
+
 workflow {
     if (params.tumor_only_mode)
         file_to_validate = Channel.from(
-            params.tumor,
-            "${params.tumor}.bai",
             params.reference,
             params.reference_index,
             params.reference_dict
         )
+        .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
+    
     else
         file_to_validate = Channel.from(
-            params.tumor,
-            "${params.tumor}.bai",
-            params.normal,
-            "${params.normal}.bai",
             params.reference,
             params.reference_index,
             params.reference_dict
         )
+        .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
 
     run_validate_PipeVal(file_to_validate)
 
@@ -91,12 +118,27 @@ workflow {
     }
 
     if ('somaticsniper' in params.algorithm) {
-        somaticsniper()
+        somaticsniper(
+            tumor_input.tumor_bam,
+            tumor_input.tumor_index,
+            normal_input.normal_bam,
+            normal_input.normal_index
+        )
     }
     if ('strelka2' in params.algorithm) {
-        strelka2()
+        strelka2(
+            tumor_input.tumor_bam,
+            tumor_input.tumor_index,
+            normal_input.normal_bam,
+            normal_input.normal_index
+        )
     }
     if ('mutect2' in params.algorithm) {
-        mutect2()
+        mutect2(
+            tumor_input.tumor_bam.collect(),
+            tumor_input.tumor_index.collect(),
+            normal_input.normal_bam.collect(),
+            normal_input.normal_index.collect()
+        )
     }
 }
