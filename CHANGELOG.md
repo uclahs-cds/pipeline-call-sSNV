@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Add `--callRegion` option in Stelka2.
+- Add `--callRegion` option to Stelka2 algorithm.
 ### Added
 
 ## [3.0.0] - 2022-03-01
@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 - Deprecate version 2.1.0.
 
-## [2.1.0] - 2021-10-13 
+## [2.1.0] - 2021-10-13
 ### Changed
 - Update the GATK version from 4.2.0 to 4.2.2.
 - Standardize process names.
