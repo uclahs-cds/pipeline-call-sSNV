@@ -4,8 +4,6 @@ nextflow.enable.dsl=2
 
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
-params.call_region_index = "${params.call_region}.tbi"
-
 
 log.info """\
     ------------------------------------
@@ -17,7 +15,7 @@ log.info """\
     - pipeline:
         name: ${workflow.manifest.name}
         version: ${workflow.manifest.version}
-    
+
     - input:
         sample_name: ${params.sample_name}
         algorithm: ${params.algorithm}
@@ -32,10 +30,10 @@ log.info """\
         output_log_dir: ${params.output_log_dir}
 
     - option:
-        save_intermediate_files: ${params.save_intermediate_files}    
+        save_intermediate_files: ${params.save_intermediate_files}
 """
 
-include { run_validate_PipeVal } from './modules/validation' 
+include { run_validate_PipeVal } from './modules/validation'
 include { somaticsniper } from './modules/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/somaticsniper-${params.somaticsniper_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/somaticsniper-${params.somaticsniper_version}")
 include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/strelka2-${params.strelka2_version}")
 include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
@@ -58,8 +56,8 @@ workflow {
             params.reference,
             params.reference_index,
             params.reference_dict,
-	    params.call_region,
-	    params.call_region_index
+	        params.call_region,
+	        params.call_region_index
         )
      } else {
         file_to_validate = Channel.from(
@@ -86,12 +84,12 @@ workflow {
     if (params.algorithm.isEmpty()) {
         throw new Exception("ERROR: params.algorithm cannot be empty")
     }
-    
+
     Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
     if (params.tumor_only_mode) {
         valid_algorithms = ['mutect2']
     }
-    
+
     for (algo in params.algorithm) {
         if (!(algo in valid_algorithms)) {
             if (params.tumor_only_mode) {
@@ -99,7 +97,7 @@ workflow {
                 } else {
                     throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
                     }
-            
+
         }
     }
 
