@@ -73,8 +73,8 @@ process run_GetSampleName_Mutect2 {
 
     gatk GetSampleName -I $normal_bam -O sampleName.txt
     normal_name=`cat sampleName.txt`
-    
-    """                    
+
+    """
 }
 
 process call_sSNVInAssembledChromosomes_Mutect2 {
@@ -108,16 +108,16 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
-    normal_scr = normal.collect { "-I '$it'" }.join(' ')
-    normal_name_scr = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam_scr = params.tumor_only_mode ? "$tumor_scr" : "$tumor_scr $normal_scr $normal_name_scr"
+    tumor_script = tumor.collect { "-I '$it'" }.join(' ')
+    normal_script = normal.collect { "-I '$it'" }.join(' ')
+    normal_name_script = normal_name.collect { "-normal ${it}" }.join(' ')
+    bam_script = params.tumor_only_mode ? "$tumor_script" : "$tumor_script $normal_script $normal_name_script"
     """
     set -euo pipefail
-        
+
     gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
-        $bam_scr \
+        $bam_script \
         -L $interval \
         --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
         -O unfiltered_${interval.baseName}.vcf.gz \
@@ -157,17 +157,17 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor_scr = tumor.collect { "-I '$it'" }.join(' ')
-    normal_scr = normal.collect { "-I '$it'" }.join(' ')
-    normal_name_scr = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam_scr = params.tumor_only_mode ? "$tumor_scr" : "$tumor_scr $normal_scr $normal_name_scr"
+    tumor_script = tumor.collect { "-I '$it'" }.join(' ')
+    normal_script = normal.collect { "-I '$it'" }.join(' ')
+    normal_name_script = normal_name.collect { "-normal ${it}" }.join(' ')
+    bam_script = params.tumor_only_mode ? "$tumor_script" : "$tumor_script $normal_script $normal_name_script"
     """
     set -euo pipefail
-        
+
     gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
         -XL $interval \
-        $bam_scr \
+        $bam_script \
         --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
         -O unfiltered_non_canonical.vcf.gz \
         --tmp-dir \$PWD \
@@ -212,7 +212,7 @@ process run_MergeMutectStats_GATK {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
-    
+
     input:
     path unfiltered_stats
 
@@ -267,7 +267,7 @@ process run_FilterMutectCalls_GATK {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
-    
+
     input:
     path reference
     path reference_index
@@ -310,7 +310,7 @@ process filter_VCF {
     output:
     path "mutect2_${params.sample_name}_filtered_pass.vcf", emit: mutect2_vcf
     path ".command.*"
-    
+
     script:
     """
     set -euo pipefail
