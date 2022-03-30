@@ -1,0 +1,6 @@
+---
+sample_id: 'sample_name'
+normal:
+  - '/path/to/normal.bam'
+tumor:
+  - '/path/to/tumor.bam'
