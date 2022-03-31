@@ -3,9 +3,19 @@ include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCand
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
 workflow somaticsniper {
+    take:
+    tumor_bam
+    tumor_index
+    normal_bam
+    normal_index
+
     main:
-        call_sSNV_SomaticSniper(params.tumor, params.normal, params.reference)
-        ch_convert_BAM2Pileup_SAMtools_bams = channel.fromList([['tumor', params.tumor], ['normal', params.normal]])
+        call_sSNV_SomaticSniper(tumor_bam, normal_bam, params.reference)
+        tumor_bam_path = tumor_bam 
+            .map{it -> ['tumor', it]}
+        normal_bam_path = normal_bam
+            .map{it -> ['normal', it]}
+        ch_convert_BAM2Pileup_SAMtools_bams = tumor_bam_path.mix(normal_bam_path)
         convert_BAM2Pileup_SAMtools(ch_convert_BAM2Pileup_SAMtools_bams, params.reference)
         create_IndelCandidate_SAMtools(convert_BAM2Pileup_SAMtools.out.raw_pileup)
 
@@ -25,7 +35,7 @@ workflow somaticsniper {
         generate_ReadCount_bam_readcount(
             params.reference,
             create_ReadCountPosition_SomaticSniper.out.snp_positions,
-            params.tumor, "${params.tumor}.bai")
+            tumor_bam, tumor_index)
         filter_FalsePositive_SomaticSniper(
             apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, 
             generate_ReadCount_bam_readcount.out.readcount)
