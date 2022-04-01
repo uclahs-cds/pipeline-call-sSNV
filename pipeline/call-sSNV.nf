@@ -76,8 +76,8 @@ workflow {
             params.reference_dict
         )
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
-
-    else
+    }
+    else {
         file_to_validate = Channel.from(
             params.reference,
             params.reference_index,
@@ -86,7 +86,7 @@ workflow {
             params.call_region_index
         )
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
-
+    }
     run_validate_PipeVal(file_to_validate)
 
     run_validate_PipeVal.out.val_file.collectFile(
