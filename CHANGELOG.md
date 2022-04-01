@@ -6,9 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Add `--callRegion` option to Stelka2 algorithm.
 - Change the input files to YAML and template.config.
 ### Added
+- Add `--callRegion` option to Stelka2 algorithm.
 
 ## [3.0.0] - 2022-03-01
 ### Changed
