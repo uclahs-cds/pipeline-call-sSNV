@@ -108,16 +108,16 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor_script = tumor.collect { "-I '$it'" }.join(' ')
-    normal_script = normal.collect { "-I '$it'" }.join(' ')
-    normal_name_script = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam_script = params.tumor_only_mode ? "$tumor_script" : "$tumor_script $normal_script $normal_name_script"
+    tumor = tumor.collect { "-I '$it'" }.join(' ')
+    normal = normal.collect { "-I '$it'" }.join(' ')
+    normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
+    bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
     """
     set -euo pipefail
 
     gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
-        $bam_script \
+        $bam \
         -L $interval \
         --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
         -O unfiltered_${interval.baseName}.vcf.gz \
@@ -157,17 +157,17 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor_script = tumor.collect { "-I '$it'" }.join(' ')
-    normal_script = normal.collect { "-I '$it'" }.join(' ')
-    normal_name_script = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam_script = params.tumor_only_mode ? "$tumor_script" : "$tumor_script $normal_script $normal_name_script"
+    tumor = tumor.collect { "-I '$it'" }.join(' ')
+    normal = normal.collect { "-I '$it'" }.join(' ')
+    normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
+    bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
     """
     set -euo pipefail
 
     gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
         -XL $interval \
-        $bam_script \
+        $bam \
         --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
         -O unfiltered_non_canonical.vcf.gz \
         --tmp-dir \$PWD \
