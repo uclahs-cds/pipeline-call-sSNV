@@ -13,7 +13,7 @@ process call_sIndel_Manta {
     container params.docker_image_manta
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "MantaWorkflow/results",
+               pattern: "MantaWorkflow",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -33,7 +33,7 @@ process call_sIndel_Manta {
     output:
     tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
           path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz.tbi")
-    path "MantaWorkflow/results"
+    path "MantaWorkflow"
     path ".command.*"
 
     script:
@@ -56,7 +56,7 @@ process call_sSNV_Strelka2 {
     container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "StrelkaSomaticWorkflow/results",
+               pattern: "StrelkaSomaticWorkflow",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -77,7 +77,7 @@ process call_sSNV_Strelka2 {
     output:
     tuple val("somatic_snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
     tuple val("somatic_indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
-    path "StrelkaSomaticWorkflow/results"
+    path "StrelkaSomaticWorkflow"
     path ".command.*"
 
     script:
