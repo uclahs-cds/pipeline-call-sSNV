@@ -69,7 +69,7 @@ Channel
 
 
 workflow {
-    if (params.tumor_only_mode){
+    if (params.tumor_only_mode) {
         file_to_validate = Channel.from(
             params.reference,
             params.reference_index,
@@ -82,8 +82,8 @@ workflow {
             params.reference,
             params.reference_index,
             params.reference_dict,
-	        params.call_region,
-	        params.call_region_index
+            params.call_region,
+            params.call_region_index
         )
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
 
