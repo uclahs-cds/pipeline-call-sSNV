@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Add `--callRegion` option to Stelka2 algorithm.
+- Add Manta and Strelka2's intermediate files under `workspace` folder.
 - Change the input files to YAML and template.config.
 ### Added
 
