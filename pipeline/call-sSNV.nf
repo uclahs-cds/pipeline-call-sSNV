@@ -31,7 +31,10 @@ log.info """\
         output_log_dir: ${params.output_log_dir}
 
     - option:
-        save_intermediate_files: ${params.save_intermediate_files}    
+        save_intermediate_files: ${params.save_intermediate_files}   
+        multi_tumor_sample: ${params.multi_tumor_sample}
+        multi_normal_sample: ${params.multi_normal_sample}
+        tumor_only_mode: ${params.tumor_only_mode}
 """
 
 include { run_validate_PipeVal } from './modules/validation' 

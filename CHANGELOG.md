@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change the input files to YAML and template.config.
 ### Added
+- Add mutect2's multiple samples option into the pipeline.
 
 ## [3.0.0] - 2022-03-01
 ### Changed
