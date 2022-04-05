@@ -1,5 +1,5 @@
 ---
-sample_id: 'sample_name'
+sample_id: 'sample_id'
 normal:
   - '/path/to/normal.bam'
 tumor:

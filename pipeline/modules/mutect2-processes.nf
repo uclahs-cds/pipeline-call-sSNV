@@ -297,7 +297,7 @@ process filter_VCF {
     container "ubuntu:20.04"
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "mutect2_${params.sample_name}_filtered_pass.vcf",
+               pattern: "mutect2_${params.sample_id}_filtered_pass.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -308,12 +308,12 @@ process filter_VCF {
     path filtered
 
     output:
-    path "mutect2_${params.sample_name}_filtered_pass.vcf", emit: mutect2_vcf
+    path "mutect2_${params.sample_id}_filtered_pass.vcf", emit: mutect2_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > mutect2_${params.sample_name}_filtered_pass.vcf
+    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > mutect2_${params.sample_id}_filtered_pass.vcf
     """
 }

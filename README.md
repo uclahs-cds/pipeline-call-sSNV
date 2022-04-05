@@ -14,12 +14,12 @@ The mutect2 algorithm can also take multiple samples and tumor only samples.
 ![Diagram](docs/diagram.svg)
 #### Tools
 ##### SomaticSniper
-SomaticSniper source: https://github.com/genome/somatic-sniper  
-Version: SomaticSniper v1.0.5.0 (Released on Jul 16, 2015)  
+SomaticSniper source: https://github.com/genome/somatic-sniper
+Version: SomaticSniper v1.0.5.0 (Released on Jul 16, 2015)
 Docker image: blcdsdockerregistry/call-ssnv:somaticsniper-v1.0.5.0
 ##### bam-readcount
-bam-readcount source: https://github.com/genome/bam-readcount  
-Version: v0.8.0 Release (Released on Oct 21, 2016)  
+bam-readcount source: https://github.com/genome/bam-readcount
+Version: v0.8.0 Release (Released on Oct 21, 2016)
 Docker image: blcdsdockerregistry/call-ssnv:bam-readcount-v0.8.0
 
 ### Strelka2
@@ -42,20 +42,20 @@ Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker image: broadinstitute/gatk:4.2.4.1
 
 ## Inputs
-To run the pipeline, one input.yaml and one template.config are needed. When running a batch of samples, template.config can be shared, while input.yaml is unique for each sample. 
+To run the pipeline, one input.yaml and one template.config are needed. When running a batch of samples, template.config can be shared, while input.yaml is unique for each sample.
 
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
-| sample_name | string | The name/ID of the sample                 | YAML File |
+| sample_id | string | The name/ID of the sample                 | YAML File |
 | algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
 | tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
-| output_log_dir | string | The location where log files (.command.\*) will be saved | 
+| output_log_dir | string | The location where log files (.command.\*) will be saved |
 Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
-| workdir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File | 
+| workdir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
 
 ## Strelka2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
@@ -78,22 +78,22 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 ## Outputs
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| somaticsniper_{sample_name}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
-| strelka2_{sample_name}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
-| strelka2_{sample_name}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
-| mutect2_{sample_name}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
+| somaticsniper_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
+| strelka2_{sample_id}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
+| strelka2_{sample_id}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
+| mutect2_{sample_id}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
 1. Download the stable release [here](https://github.com/uclahs-cds/pipeline-call-sSNV/releases) or the development version by cloning the GitHub repository to your machine.
-2. Fill in the params section of the [config file](https://github.com/uclahs-cds/pipeline-call-sSNV/blob/main/pipeline/nextflow.config). 
+2. Fill in the params section of the [config file](https://github.com/uclahs-cds/pipeline-call-sSNV/blob/main/pipeline/nextflow.config).
 3. Run the pipeline using the [Nextflow submission script](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
 ```bash
 python path/to/submit_nextflow_pipeline.py \
     --nextflow_script path/to/call-sSNV.nf \
     --nextflow_config path/to/nextflow.config \
     --nextflow_yaml path/to/input.yaml \
-    --pipeline_run_name <sample_name> \
+    --pipeline_run_name <sample_id> \
     --partition_type F72 \
     --email jdoe@mednet.ucla.edu
 ```
