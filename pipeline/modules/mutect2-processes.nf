@@ -73,8 +73,8 @@ process run_GetSampleName_Mutect2 {
 
     gatk GetSampleName -I $normal_bam -O sampleName.txt
     normal_name=`cat sampleName.txt`
-    
-    """                    
+
+    """
 }
 
 process call_sSNVInAssembledChromosomes_Mutect2 {
@@ -114,7 +114,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     bam_scr = params.tumor_only_mode ? "$tumor_scr" : "$tumor_scr $normal_scr $normal_name_scr"
     """
     set -euo pipefail
-        
+
     gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
         $bam_scr \
@@ -163,7 +163,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     bam_scr = params.tumor_only_mode ? "$tumor_scr" : "$tumor_scr $normal_scr $normal_name_scr"
     """
     set -euo pipefail
-        
+
     gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
         -R $reference \
         -XL $interval \
@@ -212,7 +212,7 @@ process run_MergeMutectStats_GATK {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
-    
+
     input:
     path unfiltered_stats
 
@@ -257,6 +257,75 @@ process run_LearnReadOrientationModel_GATK {
     """
 }
 
+process run_GetPileupSummaries_GATK {
+    container params.docker_image_GATK
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+               mode: "copy",
+               pattern: '*.table'
+    publishDir path: "${params.workflow_output_log_dir}",
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path interval
+    path bam
+    path bam_index
+    path reference
+    path reference_index
+    path reference_dict
+    path bundle_contest_hapmap_3p3_vcf_gz
+    path bundle_contest_hapmap_3p3_vcf_gz_tbi
+
+    output:
+    path(".command.*")
+    path("*_getpileupsummaries.table"), emit: pileupsummaries
+
+    script:
+    intervals = interval.collect{ "--intervals '$it'" }.join(' ')
+    """
+    set -euo pipefail
+    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
+        GetPileupSummaries \
+        -I $bam \
+        -R $reference \
+        -L $intervals \
+        -V $bundle_contest_hapmap_3p3_vcf_gz \
+        --tmp-dir \$PWD \
+        -O ${bam.baseName}}_getpileupsummaries.table
+    """
+}
+
+process run_CalculateContamination_GATK {
+    container params.docker_image_GATK
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+               mode: "copy",
+               pattern: '*.table'
+    publishDir path: "${params.workflow_output_log_dir}",
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path tumor_pileupsummaries
+    path normal_pileupsummaries optional true
+
+    output:
+    path(".command.*")
+    path("calculatecontamination.table"), emit: contamination
+
+    script:
+    matched = params.tumor_only_mode ? "" : "--matched-normal ${matched_normal_pileupsummaries}"
+
+    """
+    set -euo pipefail
+    gatk --java-options "-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m \
+        CalculateContamination \
+        --input ${pileupsummaries} \
+        --output calculatecontamination.table
+    """
+}
+
 process run_FilterMutectCalls_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
@@ -267,7 +336,7 @@ process run_FilterMutectCalls_GATK {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
-    
+
     input:
     path reference
     path reference_index
@@ -276,6 +345,7 @@ process run_FilterMutectCalls_GATK {
     path unfiltered_index
     path unfiltered_stats
     path read_orientation_model
+    path contamination
 
     output:
     path "filtered.vcf.gz", emit: filtered
@@ -288,6 +358,7 @@ process run_FilterMutectCalls_GATK {
         -R $reference \
         -V $unfiltered \
         --ob-priors $read_orientation_model \
+        --contamination-table $contamination \
         -O filtered.vcf.gz \
         ${params.filter_mutect_calls_extra_args}
     """
@@ -310,7 +381,7 @@ process filter_VCF {
     output:
     path "mutect2_${params.sample_name}_filtered_pass.vcf", emit: mutect2_vcf
     path ".command.*"
-    
+
     script:
     """
     set -euo pipefail
