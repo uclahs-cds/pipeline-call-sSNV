@@ -16,9 +16,9 @@ log.info """\
     - pipeline:
         name: ${workflow.manifest.name}
         version: ${workflow.manifest.version}
-    
+
     - input:
-        sample_name: ${params.sample_name}
+        sample_id: ${params.sample_id}
         algorithm: ${params.algorithm}
         tumor: ${params.tumor}
         normal: ${params.normal}
@@ -31,13 +31,13 @@ log.info """\
         output_log_dir: ${params.output_log_dir}
 
     - option:
-        save_intermediate_files: ${params.save_intermediate_files}   
+        save_intermediate_files: ${params.save_intermediate_files}
         multi_tumor_sample: ${params.multi_tumor_sample}
         multi_normal_sample: ${params.multi_normal_sample}
         tumor_only_mode: ${params.tumor_only_mode}
 """
 
-include { run_validate_PipeVal } from './modules/validation' 
+include { run_validate_PipeVal } from './modules/validation'
 include { somaticsniper } from './modules/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/somaticsniper-${params.somaticsniper_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/somaticsniper-${params.somaticsniper_version}")
 include { strelka2 } from './modules/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/strelka2-${params.strelka2_version}")
 include { mutect2 } from './modules/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
@@ -80,7 +80,7 @@ workflow {
             params.reference_dict
         )
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
-    
+
     else
         file_to_validate = Channel.from(
             params.reference,
@@ -103,12 +103,12 @@ workflow {
     if (params.algorithm.isEmpty()) {
         throw new Exception("ERROR: params.algorithm cannot be empty")
     }
-    
+
     Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
     if (params.tumor_only_mode) {
         valid_algorithms = ['mutect2']
     }
-    
+
     for (algo in params.algorithm) {
         if (!(algo in valid_algorithms)) {
             if (params.tumor_only_mode) {
@@ -116,7 +116,7 @@ workflow {
                 } else {
                     throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
                     }
-            
+
         }
     }
 
