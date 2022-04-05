@@ -1,5 +1,6 @@
 ---
-sample_name: 'A-mini-n2'
+sample_id: 'A-mini-n2'
+# For multi samples, just list all the bams under the normal or tumor.
 normal:
   - /hot/resources/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
 tumor:
