@@ -98,8 +98,8 @@ workflow mutect2 {
 
         run_GetPileupSummaries_GATK_tumor(
                 run_SplitIntervals_GATK.out.interval_list,
-                tumor_bam,
-                tumor_index,
+                tumor_bam.flatten(),
+                tumor_index.flatten(),
                 params.reference,
                 params.reference_index,
                 params.reference_dict,

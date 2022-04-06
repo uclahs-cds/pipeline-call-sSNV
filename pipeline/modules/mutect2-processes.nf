@@ -292,7 +292,7 @@ process run_GetPileupSummaries_GATK {
         -R $reference \
         -V $bundleVcf \
         --tmp-dir \$PWD \
-        -O ${bam.getName()}_getpileupsummaries.table
+        -O ${bam.baseName}_getpileupsummaries.table
     """
 }
 
@@ -300,7 +300,7 @@ process run_CalculateContamination_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: 'calculatecontamination.table'
+               pattern: '*_calculatecontamination.table'
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
@@ -312,7 +312,7 @@ process run_CalculateContamination_GATK {
 
     output:
     path(".command.*")
-    path("calculatecontamination.table"), emit: contamination
+    path("*_calculatecontamination.table"), emit: contamination
 
     script:
     matched = params.tumor_only_mode ? "" : "--matched-normal ${normal_pileupsummaries}"
@@ -323,7 +323,7 @@ process run_CalculateContamination_GATK {
         CalculateContamination \
         --input ${tumor_pileupsummaries} \
         $matched \
-        --output calculatecontamination.table
+        --output ${tumor_pileupsummaries.baseName}_calculatecontamination.table
     """
 }
 
@@ -353,13 +353,14 @@ process run_FilterMutectCalls_GATK {
     path ".command.*"
 
     script:
+    contamination = contamination.collect { "--contamination-table  '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk FilterMutectCalls \
         -R $reference \
         -V $unfiltered \
         --ob-priors $read_orientation_model \
-        --contamination-table $contamination \
+        $contamination \
         -O filtered.vcf.gz \
         ${params.filter_mutect_calls_extra_args}
     """
