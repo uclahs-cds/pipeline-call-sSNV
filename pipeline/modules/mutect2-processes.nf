@@ -274,8 +274,8 @@ process run_GetPileupSummaries_GATK {
     path reference
     path reference_index
     path reference_dict
-    path bundle_contest_hapmap_3p3_vcf_gz
-    path bundle_contest_hapmap_3p3_vcf_gz_tbi
+    path bundleVcf
+    path bundleVcf_tbi
 
     output:
     path(".command.*")
@@ -283,16 +283,16 @@ process run_GetPileupSummaries_GATK {
 
     script:
     intervals = interval.collect{ "--intervals '$it'" }.join(' ')
+
     """
     set -euo pipefail
-    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
-        GetPileupSummaries \
+    gatk GetPileupSummaries --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
         -I $bam \
+        $intervals \
         -R $reference \
-        -L $intervals \
-        -V $bundle_contest_hapmap_3p3_vcf_gz \
+        -V $bundleVcf \
         --tmp-dir \$PWD \
-        -O ${bam.baseName}}_getpileupsummaries.table
+        -O ${bam.getName()}_getpileupsummaries.table
     """
 }
 
@@ -300,7 +300,7 @@ process run_CalculateContamination_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: '*.table'
+               pattern: 'calculatecontamination.table'
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
                pattern: ".command.*",
@@ -308,20 +308,21 @@ process run_CalculateContamination_GATK {
 
     input:
     path tumor_pileupsummaries
-    path normal_pileupsummaries optional true
+    path normal_pileupsummaries
 
     output:
     path(".command.*")
     path("calculatecontamination.table"), emit: contamination
 
     script:
-    matched = params.tumor_only_mode ? "" : "--matched-normal ${matched_normal_pileupsummaries}"
+    matched = params.tumor_only_mode ? "" : "--matched-normal ${normal_pileupsummaries}"
 
     """
     set -euo pipefail
-    gatk --java-options "-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m \
+    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
         CalculateContamination \
-        --input ${pileupsummaries} \
+        --input ${tumor_pileupsummaries} \
+        $matched \
         --output calculatecontamination.table
     """
 }

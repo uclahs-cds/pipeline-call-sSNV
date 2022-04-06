@@ -1,6 +1,6 @@
-include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
-include { run_GetPileupSummaries_GATK as run_GetPileupSummaries_GATK_tumor; run_GetPileupSummaries_GATK as run_GetPileupSummaries_GATK_normal } from './mutect2-processes'
-
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF; run_CalculateContamination_GATK } from './mutect2-processes'
+include { run_GetPileupSummaries_GATK as run_GetPileupSummaries_GATK_tumor } from './mutect2-processes'
+include { run_GetPileupSummaries_GATK as run_GetPileupSummaries_GATK_normal } from './mutect2-processes'
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
 workflow mutect2 {
@@ -97,40 +97,37 @@ workflow mutect2 {
         )
 
         run_GetPileupSummaries_GATK_tumor(
-                intervals,
+                run_SplitIntervals_GATK.out.interval_list,
                 tumor_bam,
                 tumor_index,
-                normal_bam,
-                normal_index,
                 params.reference,
                 params.reference_index,
                 params.reference_dict,
                 params.bundle_hapmap_3p3_vcf_gz,
-                "${params.bundle_hapmap_3p3_vcf_gz,}.tbi"
+                params.bundle_hapmap_3p3_vcf_gz_tbi
                 )
 
         if (params.tumor_only_mode == false) {
             run_GetPileupSummaries_GATK_normal(
-                intervals,
-                normal_bam,
-                normal_index,
+                run_SplitIntervals_GATK.out.interval_list,
                 normal_bam,
                 normal_index,
                 params.reference,
                 params.reference_index,
                 params.reference_dict,
                 params.bundle_hapmap_3p3_vcf_gz,
-                "${params.bundle_hapmap_3p3_vcf_gz,}.tbi"
+                params.bundle_hapmap_3p3_vcf_gz_tbi
                 )
         }
 
-        if (params.tumor_only_mode) {
-            run_CalculateContamination_GATK(run_GetPileupSummaries_GATK_tumor.out.contamination)
-        } else {
+        if (params.tumor_only_mode == true) {
+            normal_pileupsummaries = '/scratch/decoy.table'
             run_CalculateContamination_GATK(
-                run_GetPileupSummaries_GATK_tumor.out.contamination,
-                run_GetPileupSummaries_GATK_normal.out.contamination
-            )
+                run_GetPileupSummaries_GATK_tumor.out.pileupsummaries,
+                normal_pileupsummaries
+               )
+        } else {
+            run_CalculateContamination_GATK(run_GetPileupSummaries_GATK_tumor.out.pileupsummaries, run_GetPileupSummaries_GATK_normal.out.pileupsummaries)
         }
 
         run_FilterMutectCalls_GATK(
@@ -141,7 +138,7 @@ workflow mutect2 {
             run_MergeVcfs_GATK.out.unfiltered_index,
             run_MergeMutectStats_GATK.out.merged_stats,
             run_LearnReadOrientationModel_GATK.out.read_orientation_model,
-            run_FilterMutectCalls_GATK.out.contamination
+            run_CalculateContamination_GATK.out.contamination
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
         compress_VCF_bgzip(filter_VCF.out.mutect2_vcf)

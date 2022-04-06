@@ -4,6 +4,7 @@ nextflow.enable.dsl=2
 
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
+params.bundle_hapmap_3p3_vcf_gz_tbi = "${params.bundle_hapmap_3p3_vcf_gz}.tbi"
 
 
 log.info """\
