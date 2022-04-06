@@ -28,7 +28,7 @@ process call_sSNV_SomaticSniper {
     path reference
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf", emit: bam_somaticsniper
+    path "somaticsniper_${params.sample_id}.vcf", emit: bam_somaticsniper
     path ".command.*"
 
     """
@@ -46,7 +46,7 @@ process call_sSNV_SomaticSniper {
         -f $reference \
         $tumor \
         $normal \
-        somaticsniper_${params.sample_name}.vcf
+        somaticsniper_${params.sample_id}.vcf
     """
 }
 
@@ -70,7 +70,7 @@ process convert_BAM2Pileup_SAMtools {
     path reference
 
     output:
-    tuple val(type), path("raw_${type}_${params.sample_name}.pileup"), emit: raw_pileup
+    tuple val(type), path("raw_${type}_${params.sample_id}.pileup"), emit: raw_pileup
     path ".command.*"
 
     """
@@ -78,7 +78,7 @@ process convert_BAM2Pileup_SAMtools {
     samtools pileup \
         -vcf $reference \
         $bam \
-        > raw_${type}_${params.sample_name}.pileup
+        > raw_${type}_${params.sample_id}.pileup
     """
 }
 
@@ -101,7 +101,7 @@ process create_IndelCandidate_SAMtools {
     tuple val(type), path(raw_pileup)
 
     output:
-    tuple val(type), path("${type}_filt_${params.sample_name}.pileup"), emit: filtered_pileup
+    tuple val(type), path("${type}_filt_${params.sample_id}.pileup"), emit: filtered_pileup
     path ".command.*"
 
     """
@@ -110,7 +110,7 @@ process create_IndelCandidate_SAMtools {
         $raw_pileup \
         | awk '\$6>=20' \
         | grep -P "\t\\*\t" \
-        > ${type}_filt_${params.sample_name}.pileup
+        > ${type}_filt_${params.sample_id}.pileup
     """
 }
 
@@ -132,7 +132,7 @@ process apply_NormalIndelFilter_SomaticSniper {
     path indel_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal", emit: vcf_normal
+    path "somaticsniper_${params.sample_id}.vcf_normal", emit: vcf_normal
     path ".command.*"
 
     """
@@ -140,7 +140,7 @@ process apply_NormalIndelFilter_SomaticSniper {
     snpfilter.pl \
         --snp-file $snp_file \
         --indel-file $indel_file \
-        --out-file somaticsniper_${params.sample_name}.vcf_normal
+        --out-file somaticsniper_${params.sample_id}.vcf_normal
     """
 }
 
@@ -162,7 +162,7 @@ process apply_TumorIndelFilter_SomaticSniper {
     path indel_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter", emit: vcf_tumor
+    path "somaticsniper_${params.sample_id}.vcf_normal_tumor.SNPfilter", emit: vcf_tumor
     path ".command.*"
 
     """
@@ -170,7 +170,7 @@ process apply_TumorIndelFilter_SomaticSniper {
     snpfilter.pl \
         --snp-file $snp_file \
         --indel-file $indel_file \
-        --out-file somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter
+        --out-file somaticsniper_${params.sample_id}.vcf_normal_tumor.SNPfilter
     """
 }
 
@@ -191,14 +191,14 @@ process create_ReadCountPosition_SomaticSniper {
     path snp_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos", emit: snp_positions
+    path "somaticsniper_${params.sample_id}.vcf_normal_tumor.SNPfilter.pos", emit: snp_positions
     path ".command.*"
 
     """
     set -euo pipefail
     prepare_for_readcount.pl \
         --snp-file $snp_file \
-        --out-file somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.pos
+        --out-file somaticsniper_${params.sample_id}.vcf_normal_tumor.SNPfilter.pos
     """
 }
 
@@ -222,7 +222,7 @@ process generate_ReadCount_bam_readcount {
     path tumor_index
 
     output:
-    path "somaticsniper_${params.sample_name}.readcount", emit: readcount
+    path "somaticsniper_${params.sample_id}.readcount", emit: readcount
     path ".command.*"
 
     // tumor index file not explicitly passed to bam-readcount,
@@ -237,7 +237,7 @@ process generate_ReadCount_bam_readcount {
         -f $reference \
         -l $site_list \
         $tumor \
-        > somaticsniper_${params.sample_name}.readcount
+        > somaticsniper_${params.sample_id}.readcount
     """
 }
 
@@ -259,8 +259,8 @@ process filter_FalsePositive_SomaticSniper {
     path readcount_file
 
     output:
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.fp_pass", emit: fp_pass
-    path "somaticsniper_${params.sample_name}.vcf_normal_tumor.SNPfilter.fp_fail", emit: fp_fail
+    path "somaticsniper_${params.sample_id}.vcf_normal_tumor.SNPfilter.fp_pass", emit: fp_pass
+    path "somaticsniper_${params.sample_id}.vcf_normal_tumor.SNPfilter.fp_fail", emit: fp_fail
     path ".command.*"
 
     """
@@ -276,7 +276,7 @@ process filter_FalsePositive_SomaticSniper {
 process call_HighConfidenceSNV_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
-               pattern: "somaticsniper_${params.sample_name}*.vcf",
+               pattern: "somaticsniper_${params.sample_id}*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
@@ -288,8 +288,8 @@ process call_HighConfidenceSNV_SomaticSniper {
     path fp_pass
 
     output:
-    path "somaticsniper_${params.sample_name}_hc.vcf", emit: hc
-    path "somaticsniper_${params.sample_name}_lc.vcf", emit: lc
+    path "somaticsniper_${params.sample_id}_hc.vcf", emit: hc
+    path "somaticsniper_${params.sample_id}_lc.vcf", emit: lc
     path ".command.*"
 
     """
@@ -298,8 +298,8 @@ process call_HighConfidenceSNV_SomaticSniper {
         --min-mapping-quality 40 `# min mapping quality of the reads supporting the variant in the tumor, default 40` \
         --min-somatic-score 40 `# minimum somatic score, default 40` \
         --snp-file $fp_pass \
-        --lq-output "somaticsniper_${params.sample_name}_lc.vcf" \
-        --out-file "somaticsniper_${params.sample_name}_hc.vcf"
+        --lq-output "somaticsniper_${params.sample_id}_lc.vcf" \
+        --out-file "somaticsniper_${params.sample_id}_hc.vcf"
     """
 }
 

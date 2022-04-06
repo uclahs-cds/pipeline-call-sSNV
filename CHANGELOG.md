@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Change the input files to YAML and template.config.
+- Change the `sample_name` to `sample_id`.
 ### Added
+- Add mutect2's multiple samples option into the pipeline.
 
 ## [3.0.0] - 2022-03-01
 ### Changed
@@ -40,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 - Deprecate version 2.1.0.
 
-## [2.1.0] - 2021-10-13 
+## [2.1.0] - 2021-10-13
 ### Changed
 - Update the GATK version from 4.2.0 to 4.2.2.
 - Standardize process names.
