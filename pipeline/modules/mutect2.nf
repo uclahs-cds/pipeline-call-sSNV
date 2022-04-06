@@ -2,7 +2,7 @@ include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembl
 
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
-params.gnomad_vcf_index = "${params.gnomad_vcf_}.tbi"
+params.gnomad_vcf_index = "${params.gnomad_vcf}.tbi"
 
 workflow mutect2 {
     take:
