@@ -70,21 +70,16 @@ Channel
 
 
 workflow {
-
+    reference_ch = Channel.from(
+        params.reference,
+        params.reference_index,
+        params.reference_dict
+    )
     if (params.tumor_only_mode) {
-        file_to_validate = Channel.from(
-            params.reference,
-            params.reference_index,
-            params.reference_dict
-        )
+        file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
-    }
-    else {
-        file_to_validate = Channel.from(
-            params.reference,
-            params.reference_index,
-            params.reference_dict
-        )
+    } else {
+        file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
     }
     if (params.use_call_region) {
