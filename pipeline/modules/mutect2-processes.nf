@@ -114,7 +114,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     normal = normal.collect { "-I '$it'" }.join(' ')
     normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
-    germline = params.germline ? "" : "-germline-resource $gnomad_vcf"
+    germline = params.germline ? "-germline-resource $gnomad_vcf" : ""
     """
     set -euo pipefail
 
@@ -167,7 +167,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     normal = normal.collect { "-I '$it'" }.join(' ')
     normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
-    germline = params.germline ? "" : "-germline-resource $gnomad_vcf"
+    germline = params.germline ? "-germline-resource $gnomad_vcf" : ""
     """
     set -euo pipefail
 
