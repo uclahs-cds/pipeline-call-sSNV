@@ -61,6 +61,10 @@ Config File |
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | exome       | string | Adds the '--exome' option when running manta and strelka2 | Config File |
+| call_region | string | Adds '--callRegions' option when running manta and strelka2 | Config File |
+* Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the `--callRegions` configuration option. See the `--callRegions` documentations here: [Strelka2](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions), [Manta](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions).
+Note in particular that even when --callRegions is specified, the --exome flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
+* The BED file's index file `bed.gz.tbi` needs to be stored in the same folder.
 
 
 ## Mutect2 Specific Configuration
