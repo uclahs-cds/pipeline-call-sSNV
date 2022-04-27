@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Change the input files to YAML and template.config.
+- Change the `sample_name` to `sample_id`.
 ### Added
+- Add mutect2's multiple samples option into the pipeline.
 - Add `--callRegion` option to Stelka2 algorithm.
 - Add Manta and Strelka2's intermediate files.
 

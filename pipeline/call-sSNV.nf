@@ -17,7 +17,7 @@ log.info """\
         version: ${workflow.manifest.version}
 
     - input:
-        sample_name: ${params.sample_name}
+        sample_id: ${params.sample_id}
         algorithm: ${params.algorithm}
         tumor: ${params.tumor}
         normal: ${params.normal}
@@ -32,6 +32,9 @@ log.info """\
 
     - option:
         save_intermediate_files: ${params.save_intermediate_files}
+        multi_tumor_sample: ${params.multi_tumor_sample}
+        multi_normal_sample: ${params.multi_normal_sample}
+        tumor_only_mode: ${params.tumor_only_mode}
 """
 
 include { run_validate_PipeVal } from './modules/validation'

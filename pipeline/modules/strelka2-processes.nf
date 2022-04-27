@@ -102,7 +102,7 @@ process filter_VCF {
     container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "strelka2_${params.sample_name}_${name}_pass.vcf",
+               pattern: "strelka2_${params.sample_id}_${name}_pass.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -113,12 +113,12 @@ process filter_VCF {
     tuple val(name), path(vcf_gz)
 
     output:
-    path "strelka2_${params.sample_name}_${name}_pass.vcf", emit: strelka2_vcf
+    path "strelka2_${params.sample_id}_${name}_pass.vcf", emit: strelka2_vcf
     path ".command.*"
 
     // https://www.biostars.org/p/206488/
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > strelka2_${params.sample_name}_${name}_pass.vcf
+    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > strelka2_${params.sample_id}_${name}_pass.vcf
     """
 }

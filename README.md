@@ -2,6 +2,7 @@
 
 ## Overview
 This pipeline performs somatic SNV calling given a pair of tumor/normal BAM. 3 somatic SNV callers are available and described below. Each caller will run independently of each other.
+The mutect2 algorithm can also take multiple samples and tumor only samples.
 
 ## Somatic SNV callers:
 * Somatic Sniper
@@ -41,12 +42,14 @@ Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker image: broadinstitute/gatk:4.2.4.1
 
 ## Inputs
+To run the pipeline, one input.yaml and one template.config are needed. When running a batch of samples, template.config can be shared, while input.yaml is unique for each sample.
+
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
-| sample_name | string | The name/ID of the sample                 | Config File |
+| sample_id | string | The name/ID of the sample                 | YAML File |
 | algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
-| tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | Config File |
-| normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | Config File |
+| tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
+| normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
 | output_log_dir | string | The location where log files (.command.\*) will be saved |
@@ -73,15 +76,16 @@ Note in particular that even when --callRegions is specified, the --exome flag i
 | gatk_command_mem_diff | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) | Config File |
 | scatter_count | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. | Config File |
 | intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
-| tumor_only_mode | boolean | An option to use the mutect2 algorithm when no normal control samples exist in the datasets |
+
+For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in input.YAML empty, as [template_tumor_only.yaml](pipeline/inputs/template_tumor_only.yaml). For multiple samples, put all the input bams in the input.YAML, as [template_multi_sample.yaml](pipeline/inputs/template_multi_sample.yaml).
 
 ## Outputs
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| somaticsniper_{sample_name}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
-| strelka2_{sample_name}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
-| strelka2_{sample_name}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
-| mutect2_{sample_name}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
+| somaticsniper_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
+| strelka2_{sample_id}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
+| strelka2_{sample_id}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
+| mutect2_{sample_id}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
@@ -92,7 +96,8 @@ Note in particular that even when --callRegions is specified, the --exome flag i
 python path/to/submit_nextflow_pipeline.py \
     --nextflow_script path/to/call-sSNV.nf \
     --nextflow_config path/to/nextflow.config \
-    --pipeline_run_name <sample_name> \
+    --nextflow_yaml path/to/input.yaml \
+    --pipeline_run_name <sample_id> \
     --partition_type F72 \
     --email jdoe@mednet.ucla.edu
 ```

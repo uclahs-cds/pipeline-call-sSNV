@@ -1,4 +1,4 @@
-include { run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
 
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
@@ -10,6 +10,14 @@ workflow mutect2 {
     normal_index
 
     main:
+        if (params.tumor_only_mode) {
+            normal_name_ch = Channel.from('normal_name')
+        } else {
+            run_GetSampleName_Mutect2(normal_bam.flatten())
+            normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
+                .map{return (it in List) ? it : [it]}
+        }
+
         if (params.intervals) {
             intervals = params.intervals
         } else {
@@ -25,7 +33,8 @@ workflow mutect2 {
                 normal_index,
                 params.reference,
                 params.reference_index,
-                params.reference_dict
+                params.reference_dict,
+                normal_name_ch
             )
         }
         run_SplitIntervals_GATK(
@@ -34,15 +43,36 @@ workflow mutect2 {
             params.reference_index,
             params.reference_dict
         )
+  
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
-            tumor_bam,
-            tumor_index,
-            normal_bam,
-            normal_index,
+            tumor_bam
+                .map { [it] }
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
+            tumor_index
+                .map { [it] }
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
+            normal_bam
+                .map { [it] }
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
+            normal_index
+                .map { [it] }
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
+            ,
             params.reference,
             params.reference_index,
-            params.reference_dict
+            params.reference_dict,
+            normal_name_ch
+                .map { [it] }
+                .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
+                .map { it[0] }
         )
 
         if (params.intervals) {
