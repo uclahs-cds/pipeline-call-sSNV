@@ -5,7 +5,6 @@ nextflow.enable.dsl=2
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
-
 log.info """\
     ------------------------------------
     C A L L - S S N V    P I P E L I N E
@@ -25,6 +24,7 @@ log.info """\
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
+        call_region: ${params.call_region}
 
     - output:
         output_dir: ${params.output_dir}
@@ -73,21 +73,26 @@ Channel
 
 
 workflow {
-    if (params.tumor_only_mode)
-        file_to_validate = Channel.from(
-            params.reference,
-            params.reference_index,
-            params.reference_dict
-        )
+    reference_ch = Channel.from(
+        params.reference,
+        params.reference_index,
+        params.reference_dict
+    )
+    if (params.tumor_only_mode) {
+        file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
-
-    else
-        file_to_validate = Channel.from(
-            params.reference,
-            params.reference_index,
-            params.reference_dict
-        )
+    } else {
+        file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
+    }
+    if (params.use_call_region) {
+        file_to_validate = file_to_validate.mix(
+            Channel.from(
+                params.call_region,
+                params.call_region_index
+            )
+        )
+    }
 
     run_validate_PipeVal(file_to_validate)
 

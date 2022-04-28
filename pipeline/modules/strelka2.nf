@@ -16,7 +16,9 @@ workflow strelka2 {
             normal_bam,
             normal_index,
             params.reference,
-            "${params.reference}.fai"
+            "${params.reference}.fai",
+            params.call_region,
+            params.call_region_index
         )
         call_sSNV_Strelka2(
             tumor_bam,
@@ -25,7 +27,9 @@ workflow strelka2 {
             normal_index,
             params.reference,
             "${params.reference}.fai",
-            call_sIndel_Manta.out[0]
+            call_sIndel_Manta.out[0],
+            params.call_region,
+            params.call_region_index
         )
         filter_VCF(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
         compress_VCF_bgzip(filter_VCF.out.strelka2_vcf)
