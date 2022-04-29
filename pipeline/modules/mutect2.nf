@@ -2,8 +2,6 @@ include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembl
 
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
-params.gnomad_vcf_index = "${params.gnomad_vcf}.tbi"
-
 workflow mutect2 {
     take:
     tumor_bam
@@ -37,8 +35,8 @@ workflow mutect2 {
                 params.reference_index,
                 params.reference_dict,
                 normal_name_ch,
-                params.gnomad_vcf,
-                params.gnomad_vcf_index
+                params.germline_resource_gnomad_vcf,
+                params.germline_resource_gnomad_vcf_index
             )
         }
         run_SplitIntervals_GATK(
@@ -78,8 +76,8 @@ workflow mutect2 {
                 .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
                 .map { it[0] }
             ,
-            params.gnomad_vcf,
-            params.gnomad_vcf_index
+            params.germline_resource_gnomad_vcf,
+            params.germline_resource_gnomad_vcf_index
         )
 
         if (params.intervals) {
