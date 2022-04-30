@@ -1,7 +1,7 @@
 ---
 Category: 'pipeline'
 Description: 'A Nextflow pipeline to identify the somatic single nucleotide variants (sSNVs) by comparing a pair of tumor/normal samples.'
-Maintainers: ['YBugh@mednet.ucla.edu', 'maotian@mednet.ucla.edu']
+Maintainers: ['maotian@mednet.ucla.edu']
 Contributors: ['Bugh Caden', 'Helena Winata', 'Mao Tian', 'Yash Patel']
 Languages: ['Docker', 'Nextflow']
 Dependencies: ['Docker', 'Nextflow']
