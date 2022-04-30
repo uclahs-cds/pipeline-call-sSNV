@@ -34,7 +34,9 @@ workflow mutect2 {
                 params.reference,
                 params.reference_index,
                 params.reference_dict,
-                normal_name_ch
+                normal_name_ch,
+                params.germline_resource_gnomad_vcf,
+                params.germline_resource_gnomad_vcf_index
             )
         }
         run_SplitIntervals_GATK(
@@ -43,7 +45,7 @@ workflow mutect2 {
             params.reference_index,
             params.reference_dict
         )
-  
+
         call_sSNVInAssembledChromosomes_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
             tumor_bam
@@ -73,6 +75,9 @@ workflow mutect2 {
                 .map { [it] }
                 .combine(run_SplitIntervals_GATK.out.interval_list.flatten())
                 .map { it[0] }
+            ,
+            params.germline_resource_gnomad_vcf,
+            params.germline_resource_gnomad_vcf_index
         )
 
         if (params.intervals) {
@@ -109,7 +114,7 @@ workflow mutect2 {
 
         file_for_sha512 = compress_VCF_bgzip.out.vcf_gz.mix(index_VCF_tabix.out.vcf_gz_tbi)
         generate_sha512sum(file_for_sha512)
-    
+
     emit:
         compress_VCF_bgzip.out.vcf_gz
         index_VCF_tabix.out.vcf_gz_tbi

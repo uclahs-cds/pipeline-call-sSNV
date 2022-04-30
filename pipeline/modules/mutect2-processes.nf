@@ -99,6 +99,8 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path reference_index
     path reference_dict
     val normal_name
+    path germline_resource_gnomad_vcf
+    path germline_resource_gnomad_vcf_index
 
     output:
     path "unfiltered_${interval.baseName}.vcf.gz", emit: unfiltered
@@ -112,6 +114,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     normal = normal.collect { "-I '$it'" }.join(' ')
     normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
+    germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
     """
     set -euo pipefail
 
@@ -122,6 +125,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
         --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
         -O unfiltered_${interval.baseName}.vcf.gz \
         --tmp-dir \$PWD \
+        $germline \
         ${params.mutect2_extra_args}
     """
 }
@@ -148,6 +152,8 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path reference_index
     path reference_dict
     val normal_name
+    path germline_resource_gnomad_vcf
+    path germline_resource_gnomad_vcf_index
 
     output:
     path "unfiltered_non_canonical.vcf.gz", emit: unfiltered
@@ -161,6 +167,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     normal = normal.collect { "-I '$it'" }.join(' ')
     normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
+    germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
     """
     set -euo pipefail
 
@@ -171,6 +178,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
         --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
         -O unfiltered_non_canonical.vcf.gz \
         --tmp-dir \$PWD \
+        $germline \
         ${params.mutect2_extra_args}
     """
 }
