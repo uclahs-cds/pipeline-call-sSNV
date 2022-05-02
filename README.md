@@ -11,7 +11,7 @@ The mutect2 algorithm can also take multiple samples and tumor only samples.
 
 
 ### SomaticSniper
-![Diagram](docs/diagram.svg)
+![Diagram](image/diagram.svg)
 #### Tools
 ##### SomaticSniper
 SomaticSniper source: https://github.com/genome/somatic-sniper
@@ -23,7 +23,7 @@ Version: v0.8.0 Release (Released on Oct 21, 2016)
 Docker image: blcdsdockerregistry/call-ssnv:bam-readcount-v0.8.0
 
 ### Strelka2
-![Diagram](docs/strelka2.svg)
+![Diagram](image/strelka2.svg)
 #### Tools
 ##### Manta
 Manta source: https://github.com/Illumina/manta
