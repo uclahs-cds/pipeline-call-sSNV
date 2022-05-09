@@ -11,7 +11,7 @@ The mutect2 algorithm can also take multiple samples and tumor only samples.
 
 
 ### SomaticSniper
-![Diagram](docs/diagram.svg)
+![Diagram](image/diagram.svg)
 #### Tools
 ##### SomaticSniper
 SomaticSniper source: https://github.com/genome/somatic-sniper
@@ -23,7 +23,7 @@ Version: v0.8.0 Release (Released on Oct 21, 2016)
 Docker image: blcdsdockerregistry/call-ssnv:bam-readcount-v0.8.0
 
 ### Strelka2
-![Diagram](docs/strelka2.svg)
+![Diagram](image/strelka2.svg)
 #### Tools
 ##### Manta
 Manta source: https://github.com/Illumina/manta
@@ -63,8 +63,10 @@ Config File |
 | exome       | string | Adds the '--exome' option when running manta and strelka2 | Config File |
 | call_region | string | Adds '--callRegions' option when running manta and strelka2 | Config File |
 * Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the `--callRegions` configuration option. See the `--callRegions` documentations here: [Strelka2](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions), [Manta](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions). `--callRegions` is optional for Strelka2, but can be used to specify canonical regions to save the running time. An example of call region's bed.gz can be found and used here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`.
-Note in particular that even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
+
 * The BED file's index file `bed.gz.tbi` needs to be stored in the same folder.
+* In particular, as noted in Strelka's [User Guide](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions):
+> Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
 
 ## Mutect2 Specific Configuration
@@ -78,7 +80,7 @@ Note in particular that even when `--callRegions` is specified, the `--exome` fl
 | intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
 | germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. | Config File |
 
-For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in input.YAML empty, as [template_tumor_only.yaml](pipeline/inputs/template_tumor_only.yaml). For multiple samples, put all the input bams in the input.YAML, as [template_multi_sample.yaml](pipeline/inputs/template_multi_sample.yaml).
+For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in input.YAML empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the input.YAML, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
 
 ## Outputs
 | Output                                         | Type         | Description                   |
@@ -91,7 +93,7 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 
 #### How to run the pipeline
 1. Download the stable release [here](https://github.com/uclahs-cds/pipeline-call-sSNV/releases) or the development version by cloning the GitHub repository to your machine.
-2. Fill in the params section of the [config file](https://github.com/uclahs-cds/pipeline-call-sSNV/blob/main/pipeline/nextflow.config).
+2. Fill in the params section of the [config file](nextflow.config).
 3. Run the pipeline using the [Nextflow submission script](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
 ```bash
 python path/to/submit_nextflow_pipeline.py \
@@ -109,7 +111,7 @@ python path/to/submit_nextflow_pipeline.py \
 
 ## License
 
-Authors: Bugh Caden (YBugh@mednet.ucla.edu), Helena Winata (HWinata@mednet.ucla.edu), Mao Tian (maotian@mednet.ucla.edu).
+Authors: Mao Tian (maotian@mednet.ucla.edu), Bugh Caden, Helena Winata (HWinata@mednet.ucla.edu).
 
 Call-sSNV is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
