@@ -125,6 +125,13 @@ workflow {
         }
     }
 
+    if (params.sample_id.isEmpty()) {
+        throw new AbortOperationException("ERROR: Missing sample name.")
+    }
+    if(!Files.isWritable(params.output_dir)){
+        throw new AbortOperationException("ERROR: Permission Denied of ${params.algorithm}.")
+    }
+
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,
