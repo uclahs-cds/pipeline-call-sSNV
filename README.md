@@ -111,7 +111,7 @@ python path/to/submit_nextflow_pipeline.py \
 
 ## License
 
-Authors: Bugh Caden, Helena Winata (HWinata@mednet.ucla.edu), Mao Tian (maotian@mednet.ucla.edu).
+Authors: Mao Tian (maotian@mednet.ucla.edu), Bugh Caden, Helena Winata (HWinata@mednet.ucla.edu).
 
 Call-sSNV is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
