@@ -126,10 +126,7 @@ workflow {
     }
 
     if (params.sample_id.isEmpty()) {
-        throw new AbortOperationException("ERROR: Missing sample name.")
-    }
-    if(!Files.isWritable(params.output_dir)){
-        throw new AbortOperationException("ERROR: Permission Denied of ${params.algorithm}.")
+        throw new Exception("ERROR: Missing sample name.")
     }
 
     if ('somaticsniper' in params.algorithm) {
