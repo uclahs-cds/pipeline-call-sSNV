@@ -2,7 +2,7 @@
 
 ## Overview
 This pipeline performs somatic SNV calling given a pair of tumor/normal BAM. 3 somatic SNV callers are available and described below. Each caller will run independently of each other.
-The mutect2 algorithm can also take multiple samples and tumor only samples.
+The mutect2 caller can also take multiple samples and tumor only samples.
 
 ## Somatic SNV callers:
 * Somatic Sniper
@@ -47,7 +47,7 @@ To run the pipeline, one input.yaml and one template.config are needed. When run
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | sample_id | string | The name/ID of the sample                 | YAML File |
-| algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
+| caller   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
 | tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
 | normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |

@@ -18,8 +18,8 @@ log.info """\
 
     - input:
         sample_id: ${params.sample_id}
-        algorithm: ${params.algorithm}
-        tumor: ${params.tumor}
+        caller: ${params.caller}
+        tumor: ${params.input.tumor}
         normal: ${params.normal}
         reference: ${params.reference}
         reference_index: ${params.reference_index}
@@ -56,7 +56,7 @@ def indexFile(bam_or_vcf) {
 }
 
 Channel
-    .from( params.tumor )
+    .from( params.input.tumor )
     .multiMap{ it ->
         tumor_bam: it
         tumor_index: indexFile(it)
@@ -64,7 +64,7 @@ Channel
     .set { tumor_input }
 
 Channel
-    .from( params.normal )
+    .from( params.input.normal )
     .multiMap{ it ->
         normal_bam: it
         normal_index: indexFile(it)
@@ -101,35 +101,31 @@ workflow {
         storeDir: "${params.output_dir}/validation"
         )
 
-    // Validate params.algorithm
-    if (params.algorithm.getClass() != java.util.ArrayList) {
-        throw new Exception("ERROR: params.algorithm ${params.algorithm} must be a list")
+    // Validate params.caller
+    if (params.caller.getClass() != java.util.ArrayList) {
+        throw new Exception("ERROR: params.caller ${params.caller} must be a list")
     }
-    if (params.algorithm.isEmpty()) {
-        throw new Exception("ERROR: params.algorithm cannot be empty")
+    if (params.caller.isEmpty()) {
+        throw new Exception("ERROR: params.caller cannot be empty")
     }
 
-    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
+    Set valid_callers = ['somaticsniper', 'strelka2', 'mutect2']
     if (params.tumor_only_mode) {
-        valid_algorithms = ['mutect2']
+        valid_callers = ['mutect2']
     }
 
-    for (algo in params.algorithm) {
-        if (!(algo in valid_algorithms)) {
+    for (algo in params.caller) {
+        if (!(algo in valid_callers)) {
             if (params.tumor_only_mode) {
-                throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value. Tumor-only mode is only applied to Mutect2 algorithm.")
+                throw new Exception("ERROR: params.caller ${params.caller} contains an invalid value. Tumor-only mode is only applied to Mutect2 caller.")
                 } else {
-                    throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
+                    throw new Exception("ERROR: params.caller ${params.caller} contains an invalid value.")
                     }
 
         }
     }
 
-    if (params.sample_id.isEmpty()) {
-        throw new Exception("ERROR: Missing sample name.")
-    }
-
-    if ('somaticsniper' in params.algorithm) {
+    if ('somaticsniper' in params.caller) {
         somaticsniper(
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
@@ -137,7 +133,7 @@ workflow {
             normal_input.normal_index
         )
     }
-    if ('strelka2' in params.algorithm) {
+    if ('strelka2' in params.caller) {
         strelka2(
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
@@ -145,7 +141,7 @@ workflow {
             normal_input.normal_index
         )
     }
-    if ('mutect2' in params.algorithm) {
+    if ('mutect2' in params.caller) {
         mutect2(
             tumor_input.tumor_bam.collect(),
             tumor_input.tumor_index.collect(),
