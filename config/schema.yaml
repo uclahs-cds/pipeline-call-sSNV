@@ -62,12 +62,6 @@ filter_mutect_calls_extra_args:
   required: false
   help: 'Additional arguments for the FilterMutectCalls command'
 
-gatk_command_mem_diff:
-  type: 'String'
-  required: false
-  default: '500.MB'
-  help: 'nextflow.util.MemoryUnit'
-
 scatter_count:
   type: 'Integer'
   required: false
@@ -94,12 +88,12 @@ input:
       help: 'Input BAMs'
       elements:
         tumor:
-          type: 'Path'
+          type: 'ListPaths'
           mode: 'r'
           required: true
           help: 'Absolute path to tumor sample BAM files'
         normal:
-          type: 'Path'
+          type: 'ListPaths'
           mode: 'r'
           required: false
           help: 'Absolute path to normal sample BAM files'

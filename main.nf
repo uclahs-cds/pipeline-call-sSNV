@@ -19,8 +19,8 @@ log.info """\
     - input:
         sample_id: ${params.sample_id}
         caller: ${params.caller}
-        tumor: ${params.input.tumor}
-        normal: ${params.normal}
+        tumor: ${params.input.BAM.tumor}
+        normal: ${params.input.BAM.normal}
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
@@ -56,7 +56,7 @@ def indexFile(bam_or_vcf) {
 }
 
 Channel
-    .from( params.input.tumor )
+    .from( params.input.BAM.tumor )
     .multiMap{ it ->
         tumor_bam: it
         tumor_index: indexFile(it)
@@ -64,7 +64,7 @@ Channel
     .set { tumor_input }
 
 Channel
-    .from( params.input.normal )
+    .from( params.input.BAM.normal )
     .multiMap{ it ->
         normal_bam: it
         normal_index: indexFile(it)
