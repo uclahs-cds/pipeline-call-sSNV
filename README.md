@@ -2,7 +2,7 @@
 
 ## Overview
 This pipeline performs somatic SNV calling given a pair of tumor/normal BAM. 3 somatic SNV callers are available and described below. Each caller will run independently of each other.
-The mutect2 caller can also take multiple samples and tumor only samples.
+The mutect2 algorithm can also take multiple samples and tumor only samples.
 
 ## Somatic SNV callers:
 * Somatic Sniper
