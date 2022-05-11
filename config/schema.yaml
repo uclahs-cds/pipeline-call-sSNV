@@ -1,8 +1,8 @@
 ---
-caller:
+algorithm:
   type: 'List'
   required: true
-  help: 'List of sSNV callers'
+  help: 'List of sSNV algorithms'
   default:
     - mutect2
     - somaticsniper

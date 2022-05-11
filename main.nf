@@ -18,7 +18,7 @@ log.info """\
 
     - input:
         sample_id: ${params.sample_id}
-        caller: ${params.caller}
+        algorithm: ${params.algorithm}
         tumor: ${params.input.BAM.tumor}
         normal: ${params.input.BAM.normal}
         reference: ${params.reference}
@@ -101,17 +101,17 @@ workflow {
         storeDir: "${params.output_dir}/validation"
         )
 
-    Set valid_callers = ['somaticsniper', 'strelka2', 'mutect2']
+    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
     if (params.tumor_only_mode || params.multi_tumor_sample || params.multi_normal_sample ) {
-        valid_callers = ['mutect2']
+        valid_algorithms = ['mutect2']
     }
 
-    for (algo in params.caller) {
-        if (!(algo in valid_callers)) {
+    for (algo in params.algorithm) {
+        if (!(algo in valid_algorithms)) {
             if (params.tumor_only_mode) {
-                throw new Exception("ERROR: params.caller ${params.caller} contains an invalid value. Tumor-only mode or multi-sample mode is only applied to Mutect2 caller.")
+                throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value. Tumor-only mode or multi-sample mode is only applied to Mutect2 algorithm.")
                 } else {
-                    throw new Exception("ERROR: params.caller ${params.caller} contains an invalid value.")
+                    throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
                     }
 
         }
@@ -121,7 +121,7 @@ workflow {
         throw new Exception("ERROR: Missing sample name.")
     }
 
-    if ('somaticsniper' in params.caller) {
+    if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
@@ -129,7 +129,7 @@ workflow {
             normal_input.normal_index
         )
     }
-    if ('strelka2' in params.caller) {
+    if ('strelka2' in params.algorithm) {
         strelka2(
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
@@ -137,7 +137,7 @@ workflow {
             normal_input.normal_index
         )
     }
-    if ('mutect2' in params.caller) {
+    if ('mutect2' in params.algorithm) {
         mutect2(
             tumor_input.tumor_bam.collect(),
             tumor_input.tumor_index.collect(),
