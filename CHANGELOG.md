@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+
+## [4.0.0-rc.1] - 2022-05-10
+### Changed
 - Change the input files to YAML and template.config.
 - Change the `sample_name` to `sample_id`.
 - Standardize the repository structure.
