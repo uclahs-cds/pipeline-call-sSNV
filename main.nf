@@ -101,28 +101,24 @@ workflow {
         storeDir: "${params.output_dir}/validation"
         )
 
-    // Validate params.caller
-    if (params.caller.getClass() != java.util.ArrayList) {
-        throw new Exception("ERROR: params.caller ${params.caller} must be a list")
-    }
-    if (params.caller.isEmpty()) {
-        throw new Exception("ERROR: params.caller cannot be empty")
-    }
-
     Set valid_callers = ['somaticsniper', 'strelka2', 'mutect2']
-    if (params.tumor_only_mode) {
+    if (params.tumor_only_mode || params.multi_tumor_sample || params.multi_normal_sample ) {
         valid_callers = ['mutect2']
     }
 
     for (algo in params.caller) {
         if (!(algo in valid_callers)) {
             if (params.tumor_only_mode) {
-                throw new Exception("ERROR: params.caller ${params.caller} contains an invalid value. Tumor-only mode is only applied to Mutect2 caller.")
+                throw new Exception("ERROR: params.caller ${params.caller} contains an invalid value. Tumor-only mode or multi-sample mode is only applied to Mutect2 caller.")
                 } else {
                     throw new Exception("ERROR: params.caller ${params.caller} contains an invalid value.")
                     }
 
         }
+    }
+
+    if (params.sample_id.isEmpty()) {
+        throw new Exception("ERROR: Missing sample name.")
     }
 
     if ('somaticsniper' in params.caller) {

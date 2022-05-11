@@ -24,6 +24,12 @@ output_dir:
   required: true
   help: 'Absolute path to output directory'
 
+work_dir:
+  type: 'Path'
+  mode: 'w'
+  required: false
+  help: 'Absolute path to output directory'
+
 sample_id:
   type: 'String'
   required: true
