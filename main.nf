@@ -101,26 +101,6 @@ workflow {
         storeDir: "${params.output_dir}/validation"
         )
 
-    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
-    if (params.tumor_only_mode || params.multi_tumor_sample || params.multi_normal_sample ) {
-        valid_algorithms = ['mutect2']
-    }
-
-    for (algo in params.algorithm) {
-        if (!(algo in valid_algorithms)) {
-            if (params.tumor_only_mode) {
-                throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value. Tumor-only mode or multi-sample mode is only applied to Mutect2 algorithm.")
-                } else {
-                    throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
-                    }
-
-        }
-    }
-
-    if (params.sample_id.isEmpty()) {
-        throw new Exception("ERROR: Missing sample name.")
-    }
-
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,
