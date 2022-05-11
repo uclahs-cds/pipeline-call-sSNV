@@ -11,85 +11,71 @@ algorithm:
     - mutect2
     - somaticsniper
     - strelka2
-
 reference:
   type: 'Path'
   mode: 'r'
   required: true
   help: 'Absolute path to reference directory'
-
 output_dir:
   type: 'Path'
   mode: 'w'
   required: true
   help: 'Absolute path to output directory'
-
 work_dir:
   type: 'Path'
   mode: 'w'
   required: false
   help: 'Absolute path to output directory'
-
 sample_id:
   type: 'String'
   required: true
   help: 'Sample identifier'
-
 save_intermediate_files:
   type: 'Bool'
   required: true
   default: false
   help: 'The option to save the intermediate files'
-
 exome:
   type: 'Bool'
   required: false
   default: false
   help: 'The exome option when running manta and strelka2'
-
 call_region:
   type: 'Path'
   required: false
   default: '/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz'
   help: 'A call region bed file for strelka2 to save runtime or for a targeted region'
-
 split_intervals_extra_args:
   type: 'String'
   required: false
   help: 'Additional arguments for the SplitIntervals command'
-
 mutect2_extra_args:
   type: 'String'
   required: false
   help: 'Additional arguments for the Mutect2 command'
-
 filter_mutect_calls_extra_args:
   type: 'String'
   required: false
   help: 'Additional arguments for the FilterMutectCalls command'
-
 scatter_count:
   type: 'Integer'
   required: false
   default: 50
-
 intervals:
   type: 'String'
   required: false
   help: 'A GATK accepted interval list file'
-
 germline_resource_gnomad_vcf:
   type: 'Path'
   required: true
   default: '/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz'
-
 input:
   type: 'InputNamespace'
   required: true
   help: 'Input samples'
   elements:
     BAM:
-      type: 'ListBAMs'
+      type: 'InputNamespace'
       required: true
       help: 'Input BAMs'
       elements:
