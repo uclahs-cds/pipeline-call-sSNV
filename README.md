@@ -145,11 +145,21 @@ Testing was performed in the Boutros Lab SLURM Development cluster. Metrics belo
 
 
 #### Strelka2
-|process_name                                |max_duration        |max_cpu |max_peak_vmem |
-|:-------------------------------------------|:-------------------|:-------|:-------------|
-|call_sIndel_Manta                           |1.41 hours          |2724.2% |23.2 GB       |
-|call_sSNV_Strelka2                          |22.54 hours         |511.3%  |17.4 GB       |
-|filter_VCF                                  |6.3s                |92.4%   |11.1 MB       |
+Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canoincal regions of the genome, here is the results:
+
+##### without `--callRegions`:
+|process_name             |max_duration        |max_cpu |max_peak_vmem |
+|:------------------------|:-------------------|:-------|:-------------|
+|call_sIndel_Manta        |1.41 hours          |2724.2% |23.2 GB       |
+|call_sSNV_Strelka2       |22.54 hours         |511.3%  |17.4 GB       |
+##### with `--callRegions`:
+|process_name             |max_duration        |max_cpu |max_peak_vmem |
+|:------------------------|:-------------------|:-------|:-------------|
+|call_sIndel_Manta        |53m 54s         |1848.6% |11.7 GB        |
+|call_sSNV_Strelka2       |58m 19s         |3234.0%  |8.2 GB       |
+
+Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary. `-callRegions`'s input `bed.gz` file can be found here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`. For other genome version, you can use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
+
 
 ---
 
