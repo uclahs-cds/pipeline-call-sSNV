@@ -1,0 +1,5 @@
+---
+sample_id: 'A-mini-n2'
+# For tumor-only mode, list all the tumor.bams under 'tumor:'.
+tumor:
+  - /hot/resources/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam

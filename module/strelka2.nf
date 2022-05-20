@@ -3,23 +3,33 @@ include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-p
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
 workflow strelka2 {
+    take:
+    tumor_bam
+    tumor_index
+    normal_bam
+    normal_index
+    
     main:
         call_sIndel_Manta(
-            params.tumor,
-            "${params.tumor}.bai",
-            params.normal,
-            "${params.normal}.bai",
-            params.reference,
-            "${params.reference}.fai"
-        )
-        call_sSNV_Strelka2(
-            params.tumor,
-            "${params.tumor}.bai",
-            params.normal,
-            "${params.normal}.bai",
+            tumor_bam,
+            tumor_index,
+            normal_bam,
+            normal_index,
             params.reference,
             "${params.reference}.fai",
-            call_sIndel_Manta.out[0]
+            params.call_region,
+            params.call_region_index
+        )
+        call_sSNV_Strelka2(
+            tumor_bam,
+            tumor_index,
+            normal_bam,
+            normal_index,
+            params.reference,
+            "${params.reference}.fai",
+            call_sIndel_Manta.out[0],
+            params.call_region,
+            params.call_region_index
         )
         filter_VCF(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
         compress_VCF_bgzip(filter_VCF.out.strelka2_vcf)

@@ -13,7 +13,7 @@ process call_sIndel_Manta {
     container params.docker_image_manta
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "MantaWorkflow/results",
+               pattern: "MantaWorkflow",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -27,23 +27,27 @@ process call_sIndel_Manta {
     path normal_index
     path reference
     path reference_index
+    path call_region
+    path call_region_index
 
     output:
     tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
           path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz.tbi")
-    path "MantaWorkflow/results"
+    path "MantaWorkflow"
     path ".command.*"
 
     script:
     exome = params.exome ? "--exome" : ""
+    call_region = params.use_call_region ? "--callRegions ${call_region}" : ""
     """
     configManta.py \
         --normalBam $normal \
         --tumorBam $tumor \
         --referenceFasta $reference \
         ${exome} \
+        ${call_region} \
         --runDir MantaWorkflow
-    
+
     MantaWorkflow/runWorkflow.py -j ${task.cpus}
     """
 }
@@ -52,7 +56,7 @@ process call_sSNV_Strelka2 {
     container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "StrelkaSomaticWorkflow/results",
+               pattern: "StrelkaSomaticWorkflow",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -67,25 +71,29 @@ process call_sSNV_Strelka2 {
     path reference
     path reference_index
     tuple path(indel_candidates), path(indel_candidates_index)
+    path call_region
+    path call_region_index
 
     output:
     tuple val("somatic_snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
     tuple val("somatic_indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
-    path "StrelkaSomaticWorkflow/results"
+    path "StrelkaSomaticWorkflow"
     path ".command.*"
 
     script:
     exome = params.exome ? "--exome" : ""
+    call_region = params.use_call_region ? "--callRegions ${call_region}" : ""
     """
     set -euo pipefail
     configureStrelkaSomaticWorkflow.py \
         --normalBam $normal \
         --tumorBam $tumor \
         --referenceFasta $reference \
+        ${call_region} \
         --indelCandidates $indel_candidates \
         ${exome} \
         --runDir StrelkaSomaticWorkflow
-    
+
     StrelkaSomaticWorkflow/runWorkflow.py -m local -j ${task.cpus}
     """
 }
@@ -94,7 +102,7 @@ process filter_VCF {
     container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "strelka2_${params.sample_name}_${name}_pass.vcf",
+               pattern: "strelka2_${params.sample_id}_${name}_pass.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -105,12 +113,12 @@ process filter_VCF {
     tuple val(name), path(vcf_gz)
 
     output:
-    path "strelka2_${params.sample_name}_${name}_pass.vcf", emit: strelka2_vcf
+    path "strelka2_${params.sample_id}_${name}_pass.vcf", emit: strelka2_vcf
     path ".command.*"
 
     // https://www.biostars.org/p/206488/
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > strelka2_${params.sample_name}_${name}_pass.vcf
+    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > strelka2_${params.sample_id}_${name}_pass.vcf
     """
 }

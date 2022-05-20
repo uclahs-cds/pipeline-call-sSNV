@@ -6,8 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update README.md to apply the recent changes.
+
+## [4.0.0-rc.1] - 2022-05-13
+### Changed
+- Change the input files to YAML and template.config.
+- Change the `sample_name` to `sample_id`.
+- Standardize the repository structure.
 - Update .gitignore to exclude molecular files.
+
 ### Added
+- Add Mutect2's multiple samples option into the pipeline.
+- Add germline resource to Mutect2.
+- Add `--callRegion` option to Stelka2 algorithm.
+- Add Manta and Strelka2's intermediate files.
+
+## [3.0.0] - 2022-03-01
+### Changed
+- Update .gitignore to exclude molecular files.
+- Update F72.config to increase the compute efficiency.
+### Added
+- Add tumor_only_mode in mutect2 options.
+- Add Mutect2's orientation bias filter.
 ### Fixed
 
 ## [3.0.0-rc.1] - 2022-01-07
@@ -20,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Update GATK to 4.2.4.1 to address Log4j critical vulnerability [GHSA-jfh8-c2jp-5v3q](https://github.com/advisories/GHSA-jfh8-c2jp-5v3q) and other newly discovered log4j2 vulnerabilities.
 
+
 ## [2.1.1] - 2021-10-15
 ### Changed
 ### Added
@@ -31,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 - Deprecate version 2.1.0.
 
-## [2.1.0] - 2021-10-13 
+## [2.1.0] - 2021-10-13
 ### Changed
 - Update the GATK version from 4.2.0 to 4.2.2.
 - Standardize process names.
