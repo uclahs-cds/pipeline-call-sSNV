@@ -48,26 +48,31 @@ call_region:
 split_intervals_extra_args:
   type: 'String'
   required: false
+  allow_empty: true
   help: 'Additional arguments for the SplitIntervals command'
 mutect2_extra_args:
   type: 'String'
   required: false
+  allow_empty: true
   help: 'Additional arguments for the Mutect2 command'
 filter_mutect_calls_extra_args:
   type: 'String'
   required: false
+  allow_empty: true
   help: 'Additional arguments for the FilterMutectCalls command'
 scatter_count:
   type: 'Integer'
-  required: false
+  required: true
   default: 50
 intervals:
   type: 'String'
   required: false
+  allow_empty: true
   help: 'A GATK accepted interval list file'
 germline_resource_gnomad_vcf:
   type: 'Path'
   required: false
+  allow_empty: true
 input:
   type: 'InputNamespace'
   required: true
