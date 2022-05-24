@@ -1,0 +1,4 @@
+[submodule "external/pipeline-Nextflow-config"]
+	path = external/pipeline-Nextflow-config
+	url = git@github.com:uclahs-cds/pipeline-Nextflow-config.git
+	branch = main

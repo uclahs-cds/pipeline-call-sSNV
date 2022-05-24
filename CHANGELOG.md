@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add germline resource to Mutect2.
 - Add `--callRegion` option to Stelka2 algorithm.
 - Add Manta and Strelka2's intermediate files.
+- Add schema.config using git submodule from [pipeline-Nextflow-config](https://github.com/uclahs-cds/pipeline-Nextflow-config) to check if params are valid.
 
 ## [3.0.0] - 2022-03-01
 ### Changed

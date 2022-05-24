@@ -19,8 +19,8 @@ log.info """\
     - input:
         sample_id: ${params.sample_id}
         algorithm: ${params.algorithm}
-        tumor: ${params.tumor}
-        normal: ${params.normal}
+        tumor: ${params.input.BAM.tumor}
+        normal: ${params.input.BAM.normal}
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
@@ -56,7 +56,7 @@ def indexFile(bam_or_vcf) {
 }
 
 Channel
-    .from( params.tumor )
+    .from( params.input.BAM.tumor )
     .multiMap{ it ->
         tumor_bam: it
         tumor_index: indexFile(it)
@@ -64,7 +64,7 @@ Channel
     .set { tumor_input }
 
 Channel
-    .from( params.normal )
+    .from( params.input.BAM.normal )
     .multiMap{ it ->
         normal_bam: it
         normal_index: indexFile(it)
@@ -100,30 +100,6 @@ workflow {
         name: 'input_validation.txt', newLine: true,
         storeDir: "${params.output_dir}/validation"
         )
-
-    // Validate params.algorithm
-    if (params.algorithm.getClass() != java.util.ArrayList) {
-        throw new Exception("ERROR: params.algorithm ${params.algorithm} must be a list")
-    }
-    if (params.algorithm.isEmpty()) {
-        throw new Exception("ERROR: params.algorithm cannot be empty")
-    }
-
-    Set valid_algorithms = ['somaticsniper', 'strelka2', 'mutect2']
-    if (params.tumor_only_mode) {
-        valid_algorithms = ['mutect2']
-    }
-
-    for (algo in params.algorithm) {
-        if (!(algo in valid_algorithms)) {
-            if (params.tumor_only_mode) {
-                throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value. Tumor-only mode is only applied to Mutect2 algorithm.")
-                } else {
-                    throw new Exception("ERROR: params.algorithm ${params.algorithm} contains an invalid value.")
-                    }
-
-        }
-    }
 
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
