@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+### Added
+- Add retry.config using git submodule from [pipeline-Nextflow-config](https://github.com/uclahs-cds/pipeline-Nextflow-config) to enable processes to retry with more memory.
 
 ## [4.0.0-rc.1] - 2022-05-13
 ### Changed
