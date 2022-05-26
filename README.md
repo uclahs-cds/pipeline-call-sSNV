@@ -92,8 +92,8 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
-1. Download the stable release [here](https://github.com/uclahs-cds/pipeline-call-sSNV/releases) or the development version by cloning the GitHub repository to your machine.
-2. Fill in the params section of the [config file](nextflow.config).
+1. Using the [stable release](https://github.com/uclahs-cds/pipeline-call-sSNV/releases) stored under `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/` or the development version by cloning the GitHub repository to your machine.
+2. Fill in the params section of the [config file](config/template.config) and [input YAML](input/call-sSNV-template.yaml)
 3. Run the pipeline using the [Nextflow submission script](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
 ```bash
 python path/to/submit_nextflow_pipeline.py \
@@ -116,9 +116,11 @@ Testing was performed primarily in the Boutros Lab SLURM Development cluster usi
 
 ### Test Data Set
 
-| Data Set | Run Configuration | Output Dir | Control Sample | Tumor Sample |  
+Tested Version: 4.0.0-rc.1
+
+| Data Set | Run Configuration | Output Dir | Control Sample | Tumor Sample |
 | ------ | ------ | ------- | ------ | ------- |
-| A-full-P2 |/hot/pipeline/development/slurm/call-sSNV/unreleased/maotian-update-README/analysis/all/A-full/nextflow.config | /hot/pipeline/development/slurm/call-sSNV/unreleased/maotian-update-README/analysis/all/A-full/output | HG002.N | P2 |  
+| A-full-P2 |/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/maotian-update-README/analysis/all/A-full/nextflow.config | /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/maotian-update-README/analysis/all/A-full/output | HG002.N | P2 |
 
 ### Performance Validation
 Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline versiion used here is call-sSNV v2.1.1.
