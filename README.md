@@ -124,39 +124,44 @@ Testing was performed primarily in the Boutros Lab SLURM Development cluster usi
 Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline versiion used here is v4.0.0-rc.1
 
 #### Mutect2
+Duration: 3h 25m 24s
+*`call_sSNVInAssembledChromosomes_Mutect2` has been splited into 50 intervals, so the following table shows one of those processes:
 
 |process_name                                 |max_duration     |max_cpu |max_peak_vmem |
 |:--------------------------------------------|:----------------|:-------|:-------------|
-|call_sSNVInNonAssembledChromosomes_Mutect2   |5.51 hours       |155.4%  |33.2 GB       |
-|run_SplitIntervals_GATK                      |2.07 minutes     |83.1%   |32.1 GB       |
-|call_sSNVInAssembledChromosomes_Mutect2      |2.74 hours       |152.8%  |7.1 GB        |
-|run_MergeMutectStats_GATK                    |7.4s             |90.9%   |32.1 GB       |
-|run_MergeVcfs_GATK                           |26.4s            |94%     |32.1 GB       |
-|run_FilterMutectCalls_GATK                   |8.97 minutes     |97.9%   |32.1 GB       |
+|call_sSNVInNonAssembledChromosomes_Mutect2   | 32m 44s         | 142.0% |33.1 GB       |
+|call_sSNVInAssembledChromosomes_Mutect2      |1h 20m 12s       | 123.8% |7.8 GB        |
+|run_LearnReadOrientationModel_GATK           |31m 5s         |106.8%  |10.2 GB       |
+
 
 #### SomaticSniper
+Duration: 9h 21m 23s
+
 |process_name                           |max_duration           |max_cpu |max_peak_vmem |
 |:--------------------------------------|:----------------------|:-------|:-------------|
-|convert_BAM2Pileup_SAMtools            |12.41 hours            |91.7%   |838.9 MB      |
-|call_sSNV_SomaticSniper                |12.05 hours            |98.5%   |916.1 MB      |
-|create_IndelCandidate_SAMtools         |56.8s                  |95.3%   |56.6 MB       |
-|apply_NormalIndelFilter_SomaticSniper  |6.6s                   |92%     |154.7 MB      |
-|generate_ReadCount_bam_readcount       |29.55 minutes          |80.7%   |542.8 MB      |
+|convert_BAM2Pileup_SAMtools            |4h 18m 29s             | 98.2%  | 1.9 GB       |
+|call_sSNV_SomaticSniper                |8h 48m 45s             |98.7%   | 511.6 MB     |
+|generate_ReadCount_bam_readcount       |29.55 minutes          |75.9%   | 261.5 MB     |
 
 
 #### Strelka2
-Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canoincal regions of the genome, here is the results:
+Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canoincal regions of the genome, here is the results of CPCG1906:
+Sample: CPCG1906
+Normal BAM: `/hot/software/pipeline/pipeline-align-DNA/Nextflow/development/outputs/bwa-mem2_and_hisat2-2.2.1/bwa-mem2/bams/a-full-CPCG0196-B1/align-DNA-20210424-024139/pipeline-alignDNA.inputs.CPCG0196-B1.bam`
+Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-T001-P01-F.bam`
 
 ##### without `--callRegions`:
+
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
 |:------------------------|:-------------------|:-------|:-------------|
 |call_sIndel_Manta        |1.41 hours          |2724.2% |23.2 GB       |
 |call_sSNV_Strelka2       |22.54 hours         |511.3%  |17.4 GB       |
 ##### with `--callRegions`:
+
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
 |:------------------------|:-------------------|:-------|:-------------|
-|call_sIndel_Manta        |53m 54s         |1848.6% |11.7 GB        |
-|call_sSNV_Strelka2       |58m 19s         |3234.0%  |8.2 GB       |
+|call_sIndel_Manta        |1h 35m 25s         |1848.6% |11.7 GB        |
+|call_sSNV_Strelka2       |59m 19s        |3234.0%  |8.2 GB       |
 
 Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary. `-callRegions`'s input `bed.gz` file can be found here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`. For other genome version, you can use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
 
