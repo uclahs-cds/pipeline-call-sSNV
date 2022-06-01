@@ -1,6 +1,8 @@
 ---
 sample_id: 'A-mini-n2'
-normal:
-  - /hot/resources/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
-tumor:
-  - /hot/resources/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
+input:
+  BAM:
+    normal:
+      - /hot/resources/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
+    tumor:
+      - /hot/resources/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
