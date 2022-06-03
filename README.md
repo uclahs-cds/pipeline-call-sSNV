@@ -55,7 +55,7 @@ To run the pipeline, one input.yaml and one template.config are needed. When run
 | output_log_dir | string | The location where log files (.command.\*) will be saved |
 Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
-| workdir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
+| work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
 
 ## Strelka2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
@@ -121,11 +121,11 @@ Testing was performed primarily in the Boutros Lab SLURM Development cluster usi
 | A-full-P2 |/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/maotian-update-README/analysis/all/A-full/nextflow.config | /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/maotian-update-README/analysis/all/A-full/output | HG002.N | P2 |
 
 ### Performance Validation
-Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline versiion used here is v4.0.0-rc.1
+Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline version used here is v4.0.0-rc.1
 
 #### Mutect2
 Duration: 3h 25m 24s
-*`call_sSNVInAssembledChromosomes_Mutect2` has been splited into 50 intervals, so the following table shows one of those processes:
+* Process `call_sSNVInAssembledChromosomes_Mutect2` has been splited into 50 intervals, so the following table shows one of those processes:
 
 |process_name                                 |max_duration     |max_cpu |max_peak_vmem |
 |:--------------------------------------------|:----------------|:-------|:-------------|
@@ -145,8 +145,8 @@ Duration: 9h 21m 23s
 
 
 #### Strelka2
-Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canoincal regions of the genome, here is the results of CPCG1906:
-Sample: CPCG1906
+Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canoincal regions of the genome, here is the results of CPCG0196:
+Sample: CPCG0196
 Normal BAM: `/hot/software/pipeline/pipeline-align-DNA/Nextflow/development/outputs/bwa-mem2_and_hisat2-2.2.1/bwa-mem2/bams/a-full-CPCG0196-B1/align-DNA-20210424-024139/pipeline-alignDNA.inputs.CPCG0196-B1.bam`
 Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-T001-P01-F.bam`
 
