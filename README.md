@@ -42,7 +42,7 @@ Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker image: broadinstitute/gatk:4.2.4.1
 
 ## Inputs
-To run the pipeline, one input.yaml and one template.config are needed. When running a batch of samples, template.config can be shared, while input.yaml is unique for each sample.
+To run the pipeline, one `input.yaml` and one `template.config` are needed. When running a batch of samples, `template.config` can be shared, while `input` is unique for each sample.
 
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
@@ -80,7 +80,7 @@ Config File |
 | intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
 | germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. | Config File |
 
-For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in input.YAML empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the input.YAML, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
+For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.YAML` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.YAML`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
 
 ## Outputs
 | Output                                         | Type         | Description                   |
@@ -98,7 +98,7 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 ```bash
 python path/to/submit_nextflow_pipeline.py \
     --nextflow_script path/to/call-sSNV.nf \
-    --nextflow_config path/to/nextflow.config \
+    --nextflow_config path/to/nextflow\
     --nextflow_yaml path/to/input.yaml \
     --pipeline_run_name <sample_id> \
     --partition_type F72 \
@@ -141,7 +141,7 @@ Duration: 9h 21m 23s
 |:--------------------------------------|:----------------------|:-------|:-------------|
 |convert_BAM2Pileup_SAMtools            |4h 18m 29s             | 98.2%  | 1.9 GB       |
 |call_sSNV_SomaticSniper                |8h 48m 45s             |98.7%   | 511.6 MB     |
-|generate_ReadCount_bam_readcount       |29.55 minutes          |75.9%   | 261.5 MB     |
+|generate_ReadCount_bam_readcount       |29m 33s          |75.9%   | 261.5 MB     |
 
 
 #### Strelka2
@@ -154,8 +154,8 @@ Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
 |:------------------------|:-------------------|:-------|:-------------|
-|call_sIndel_Manta        |1.41 hours          |2724.2% |23.2 GB       |
-|call_sSNV_Strelka2       |22.54 hours         |511.3%  |17.4 GB       |
+|call_sIndel_Manta        |1h 24m 26s      |2724.2% |23.2 GB       |
+|call_sSNV_Strelka2       |22h 32m 24s      |511.3%  |17.4 GB       |
 ##### with `--callRegions`:
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
