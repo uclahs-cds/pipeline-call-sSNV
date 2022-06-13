@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Update `README.md` to apply the recent changes.
-- Update `template.YAML` according to the `schema.config`.
+- Update the YAML input structure.
+
+### Fixed
+- Add the decoy file for `params.germline_resource_gnomad_vcf`.
 
 ## [4.0.0-rc.1] - 2022-05-13
 ### Changed
