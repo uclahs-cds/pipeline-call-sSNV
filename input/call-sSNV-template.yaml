@@ -1,6 +1,8 @@
 ---
 sample_id: 'sample_id'
-normal:
-  - '/path/to/normal.bam'
-tumor:
-  - '/path/to/tumor.bam'
+input:
+  BAM:
+    normal:
+      - '/path/to/normal.bam'
+    tumor:
+      - '/path/to/tumor.bam'

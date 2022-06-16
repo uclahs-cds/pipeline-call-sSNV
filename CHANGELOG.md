@@ -4,10 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased]
 ### Changed
 ### Added
 - Add retry.config using git submodule from [pipeline-Nextflow-config](https://github.com/uclahs-cds/pipeline-Nextflow-config) to enable processes to retry with more memory.
+- Update PR template.
+
+### Fixed
+- Fix the bug with M64 detection.
+
+## [4.0.0] - 2022-06-13
+### Changed
+- Update `README.md` to apply the recent changes.
+- Update the YAML input structure.
+
+### Fixed
+- Add the decoy file for `params.germline_resource_gnomad_vcf`.
 
 ## [4.0.0-rc.1] - 2022-05-13
 ### Changed
