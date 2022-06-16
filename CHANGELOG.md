@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update PR template.
 
 ### Fixed
-
+- Fix the bug with M64 detection.
 
 ## [4.0.0] - 2022-06-13
 ### Changed
