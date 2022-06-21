@@ -38,14 +38,14 @@ process call_sIndel_Manta {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region = params.use_call_region ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_call_region ? "--callRegions ${call_region}" : ""
     """
     configManta.py \
         --normalBam $normal \
         --tumorBam $tumor \
         --referenceFasta $reference \
         ${exome} \
-        ${call_region} \
+        ${call_region_command} \
         --runDir MantaWorkflow
 
     MantaWorkflow/runWorkflow.py -j ${task.cpus}
@@ -82,14 +82,14 @@ process call_sSNV_Strelka2 {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region = params.use_call_region ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_call_region ? "--callRegions ${call_region}" : ""
     """
     set -euo pipefail
     configureStrelkaSomaticWorkflow.py \
         --normalBam $normal \
         --tumorBam $tumor \
         --referenceFasta $reference \
-        ${call_region} \
+        ${call_region_command} \
         --indelCandidates $indel_candidates \
         ${exome} \
         --runDir StrelkaSomaticWorkflow
