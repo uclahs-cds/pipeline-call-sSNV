@@ -81,31 +81,21 @@ workflow mutect2 {
         )
 
         if (params.intervals) {
-            run_MergeVcfs_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.collect())
-            run_MergeMutectStats_GATK(
-                call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.collect())
+            ich_MergeVcfs = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.collect()
+            ich_MergeMutectStats = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.collect()
+            ich_LearnReadOrientationModel = call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.collect()
         } else {
-            run_MergeVcfs_GATK(call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.mix(
-                call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered
-                ).collect())
-            run_MergeMutectStats_GATK(
-                call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.mix(
-                    call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered_stats
-                    ).collect()
-            )
+            ich_MergeVcfs = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.mix(
+                call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered).collect()
+            ich_MergeMutectStats = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.mix(
+                call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered_stats).collect()
+            ich_LearnReadOrientationModel = call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.mix(
+                call_sSNVInNonAssembledChromosomes_Mutect2.out.f1r2).collect()
         }
 
-        if (params.intervals) {
-            run_LearnReadOrientationModel_GATK(
-                call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.collect()
-            )
-        } else {
-            run_LearnReadOrientationModel_GATK(
-                call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.mix(
-                    call_sSNVInNonAssembledChromosomes_Mutect2.out.f1r2
-                    ).collect()
-            )
-        }
+        run_MergeVcfs_GATK(ich_MergeVcfs)
+        run_MergeMutectStats_GATK(ich_MergeMutectStats)
+        run_LearnReadOrientationModel_GATK(ich_LearnReadOrientationModel)
 
         run_FilterMutectCalls_GATK(
             params.reference,
