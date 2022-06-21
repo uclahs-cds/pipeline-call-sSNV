@@ -94,11 +94,19 @@ workflow mutect2 {
                     ).collect()
             )
         }
-        run_LearnReadOrientationModel_GATK(
-            call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.mix(
-                call_sSNVInNonAssembledChromosomes_Mutect2.out.f1r2
-                ).collect()
-        )
+
+        if (params.intervals) {
+            run_LearnReadOrientationModel_GATK(
+                call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.collect()
+            )
+        } else {
+            run_LearnReadOrientationModel_GATK(
+                call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.mix(
+                    call_sSNVInNonAssembledChromosomes_Mutect2.out.f1r2
+                    ).collect()
+            )
+        }
+
         run_FilterMutectCalls_GATK(
             params.reference,
             params.reference_index,
