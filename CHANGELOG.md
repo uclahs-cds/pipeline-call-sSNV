@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix the bug with M64 detection.
+- Fix the bug with interval list input.
 
 ## [4.0.0] - 2022-06-13
 ### Changed
