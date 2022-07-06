@@ -110,10 +110,10 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor = tumor.collect { "-I '$it'" }.join(' ')
-    normal = normal.collect { "-I '$it'" }.join(' ')
-    normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
+    tumors = tumor.collect { "-I '$it'" }.join(' ')
+    normals = normal.collect { "-I '$it'" }.join(' ')
+    normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
+    bam = params.tumor_only_mode ? "$tumors" : "$tumors $normals $normal_names"
     germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
     """
     set -euo pipefail
@@ -163,10 +163,10 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path ".command.*"
 
     script:
-    tumor = tumor.collect { "-I '$it'" }.join(' ')
-    normal = normal.collect { "-I '$it'" }.join(' ')
-    normal_name = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam = params.tumor_only_mode ? "$tumor" : "$tumor $normal $normal_name"
+    tumors = tumor.collect { "-I '$it'" }.join(' ')
+    normals = normal.collect { "-I '$it'" }.join(' ')
+    normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
+    bam = params.tumor_only_mode ? "$tumors" : "$tumors $normals $normal_names"
     germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
     """
     set -euo pipefail
@@ -195,7 +195,7 @@ process run_MergeVcfs_GATK {
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
-    path unfiltered_vcfs
+    path unfiltered_vcf
 
     output:
     path "unfiltered.vcf.gz", emit: unfiltered
@@ -203,7 +203,7 @@ process run_MergeVcfs_GATK {
     path ".command.*"
 
     script:
-    unfiltered_vcfs = unfiltered_vcfs.collect { "-I '$it'" }.join(' ')
+    unfiltered_vcfs = unfiltered_vcf.collect { "-I '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk MergeVcfs $unfiltered_vcfs -O unfiltered.vcf.gz
@@ -222,14 +222,14 @@ process run_MergeMutectStats_GATK {
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
-    path unfiltered_stats
+    path unfiltered_stat
 
     output:
     path "unfiltered.vcf.gz.stats", emit: merged_stats
     path ".command.*"
 
     script:
-    unfiltered_stats = unfiltered_stats.collect { "-stats '$it'" }.join(' ')
+    unfiltered_stats = unfiltered_stat.collect { "-stats '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk MergeMutectStats $unfiltered_stats -O unfiltered.vcf.gz.stats
