@@ -1,6 +1,6 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
 
-include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
+include { compress_VCF_bgzip; generate_sha512sum } from './common'
 
 include { index_file_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_file/main.nf'
 

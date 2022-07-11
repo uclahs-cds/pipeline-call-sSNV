@@ -1,6 +1,6 @@
 include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
 
-include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
+include { compress_VCF_bgzip; generate_sha512sum } from './common'
 
 include { index_file_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_file/main.nf'
 
