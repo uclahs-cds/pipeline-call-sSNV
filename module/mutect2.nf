@@ -2,7 +2,10 @@ include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembl
 
 include { compress_VCF_bgzip; generate_sha512sum } from './common'
 
-include { index_VCF_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_file/main.nf'
+include { index_VCF_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+    options: [
+        extra_args: "-b 4"
+        ])
 
 workflow mutect2 {
     take:

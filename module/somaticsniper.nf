@@ -2,7 +2,7 @@ include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCand
 
 include { compress_VCF_bgzip; generate_sha512sum } from './common'
 
-include { index_VCF_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_file/main.nf'
+include { index_VCF_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'
 
 workflow somaticsniper {
     take:
