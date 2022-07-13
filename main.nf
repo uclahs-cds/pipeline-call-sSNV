@@ -28,7 +28,7 @@ log.info """\
 
     - output:
         output_dir: ${params.output_dir}
-        output_log_dir: ${params.output_log_dir}
+        log_output_dir: ${params.log_output_dir}
 
     - option:
         save_intermediate_files: ${params.save_intermediate_files}
@@ -38,9 +38,9 @@ log.info """\
 """
 
 include { run_validate_PipeVal } from './module/validation'
-include { somaticsniper } from './module/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/somaticsniper-${params.somaticsniper_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/somaticsniper-${params.somaticsniper_version}")
-include { strelka2 } from './module/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/strelka2-${params.strelka2_version}")
-include { mutect2 } from './module/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_output_log_dir: "${params.output_log_dir}/process-log/mutect2-${params.GATK_version}")
+include { somaticsniper } from './module/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/somaticsniper-${params.somaticsniper_version}", workflow_log_output_dir: "${params.log_output_dir}/process-log/somaticsniper-${params.somaticsniper_version}")
+include { strelka2 } from './module/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_log_output_dir: "${params.log_output_dir}/process-log/strelka2-${params.strelka2_version}")
+include { mutect2 } from './module/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_log_output_dir: "${params.log_output_dir}/process-log/mutect2-${params.GATK_version}")
 
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {

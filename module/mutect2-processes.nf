@@ -21,7 +21,7 @@ process run_SplitIntervals_GATK {
                mode: "copy",
                pattern: "interval-files/*-scattered.interval_list",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -55,7 +55,7 @@ process run_GetSampleName_Mutect2 {
                mode: "copy",
                pattern: "*.txt",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -84,7 +84,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
                mode: "copy",
                pattern: "unfiltered*",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -137,7 +137,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
                mode: "copy",
                pattern: "unfiltered*",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -189,7 +189,7 @@ process run_MergeVcfs_GATK {
                mode: "copy",
                pattern: "unfiltered.vcf.gz*",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -216,7 +216,7 @@ process run_MergeMutectStats_GATK {
                mode: "copy",
                pattern: "unfiltered.vcf.gz.stats",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -242,7 +242,7 @@ process run_LearnReadOrientationModel_GATK {
                mode: "copy",
                pattern: "read-orientation-model.tar.gz",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -271,7 +271,7 @@ process run_FilterMutectCalls_GATK {
                mode: "copy",
                pattern: "filtered.vcf.gz",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -307,7 +307,7 @@ process filter_VCF {
                mode: "copy",
                pattern: "mutect2_${params.sample_id}_filtered_pass.vcf",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
