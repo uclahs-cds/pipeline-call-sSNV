@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Change index_VCF_tabix process using git submodule from [pipeline-Nextflow-module](https://github.com/uclahs-cds/pipeline-Nextflow-module).
+
 ### Added
 - Add retry.config using git submodule from [pipeline-Nextflow-config](https://github.com/uclahs-cds/pipeline-Nextflow-config) to enable processes to retry with more memory.
 
