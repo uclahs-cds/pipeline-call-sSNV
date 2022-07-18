@@ -114,9 +114,12 @@ workflow mutect2 {
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
         compress_VCF_bgzip(filter_VCF.out.mutect2_vcf)
-        index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
-
-        file_for_sha512 = compress_VCF_bgzip.out.vcf_gz.mix(index_VCF_tabix.out.index)
+        index_ch = compress_VCF_bgzip.out.vcf_gz
+            .map{
+                it -> [params.sample_id, it]
+            }
+        index_VCF_tabix(index_ch)
+        file_for_sha512 = index_ch.mix(index_VCF_tabix.out.index)
         generate_sha512sum(file_for_sha512)
 
     emit:

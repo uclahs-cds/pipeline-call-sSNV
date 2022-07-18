@@ -37,13 +37,13 @@ process generate_sha512sum {
    publishDir path: "${params.workflow_log_output_dir}",
               mode: "copy",
               pattern: ".command.*",
-              saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+              saveAs: { "${task.process.replace(':', '/')}-${id}/log${file(it).getName()}" }
 
    input:
-    path (file_for_sha512)
+    tuple val(id), path (file_for_sha512)
 
    output:
-    path("${file_for_sha512}.sha512"), emit: sha512sum
+    tuple val(id), path("${file_for_sha512}.sha512"), emit: sha512sum
     path ".command.*"
 
    script:
