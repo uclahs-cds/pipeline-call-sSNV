@@ -1,6 +1,6 @@
 include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
 
-include { compress_VCF_bgzip; generate_sha512sum } from './common'
+include { generate_sha512sum } from './common'
 
 include { index_VCF_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
@@ -46,15 +46,14 @@ workflow somaticsniper {
             apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor,
             generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
-        compress_VCF_bgzip(call_HighConfidenceSNV_SomaticSniper.out.hc)
-        index_ch = compress_VCF_bgzip.out.vcf_gz
+        index_ch = call_HighConfidenceSNV_SomaticSniper.out.hc
             .map{
                 it -> [params.sample_id, it]
             }
         index_VCF_tabix(index_ch)
-        file_for_sha512 = index_ch.mix(index_VCF_tabix.out.index)
+        file_for_sha512 = index_VCF_tabix.out.vcf_gz.mix(index_VCF_tabix.out.index)
         generate_sha512sum(file_for_sha512)
     emit:
-        compress_VCF_bgzip.out.vcf_gz
+        index_VCF_tabix.out.vcf_gz
         index_VCF_tabix.out.index
 }

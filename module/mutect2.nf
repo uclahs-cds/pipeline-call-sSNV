@@ -113,16 +113,15 @@ workflow mutect2 {
             run_LearnReadOrientationModel_GATK.out.read_orientation_model
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
-        compress_VCF_bgzip(filter_VCF.out.mutect2_vcf)
-        index_ch = compress_VCF_bgzip.out.vcf_gz
+        index_ch = filter_VCF.out.mutect2_vcf
             .map{
                 it -> [params.sample_id, it]
             }
         index_VCF_tabix(index_ch)
-        file_for_sha512 = index_ch.mix(index_VCF_tabix.out.index)
+        file_for_sha512 = index_VCF_tabix.out.vcf_gz.mix(index_VCF_tabix.out.index)
         generate_sha512sum(file_for_sha512)
 
     emit:
-        compress_VCF_bgzip.out.vcf_gz
+        index_VCF_tabix.out.vcf_gz
         index_VCF_tabix.out.index
 }

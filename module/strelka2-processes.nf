@@ -113,7 +113,7 @@ process filter_VCF {
     tuple val(name), path(vcf_gz)
 
     output:
-    path "strelka2_${params.sample_id}_${name}_pass.vcf", emit: strelka2_vcf
+    tuple val(name), path ("strelka2_${params.sample_id}_${name}_pass.vcf"), emit: strelka2_vcf
     path ".command.*"
 
     // https://www.biostars.org/p/206488/
