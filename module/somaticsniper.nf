@@ -2,7 +2,7 @@ include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCand
 
 include { generate_sha512sum } from './common'
 
-include { index_VCF_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/workflow_compress_index.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir
@@ -46,14 +46,14 @@ workflow somaticsniper {
             apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor,
             generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
-        index_ch = call_HighConfidenceSNV_SomaticSniper.out.hc
+        index_compress_ch = call_HighConfidenceSNV_SomaticSniper.out.hc
             .map{
                 it -> [params.sample_id, it]
             }
-        index_VCF_tabix(index_ch)
-        file_for_sha512 = index_VCF_tabix.out.vcf_gz.mix(index_VCF_tabix.out.index)
+        compress_index_VCF(index_compress_ch)
+        file_for_sha512 = compress_index_VCF.out.vcf_gz.mix(compress_index_VCF.out.index)
         generate_sha512sum(file_for_sha512)
     emit:
-        index_VCF_tabix.out.vcf_gz
-        index_VCF_tabix.out.index
+        compress_index_VCF.out.vcf_gz
+        compress_index_VCF.out.index
 }

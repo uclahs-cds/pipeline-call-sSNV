@@ -2,7 +2,7 @@ include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-p
 
 include { generate_sha512sum } from './common'
 
-include { index_VCF_tabix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/workflow_compress_index.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir
@@ -38,10 +38,11 @@ workflow strelka2 {
             params.call_region_index
         )
         filter_VCF(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
-        index_VCF_tabix(filter_VCF.out.strelka2_vcf)
-        file_for_sha512 = index_VCF_tabix.out.vcf_gz.mix(index_VCF_tabix.out.index)
+        compress_index_VCF(filter_VCF.out.strelka2_vcf)
+        file_for_sha512 = compress_index_VCF.out.vcf_gz.mix(compress_index_VCF.out.index)
         generate_sha512sum(file_for_sha512)
+
     emit:
-        index_VCF_tabix.out.vcf_gz
-        index_VCF_tabix.out.index
+        compress_index_VCF.out.vcf_gz
+        compress_index_VCF.out.index
 }
