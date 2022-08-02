@@ -30,6 +30,10 @@ sample_id:
   type: 'String'
   required: true
   help: 'Sample identifier'
+dataset_id:
+  type: 'String'
+  required: true
+  help: 'dataset identifier'
 save_intermediate_files:
   type: 'Bool'
   required: true

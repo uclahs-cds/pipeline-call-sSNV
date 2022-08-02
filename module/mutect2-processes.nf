@@ -1,3 +1,5 @@
+include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
+
 log.info """\
 ====================================
           M U T E C T 2
@@ -316,12 +318,16 @@ process filter_VCF {
     path filtered
 
     output:
-    path "mutect2_${params.sample_id}_filtered_pass.vcf", emit: mutect2_vcf
+    path "*.vcf", emit: mutect2_vcf
     path ".command.*"
 
     script:
+    output_filename = generate_standard_filename("mutect2-${params.GATK_version}",
+        params.dataset_id,
+        params.sample_id,
+        [additional_information: "filtered_pass"])
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > mutect2_${params.sample_id}_filtered_pass.vcf
+    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}.vcf
     """
 }

@@ -18,7 +18,7 @@ process compress_VCF_bgzip {
 
     input:
     path vcf
-    
+
     output:
     path "${vcf}.gz" , emit: vcf_gz
     path ".command.*"
@@ -41,7 +41,7 @@ process index_VCF_tabix {
 
     input:
     path vcf_gz
-    
+
     output:
     path "${vcf_gz}.tbi", emit: vcf_gz_tbi
     path ".command.*"
@@ -64,7 +64,7 @@ process generate_sha512sum {
 
    input:
     path (file_for_sha512)
-    
+
    output:
     path("${file_for_sha512}.sha512"), emit: sha512sum
     path ".command.*"

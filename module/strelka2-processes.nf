@@ -1,3 +1,5 @@
+include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
+
 log.info """\
 ====================================
           S T R E L K A 2
@@ -113,12 +115,17 @@ process filter_VCF {
     tuple val(name), path(vcf_gz)
 
     output:
-    path "strelka2_${params.sample_id}_${name}_pass.vcf", emit: strelka2_vcf
+    path "*.vcf", emit: strelka2_vcf
     path ".command.*"
 
     // https://www.biostars.org/p/206488/
+    script:
+    output_filename = generate_standard_filename("strelka2_${params.strelka2_version}",
+        params.dataset_id,
+        params.sample_id,
+        [additional_information: "filtered_pass"])
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > strelka2_${params.sample_id}_${name}_pass.vcf
+    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}.vcf
     """
 }

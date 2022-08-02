@@ -1,4 +1,5 @@
 #!/usr/bin/env nextflow
+include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 
 log.info """\
 ====================================
@@ -288,9 +289,15 @@ process call_HighConfidenceSNV_SomaticSniper {
     path fp_pass
 
     output:
-    path "somaticsniper_${params.sample_id}_hc.vcf", emit: hc
-    path "somaticsniper_${params.sample_id}_lc.vcf", emit: lc
+    path "*_hc.vcf", emit: hc
+    path "*_lc.vcf", emit: lc
     path ".command.*"
+
+    script:
+    output_filename = generate_standard_filename("somaticsniper-${params.somaticsniper_version}",
+        params.dataset_id,
+        params.sample_id,
+        [:])
 
     """
     set -euo pipefail
@@ -298,8 +305,8 @@ process call_HighConfidenceSNV_SomaticSniper {
         --min-mapping-quality 40 `# min mapping quality of the reads supporting the variant in the tumor, default 40` \
         --min-somatic-score 40 `# minimum somatic score, default 40` \
         --snp-file $fp_pass \
-        --lq-output "somaticsniper_${params.sample_id}_lc.vcf" \
-        --out-file "somaticsniper_${params.sample_id}_hc.vcf"
+        --lq-output "${output_filename}_lc.vcf" \
+        --out-file "${output_filename}_hc.vcf"
     """
 }
 
