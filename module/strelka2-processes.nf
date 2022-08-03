@@ -113,6 +113,7 @@ process filter_VCF {
 
     input:
     tuple val(name), path(vcf_gz)
+    val output_filename
 
     output:
     path "*.vcf", emit: strelka2_vcf
@@ -120,12 +121,8 @@ process filter_VCF {
 
     // https://www.biostars.org/p/206488/
     script:
-    output_filename = generate_standard_filename("strelka2_${params.strelka2_version}",
-        params.dataset_id,
-        params.sample_id,
-        [additional_information: "filtered_pass"])
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}.vcf
+    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}_filtered-pass.vcf
     """
 }

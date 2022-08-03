@@ -189,7 +189,7 @@ process run_MergeVcfs_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered.vcf.gz*",
+               pattern: "*_unfiltered.vcf.gz",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -198,17 +198,18 @@ process run_MergeVcfs_GATK {
 
     input:
     path unfiltered_vcf
+    val output_filename
 
     output:
-    path "unfiltered.vcf.gz", emit: unfiltered
-    path "unfiltered.vcf.gz.tbi", emit: unfiltered_index
+    path "*_unfiltered.vcf.gz", emit: unfiltered
+    path "*_unfiltered.vcf.gz.tbi", emit: unfiltered_index
     path ".command.*"
 
     script:
     unfiltered_vcfs = unfiltered_vcf.collect { "-I '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk MergeVcfs $unfiltered_vcfs -O unfiltered.vcf.gz
+    gatk MergeVcfs $unfiltered_vcfs -O ${output_filename}_unfiltered.vcf.gz
     """
 }
 
@@ -216,7 +217,7 @@ process run_MergeMutectStats_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered.vcf.gz.stats",
+               pattern: "*_unfiltered.vcf.gz.stats",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -225,6 +226,7 @@ process run_MergeMutectStats_GATK {
 
     input:
     path unfiltered_stat
+    val output_filename
 
     output:
     path "unfiltered.vcf.gz.stats", emit: merged_stats
@@ -234,7 +236,7 @@ process run_MergeMutectStats_GATK {
     unfiltered_stats = unfiltered_stat.collect { "-stats '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk MergeMutectStats $unfiltered_stats -O unfiltered.vcf.gz.stats
+    gatk MergeMutectStats $unfiltered_stats -O ${output_filename}_unfiltered.vcf.gz.stats
     """
 }
 
@@ -262,7 +264,7 @@ process run_LearnReadOrientationModel_GATK {
     set -euo pipefail
     gatk LearnReadOrientationModel --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
     $f1r2 \
-    --tmp-dir $params.work_dir \
+    --tmp-dir ${params.work_dir} \
     -O read-orientation-model.tar.gz
     """
 }
@@ -286,9 +288,10 @@ process run_FilterMutectCalls_GATK {
     path unfiltered_index
     path unfiltered_stats
     path read_orientation_model
+    val output_filename
 
     output:
-    path "filtered.vcf.gz", emit: filtered
+    path "*filtered.vcf.gz", emit: filtered
     path ".command.*"
 
     script:
@@ -298,7 +301,7 @@ process run_FilterMutectCalls_GATK {
         -R $reference \
         -V $unfiltered \
         --ob-priors $read_orientation_model \
-        -O filtered.vcf.gz \
+        -O ${output_filename}_filtered.vcf.gz \
         ${params.filter_mutect_calls_extra_args}
     """
 }
@@ -316,18 +319,15 @@ process filter_VCF {
 
     input:
     path filtered
+    val output_filename
 
     output:
     path "*.vcf", emit: mutect2_vcf
     path ".command.*"
 
     script:
-    output_filename = generate_standard_filename("mutect2-${params.GATK_version}",
-        params.dataset_id,
-        params.sample_id,
-        [additional_information: "filtered_pass"])
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}.vcf
+    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}_filtered-pass.vcf
     """
 }

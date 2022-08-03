@@ -1,5 +1,5 @@
 include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
-
+include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
 workflow mutect2 {
@@ -17,6 +17,11 @@ workflow mutect2 {
             normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
                 .map{return (it in List) ? it : [it]}
         }
+
+        output_filename = generate_standard_filename("mutect2-${params.GATK_version}",
+            params.dataset_id,
+            params.sample_id,
+            [:])
 
         if (params.intervals) {
             intervals = params.intervals
@@ -93,8 +98,8 @@ workflow mutect2 {
                 call_sSNVInNonAssembledChromosomes_Mutect2.out.f1r2).collect()
         }
 
-        run_MergeVcfs_GATK(ich_MergeVcfs)
-        run_MergeMutectStats_GATK(ich_MergeMutectStats)
+        run_MergeVcfs_GATK(ich_MergeVcfs, output_filename)
+        run_MergeMutectStats_GATK(ich_MergeMutectStats, output_filename)
         run_LearnReadOrientationModel_GATK(ich_LearnReadOrientationModel)
 
         run_FilterMutectCalls_GATK(
@@ -104,9 +109,10 @@ workflow mutect2 {
             run_MergeVcfs_GATK.out.unfiltered,
             run_MergeVcfs_GATK.out.unfiltered_index,
             run_MergeMutectStats_GATK.out.merged_stats,
-            run_LearnReadOrientationModel_GATK.out.read_orientation_model
+            run_LearnReadOrientationModel_GATK.out.read_orientation_model,
+            output_filename
         )
-        filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
+        filter_VCF(run_FilterMutectCalls_GATK.out.filtered, output_filename)
         compress_VCF_bgzip(filter_VCF.out.mutect2_vcf)
         index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
 
