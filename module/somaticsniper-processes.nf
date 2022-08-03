@@ -105,7 +105,7 @@ process create_IndelCandidate_SAMtools {
     val output_filename
 
     output:
-    tuple val(type), path("*_${type}-filt.pileup"), emit: filtered_pileup
+    tuple val(type), path("*_filtered-${type}.pileup"), emit: filtered_pileup
     path ".command.*"
 
     """
@@ -114,7 +114,7 @@ process create_IndelCandidate_SAMtools {
         $raw_pileup \
         | awk '\$6>=20' \
         | grep -P "\t\\*\t" \
-        > ${output_filename}_${type}-filt.pileup
+        > ${output_filename}_filtered-${type}.pileup
     """
 }
 
@@ -124,7 +124,7 @@ process apply_NormalIndelFilter_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "*.vcf_normal",
+               pattern: "*_normal.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -137,7 +137,7 @@ process apply_NormalIndelFilter_SomaticSniper {
     val output_filename
 
     output:
-    path "*.vcf_normal", emit: vcf_normal
+    path "*_normal.vcf", emit: vcf_normal
     path ".command.*"
 
     """
@@ -145,7 +145,7 @@ process apply_NormalIndelFilter_SomaticSniper {
     snpfilter.pl \
         --snp-file $snp_file \
         --indel-file $indel_file \
-        --out-file ${output_filename}.vcf_normal
+        --out-file ${output_filename}_normal.vcf
     """
 }
 
@@ -155,7 +155,7 @@ process apply_TumorIndelFilter_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "*.vcf-normal-tumor.SNPfilter",
+               pattern: "*.SNPfilter",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -168,7 +168,7 @@ process apply_TumorIndelFilter_SomaticSniper {
     val output_filename
 
     output:
-    path "*.vcf-normal-tumor.SNPfilter", emit: vcf_tumor
+    path "*.SNPfilter", emit: vcf_tumor
     path ".command.*"
 
     """
@@ -176,7 +176,7 @@ process apply_TumorIndelFilter_SomaticSniper {
     snpfilter.pl \
         --snp-file $snp_file \
         --indel-file $indel_file \
-        --out-file ${output_filename}.vcf-normal-tumor.SNPfilter
+        --out-file ${output_filename}.SNPfilter
     """
 }
 
@@ -186,7 +186,7 @@ process create_ReadCountPosition_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "*.vcf-normal-tumor.SNPfilter.pos",
+               pattern: "*.SNPfilter.pos",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -198,7 +198,7 @@ process create_ReadCountPosition_SomaticSniper {
     val output_filename
 
     output:
-    path "*.vcf-normal-tumor.SNPfilter.pos", emit: snp_positions
+    path "*.SNPfilter.pos", emit: snp_positions
     path ".command.*"
 
     script:
@@ -206,7 +206,7 @@ process create_ReadCountPosition_SomaticSniper {
     set -euo pipefail
     prepare_for_readcount.pl \
         --snp-file $snp_file \
-        --out-file ${output_filename}.vcf-normal-tumor.SNPfilter.pos
+        --out-file ${output_filename}.SNPfilter.pos
     """
 }
 
@@ -256,7 +256,7 @@ process filter_FalsePositive_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "*.vcf_normal_tumor.SNPfilter.*",
+               pattern: "*.SNPfilter.*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -268,8 +268,8 @@ process filter_FalsePositive_SomaticSniper {
     path readcount_file
 
     output:
-    path "*.vcf-normal-tumor.SNPfilter.fp_pass", emit: fp_pass
-    path "*.vcf-normal-tumor.SNPfilter.fp_fail", emit: fp_fail
+    path "*.SNPfilter.fp_pass", emit: fp_pass
+    path "*.SNPfilter.fp_fail", emit: fp_fail
     path ".command.*"
 
     """

@@ -229,7 +229,7 @@ process run_MergeMutectStats_GATK {
     val output_filename
 
     output:
-    path "unfiltered.vcf.gz.stats", emit: merged_stats
+    path "*_unfiltered.vcf.gz.stats", emit: merged_stats
     path ".command.*"
 
     script:
@@ -273,7 +273,7 @@ process run_FilterMutectCalls_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "filtered.vcf.gz",
+               pattern: "*_filtered.vcf.gz",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -291,7 +291,7 @@ process run_FilterMutectCalls_GATK {
     val output_filename
 
     output:
-    path "*filtered.vcf.gz", emit: filtered
+    path "*_filtered.vcf.gz", emit: filtered
     path ".command.*"
 
     script:
@@ -310,7 +310,7 @@ process filter_VCF {
     container "ubuntu:20.04"
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "mutect2_${params.sample_id}_filtered_pass.vcf",
+               pattern: "*filtered-pass.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
