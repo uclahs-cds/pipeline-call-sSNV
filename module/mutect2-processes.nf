@@ -84,7 +84,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered*",
+               pattern: "${params.output_filename}_unfiltered*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -105,10 +105,10 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path germline_resource_gnomad_vcf_index
 
     output:
-    path "unfiltered_${interval.baseName}.vcf.gz", emit: unfiltered
-    path "unfiltered_${interval.baseName}.vcf.gz.tbi", emit: unfiltered_index
-    path "unfiltered_${interval.baseName}.vcf.gz.stats", emit: unfiltered_stats
-    path "unfiltered_${interval.baseName}_f1r2.tar.gz", emit: f1r2
+    path "${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz", emit: unfiltered
+    path "${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz.tbi", emit: unfiltered_index
+    path "${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz.stats", emit: unfiltered_stats
+    path "${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -124,8 +124,8 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
         -R $reference \
         $bam \
         -L $interval \
-        --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
-        -O unfiltered_${interval.baseName}.vcf.gz \
+        --f1r2-tar-gz ${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz \
+        -O ${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
         ${params.mutect2_extra_args}
@@ -137,7 +137,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered*",
+               pattern: "${params.output_filename}_unfiltered*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -158,10 +158,10 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path germline_resource_gnomad_vcf_index
 
     output:
-    path "unfiltered_non_canonical.vcf.gz", emit: unfiltered
-    path "unfiltered_non_canonical.vcf.gz.tbi", emit: unfiltered_index
-    path "unfiltered_non_canonical.vcf.gz.stats", emit: unfiltered_stats
-    path "unfiltered_${interval.baseName}_f1r2.tar.gz", emit: f1r2
+    path "${params.output_filename}_unfiltered-non-canonical.vcf.gz", emit: unfiltered
+    path "${params.output_filename}_unfiltered-non-canonical.vcf.gz.tbi", emit: unfiltered_index
+    path "${params.output_filename}_unfiltered-non-canonical.vcf.gz.stats", emit: unfiltered_stats
+    path "${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -177,8 +177,8 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
         -R $reference \
         -XL $interval \
         $bam \
-        --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
-        -O unfiltered_non_canonical.vcf.gz \
+        --f1r2-tar-gz ${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz \
+        -O ${params.output_filename}_unfiltered-non-canonical.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
         ${params.mutect2_extra_args}
@@ -198,7 +198,6 @@ process run_MergeVcfs_GATK {
 
     input:
     path unfiltered_vcf
-    val output_filename
 
     output:
     path "*_unfiltered.vcf.gz", emit: unfiltered
@@ -209,7 +208,7 @@ process run_MergeVcfs_GATK {
     unfiltered_vcfs = unfiltered_vcf.collect { "-I '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk MergeVcfs $unfiltered_vcfs -O ${output_filename}_unfiltered.vcf.gz
+    gatk MergeVcfs $unfiltered_vcfs -O ${params.output_filename}_unfiltered.vcf.gz
     """
 }
 
@@ -226,7 +225,6 @@ process run_MergeMutectStats_GATK {
 
     input:
     path unfiltered_stat
-    val output_filename
 
     output:
     path "*_unfiltered.vcf.gz.stats", emit: merged_stats
@@ -236,7 +234,7 @@ process run_MergeMutectStats_GATK {
     unfiltered_stats = unfiltered_stat.collect { "-stats '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk MergeMutectStats $unfiltered_stats -O ${output_filename}_unfiltered.vcf.gz.stats
+    gatk MergeMutectStats $unfiltered_stats -O ${params.output_filename}_unfiltered.vcf.gz.stats
     """
 }
 
@@ -288,7 +286,6 @@ process run_FilterMutectCalls_GATK {
     path unfiltered_index
     path unfiltered_stats
     path read_orientation_model
-    val output_filename
 
     output:
     path "*_filtered.vcf.gz", emit: filtered
@@ -301,7 +298,7 @@ process run_FilterMutectCalls_GATK {
         -R $reference \
         -V $unfiltered \
         --ob-priors $read_orientation_model \
-        -O ${output_filename}_filtered.vcf.gz \
+        -O ${params.output_filename}_filtered.vcf.gz \
         ${params.filter_mutect_calls_extra_args}
     """
 }
@@ -319,7 +316,6 @@ process filter_VCF {
 
     input:
     path filtered
-    val output_filename
 
     output:
     path "*.vcf", emit: mutect2_vcf
@@ -328,6 +324,6 @@ process filter_VCF {
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}_filtered-pass.vcf
+    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
     """
 }

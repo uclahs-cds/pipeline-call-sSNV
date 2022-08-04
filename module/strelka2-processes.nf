@@ -104,7 +104,7 @@ process filter_VCF {
     container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "strelka2_${params.sample_id}_${name}_pass.vcf",
+               pattern: "${params.output_filename}_filtered-pass.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -113,7 +113,6 @@ process filter_VCF {
 
     input:
     tuple val(name), path(vcf_gz)
-    val output_filename
 
     output:
     path "*.vcf", emit: strelka2_vcf
@@ -123,6 +122,6 @@ process filter_VCF {
     script:
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${output_filename}_filtered-pass.vcf
+    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
     """
 }
