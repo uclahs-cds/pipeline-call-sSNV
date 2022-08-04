@@ -189,7 +189,7 @@ process run_MergeVcfs_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "*_unfiltered.vcf.gz",
+               pattern: "*_unfiltered.vcf.gz*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",

@@ -1,6 +1,4 @@
 #!/usr/bin/env nextflow
-include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-
 log.info """\
 ====================================
     S O M A T I C    S N I P E R
@@ -229,7 +227,6 @@ process generate_ReadCount_bam_readcount {
 
     // tumor index file not explicitly passed to bam-readcount,
     // but it needs to be in the working directory otherwise bam-readcount will fail
-    script:
     """
     set -euo pipefail
     bam-readcount \
@@ -294,7 +291,6 @@ process call_HighConfidenceSNV_SomaticSniper {
     path "*_lc.vcf", emit: lc
     path ".command.*"
 
-    script:
     """
     set -euo pipefail
     highconfidence.pl \
