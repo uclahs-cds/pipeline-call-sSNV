@@ -48,7 +48,7 @@ include { somaticsniper } from './module/somaticsniper' addParams(
 include { strelka2 } from './module/strelka2' addParams(
     workflow_output_dir: "${params.output_dir}/Strelka2-${params.strelka2_version}",
     workflow_output_log_dir: "${params.output_log_dir}/process-log/Strelka2-${params.strelka2_version}",
-    output_filename: generate_standard_filename("strelka2_${params.strelka2_version}",
+    output_filename: generate_standard_filename("Strelka2_${params.strelka2_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
