@@ -1,4 +1,4 @@
-include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
+include { generate_standard_filename; sanitize_string } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 
 log.info """\
 ====================================
@@ -105,10 +105,10 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path germline_resource_gnomad_vcf_index
 
     output:
-    path "${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz", emit: unfiltered
-    path "${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz.tbi", emit: unfiltered_index
-    path "${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz.stats", emit: unfiltered_stats
-    path "${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz", emit: f1r2
+    path "*.vcf.gz", emit: unfiltered
+    path "*.vcf.gz.tbi", emit: unfiltered_index
+    path "*.vcf.gz.stats", emit: unfiltered_stats
+    path "*-f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -158,10 +158,10 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path germline_resource_gnomad_vcf_index
 
     output:
-    path "${params.output_filename}_unfiltered-non-canonical.vcf.gz", emit: unfiltered
-    path "${params.output_filename}_unfiltered-non-canonical.vcf.gz.tbi", emit: unfiltered_index
-    path "${params.output_filename}_unfiltered-non-canonical.vcf.gz.stats", emit: unfiltered_stats
-    path "${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz", emit: f1r2
+    path "*.vcf.gz", emit: unfiltered
+    path "*.vcf.gz.tbi", emit: unfiltered_index
+    path "*.vcf.gz.stats", emit: unfiltered_stats
+    path "*-f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -177,7 +177,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
         -R $reference \
         -XL $interval \
         $bam \
-        --f1r2-tar-gz ${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz \
+        --f1r2-tar-gz ${params.output_filename}_unfiltered-non-canonical-f1r2.tar.gz \
         -O ${params.output_filename}_unfiltered-non-canonical.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
