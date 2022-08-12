@@ -1,4 +1,5 @@
 ---
+patient_id: 'A-mini'
 sample_id: 'A-mini-n2'
 # For multi samples, just list all the bams under the normal or tumor.
 input:

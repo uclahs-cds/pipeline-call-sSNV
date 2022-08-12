@@ -1,4 +1,5 @@
 ---
+patient_id: 'patient_id'
 sample_id: 'sample_id'
 input:
   BAM:

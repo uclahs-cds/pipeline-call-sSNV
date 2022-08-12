@@ -55,10 +55,19 @@ include { strelka2 } from './module/strelka2' addParams(
 include { mutect2 } from './module/mutect2' addParams(
     workflow_output_dir: "${params.output_dir}/Mutect2-${params.GATK_version}",
     workflow_output_log_dir: "${params.output_log_dir}/process-log/Mutect2-${params.GATK_version}",
-    output_filename: generate_standard_filename("Mutect2-${params.GATK_version}",
-        params.dataset_id,
-        params.sample_id,
-        [:]))
+    output_filename:
+        "${if (params.multi_tumor_sample || params.multi_normal_sample) {
+            generate_standard_filename("Mutect2-${params.GATK_version}",
+                params.dataset_id,
+                params.patient_id,
+                [:])
+        } else {
+            generate_standard_filename("Mutect2-${params.GATK_version}",
+                params.dataset_id,
+                params.sample_id,
+                [:])
+        }}"
+        )
 
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {

@@ -1,5 +1,3 @@
-include { generate_standard_filename; sanitize_string } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-
 log.info """\
 ====================================
           M U T E C T 2

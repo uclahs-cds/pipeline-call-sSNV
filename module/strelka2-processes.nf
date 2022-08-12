@@ -1,5 +1,3 @@
-include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-
 log.info """\
 ====================================
           S T R E L K A 2
@@ -104,7 +102,7 @@ process filter_VCF {
     container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "${params.output_filename}_filtered-pass.vcf",
+               pattern: "*.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
@@ -122,6 +120,6 @@ process filter_VCF {
     script:
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
+    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_${name}-filtered-pass.vcf
     """
 }
