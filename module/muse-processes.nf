@@ -47,7 +47,7 @@ process run_sump_MuSE {
     container params.docker_image_MuSE
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "",
+               pattern: "*.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_output_log_dir}",
                mode: "copy",
