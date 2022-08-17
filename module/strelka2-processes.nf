@@ -75,8 +75,8 @@ process call_sSNV_Strelka2 {
     path call_region_index
 
     output:
-    tuple val("somatic_snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
-    tuple val("somatic_indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
+    tuple val("somatic-snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
+    tuple val("somatic-indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
     path "StrelkaSomaticWorkflow"
     path ".command.*"
 
