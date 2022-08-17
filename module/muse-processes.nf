@@ -69,7 +69,6 @@ process run_sump_MuSE {
 
     script:
     arg_seq_type = params.exome ? "-E" : "-G"
-    call_region_command = params.use_call_region ? "--callRegions ${call_region}" : ""
     """
     set -euo pipefail
     MuSE sump \
