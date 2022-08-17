@@ -68,13 +68,6 @@ include { mutect2 } from './module/mutect2' addParams(
                 [:])
         }}"
         )
-include { muse } from './module/muse' addParams(
-    workflow_output_dir: "${params.output_dir}/MuSE-${params.MuSE_version}",
-    workflow_output_log_dir: "${params.output_log_dir}/process-log/MuSE-${params.MuSE_version}",
-    output_filename: generate_standard_filename("MuSE_${params.MuSE_version}",
-        params.dataset_id,
-        params.sample_id,
-        [:]))
 
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {
@@ -157,14 +150,6 @@ workflow {
             tumor_input.tumor_index.collect(),
             normal_input.normal_bam.collect(),
             normal_input.normal_index.collect()
-        )
-    }
-    if ('muse' in params.algorithm) {
-        muse(
-            tumor_input.tumor_bam,
-            tumor_input.tumor_index,
-            normal_input.normal_bam,
-            normal_input.normal_index
         )
     }
 }
