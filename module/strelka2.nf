@@ -1,5 +1,4 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
-
 include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
 
 workflow strelka2 {
@@ -8,7 +7,7 @@ workflow strelka2 {
     tumor_index
     normal_bam
     normal_index
-    
+
     main:
         call_sIndel_Manta(
             tumor_bam,
