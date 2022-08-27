@@ -1,6 +1,6 @@
 ---
-patient_id: 'A-mini'
-sample_id: 'A-mini-n2'
+patient_id: 'TWGSAMIN000001'
+sample_id: 'TWGSAMIN000001-T001-S01-F'
 # For tumor-only mode, list all the tumor.bams under 'tumor:'.
 input:
   BAM:
