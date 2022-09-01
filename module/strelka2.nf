@@ -1,16 +1,14 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
-<<<<<<< HEAD
 
 include { generate_sha512sum } from './common'
 
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/workflow_compress_index.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args
         ])
-=======
-include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
->>>>>>> main
 
 workflow strelka2 {
     take:

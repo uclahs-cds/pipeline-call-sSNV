@@ -1,16 +1,14 @@
 include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
-<<<<<<< HEAD
 
 include { generate_sha512sum } from './common'
 
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/workflow_compress_index.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args
         ])
-=======
-include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
->>>>>>> main
 
 workflow somaticsniper {
     take:
@@ -42,18 +40,8 @@ workflow somaticsniper {
         apply_NormalIndelFilter_SomaticSniper(call_sSNV_SomaticSniper.out.bam_somaticsniper, ch_snpfilter.normal)
         apply_TumorIndelFilter_SomaticSniper(apply_NormalIndelFilter_SomaticSniper.out.vcf_normal, ch_snpfilter.tumor)
         create_ReadCountPosition_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor)
-<<<<<<< HEAD
-        generate_ReadCount_bam_readcount(
-            params.reference,
-            create_ReadCountPosition_SomaticSniper.out.snp_positions,
-            tumor_bam, tumor_index)
-        filter_FalsePositive_SomaticSniper(
-            apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor,
-            generate_ReadCount_bam_readcount.out.readcount)
-=======
         generate_ReadCount_bam_readcount(params.reference,create_ReadCountPosition_SomaticSniper.out.snp_positions, tumor_bam, tumor_index)
         filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
->>>>>>> main
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
         index_compress_ch = call_HighConfidenceSNV_SomaticSniper.out.hc
             .map{
