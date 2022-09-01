@@ -7,10 +7,12 @@ algorithm:
     - mutect2
     - somaticsniper
     - strelka2
+    - muse
   choices:
     - mutect2
     - somaticsniper
     - strelka2
+    - muse
 reference:
   type: 'Path'
   mode: 'r'
