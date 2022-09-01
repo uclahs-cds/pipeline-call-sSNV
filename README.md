@@ -46,10 +46,13 @@ To run the pipeline, one `input.yaml` and one `template.config` are needed. When
 
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
-| sample_id | string | The name/ID of the sample                 | YAML File |
+| patient_id | string | The name/ID of the patient    | YAML File |
+| input.tumor.BAM | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
+| input.tumor.id | string | The name/ID of the tumor sample    | YAML File |
+| input.normal.BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
+| input.normal.id | string | The name/ID of the normal sample      | YAML File |
+| dataset_id | string | The name/ID of the dataset    | Config File |
 | algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
-| tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
-| normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
 | output_log_dir | string | The location where log files (.command.\*) will be saved |
@@ -85,10 +88,10 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 ## Outputs
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| somaticsniper_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
-| strelka2_{sample_id}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
-| strelka2_{sample_id}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
-| mutect2_{sample_id}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
+| {SomaticSniper-version}_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
+| {Strelka2-version}_{sample_id}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
+| {Strelka2-version}_{sample_id}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
+| {Mutect2-version}_{sample_id}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Standardize output filenames using `generate_standardized_filename` module from [pipeline-Nextflow-module](https://github.com/uclahs-cds/pipeline-Nextflow-module/tree/main/modules/common/generate_standardized_filename).
-- Change input.YAML structure to allow the separate sample_id for different BAMs.
+- Change the `input.YAML` structure to allow separate sample_ids for normal and tumor BAMs.
 
 ### Added
 - Add retry.config using git submodule from [pipeline-Nextflow-config](https://github.com/uclahs-cds/pipeline-Nextflow-config) to enable processes to retry with more memory.
