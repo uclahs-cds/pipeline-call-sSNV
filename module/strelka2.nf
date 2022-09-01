@@ -1,4 +1,5 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
+<<<<<<< HEAD
 
 include { generate_sha512sum } from './common'
 
@@ -7,6 +8,9 @@ include { compress_index_VCF } from '../external/pipeline-Nextflow-module/module
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir
         ])
+=======
+include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
+>>>>>>> main
 
 workflow strelka2 {
     take:

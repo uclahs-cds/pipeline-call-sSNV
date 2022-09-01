@@ -29,6 +29,32 @@ process compress_VCF_bgzip {
     """
 }
 
+<<<<<<< HEAD
+=======
+process index_VCF_tabix {
+    container params.docker_image_samtools
+    publishDir path: "${params.workflow_output_dir}/output",
+               mode: "copy",
+               pattern: "*.vcf.gz.tbi"
+    publishDir path: "${params.workflow_output_log_dir}",
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path vcf_gz
+
+    output:
+    path "${vcf_gz}.tbi", emit: vcf_gz_tbi
+    path ".command.*"
+
+    """
+    set -euo pipefail
+    tabix -p vcf ${vcf_gz}
+    """
+}
+
+>>>>>>> main
 process generate_sha512sum {
     container params.docker_image_validate_params
    publishDir path: "${params.workflow_output_dir}/output",
@@ -40,7 +66,11 @@ process generate_sha512sum {
               saveAs: { "${task.process.replace(':', '/')}-${id}/log${file(it).getName()}" }
 
    input:
+<<<<<<< HEAD
     tuple val(id), path (file_for_sha512)
+=======
+    path (file_for_sha512)
+>>>>>>> main
 
    output:
     tuple val(id), path("${file_for_sha512}.sha512"), emit: sha512sum

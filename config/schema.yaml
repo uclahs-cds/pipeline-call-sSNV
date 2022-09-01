@@ -30,6 +30,14 @@ sample_id:
   type: 'String'
   required: true
   help: 'Sample identifier'
+patient_id:
+  type: 'String'
+  required: true
+  help: 'Patient identifier'
+dataset_id:
+  type: 'String'
+  required: true
+  help: 'Dataset identifier'
 save_intermediate_files:
   type: 'Bool'
   required: true

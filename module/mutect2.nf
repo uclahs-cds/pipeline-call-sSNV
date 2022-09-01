@@ -1,4 +1,5 @@
 include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
+<<<<<<< HEAD
 
 include { compress_VCF_bgzip; generate_sha512sum } from './common'
 
@@ -7,6 +8,9 @@ include { compress_index_VCF } from '../external/pipeline-Nextflow-module/module
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir
         ])
+=======
+include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
+>>>>>>> main
 
 workflow mutect2 {
     take:
@@ -23,7 +27,6 @@ workflow mutect2 {
             normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
                 .map{return (it in List) ? it : [it]}
         }
-
         if (params.intervals) {
             intervals = params.intervals
         } else {

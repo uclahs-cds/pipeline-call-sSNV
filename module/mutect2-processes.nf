@@ -82,7 +82,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered*",
+               pattern: "${params.output_filename}_unfiltered*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
@@ -103,10 +103,10 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     path germline_resource_gnomad_vcf_index
 
     output:
-    path "unfiltered_${interval.baseName}.vcf.gz", emit: unfiltered
-    path "unfiltered_${interval.baseName}.vcf.gz.tbi", emit: unfiltered_index
-    path "unfiltered_${interval.baseName}.vcf.gz.stats", emit: unfiltered_stats
-    path "unfiltered_${interval.baseName}_f1r2.tar.gz", emit: f1r2
+    path "*.vcf.gz", emit: unfiltered
+    path "*.vcf.gz.tbi", emit: unfiltered_index
+    path "*.vcf.gz.stats", emit: unfiltered_stats
+    path "*-f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -122,8 +122,8 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
         -R $reference \
         $bam \
         -L $interval \
-        --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
-        -O unfiltered_${interval.baseName}.vcf.gz \
+        --f1r2-tar-gz ${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz \
+        -O ${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
         ${params.mutect2_extra_args}
@@ -135,7 +135,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered*",
+               pattern: "${params.output_filename}_unfiltered*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
@@ -156,10 +156,10 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     path germline_resource_gnomad_vcf_index
 
     output:
-    path "unfiltered_non_canonical.vcf.gz", emit: unfiltered
-    path "unfiltered_non_canonical.vcf.gz.tbi", emit: unfiltered_index
-    path "unfiltered_non_canonical.vcf.gz.stats", emit: unfiltered_stats
-    path "unfiltered_${interval.baseName}_f1r2.tar.gz", emit: f1r2
+    path "*.vcf.gz", emit: unfiltered
+    path "*.vcf.gz.tbi", emit: unfiltered_index
+    path "*.vcf.gz.stats", emit: unfiltered_stats
+    path "*-f1r2.tar.gz", emit: f1r2
     path ".command.*"
 
     script:
@@ -175,8 +175,8 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
         -R $reference \
         -XL $interval \
         $bam \
-        --f1r2-tar-gz unfiltered_${interval.baseName}_f1r2.tar.gz \
-        -O unfiltered_non_canonical.vcf.gz \
+        --f1r2-tar-gz ${params.output_filename}_unfiltered-non-canonical-f1r2.tar.gz \
+        -O ${params.output_filename}_unfiltered-non-canonical.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
         ${params.mutect2_extra_args}
@@ -187,7 +187,7 @@ process run_MergeVcfs_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered.vcf.gz*",
+               pattern: "*_unfiltered.vcf.gz*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
@@ -198,15 +198,15 @@ process run_MergeVcfs_GATK {
     path unfiltered_vcf
 
     output:
-    path "unfiltered.vcf.gz", emit: unfiltered
-    path "unfiltered.vcf.gz.tbi", emit: unfiltered_index
+    path "*_unfiltered.vcf.gz", emit: unfiltered
+    path "*_unfiltered.vcf.gz.tbi", emit: unfiltered_index
     path ".command.*"
 
     script:
     unfiltered_vcfs = unfiltered_vcf.collect { "-I '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk MergeVcfs $unfiltered_vcfs -O unfiltered.vcf.gz
+    gatk MergeVcfs $unfiltered_vcfs -O ${params.output_filename}_unfiltered.vcf.gz
     """
 }
 
@@ -214,7 +214,7 @@ process run_MergeMutectStats_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "unfiltered.vcf.gz.stats",
+               pattern: "*_unfiltered.vcf.gz.stats",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
@@ -225,14 +225,14 @@ process run_MergeMutectStats_GATK {
     path unfiltered_stat
 
     output:
-    path "unfiltered.vcf.gz.stats", emit: merged_stats
+    path "*_unfiltered.vcf.gz.stats", emit: merged_stats
     path ".command.*"
 
     script:
     unfiltered_stats = unfiltered_stat.collect { "-stats '$it'" }.join(' ')
     """
     set -euo pipefail
-    gatk MergeMutectStats $unfiltered_stats -O unfiltered.vcf.gz.stats
+    gatk MergeMutectStats $unfiltered_stats -O ${params.output_filename}_unfiltered.vcf.gz.stats
     """
 }
 
@@ -260,7 +260,7 @@ process run_LearnReadOrientationModel_GATK {
     set -euo pipefail
     gatk LearnReadOrientationModel --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" \
     $f1r2 \
-    --tmp-dir $params.work_dir \
+    --tmp-dir ${params.work_dir} \
     -O read-orientation-model.tar.gz
     """
 }
@@ -269,7 +269,7 @@ process run_FilterMutectCalls_GATK {
     container params.docker_image_GATK
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "filtered.vcf.gz",
+               pattern: "*_filtered.vcf.gz",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
@@ -286,7 +286,7 @@ process run_FilterMutectCalls_GATK {
     path read_orientation_model
 
     output:
-    path "filtered.vcf.gz", emit: filtered
+    path "*_filtered.vcf.gz", emit: filtered
     path ".command.*"
 
     script:
@@ -296,7 +296,7 @@ process run_FilterMutectCalls_GATK {
         -R $reference \
         -V $unfiltered \
         --ob-priors $read_orientation_model \
-        -O filtered.vcf.gz \
+        -O ${params.output_filename}_filtered.vcf.gz \
         ${params.filter_mutect_calls_extra_args}
     """
 }
@@ -305,7 +305,7 @@ process filter_VCF {
     container "ubuntu:20.04"
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
-               pattern: "mutect2_${params.sample_id}_filtered_pass.vcf",
+               pattern: "*filtered-pass.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
@@ -316,12 +316,12 @@ process filter_VCF {
     path filtered
 
     output:
-    path "mutect2_${params.sample_id}_filtered_pass.vcf", emit: mutect2_vcf
+    path "*.vcf", emit: mutect2_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > mutect2_${params.sample_id}_filtered_pass.vcf
+    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
     """
 }

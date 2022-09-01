@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-
+include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
@@ -38,9 +38,36 @@ log.info """\
 """
 
 include { run_validate_PipeVal } from './module/validation'
-include { somaticsniper } from './module/somaticsniper' addParams(workflow_output_dir: "${params.output_dir}/somaticsniper-${params.somaticsniper_version}", workflow_log_output_dir: "${params.log_output_dir}/process-log/somaticsniper-${params.somaticsniper_version}")
-include { strelka2 } from './module/strelka2' addParams(workflow_output_dir: "${params.output_dir}/strelka2-${params.strelka2_version}", workflow_log_output_dir: "${params.log_output_dir}/process-log/strelka2-${params.strelka2_version}")
-include { mutect2 } from './module/mutect2' addParams(workflow_output_dir: "${params.output_dir}/mutect2-${params.GATK_version}", workflow_log_output_dir: "${params.log_output_dir}/process-log/mutect2-${params.GATK_version}")
+include { somaticsniper } from './module/somaticsniper' addParams(
+    workflow_output_dir: "${params.output_dir}/SomaticSniper-${params.somaticsniper_version}",
+    workflow_output_log_dir: "${params.output_log_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
+    output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
+        params.dataset_id,
+        params.sample_id,
+        [:]))
+include { strelka2 } from './module/strelka2' addParams(
+    workflow_output_dir: "${params.output_dir}/Strelka2-${params.strelka2_version}",
+    workflow_output_log_dir: "${params.output_log_dir}/process-log/Strelka2-${params.strelka2_version}",
+    output_filename: generate_standard_filename("Strelka2_${params.strelka2_version}",
+        params.dataset_id,
+        params.sample_id,
+        [:]))
+include { mutect2 } from './module/mutect2' addParams(
+    workflow_output_dir: "${params.output_dir}/Mutect2-${params.GATK_version}",
+    workflow_output_log_dir: "${params.output_log_dir}/process-log/Mutect2-${params.GATK_version}",
+    output_filename:
+        "${if (params.multi_tumor_sample || params.multi_normal_sample) {
+            generate_standard_filename("Mutect2-${params.GATK_version}",
+                params.dataset_id,
+                params.patient_id,
+                [:])
+        } else {
+            generate_standard_filename("Mutect2-${params.GATK_version}",
+                params.dataset_id,
+                params.sample_id,
+                [:])
+        }}"
+        )
 
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {
