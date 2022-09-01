@@ -5,7 +5,7 @@ include { generate_sha512sum } from './common'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/workflow_compress_index.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir,
+        output_log_dir: params.workflow_output_log_dir,
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args
         ])
