@@ -1,9 +1,9 @@
 ---
 patient_id: 'patient_id'
-sample_id: 'sample_id'
 input:
-  BAM:
-    normal:
-      - '/path/to/normal.bam'
-    tumor:
-      - '/path/to/tumor.bam'
+  normal:
+    - id: normal_sample_id
+      BAM: /path/to/normal.bam
+  tumor:
+    - id: tumor_sample_id
+      BAM: /path/to/tumor.bam
