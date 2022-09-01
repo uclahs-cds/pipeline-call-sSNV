@@ -19,8 +19,8 @@ log.info """\
     - input:
         sample_id: ${params.sample_id}
         algorithm: ${params.algorithm}
-        tumor: ${params.input.BAM.tumor}
-        normal: ${params.input.BAM.normal}
+        tumor: ${params.input.tumor.BAM}
+        normal: ${params.input.normal.BAM}
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
@@ -55,23 +55,7 @@ include { strelka2 } from './module/strelka2' addParams(
 include { mutect2 } from './module/mutect2' addParams(
     workflow_output_dir: "${params.output_dir}/Mutect2-${params.GATK_version}",
     workflow_output_log_dir: "${params.output_log_dir}/process-log/Mutect2-${params.GATK_version}",
-    output_filename:
-        "${if (params.multi_tumor_sample || params.multi_normal_sample) {
-            generate_standard_filename("Mutect2-${params.GATK_version}",
-                params.dataset_id,
-                params.patient_id,
-                [:])
-        } else {
-            generate_standard_filename("Mutect2-${params.GATK_version}",
-                params.dataset_id,
-                params.sample_id,
-                [:])
-        }}"
-        )
-include { muse } from './module/muse' addParams(
-    workflow_output_dir: "${params.output_dir}/MuSE-${params.MuSE_version}",
-    workflow_output_log_dir: "${params.output_log_dir}/process-log/MuSE-${params.MuSE_version}",
-    output_filename: generate_standard_filename("MuSE_${params.MuSE_version}",
+    output_filename: generate_standard_filename("Mutect2_${params.strelka2_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
@@ -90,18 +74,20 @@ def indexFile(bam_or_vcf) {
 }
 
 Channel
-    .from( params.input.BAM.tumor )
+    .from( params.input.tumor )
     .multiMap{ it ->
-        tumor_bam: it
-        tumor_index: indexFile(it)
+        tumor_id: it.id
+        tumor_bam: it.BAM
+        tumor_index: indexFile(it.BAM)
     }
     .set { tumor_input }
 
 Channel
-    .from( params.input.BAM.normal )
+    .from( params.input.normal )
     .multiMap{ it ->
-        normal_bam: it
-        normal_index: indexFile(it)
+        normal_id: it.id
+        normal_bam: it.BAM
+        normal_index: indexFile(it.BAM)
     }
     .set { normal_input }
 
@@ -157,14 +143,6 @@ workflow {
             tumor_input.tumor_index.collect(),
             normal_input.normal_bam.collect(),
             normal_input.normal_index.collect()
-        )
-    }
-    if ('muse' in params.algorithm) {
-        muse(
-            tumor_input.tumor_bam,
-            tumor_input.tumor_index,
-            normal_input.normal_bam,
-            normal_input.normal_index
         )
     }
 }

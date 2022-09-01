@@ -1,11 +1,12 @@
 ---
-patient_id: 'A-mini'
-sample_id: 'A-mini-n2'
+patient_id: 'TWGSAMIN000001'
 # For multi samples, just list all the bams under the normal or tumor.
 input:
-  BAM:
-    normal:
-      - /hot/resource/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
-    tumor:
-      - /hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
-      - /hot/resource/SMC-HET/tumours/A-mini/bams/n1/output/S2.T-n1.bam
+  normal:
+    - id: 'TWGSAMIN000001-N001-S01-F'
+      BAM: /hot/resource/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
+  tumor:
+    - id: 'TWGSAMIN000001-T001-S01-F'
+      BAM: /hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
+    - id: 'TWGSAMIN000001-T002-S02-F'
+      BAM: /hot/resource/SMC-HET/tumours/A-mini/bams/n1/output/S2.T-n1.bam
