@@ -10,7 +10,7 @@ process generate_sha512sum {
    publishDir path: "${params.workflow_output_dir}/output",
               mode: "copy",
               pattern: "${file_for_sha512}.sha512"
-   publishDir path: "${params.workflow_output_log_dir}",
+   publishDir path: "${params.workflow_log_output_dir}",
               mode: "copy",
               pattern: ".command.*",
               saveAs: { "${task.process.replace(':', '/')}-${id}/log${file(it).getName()}" }
