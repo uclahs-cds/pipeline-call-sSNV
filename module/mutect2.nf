@@ -121,8 +121,6 @@ workflow mutect2 {
         compress_index_VCF(index_compress_ch)
         file_for_sha512 = compress_index_VCF.out.vcf_gz.mix(compress_index_VCF.out.index)
         generate_sha512sum(file_for_sha512)
-
     emit:
-        compress_index_VCF.out.vcf_gz
-        compress_index_VCF.out.index
+        compress_index_VCF.out.index_out
 }
