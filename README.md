@@ -44,13 +44,32 @@ Docker image: broadinstitute/gatk:4.2.4.1
 ## Inputs
 To run the pipeline, one `input.yaml` and one `template.config` are needed. When running a batch of samples, `template.config` can be shared, while `input` is unique for each sample.
 
+### Input YAML
+
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | patient_id | string | The name/ID of the patient    | YAML File |
-| input.tumor.BAM | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
-| input.tumor.id | string | The name/ID of the tumor sample    | YAML File |
-| input.normal.BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
-| input.normal.id | string | The name/ID of the normal sample      | YAML File |
+| tumor_BAM | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
+| tumor_id | string | The name/ID of the tumor sample    | YAML File |
+| normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
+| normal_id | string | The name/ID of the normal sample      | YAML File |
+
+* `input.YAML` should follow the standardized structure:
+```
+patient_id: 'patient_id'
+input:
+  normal:
+    - id: normal_id
+      BAM: /path/to/normal.bam
+  tumor:
+    - id: tumor_id
+      BAM: /path/to/tumor.bam
+```
+* A template of `input.YAML` can be found [here](./input/call-sSNV-template.yaml).
+
+### Input Config
+| Input       | Type   | Description                               | Location    |
+|-------------|--------|-------------------------------------------|-------------|
 | dataset_id | string | The name/ID of the dataset    | Config File |
 | algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
 | reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
@@ -60,7 +79,7 @@ Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 | work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
 
-## Strelka2 Specific Configuration
+#### Strelka2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | exome       | string | Adds the '--exome' option when running manta and strelka2 | Config File |
@@ -72,7 +91,7 @@ Config File |
 > Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
 
-## Mutect2 Specific Configuration
+#### Mutect2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | split_intervals_extra_args | string | Additional arguments for the SplitIntervals command | Config File |
