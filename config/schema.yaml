@@ -83,32 +83,30 @@ input:
   help: 'Input samples'
   elements:
     tumor:
-      type: 'List'
+      type: 'BAMEntryList'
       required: true
       help: 'Tumor id/path input'
       elements:
         id:
           type: 'String'
-          mode: 'r'
           required: true
-          help: 'Tumor sample id will be used for filenames'
+          help: 'Tumor sample id will be used for the standardized output directory'
         BAM:
           type: 'Path'
           mode: 'r'
           required: true
           help: 'Absolute path to tumor sample BAM files'
     normal:
-      type: 'List'
+      type: 'BAMEntryList'
       required: false
       help: 'Normal id/path input'
       elements:
         id:
           type: 'String'
-          mode: 'r'
-          required: false
-          help: 'Normal sample id will be used for filenames'
+          required: true
+          help: 'Normal sample id will be used to identify the normal sample'
         BAM:
           type: 'Path'
           mode: 'r'
-          required: false
+          required: true
           help: 'Absolute path to normal sample BAM files'
