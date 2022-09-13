@@ -2,7 +2,7 @@ include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCand
 
 include { generate_sha512sum } from './common'
 
-include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/workflow_compress_index.nf' addParams(
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir,
