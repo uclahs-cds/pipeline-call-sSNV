@@ -81,20 +81,20 @@ def indexFile(bam_or_vcf) {
 }
 
 Channel
-    .from( params.input.tumor )
+    .from( params.input["tumor"] )
     .multiMap{ it ->
-        tumor_id: it.id
-        tumor_bam: it.BAM
-        tumor_index: indexFile(it.BAM)
+        tumor_id: it["id"]
+        tumor_bam: it["BAM"]
+        tumor_index: indexFile(it["BAM"])
     }
     .set { tumor_input }
 
 Channel
-    .from( params.input.normal )
+    .from( params.input["normal"] )
     .multiMap{ it ->
-        normal_id: it.id
-        normal_bam: it.BAM
-        normal_index: indexFile(it.BAM)
+        normal_id: it["id"]
+        normal_bam: it["BAM"]
+        normal_index: indexFile(it["BAM"])
     }
     .set { normal_input }
 

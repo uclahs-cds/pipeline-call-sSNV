@@ -1,6 +1,6 @@
 ---
 patient_id: 'patient_id'
-# For multi samples, just list all the bams under the normal or tumor.
+# For multi samples, list the BAMs under the corresponding state (normal or tumor).
 input:
   normal:
     - id: normal_sample_id
