@@ -19,8 +19,8 @@ log.info """\
     - input:
         sample_id: ${params.sample_id}
         algorithm: ${params.algorithm}
-        tumor: ${params.input.tumor.BAM}
-        normal: ${params.input.normal.BAM}
+        tumor: ${params.input['tumor']['BAM']}
+        normal: ${params.input['normal']['BAM']}
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
