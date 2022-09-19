@@ -28,10 +28,12 @@ log.info """\
 
     - output:
         output_dir: ${params.output_dir}
-        output_log_dir: ${params.output_log_dir}
+        log_output_dir: ${params.log_output_dir}
 
     - option:
         save_intermediate_files: ${params.save_intermediate_files}
+        bgzip_extra_args = ${params.bgzip_extra_args}
+        tabix_extra_args = ${params.tabix_extra_args}
         multi_tumor_sample: ${params.multi_tumor_sample}
         multi_normal_sample: ${params.multi_normal_sample}
         tumor_only_mode: ${params.tumor_only_mode}
@@ -40,21 +42,21 @@ log.info """\
 include { run_validate_PipeVal } from './module/validation'
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir}/SomaticSniper-${params.somaticsniper_version}",
-    workflow_output_log_dir: "${params.output_log_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
     output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { strelka2 } from './module/strelka2' addParams(
     workflow_output_dir: "${params.output_dir}/Strelka2-${params.strelka2_version}",
-    workflow_output_log_dir: "${params.output_log_dir}/process-log/Strelka2-${params.strelka2_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
     output_filename: generate_standard_filename("Strelka2_${params.strelka2_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { mutect2 } from './module/mutect2' addParams(
     workflow_output_dir: "${params.output_dir}/Mutect2-${params.GATK_version}",
-    workflow_output_log_dir: "${params.output_log_dir}/process-log/Mutect2-${params.GATK_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
     output_filename:
         "${if (params.multi_tumor_sample || params.multi_normal_sample) {
             generate_standard_filename("Mutect2-${params.GATK_version}",
