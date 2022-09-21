@@ -15,7 +15,7 @@ process call_sIndel_Manta {
                mode: "copy",
                pattern: "MantaWorkflow",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -58,7 +58,7 @@ process call_sSNV_Strelka2 {
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -104,7 +104,7 @@ process filter_VCF {
                mode: "copy",
                pattern: "*.vcf",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -113,7 +113,7 @@ process filter_VCF {
     tuple val(name), path(vcf_gz)
 
     output:
-    path "*.vcf", emit: strelka2_vcf
+    tuple val(name), path("*.vcf"), emit: strelka2_vcf
     path ".command.*"
 
     // https://www.biostars.org/p/206488/

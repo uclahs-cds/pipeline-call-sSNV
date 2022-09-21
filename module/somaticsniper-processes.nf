@@ -16,7 +16,7 @@ process call_sSNV_SomaticSniper {
                mode: "copy",
                pattern: "*.vcf",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -59,7 +59,7 @@ process convert_BAM2Pileup_SAMtools {
                mode: "copy",
                pattern: "*.pileup",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -91,7 +91,7 @@ process create_IndelCandidate_SAMtools {
                mode: "copy",
                pattern: "*.pileup",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -121,7 +121,7 @@ process apply_NormalIndelFilter_SomaticSniper {
                mode: "copy",
                pattern: "*_normal.vcf",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -151,7 +151,7 @@ process apply_TumorIndelFilter_SomaticSniper {
                mode: "copy",
                pattern: "*.SNPfilter",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -181,7 +181,7 @@ process create_ReadCountPosition_SomaticSniper {
                mode: "copy",
                pattern: "*.SNPfilter.pos",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -210,7 +210,7 @@ process generate_ReadCount_bam_readcount {
                mode: "copy",
                pattern: "*.readcount",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -248,7 +248,7 @@ process filter_FalsePositive_SomaticSniper {
                mode: "copy",
                pattern: "*.SNPfilter.*",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -278,7 +278,7 @@ process call_HighConfidenceSNV_SomaticSniper {
                pattern: "*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }

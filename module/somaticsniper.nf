@@ -1,5 +1,14 @@
 include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
-include { compress_VCF_bgzip; index_VCF_tabix; generate_sha512sum } from './common'
+
+include { generate_sha512sum } from './common'
+
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args
+        ])
 
 workflow somaticsniper {
     take:
@@ -34,11 +43,14 @@ workflow somaticsniper {
         generate_ReadCount_bam_readcount(params.reference,create_ReadCountPosition_SomaticSniper.out.snp_positions, tumor_bam, tumor_index)
         filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
-        compress_VCF_bgzip(call_HighConfidenceSNV_SomaticSniper.out.hc)
-        index_VCF_tabix(compress_VCF_bgzip.out.vcf_gz)
-        file_for_sha512 = compress_VCF_bgzip.out.vcf_gz.mix(index_VCF_tabix.out.vcf_gz_tbi)
+        index_compress_ch = call_HighConfidenceSNV_SomaticSniper.out.hc
+            .map{
+                it -> [params.sample_id, it]
+            }
+        compress_index_VCF(index_compress_ch)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
+                            .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-        compress_VCF_bgzip.out.vcf_gz
-        index_VCF_tabix.out.vcf_gz_tbi
+        compress_index_VCF.out.index_out
 }
