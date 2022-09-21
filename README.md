@@ -108,9 +108,9 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
 | SomaticSniper-{version}_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
-| Strelka2-{version}_{sample_id}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
-| Strelka2-{version}_{sample_id}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
-| Mutect2-{version}_{sample_id}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
+| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf   | .vcf         | Final VCF file (strelka2)     |
+| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf | .vcf         | Indel VCF file (strelka2)     |
+| Mutect2-{version}_{sample_id}_filtered-pass.vcf        | .vcf         | Final VCF file (mutect2)      |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
