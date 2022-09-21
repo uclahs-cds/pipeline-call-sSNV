@@ -209,6 +209,16 @@ Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-
 Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary. `-callRegions`'s input `bed.gz` file can be found here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`. For other genome version, you can use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
 
 
+#### MuSE v2.0
+MuSE v2.0 was tested on a F32 slurm-dev node.
+Duration: 16h 34m 2s
+
+|process_name             |max_duration        |max_cpu |max_peak_vmem |
+|:------------------------|:-------------------|:-------|:-------------|
+|call_sSNV_MuSE        |       |31,824% |11.7 GB        |
+|run_sump_MuSE       |      |1000.0%  |8.2 GB       |
+
+
 ---
 
 ## License
