@@ -1,14 +1,16 @@
 # pipeline-call-sSNV
 
 ## Overview
-This pipeline performs somatic SNV calling given a pair of tumor/normal BAM. 3 somatic SNV callers are available and described below. Each caller will run independently of each other.
+This pipeline performs somatic SNV calling given a pair of tumor/normal BAM. 4 somatic SNV callers are available and described below. Each caller will run independently of each other.
 The mutect2 algorithm can also take multiple samples and tumor only samples.
+
+> **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry|Setup) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
 
 ## Somatic SNV callers:
 * Somatic Sniper
 * Strelka2
 * Mutect2
-
+* MuSE
 
 ### SomaticSniper
 ![Diagram](image/diagram.svg)
@@ -40,6 +42,13 @@ Docker image: blcdsdockerregistry/call-ssnv:strelka2-v2.9.10
 GATK source: https://github.com/broadinstitute/gatk
 Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker image: broadinstitute/gatk:4.2.4.1
+
+### MuSE
+#### Tools
+##### MuSE
+MuSE source: https://github.com/wwylab/MuSE
+Version: 2.0 (Released on Aug 25, 2021)
+GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
 ## Inputs
 To run the pipeline, one `input.yaml` and one `template.config` are needed. When running a batch of samples, `template.config` can be shared, while `input` is unique for each sample.
@@ -76,13 +85,19 @@ input:
 | output_dir  | string | The location where outputs will be saved  | Config File |
 | log_output_dir | string | The location where log files (.command.\*) will be saved |
 Config File |
+| exome       | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. | Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 | work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
+
+#### Module Specific Configuration
+| Input       | Type   | Description                               | Location    |
+|-------------|--------|-------------------------------------------|-------------|
+| bgzip_extra_args       | string | The extra option used for compressing VCFs | Config File |
+| tabix_extra_args       | string | The extra option used for indexing VCFs | Config File |
 
 #### Strelka2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
-| exome       | string | Adds the '--exome' option when running manta and strelka2 | Config File |
 | call_region | string | Adds '--callRegions' option when running manta and strelka2 | Config File |
 * Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the `--callRegions` configuration option. See the `--callRegions` documentations here: [Strelka2](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions), [Manta](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions). `--callRegions` is optional for Strelka2, but can be used to specify canonical regions to save the running time. An example of call region's bed.gz can be found and used here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`.
 
@@ -104,13 +119,19 @@ Config File |
 
 For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
 
+#### MuSE Specific Configuration
+| Input       | Type   | Description                               | Location    |
+|-------------|--------|-------------------------------------------|-------------|
+| dbSNP | path | The path to dbSNP database's `*.vcf.gz` | Config File |
+
 ## Outputs
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| SomaticSniper-{version}_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
-| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf   | .vcf         | Final VCF file (strelka2)     |
-| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf | .vcf         | Indel VCF file (strelka2)     |
-| Mutect2-{version}_{sample_id}_filtered-pass.vcf        | .vcf         | Final VCF file (mutect2)      |
+| SomaticSniper-{version}_{sample_id}_hc.vcf.gz             | .vcf.gz         | Final VCF file (somaticsniper)|
+| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf.gz   | .vcf.gz         | Final VCF file (strelka2)     |
+| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf.gz | .vcf.gz         | Indel VCF file (strelka2)     |
+| Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Final VCF file (mutect2)      |
+| MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Final VCF file (mutect2)      |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
