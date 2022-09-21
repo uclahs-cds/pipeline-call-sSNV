@@ -9,7 +9,7 @@ Docker Images:
 process run_validate_PipeVal {
     container params.docker_image_validate_params
 
-    publishDir path: "${params.output_log_dir}/process-log/validation",
+    publishDir path: "${params.log_output_dir}/process-log/validation",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
