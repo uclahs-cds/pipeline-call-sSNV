@@ -4,6 +4,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_MuSE:  ${params.docker_image_MuSE}
+- docker_image_BCFtools:  ${params.docker_image_BCFtools}
 
 MuSE Options:
 - exome:              ${params.exome}
@@ -81,7 +82,7 @@ process run_sump_MuSE {
 }
 
 process filter_VCF {
-    container params.docker_image_strelka2
+    container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
                mode: "copy",
                pattern: "*.vcf",
@@ -98,10 +99,9 @@ process filter_VCF {
     path "*.vcf", emit: vcf
     path ".command.*"
 
-    // https://www.biostars.org/p/206488/
     script:
     """
     set -euo pipefail
-    cat ${vcf} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
+    bcftools view -f PASS ${vcf} > ${params.output_filename}_filtered-pass.vcf
     """
 }

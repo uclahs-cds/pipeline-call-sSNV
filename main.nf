@@ -71,15 +71,15 @@ include { muse } from './module/muse' addParams(
 
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {
-  if(bam_or_vcf.endsWith('.bam')) {
-    return "${bam_or_vcf}.bai"
-  }
-  else if(bam_or_vcf.endsWith('vcf.gz')) {
-    return "${bam_or_vcf}.tbi"
-  }
-  else {
-    throw new Exception("Index file for ${bam_or_vcf} file type not supported. Use .bam or .vcf.gz files.")
-  }
+    if(bam_or_vcf.endsWith('.bam')) {
+        return "${bam_or_vcf}.bai"
+    }
+    else if(bam_or_vcf.endsWith('vcf.gz')) {
+        return "${bam_or_vcf}.tbi"
+    }
+    else {
+        throw new Exception("Index file for ${bam_or_vcf} file type not supported. Use .bam or .vcf.gz files.")
+    }
 }
 
 Channel
