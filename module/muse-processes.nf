@@ -5,9 +5,9 @@ log.info """\
 Docker Images:
 - docker_image_MuSE:  ${params.docker_image_MuSE}
 
-Strelka2 Options:
+MuSE Options:
 - exome:              ${params.exome}
-- dbSNP:              ${params.exome}
+- dbSNP:              ${params.dbSNP}
 """
 
 process call_sSNV_MuSE {
@@ -38,6 +38,7 @@ process call_sSNV_MuSE {
     MuSE call \
         -f $reference \
         -O ${params.output_filename} \
+        -n ${task.cpus} \
         $tumor \
         $normal
     """
