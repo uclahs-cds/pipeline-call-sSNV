@@ -63,7 +63,7 @@ include { mutect2 } from './module/mutect2' addParams(
         [:]))
 include { muse } from './module/muse' addParams(
     workflow_output_dir: "${params.output_dir}/MuSE-${params.MuSE_version}",
-    workflow_output_log_dir: "${params.output_log_dir}/process-log/MuSE-${params.MuSE_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/MuSE-${params.MuSE_version}",
     output_filename: generate_standard_filename("MuSE_${params.MuSE_version}",
         params.dataset_id,
         params.sample_id,

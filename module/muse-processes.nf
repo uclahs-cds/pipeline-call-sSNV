@@ -16,7 +16,7 @@ process call_sSNV_MuSE {
                mode: "copy",
                pattern: "*.txt",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -50,7 +50,7 @@ process run_sump_MuSE {
                mode: "copy",
                pattern: "*.vcf",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
@@ -86,7 +86,7 @@ process filter_VCF {
                mode: "copy",
                pattern: "*.vcf",
                enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_output_log_dir}",
+    publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
