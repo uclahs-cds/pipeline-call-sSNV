@@ -44,12 +44,34 @@ Docker image: broadinstitute/gatk:4.2.4.1
 ## Inputs
 To run the pipeline, one `input.yaml` and one `template.config` are needed. When running a batch of samples, `template.config` can be shared, while `input` is unique for each sample.
 
+### Input YAML
+
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
-| sample_id | string | The name/ID of the sample                 | YAML File |
+| patient_id | string | The name/ID of the patient    | YAML File |
+| tumor_BAM | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
+| tumor_id | string | The name/ID of the tumor sample    | YAML File |
+| normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
+| normal_id | string | The name/ID of the normal sample      | YAML File |
+
+* `input.yaml` should follow the standardized structure:
+```
+patient_id: 'patient_id'
+input:
+  normal:
+    - id: normal_id
+      BAM: /path/to/normal.bam
+  tumor:
+    - id: tumor_id
+      BAM: /path/to/tumor.bam
+```
+* A template of `input.yaml` can be found [here](./input/call-sSNV-template.yaml).
+
+### Input Config
+| Input       | Type   | Description                               | Location    |
+|-------------|--------|-------------------------------------------|-------------|
+| dataset_id | string | The name/ID of the dataset    | Config File |
 | algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
-| tumor       | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
-| normal      | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
 | log_output_dir | string | The location where log files (.command.\*) will be saved |
@@ -57,7 +79,7 @@ Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 | work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
 
-## Strelka2 Specific Configuration
+#### Strelka2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | exome       | string | Adds the '--exome' option when running manta and strelka2 | Config File |
@@ -69,7 +91,7 @@ Config File |
 > Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
 
-## Mutect2 Specific Configuration
+#### Mutect2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | split_intervals_extra_args | string | Additional arguments for the SplitIntervals command | Config File |
@@ -80,15 +102,15 @@ Config File |
 | intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
 | germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. | Config File |
 
-For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.YAML` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.YAML`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
+For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
 
 ## Outputs
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| somaticsniper_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
-| strelka2_{sample_id}_somatic_snvs_pass.vcf   | .vcf         | Final VCF file (strelka2)     |
-| strelka2_{sample_id}_somatic_indels_pass.vcf | .vcf         | Indel VCF file (strelka2)     |
-| mutect2_{sample_id}_filtered_pass.vcf        | .vcf         | Final VCF file (mutect2)      |
+| SomaticSniper-{version}_{sample_id}_hc.vcf             | .vcf         | Final VCF file (somaticsniper)|
+| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf   | .vcf         | Final VCF file (strelka2)     |
+| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf | .vcf         | Indel VCF file (strelka2)     |
+| Mutect2-{version}_{sample_id}_filtered-pass.vcf        | .vcf         | Final VCF file (mutect2)      |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline

@@ -26,10 +26,6 @@ work_dir:
   mode: 'w'
   required: false
   help: 'Absolute path to output directory'
-sample_id:
-  type: 'String'
-  required: true
-  help: 'Sample identifier'
 patient_id:
   type: 'String'
   required: true
@@ -86,18 +82,31 @@ input:
   required: true
   help: 'Input samples'
   elements:
-    BAM:
-      type: 'InputNamespace'
+    tumor:
+      type: 'BAMEntryList'
       required: true
-      help: 'Input BAMs'
+      help: 'Tumor id/path input'
       elements:
-        tumor:
-          type: 'ListPaths'
+        id:
+          type: 'String'
+          required: true
+          help: 'Tumor sample id will be used for the standardized output directory'
+        BAM:
+          type: 'Path'
           mode: 'r'
           required: true
           help: 'Absolute path to tumor sample BAM files'
-        normal:
-          type: 'ListPaths'
+    normal:
+      type: 'BAMEntryList'
+      required: false
+      help: 'Normal id/path input'
+      elements:
+        id:
+          type: 'String'
+          required: true
+          help: 'Normal sample id will be used to identify the normal sample'
+        BAM:
+          type: 'Path'
           mode: 'r'
-          required: false
+          required: true
           help: 'Absolute path to normal sample BAM files'

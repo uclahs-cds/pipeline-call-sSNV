@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change index_VCF_tabix process using git submodule from [pipeline-Nextflow-module](https://github.com/uclahs-cds/pipeline-Nextflow-module).
 - Standardize output filenames using `generate_standardized_filename` module from [pipeline-Nextflow-module](https://github.com/uclahs-cds/pipeline-Nextflow-module/tree/main/modules/common/generate_standardized_filename).
-
+- Change the `input.yaml` structure to allow separate sample_ids for normal and tumor BAMs.
 
 ### Added
 - Add retry.config using git submodule from [pipeline-Nextflow-config](https://github.com/uclahs-cds/pipeline-Nextflow-config) to enable processes to retry with more memory.
