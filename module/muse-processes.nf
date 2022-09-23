@@ -57,12 +57,6 @@ process run_sump_MuSE {
                saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
-    path tumor
-    path tumor_index
-    path normal
-    path normal_index
-    path reference
-    path reference_index
     path MuSE_txt
 
     output:

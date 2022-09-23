@@ -24,12 +24,6 @@ workflow muse {
             "${params.reference}.fai",
         )
         run_sump_MuSE(
-            tumor_bam,
-            tumor_index,
-            normal_bam,
-            normal_index,
-            params.reference,
-            "${params.reference}.fai",
             call_sSNV_MuSE.out.txt
         )
         filter_VCF(run_sump_MuSE.out.vcf)
