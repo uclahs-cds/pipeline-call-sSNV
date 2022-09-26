@@ -199,6 +199,7 @@ Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-
 |:------------------------|:-------------------|:-------|:-------------|
 |call_sIndel_Manta        |1h 24m 26s      |2724.2% |23.2 GB       |
 |call_sSNV_Strelka2       |22h 32m 24s      |511.3%  |17.4 GB       |
+
 ##### with `--callRegions`:
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
@@ -210,13 +211,13 @@ Therefore, we strongly suggest to use the `--callRegions` if the non-canonical r
 
 
 #### MuSE v2.0
-MuSE v2.0 was tested on a F32 slurm-dev node.
-Duration: 16h 34m 2s
+MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
+Duration: 1d 11h 6m 54s
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
 |:------------------------|:-------------------|:-------|:-------------|
-|call_sSNV_MuSE        |       |31,824% |11.7 GB        |
-|run_sump_MuSE       |      |1000.0%  |8.2 GB       |
+|call_sSNV_MuSE        | 3h 44m 15s   | 3181.7% | 60.4 GB   |
+|run_sump_MuSE         | 1d 7h 22m 2s | 100.0%  | 41.6 GB   |
 
 
 ---
