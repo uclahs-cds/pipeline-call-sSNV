@@ -24,7 +24,9 @@ workflow muse {
             "${params.reference}.fai",
         )
         run_sump_MuSE(
-            call_sSNV_MuSE.out.txt
+            call_sSNV_MuSE.out.txt,
+            params.dbSNP,
+            "${params.dbSNP}.tbi"
         )
         filter_VCF(run_sump_MuSE.out.vcf)
         index_compress_ch = filter_VCF.out.vcf

@@ -58,6 +58,8 @@ process run_sump_MuSE {
 
     input:
     path MuSE_txt
+    path dbSNP
+    path dbSNP_index
 
     output:
     path("*.vcf"), emit: vcf
@@ -71,7 +73,7 @@ process run_sump_MuSE {
         -I $MuSE_txt \
         $arg_seq_type \
         -O ${params.output_filename}-raw.vcf \
-        -D ${params.dbSNP}
+        -D $dbSNP
     """
 }
 
