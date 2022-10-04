@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add retry.config using git submodule from [pipeline-Nextflow-config](https://github.com/uclahs-cds/pipeline-Nextflow-config) to enable processes to retry with more memory.
 - Add [MuSE](https://github.com/wwylab/MuSE) workflow.
+- Add `pipeline-release.yaml` to [workflow](.github/workflows).
 
 ## [4.0.1] - 2022-06-24
 ### Changed
