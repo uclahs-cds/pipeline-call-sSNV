@@ -127,11 +127,11 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 ## Outputs
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| SomaticSniper-{version}_{sample_id}_hc.vcf.gz             | .vcf.gz         | Final VCF file (somaticsniper)|
-| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf.gz   | .vcf.gz         | Final VCF file (strelka2)     |
-| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf.gz | .vcf.gz         | Indel VCF file (strelka2)     |
-| Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Final VCF file (mutect2)      |
-| MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Final VCF file (mutect2)      |
+| SomaticSniper-{version}_{sample_id}_hc.vcf.gz             | .vcf.gz         | Filterd SNV VCF (somaticsniper)|
+| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf.gz   | .vcf.gz         | Filterd SNV VCF(strelka2)     |
+| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf.gz | .vcf.gz         | Filterd Indel VCF (strelka2)     |
+| Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (mutect2)      |
+| MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (MuSE)   |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
 #### How to run the pipeline
