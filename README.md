@@ -88,6 +88,7 @@ Config File |
 | exome       | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. | Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 | work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
+| docker_container_registry |	string |	Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` | Config File |
 
 #### Module Specific Configuration
 | Input       | Type   | Description                               | Location    |
