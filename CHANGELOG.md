@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-
+- Switch Docker Hub images to GitHub packages.
 ### Added
 
 ## [5.0.0] - 2022-10-04
