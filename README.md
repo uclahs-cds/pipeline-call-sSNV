@@ -41,7 +41,7 @@ GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
 Version: 4.2.4.1 (Released on Jan 4, 2022)
-GitHub Package: broadinstitute/gatk:4.2.4.1
+Docker Image: broadinstitute/gatk:4.2.4.1
 
 ### MuSE
 #### Tools
