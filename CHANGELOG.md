@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Remove redundant directories in log output directories and intermediate directories.
+- Specify `task.index` in log output directories.
 
 ### Added
 
