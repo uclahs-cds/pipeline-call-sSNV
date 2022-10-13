@@ -12,14 +12,14 @@ Docker Images:
 // Call SomaticSniper
 process call_sSNV_SomaticSniper {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -55,14 +55,14 @@ process call_sSNV_SomaticSniper {
 // We are using a specific older version of samtools (v0.1.6) packaged with SomaticSniper.
 process convert_BAM2Pileup_SAMtools {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*.pileup",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     tuple val(type), path(bam)
@@ -87,14 +87,14 @@ process convert_BAM2Pileup_SAMtools {
 // We are using samtools.pl which is packaged with SomaticSniper.
 process create_IndelCandidate_SAMtools {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*.pileup",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     tuple val(type), path(raw_pileup)
@@ -117,14 +117,14 @@ process create_IndelCandidate_SAMtools {
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process apply_NormalIndelFilter_SomaticSniper {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*_normal.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -147,14 +147,14 @@ process apply_NormalIndelFilter_SomaticSniper {
 // Remove potential false positive SNVs close to Indels detected in the pileup data
 process apply_TumorIndelFilter_SomaticSniper {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*.SNPfilter",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -177,14 +177,14 @@ process apply_TumorIndelFilter_SomaticSniper {
 // Adapt the remainder for use with bam-readcount to get SNP positions
 process create_ReadCountPosition_SomaticSniper {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*.SNPfilter.pos",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -206,14 +206,14 @@ process create_ReadCountPosition_SomaticSniper {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
     container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*.readcount",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     path reference
@@ -244,14 +244,14 @@ process generate_ReadCount_bam_readcount {
 // Run the false positive filter
 process filter_FalsePositive_SomaticSniper {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                mode: "copy",
                pattern: "*.SNPfilter.*",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -274,14 +274,14 @@ process filter_FalsePositive_SomaticSniper {
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process call_HighConfidenceSNV_SomaticSniper {
     container params.docker_image_somaticsniper
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[1]}",
                pattern: "*.vcf",
                mode: "copy",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
 
     input:
     path fp_pass
