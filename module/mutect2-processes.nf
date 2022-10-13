@@ -24,7 +24,7 @@ process run_SplitIntervals_GATK {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path intervals
@@ -58,7 +58,7 @@ process run_GetSampleName_Mutect2 {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
     input:
     path normal_bam
 
@@ -87,7 +87,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${interval_id}/log${file(it).getName()}" }
 
     input:
     path interval
@@ -115,6 +115,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 {
     normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = params.tumor_only_mode ? "$tumors" : "$tumors $normals $normal_names"
     germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
+    interval_id = interval.baseName.split('-')[0]
     """
     set -euo pipefail
 
@@ -140,7 +141,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path interval // canonical intervals to *exclude*
@@ -192,7 +193,7 @@ process run_MergeVcfs_GATK {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path unfiltered_vcf
@@ -219,7 +220,7 @@ process run_MergeMutectStats_GATK {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path unfiltered_stat
@@ -245,7 +246,7 @@ process run_LearnReadOrientationModel_GATK {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path f1r2
@@ -274,7 +275,7 @@ process run_FilterMutectCalls_GATK {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path reference
@@ -310,7 +311,7 @@ process filter_VCF {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path filtered

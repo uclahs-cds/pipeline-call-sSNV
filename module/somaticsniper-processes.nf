@@ -19,7 +19,7 @@ process call_sSNV_SomaticSniper {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -62,7 +62,7 @@ process convert_BAM2Pileup_SAMtools {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${type}/log${file(it).getName()}" }
 
     input:
     tuple val(type), path(bam)
@@ -94,7 +94,7 @@ process create_IndelCandidate_SAMtools {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${type}/log${file(it).getName()}" }
 
     input:
     tuple val(type), path(raw_pileup)
@@ -124,7 +124,7 @@ process apply_NormalIndelFilter_SomaticSniper {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -154,7 +154,7 @@ process apply_TumorIndelFilter_SomaticSniper {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -184,7 +184,7 @@ process create_ReadCountPosition_SomaticSniper {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -213,7 +213,7 @@ process generate_ReadCount_bam_readcount {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path reference
@@ -251,7 +251,7 @@ process filter_FalsePositive_SomaticSniper {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path snp_file
@@ -281,7 +281,7 @@ process call_HighConfidenceSNV_SomaticSniper {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path fp_pass
@@ -301,4 +301,3 @@ process call_HighConfidenceSNV_SomaticSniper {
         --out-file "${params.output_filename}_hc.vcf"
     """
 }
-

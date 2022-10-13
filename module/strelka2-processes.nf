@@ -18,7 +18,7 @@ process call_sIndel_Manta {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -61,7 +61,7 @@ process call_sSNV_Strelka2 {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -107,7 +107,7 @@ process filter_VCF {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}-${name}/log${file(it).getName()}" }
 
     input:
     tuple val(name), path(vcf_gz)

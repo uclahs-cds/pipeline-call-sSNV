@@ -20,7 +20,7 @@ process call_sSNV_MuSE {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -54,7 +54,7 @@ process run_sump_MuSE {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path MuSE_txt
@@ -86,7 +86,7 @@ process filter_VCF {
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[1]}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[1]}/log${file(it).getName()}" }
 
     input:
     path vcf
