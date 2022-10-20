@@ -11,14 +11,14 @@ Strelka2 Options:
 
 process call_sIndel_Manta {
     container params.docker_image_manta
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
                mode: "copy",
                pattern: "MantaWorkflow",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -54,14 +54,14 @@ process call_sIndel_Manta {
 
 process call_sSNV_Strelka2 {
     container params.docker_image_strelka2
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
                mode: "copy",
                pattern: "StrelkaSomaticWorkflow",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
     path tumor
@@ -100,14 +100,14 @@ process call_sSNV_Strelka2 {
 
 process filter_VCF {
     container params.docker_image_strelka2
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.replace(':', '/')}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
                mode: "copy",
                pattern: "*.vcf",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
-               saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+               saveAs: { "${task.process.split(':')[-1]}-${name}/log${file(it).getName()}" }
 
     input:
     tuple val(name), path(vcf_gz)
