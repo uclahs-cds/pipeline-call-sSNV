@@ -32,6 +32,7 @@ log.info """\
 
     - option:
         save_intermediate_files: ${params.save_intermediate_files}
+        docker_container_registry: ${params.docker_container_registry}
         bgzip_extra_args = ${params.bgzip_extra_args}
         tabix_extra_args = ${params.tabix_extra_args}
         multi_tumor_sample: ${params.multi_tumor_sample}

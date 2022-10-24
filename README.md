@@ -18,11 +18,11 @@ The mutect2 algorithm can also take multiple samples and tumor only samples.
 ##### SomaticSniper
 SomaticSniper source: https://github.com/genome/somatic-sniper
 Version: SomaticSniper v1.0.5.0 (Released on Jul 16, 2015)
-Docker image: blcdsdockerregistry/call-ssnv:somaticsniper-v1.0.5.0
+GitHub Package: ghcr.io/uclahs-cds/somaticsniper:1.0.5.0
 ##### bam-readcount
 bam-readcount source: https://github.com/genome/bam-readcount
 Version: v0.8.0 Release (Released on Oct 21, 2016)
-Docker image: blcdsdockerregistry/call-ssnv:bam-readcount-v0.8.0
+GitHub Package: ghcr.io/uclahs-cds/bam-readcount:0.8.0
 
 ### Strelka2
 ![Diagram](image/strelka2.svg)
@@ -30,18 +30,18 @@ Docker image: blcdsdockerregistry/call-ssnv:bam-readcount-v0.8.0
 ##### Manta
 Manta source: https://github.com/Illumina/manta
 Version: v1.6.0 (Released on Jul 9, 2019)
-Docker image: blcdsdockerregistry/call-ssnv:manta-v1.6.0
+GitHub Package: ghcr.io/uclahs-cds/manta:1.6.0
 ##### Strelka2
 Strelka2 source: https://github.com/Illumina/strelka
 Version: v2.9.10 (Released on Nov 7, 2018)
-Docker image: blcdsdockerregistry/call-ssnv:strelka2-v2.9.10
+GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 
 ### Mutect 2
 #### Tools
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
 Version: 4.2.4.1 (Released on Jan 4, 2022)
-Docker image: broadinstitute/gatk:4.2.4.1
+Docker Image: broadinstitute/gatk:4.2.4.1
 
 ### MuSE
 #### Tools
@@ -88,6 +88,7 @@ Config File |
 | exome       | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. | Config File |
 | save_intermediate_files | boolean | Whether to save intermediate files | Config File |
 | work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
+| docker_container_registry |	string |	Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` | Config File |
 
 #### Module Specific Configuration
 | Input       | Type   | Description                               | Location    |
