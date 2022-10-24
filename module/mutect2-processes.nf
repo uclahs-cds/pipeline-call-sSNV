@@ -285,12 +285,14 @@ process run_FilterMutectCalls_GATK {
     path unfiltered_index
     path unfiltered_stats
     path read_orientation_model
+    path contamination_estimation
 
     output:
     path "*_filtered.vcf.gz", emit: filtered
     path ".command.*"
 
     script:
+    contamination = params.use_contamination_estimation ? "--contamination-table ${params.contamination_estimation}"" : ""
     """
     set -euo pipefail
     gatk FilterMutectCalls \
@@ -298,6 +300,7 @@ process run_FilterMutectCalls_GATK {
         -V $unfiltered \
         --ob-priors $read_orientation_model \
         -O ${params.output_filename}_filtered.vcf.gz \
+        $contamination \
         ${params.filter_mutect_calls_extra_args}
     """
 }

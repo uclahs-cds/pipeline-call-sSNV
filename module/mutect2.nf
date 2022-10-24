@@ -103,7 +103,6 @@ workflow mutect2 {
         run_MergeVcfs_GATK(ich_MergeVcfs)
         run_MergeMutectStats_GATK(ich_MergeMutectStats)
         run_LearnReadOrientationModel_GATK(ich_LearnReadOrientationModel)
-
         run_FilterMutectCalls_GATK(
             params.reference,
             params.reference_index,
@@ -111,7 +110,8 @@ workflow mutect2 {
             run_MergeVcfs_GATK.out.unfiltered,
             run_MergeVcfs_GATK.out.unfiltered_index,
             run_MergeMutectStats_GATK.out.merged_stats,
-            run_LearnReadOrientationModel_GATK.out.read_orientation_model
+            run_LearnReadOrientationModel_GATK.out.read_orientation_model,
+            params.contamination_estimation
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
         index_compress_ch = filter_VCF.out.mutect2_vcf
