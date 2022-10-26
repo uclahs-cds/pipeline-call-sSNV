@@ -62,6 +62,7 @@ To run the pipeline, one `input.yaml` and one `template.config` are needed. When
 | tumor_id | string | The name/ID of the tumor sample    | YAML File |
 | normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | normal_id | string | The name/ID of the normal sample      | YAML File |
+| contamination_table | path | Optional. A file path of the `contamination.table` from the result of `pipeline-call-gSNP`, only for tumor samples | YAML File |
 
 * `input.yaml` should follow the standardized structure:
 ```
@@ -73,6 +74,7 @@ input:
   tumor:
     - id: tumor_id
       BAM: /path/to/tumor.bam
+      contamination_table: /path/to/tumor-contamination-table.bam
 ```
 * A template of `input.yaml` can be found [here](./input/call-sSNV-template.yaml).
 
@@ -117,7 +119,7 @@ Config File |
 | scatter_count | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. | Config File |
 | intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
 | germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. | Config File |
-| contamination_estimation | path | Optional. A file path of the `contamination.table` from the result of `pipeline-call-gSNP`. | Config File |
+
 
 For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
 
