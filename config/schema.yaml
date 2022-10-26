@@ -98,6 +98,11 @@ input:
           mode: 'r'
           required: true
           help: 'Absolute path to tumor sample BAM files'
+        contamination_table:
+          type: 'Path'
+          mode: 'r'
+          required: false
+          help: 'Absolute path to tumor sample BAM files'
     normal:
       type: 'BAMEntryList'
       required: false

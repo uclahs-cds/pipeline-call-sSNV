@@ -99,6 +99,12 @@ Channel
     }
     .set { normal_input }
 
+Channel
+    .from( params.input['tumor'] )
+    .multiMap{ it ->
+        it['contamination-table']
+    }
+    .set { contamination_estimation_ch }
 
 workflow {
     reference_ch = Channel.from(
