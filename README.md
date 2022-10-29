@@ -62,7 +62,7 @@ To run the pipeline, one `input.yaml` and one `template.config` are needed. When
 | tumor_id | string | The name/ID of the tumor sample    | YAML File |
 | normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | normal_id | string | The name/ID of the normal sample      | YAML File |
-| contamination_table | path | Optional. A file path of the `contamination.table` from the result of `pipeline-call-gSNP`, only for tumor samples | YAML File |
+| contamination_table | path | Optional, but only for tumor samples. The path of the `contamination.table`, which is generated from the GATK's `CalculateContamination` in `pipeline-call-gSNP`. The contamination.table path can be found under `pipeline-call-gSNP`'s output `QC` folder. | YAML File |
 
 * `input.yaml` should follow the standardized structure:
 ```
@@ -74,7 +74,7 @@ input:
   tumor:
     - id: tumor_id
       BAM: /path/to/tumor.bam
-      contamination_table: /path/to/tumor-contamination-table.bam
+      contamination_table: /path/to/contamination.table
 ```
 * A template of `input.yaml` can be found [here](./input/call-sSNV-template.yaml).
 
