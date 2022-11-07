@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Specify `task.index` in log output directories.
 
 ### Added
-- Add contamination estimate results to filter VCFs in Mutect2.
+- Add `contamination_table` input to `input.yaml`. Contamination estimate table from [pipeline-call-gSNP](https://github.com/uclahs-cds/pipeline-call-gSNP) is added to filter VCFs in Mutect2.
 
 ## [5.0.0] - 2022-10-04
 ### Changed
