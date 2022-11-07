@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Specify `task.index` in log output directories.
 
 ### Added
-- Add contamination estimate results to filter vcfs in mutect2.
+- Add contamination estimate results to filter VCFs in Mutect2.
 
 ## [5.0.0] - 2022-10-04
 ### Changed
