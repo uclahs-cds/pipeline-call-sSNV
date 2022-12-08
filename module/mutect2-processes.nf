@@ -292,7 +292,7 @@ process run_FilterMutectCalls_GATK {
     path ".command.*"
 
     script:
-    contamination = params.use_contamination_estimation ? contamination_estimation_ch.collect { "-I '$it'" }.join(' ') : ""
+    contamination = params.use_contamination_estimation ? contamination_estimation.collect { "-I '$it'" }.join(' ') : ""
     """
     set -euo pipefail
     gatk FilterMutectCalls \
