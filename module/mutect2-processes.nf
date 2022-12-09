@@ -12,6 +12,7 @@ Mutect2 Options:
 - scatter_count:                  ${params.scatter_count}
 - intervals:                      ${params.intervals}
 - tumor_only_mode:                ${params.tumor_only_mode}
+- use_contamination_estimation:   ${params.use_contamination_estimation}
 """
 
 process run_SplitIntervals_GATK {
@@ -292,7 +293,7 @@ process run_FilterMutectCalls_GATK {
     path ".command.*"
 
     script:
-    contamination = params.use_contamination_estimation ? contamination_estimation.collect { "-I '$it'" }.join(' ') : ""
+    contamination = params.use_contamination_estimation ? contamination_estimation.collect { "--contamination-table '$it'" }.join(' ') : ""
     """
     set -euo pipefail
     gatk FilterMutectCalls \
