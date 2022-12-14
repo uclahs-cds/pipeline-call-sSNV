@@ -13,6 +13,7 @@ Mutect2 Options:
 - intervals:                      ${params.intervals}
 - tumor_only_mode:                ${params.tumor_only_mode}
 - use_contamination_estimation:   ${params.use_contamination_estimation}
+- contamination_table:            ${params.input.tumor.contamination_table}
 """
 
 process run_SplitIntervals_GATK {
