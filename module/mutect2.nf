@@ -26,6 +26,14 @@ workflow mutect2 {
             normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
                 .map{return (it in List) ? it : [it]}
         }
+        // to avoid input file name collision error in Mutect2
+        if (params.multi_tumor_sample && !params.use_contamination_estimation) {
+            contamination_table
+                .flatten()
+                .unique()
+                .set { contamination_table }
+        }
+
         if (params.intervals) {
             intervals = params.intervals
         } else {
