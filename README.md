@@ -108,7 +108,6 @@ Config File |
 * In particular, as noted in Strelka's [User Guide](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions):
 > Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
-
 #### Mutect2 Specific Configuration
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
@@ -156,7 +155,6 @@ python path/to/submit_nextflow_pipeline.py \
 
 ---
 
-
 ## Testing and Validation
 
 Testing was performed primarily in the Boutros Lab SLURM Development cluster using F72 node. Metrics below will be updated where relevant with additional testing and tuning outputs.
@@ -179,7 +177,6 @@ Duration: 3h 25m 24s
 |call_sSNVInNonAssembledChromosomes_Mutect2   | 32m 44s         | 142.0% |33.1 GB       |
 |call_sSNVInAssembledChromosomes_Mutect2      |1h 20m 12s       | 123.8% |7.8 GB        |
 |run_LearnReadOrientationModel_GATK           |31m 5s         |106.8%  |10.2 GB       |
-
 
 #### SomaticSniper
 Duration: 9h 21m 23s
@@ -213,7 +210,6 @@ Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-
 
 Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary. `-callRegions`'s input `bed.gz` file can be found here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`. For other genome version, you can use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
 
-
 #### MuSE v2.0
 MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
 Duration: 1d 11h 6m 54s
@@ -222,7 +218,6 @@ Duration: 1d 11h 6m 54s
 |:------------------------|:-------------------|:-------|:-------------|
 |call_sSNV_MuSE        | 3h 44m 15s   | 3181.7% | 60.4 GB   |
 |run_sump_MuSE         | 1d 7h 22m 2s | 100.0%  | 41.6 GB   |
-
 
 ---
 
