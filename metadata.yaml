@@ -2,7 +2,7 @@
 Category: 'pipeline'
 Description: 'A Nextflow pipeline to identify the somatic single nucleotide variants (sSNVs) by comparing a pair of tumor/normal samples.'
 Maintainers: ['maotian@mednet.ucla.edu']
-Contributors: ['Mao Tian', 'Bugh Caden', 'Helena Winata', 'Yash Patel']
+Contributors: ['Mao Tian', 'Bugh Caden', 'Helena Winata', 'Yash Patel', 'Sorel Fitz-Gibbon']
 Languages: ['Docker', 'Nextflow']
 Dependencies: ['Docker', 'Nextflow']
-Tools: ['GATK 4.2.4.1', 'SomaticSniper v1.0.5.0', 'SAMTools v1.12', 'Strelka2 v2.9.10', 'Manta v1.6.0', 'MuSE v2.0']
+Tools: ['GATK 4.2.4.1', 'SomaticSniper v1.0.5.0', 'SAMTools v1.16.1', 'Strelka2 v2.9.10', 'Manta v1.6.0', 'MuSE v2.0']
