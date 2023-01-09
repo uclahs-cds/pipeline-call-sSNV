@@ -1,7 +1,30 @@
 # pipeline-call-sSNV
 
+- [call-sSNV](#pipeline-call-ssnv)
+  - [Overview](#overview)
+  - [How To Run](#how-to-run)
+  - [Flow Diagrams](#flow-diagram)
+  - [Pipeline Steps](#pipeline-steps)
+    - [Discovery](#discovery)
+      - [1. Calling Structural Variants](#1-calling-structural-variants)
+      - [2. Calling Copy Number Variants](#2-calling-copy-number-variants)
+      - [3. Check Output Quality](#3-check-output-quality)
+    - [Regenotyping](#regenotyping)
+      - [1. Regenotyping Structural Variants](#1-regenotyping-structural-variants)
+      - [2. Regenotyping Copy Number Variants](#2-regenotyping-copy-number-variants)
+  - [Inputs](#inputs)
+  - [Outputs](#outputs)
+  - [Testing and Validation](#testing-and-validation)
+    - [Test Data Set](#test-data-set)
+    - [Performance Validation](#performance-validation)
+    - [Quality Check Result Comparison](#quality-check-result-comparison)
+    - [Human Genome Benchmarks](#human-genome-benchmarks)
+    - [Validation Tool](#validation-tool)
+  - [References](#references)
+  - [License](#license)
+
 ## Overview
-This pipeline performs somatic SNV calling given a pair of tumor/normal BAM. 4 somatic SNV callers are available and described below. Each caller will run independently of each other.
+This pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available and described below. Each caller will run independently of the others.
 The mutect2 algorithm can also take multiple samples and tumor only samples.
 
 > **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry|Setup) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
@@ -135,7 +158,7 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 | MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (MuSE)   |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
 
-#### How to run the pipeline
+## How To Run
 1. Using the [stable release](https://github.com/uclahs-cds/pipeline-call-sSNV/releases) stored under `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/` or the development version by cloning the GitHub repository to your machine.
 2. Fill in the params section of the [config file](config/template.config) and [input YAML](input/call-sSNV-template.yaml)
 3. Run the pipeline using the [Nextflow submission script](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
