@@ -24,10 +24,7 @@
   - [License](#license)
 
 ## Overview
-This pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available and described below. Each caller will run independently of the others.
-The mutect2 algorithm can also take multiple samples and tumor only samples.
-
-> **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry|Setup) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
+The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumour/normal BAM files. Four somatic SNV callers are available: Somatic Sniper, Strelka2, Mutect2 & MuSE. The user may request one or more callers, and each caller produces an independently generated filtered vcf file.  Somatic Sniper, Strelka2, & MuSE require and will only use the first pair of tumour/normal bam files listed within the input yaml file, but Mutect2 will take bam pairs from multiple samples as well as single bams from tumour only samples. XXXX IS THIS CORREÇT?  XXXX
 
 ## Somatic SNV callers:
 * Somatic Sniper
@@ -35,8 +32,47 @@ The mutect2 algorithm can also take multiple samples and tumor only samples.
 * Mutect2
 * MuSE
 
+
+## How To Run
+Below is a summary of how to run the pipeline.  See [here](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=How+to+run+a+nextflow+pipeline) for more information on running nextflow pipelines.
+
+1. The recommended way of running the pipeline is to directly use the source code located here: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/, rather than cloning a copy of the pipeline.
+
+    * The source code should never be modified when running our pipelines
+
+2. Copy and edit the [config file](config/template.config)
+> The reference .fa file in config file should be the same with the reference genome that genereates the input bam files.
+3. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
+4. The pipeline can be executed locally using the command below:
+
+```bash
+nextflow run path/to/main.nf -config path/to/project.config -params-file project.yaml`
+```
+
+* For example, `path/to/main.nf` could be: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf`
+* `path/to/project.config` is the path to where you saved your project-specific copy of [template.config](config/template.config) 
+* `path/to/project.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml) 
+
+To submit to UCLAHS-CDS's Azure cloud, use the submission script [here](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
+
+```bash
+python path/to/submit_nextflow_pipeline.py \
+    --nextflow_script path/to/call-sSNV.nf \
+    --nextflow_config path/to/project.config\
+    --nextflow_yaml path/to/project.yaml \
+    --pipeline_run_name <sample_name> \
+    --partition_type F72 \
+    --email jdoe@mednet.ucla.edu
+```
+
+> **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry|Setup) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
+
+---
+
+## Flow Diagrams
+
 ### SomaticSniper
-![Diagram](image/diagram.svg)
+![Diagram](image/somatic-sniper.svg)
 #### Tools
 ##### SomaticSniper
 SomaticSniper source: https://github.com/genome/somatic-sniper
@@ -60,6 +96,7 @@ Version: v2.9.10 (Released on Nov 7, 2018)
 GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 
 ### Mutect 2
+[<img src=image/mutect2.png>](https://gatk.broadinstitute.org/hc/en-us/articles/360035889791?id=11136)
 #### Tools
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
@@ -67,22 +104,26 @@ Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker Image: broadinstitute/gatk:4.2.4.1
 
 ### MuSE
+[<img src="https://github.com/wwylab/MuSE/blob/master/etc/preprocessing_flowchart.png">](https://github.com/wwylab/MuSE)
 #### Tools
 ##### MuSE
 MuSE source: https://github.com/wwylab/MuSE
 Version: 2.0 (Released on Aug 25, 2021)
 GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
+## Pipeline Steps
+TBD
+
 ## Inputs
 To run the pipeline, one `input.yaml` and one `template.config` are needed. When running a batch of samples, `template.config` can be shared, while `input` is unique for each sample.
 
-### Input YAML
+### Input project.yaml. ([template.yaml](input/call-sSNV-template.yaml))
 
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
 | patient_id | string | The name/ID of the patient    | YAML File |
-| tumor_BAM | string | The path to the tumor .bam file (.bai file must exist in same directory) | YAML File |
-| tumor_id | string | The name/ID of the tumor sample    | YAML File |
+| tumour_BAM | string | The path to the tumour .bam file (.bai file must exist in same directory) | YAML File |
+| tumour_id | string | The name/ID of the tumour sample    | YAML File |
 | normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
 | normal_id | string | The name/ID of the normal sample      | YAML File |
 
@@ -93,16 +134,15 @@ input:
   normal:
     - id: normal_id
       BAM: /path/to/normal.bam
-  tumor:
-    - id: tumor_id
-      BAM: /path/to/tumor.bam
+  tumour:
+    - id: tumour_id
+      BAM: /path/to/tumour.bam
 ```
-* A template of `input.yaml` can be found [here](./input/call-sSNV-template.yaml).
 
-### Input Config
+### Input project.config ([template.config](config/template.config))
 | Input       | Type   | Description                               | Location    |
 |-------------|--------|-------------------------------------------|-------------|
-| dataset_id | string | The name/ID of the dataset    | Config File |
+| dataset_id | string | Boutros lab dataset id    | Config File |
 | algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
 | reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
 | output_dir  | string | The location where outputs will be saved  | Config File |
@@ -141,7 +181,7 @@ Config File |
 | intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
 | germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. | Config File |
 
-For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
+For special input, such as tumour-only sample and one patient's multiple samples, the pipeline will define `params.tumour_only_mode`, `params.multi_tumour_sample`, and `params.multi_normal_sample`. For tumour-only samples, leave the normal input in `input.yaml` empty, as [template_tumour_only.yaml](input/example-test-tumour-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
 
 #### MuSE Specific Configuration
 | Input       | Type   | Description                               | Location    |
@@ -157,24 +197,6 @@ For special input, such as tumor-only sample and one patient's multiple samples,
 | Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (mutect2)      |
 | MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (MuSE)   |
 | report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
-
-## How To Run
-1. Using the [stable release](https://github.com/uclahs-cds/pipeline-call-sSNV/releases) stored under `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/` or the development version by cloning the GitHub repository to your machine.
-2. Fill in the params section of the [config file](config/template.config) and [input YAML](input/call-sSNV-template.yaml)
-3. Run the pipeline using the [Nextflow submission script](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
-```bash
-python path/to/submit_nextflow_pipeline.py \
-    --nextflow_script path/to/call-sSNV.nf \
-    --nextflow_config path/to/nextflow\
-    --nextflow_yaml path/to/input.yaml \
-    --pipeline_run_name <sample_id> \
-    --partition_type F72 \
-    --email jdoe@mednet.ucla.edu
-```
-<b><i>Notes:</i></b>
-> The reference .fa file in config file should be the same with the reference genome that genereates the input bam files.
-
----
 
 
 ## Testing and Validation
@@ -235,7 +257,7 @@ Therefore, we strongly suggest to use the `--callRegions` if the non-canonical r
 
 
 #### MuSE v2.0
-MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
+MuSE v2.0 was tested with a normal/tumour paired CPCG0196 WGS sample on a F32 slurm-dev node.
 Duration: 1d 11h 6m 54s
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
@@ -246,13 +268,19 @@ Duration: 1d 11h 6m 54s
 
 ---
 
+##References
+1.	Larson, D. E. et al. SomaticSniper: identification of somatic point mutations in whole genome sequencing data. Bioinformatics 28, 311–317 (2012).
+2.	Kim, S. et al. Strelka2: fast and accurate calling of germline and somatic variants. Nat. Methods 15, 591–594 (2018).
+3.	McKenna, A. et al. The Genome Analysis Toolkit: A MapReduce framework for analyzing next-generation DNA sequencing data. Genome Res. 20, 1297–1303 (2010).
+4.	Fan, Y. et al. MuSE: accounting for tumor heterogeneity using a sample-specific error model improves sensitivity and specificity in mutation calling from sequencing data. Genome Biol. 17, 178 (2016).
+
 ## License
 
-Authors: Mao Tian (maotian@mednet.ucla.edu), Bugh Caden, Helena Winata (HWinata@mednet.ucla.edu).
+Authors: Mao Tian (maotian@mednet.ucla.edu), Bugh Caden, Helena Winata (HWinata@mednet.ucla.edu), Sorel Fitz-Gibbon (sfitzgibbon@mednet.ucla.edu).
 
-Call-sSNV is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
+pipeline-call-sSNV is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
-This pipeline performs somatic SNV calling on a pair of normal/tumor BAMs. Mutect2, SomaticSniper, and Strelka2 are currently available in this pipeline.
+This pipeline performs somatic SNV calling on a pair of normal/tumour BAMs, utilizing SomaticSniper, Strelka2, Mutect2 and MuSE.
 
 Copyright (C) 2020-2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
