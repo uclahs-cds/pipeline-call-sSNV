@@ -5,28 +5,18 @@
   - [How To Run](#how-to-run)
   - [Flow Diagrams](#flow-diagram)
   - [Pipeline Steps](#pipeline-steps)
-    - [Discovery](#discovery)
-      - [1. Calling Structural Variants](#1-calling-structural-variants)
-      - [2. Calling Copy Number Variants](#2-calling-copy-number-variants)
-      - [3. Check Output Quality](#3-check-output-quality)
-    - [Regenotyping](#regenotyping)
-      - [1. Regenotyping Structural Variants](#1-regenotyping-structural-variants)
-      - [2. Regenotyping Copy Number Variants](#2-regenotyping-copy-number-variants)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
     - [Test Data Set](#test-data-set)
     - [Performance Validation](#performance-validation)
-    - [Quality Check Result Comparison](#quality-check-result-comparison)
-    - [Human Genome Benchmarks](#human-genome-benchmarks)
-    - [Validation Tool](#validation-tool)
   - [References](#references)
   - [License](#license)
 
 ## Overview
 The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumour/normal BAM files. Four somatic SNV callers are available: Somatic Sniper, Strelka2, Mutect2 & MuSE. The user may request one or more callers, and each caller produces an independently generated filtered vcf file.  Somatic Sniper, Strelka2, & MuSE require and will only use the first pair of tumour/normal bam files listed within the input yaml file, but Mutect2 will take bam pairs from multiple samples as well as single bams from tumour only samples. XXXX IS THIS CORREÇT?  XXXX
 
-## Somatic SNV callers:
+### Somatic SNV callers:
 * Somatic Sniper
 * Strelka2
 * Mutect2
@@ -268,7 +258,7 @@ Duration: 1d 11h 6m 54s
 
 ---
 
-##References
+## References
 1.	Larson, D. E. et al. SomaticSniper: identification of somatic point mutations in whole genome sequencing data. Bioinformatics 28, 311–317 (2012).
 2.	Kim, S. et al. Strelka2: fast and accurate calling of germline and somatic variants. Nat. Methods 15, 591–594 (2018).
 3.	McKenna, A. et al. The Genome Analysis Toolkit: A MapReduce framework for analyzing next-generation DNA sequencing data. Genome Res. 20, 1297–1303 (2010).
