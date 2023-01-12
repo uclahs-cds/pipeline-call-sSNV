@@ -48,7 +48,7 @@ To submit to UCLAHS-CDS's Azure cloud, use the submission script [here](https://
 
 ```bash
 python path/to/submit_nextflow_pipeline.py \
-    --nextflow_script path/to/call-sSNV.nf \
+    --nextflow_script path/to/main.nf \
     --nextflow_config path/to/template.config\
     --nextflow_yaml path/to/input.yaml \
     --pipeline_run_name <run_name> \
@@ -130,32 +130,32 @@ input:
       BAM: /path/to/tumor.bam
 ```
 
-* Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm, otherwise the pipeline will fail. 
+* Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm, otherwise the pipeline will fail. 
 
 
 ### Input project.config ([template.config](config/template.config))
-| Input       | Type   | Description                               |
+| Input       | Required | Type   | Description                               |
 |-------------|--------|-------------------------------------------|
-| algorithm   | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
-| reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) |
-| output_dir  | string | The location where outputs will be saved  |
-| dataset_id | string | Boutros lab dataset id    |
-| exome       | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. |
-| save_intermediate_files | boolean | Whether to save intermediate files |
-| work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
-| docker_container_registry |	string |	Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
-| log_output_dir | string | The location where log files (.command.\*) will be saved |
+| algorithm   | yes | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
+| reference   | yes | string | The reference .fa file (.fai and .dict file must exist in same directory) |
+| output_dir  | yes | string | The location where outputs will be saved  |
+| dataset_id | yes | string | Boutros lab dataset id    |
+| exome       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. |
+| save_intermediate_files | yes | boolean | Whether to save intermediate files |
+| work_dir | string | no | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
+| docker_container_registry | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
+| log_output_dir | no | string | The location where log files (.command.\*) will be saved |
 
 #### Module Specific Configuration
-| Input       | Type   | Description                               |
+| Input       | Required | Type   | Description                               |
 |-------------|--------|-------------------------------------------|
-| bgzip_extra_args       | string | The extra option used for compressing VCFs |
-| tabix_extra_args       | string | The extra option used for indexing VCFs |
+| bgzip_extra_args       | no | string | The extra option used for compressing VCFs |
+| tabix_extra_args       | no | string | The extra option used for indexing VCFs |
 
 #### Strelka2 Specific Configuration
-| Input       | Type   | Description                               |
+| Input       | Required | Type   | Description                               |
 |-------------|--------|-------------------------------------------|
-| call_region | string | Adds '--callRegions' option when running manta and strelka2 |
+| call_region | no | string | Adds '--callRegions' option when running manta and strelka2 |
 * Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the `--callRegions` configuration option. See the `--callRegions` documentations here: [Strelka2](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions), [Manta](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions). `--callRegions` is optional for Strelka2, but can be used to specify canonical regions to save the running time. An example of call region's bed.gz can be found and used here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`.
 
 * The BED file's index file `bed.gz.tbi` needs to be stored in the same folder.
@@ -163,21 +163,21 @@ input:
 > Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
 #### Mutect2 Specific Configuration
-| Input       | Type   | Description                               |
+| Input       | Required |Description                               |
 |-------------|--------|-------------------------------------------|
-| split_intervals_extra_args | string | Additional arguments for the SplitIntervals command |
-| mutect2_extra_args | string | Additional arguments for the Mutect2 command |
-| filter_mutect_calls_extra_args | string | Additional arguments for the FilterMutectCalls command |
-| gatk_command_mem_diff | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
-| scatter_count | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
-| intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. |
-| germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
+| split_intervals_extra_args | no | string | Additional arguments for the SplitIntervals command |
+| mutect2_extra_args | string | no | Additional arguments for the Mutect2 command |
+| filter_mutect_calls_extra_args | no | string | Additional arguments for the FilterMutectCalls command |
+| gatk_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
+| scatter_count | yes | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
+| intervals   | no | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. |
+| germline_resource_gnomad_vcf | no | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
 
 
 #### MuSE Specific Configuration
-| Input       | Type   | Description                               |
+| Input       | Required | Type   | Description                               |
 |-------------|--------|-------------------------------------------|
-| dbSNP | path | The path to dbSNP database's `*.vcf.gz` |
+| dbSNP | yes | path | The path to dbSNP database's `*.vcf.gz` |
 
 ## Outputs
 | Output                                         | Type         | Description                   |
@@ -205,7 +205,7 @@ Testing was performed in the Boutros Lab SLURM Development cluster. Metrics belo
 
 #### Mutect2
 Duration: 3h 25m 24s
-* Process `call_sSNVInAssembledChromosomes_Mutect2` has been splited into 50 intervals, so the following table shows one of those processes:
+* Process `call_sSNVInAssembledChromosomes_Mutect2` has been split into 50 intervals, so the following table shows one of those processes:
 
 |process_name                                 |max_duration     |max_cpu |max_peak_vmem |
 |:--------------------------------------------|:----------------|:-------|:-------------|
