@@ -130,7 +130,7 @@ input:
       BAM: /path/to/tumor.bam
 ```
 
-* For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
+* Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm, otherwise the pipeline will fail. 
 
 
 ### Input project.config ([template.config](config/template.config))
