@@ -14,13 +14,13 @@
   - [License](#license)
 
 ## Overview
-The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumour/normal BAM files. Four somatic SNV callers are available: Somatic Sniper, Strelka2, Mutect2 & MuSE. The user may request one or more callers, and each caller produces an independently generated filtered vcf file.  Somatic Sniper, Strelka2, & MuSE require and will only use the first pair of tumour/normal bam files listed within the input yaml file, but Mutect2 will take bam pairs from multiple samples as well as single bams from tumour only samples. XXXX IS THIS CORREÇT?  XXXX
+The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 & MuSE. The user may request one or more callers, and each caller produces an independently generated filtered vcf file.  SomaticSniper, Strelka2, & MuSE require there to be exactly one pair of input tumor/normal bam files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal bam pairs from multiple samples from the same individual.
 
 ### Somatic SNV callers:
-* Somatic Sniper
-* Strelka2
-* Mutect2
-* MuSE
+* [SomaticSniper](https://github.com/genome/somatic-sniper)
+* [Strelka2](https://github.com/Illumina/strelka)
+* [Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
+* [MuSE](https://github.com/wwylab/MuSE)
 
 
 ## How To Run
@@ -33,24 +33,25 @@ Below is a summary of how to run the pipeline.  See [here](https://confluence.me
 2. Copy and edit the [config file](config/template.config)
 > The reference .fa file in config file should be the same with the reference genome that genereates the input bam files.
 3. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
+> 
 4. The pipeline can be executed locally using the command below:
 
 ```bash
-nextflow run path/to/main.nf -config path/to/project.config -params-file project.yaml`
+nextflow run path/to/main.nf -config path/to/template.config -params-file input.yaml`
 ```
 
 * For example, `path/to/main.nf` could be: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf`
-* `path/to/project.config` is the path to where you saved your project-specific copy of [template.config](config/template.config) 
-* `path/to/project.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml) 
+* `path/to/template.config` is the path to where you saved your project-specific copy of [template.config](config/template.config) 
+* `path/to/input.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml) 
 
 To submit to UCLAHS-CDS's Azure cloud, use the submission script [here](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
 
 ```bash
 python path/to/submit_nextflow_pipeline.py \
     --nextflow_script path/to/call-sSNV.nf \
-    --nextflow_config path/to/project.config\
-    --nextflow_yaml path/to/project.yaml \
-    --pipeline_run_name <sample_name> \
+    --nextflow_config path/to/template.config\
+    --nextflow_yaml path/to/input.yaml \
+    --pipeline_run_name <run_name> \
     --partition_type F72 \
     --email jdoe@mednet.ucla.edu
 ```
@@ -86,7 +87,7 @@ Version: v2.9.10 (Released on Nov 7, 2018)
 GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 
 ### Mutect 2
-[<img src=image/mutect2.png>](https://gatk.broadinstitute.org/hc/en-us/articles/360035889791?id=11136)
+
 #### Tools
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
@@ -94,7 +95,7 @@ Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker Image: broadinstitute/gatk:4.2.4.1
 
 ### MuSE
-[<img src="https://github.com/wwylab/MuSE/blob/master/etc/preprocessing_flowchart.png">](https://github.com/wwylab/MuSE)
+
 #### Tools
 ##### MuSE
 MuSE source: https://github.com/wwylab/MuSE
@@ -105,17 +106,17 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 TBD
 
 ## Inputs
-To run the pipeline, one `input.yaml` and one `template.config` are needed. When running a batch of samples, `template.config` can be shared, while `input` is unique for each sample.
+To run the pipeline, one `input.yaml` and one `template.config` are needed, as follows.
 
-### Input project.yaml. ([template.yaml](input/call-sSNV-template.yaml))
+### Input project.yaml. ([input.yaml](input/call-sSNV-template.yaml))
 
-| Input       | Type   | Description                               | Location    |
-|-------------|--------|-------------------------------------------|-------------|
-| patient_id | string | The name/ID of the patient    | YAML File |
-| tumour_BAM | string | The path to the tumour .bam file (.bai file must exist in same directory) | YAML File |
-| tumour_id | string | The name/ID of the tumour sample    | YAML File |
-| normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) | YAML File |
-| normal_id | string | The name/ID of the normal sample      | YAML File |
+| Input       | Type   | Description                               |
+|-------------|--------|-------------------------------------------|
+| patient_id | string | The name/ID of the patient
+| tumor_BAM | string | The path to the tumor .bam file (.bai file must exist in same directory) |
+| tumor_id | string | The name/ID of the tumor sample    |
+| normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) |
+| normal_id | string | The name/ID of the normal sample      |
 
 * `input.yaml` should follow the standardized structure:
 ```
@@ -124,59 +125,59 @@ input:
   normal:
     - id: normal_id
       BAM: /path/to/normal.bam
-  tumour:
-    - id: tumour_id
-      BAM: /path/to/tumour.bam
+  tumor:
+    - id: tumor_id
+      BAM: /path/to/tumor.bam
 ```
 
+* For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, leave the normal input in `input.yaml` empty, as [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
+
+
 ### Input project.config ([template.config](config/template.config))
-| Input       | Type   | Description                               | Location    |
-|-------------|--------|-------------------------------------------|-------------|
-| dataset_id | string | Boutros lab dataset id    | Config File |
-| algorithm   | list   | List containing a combination of somaticsniper, strelka2 or mutect2 | Config File |
-| reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) | Config File |
-| output_dir  | string | The location where outputs will be saved  | Config File |
+| Input       | Type   | Description                               |
+|-------------|--------|-------------------------------------------|
+| algorithm   | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
+| reference   | string | The reference .fa file (.fai and .dict file must exist in same directory) |
+| output_dir  | string | The location where outputs will be saved  |
+| dataset_id | string | Boutros lab dataset id    |
+| exome       | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. |
+| save_intermediate_files | boolean | Whether to save intermediate files |
+| work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
+| docker_container_registry |	string |	Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
 | log_output_dir | string | The location where log files (.command.\*) will be saved |
-Config File |
-| exome       | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. | Config File |
-| save_intermediate_files | boolean | Whether to save intermediate files | Config File |
-| work_dir | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. | Config File |
-| docker_container_registry |	string |	Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` | Config File |
 
 #### Module Specific Configuration
-| Input       | Type   | Description                               | Location    |
-|-------------|--------|-------------------------------------------|-------------|
-| bgzip_extra_args       | string | The extra option used for compressing VCFs | Config File |
-| tabix_extra_args       | string | The extra option used for indexing VCFs | Config File |
+| Input       | Type   | Description                               |
+|-------------|--------|-------------------------------------------|
+| bgzip_extra_args       | string | The extra option used for compressing VCFs |
+| tabix_extra_args       | string | The extra option used for indexing VCFs |
 
 #### Strelka2 Specific Configuration
-| Input       | Type   | Description                               | Location    |
-|-------------|--------|-------------------------------------------|-------------|
-| call_region | string | Adds '--callRegions' option when running manta and strelka2 | Config File |
+| Input       | Type   | Description                               |
+|-------------|--------|-------------------------------------------|
+| call_region | string | Adds '--callRegions' option when running manta and strelka2 |
 * Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the `--callRegions` configuration option. See the `--callRegions` documentations here: [Strelka2](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions), [Manta](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions). `--callRegions` is optional for Strelka2, but can be used to specify canonical regions to save the running time. An example of call region's bed.gz can be found and used here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`.
 
 * The BED file's index file `bed.gz.tbi` needs to be stored in the same folder.
 * In particular, as noted in Strelka's [User Guide](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions):
 > Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
-
 #### Mutect2 Specific Configuration
-| Input       | Type   | Description                               | Location    |
-|-------------|--------|-------------------------------------------|-------------|
-| split_intervals_extra_args | string | Additional arguments for the SplitIntervals command | Config File |
-| mutect2_extra_args | string | Additional arguments for the Mutect2 command | Config File |
-| filter_mutect_calls_extra_args | string | Additional arguments for the FilterMutectCalls command | Config File |
-| gatk_command_mem_diff | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) | Config File |
-| scatter_count | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. | Config File |
-| intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. | Config File |
-| germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. | Config File |
+| Input       | Type   | Description                               |
+|-------------|--------|-------------------------------------------|
+| split_intervals_extra_args | string | Additional arguments for the SplitIntervals command |
+| mutect2_extra_args | string | Additional arguments for the Mutect2 command |
+| filter_mutect_calls_extra_args | string | Additional arguments for the FilterMutectCalls command |
+| gatk_command_mem_diff | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
+| scatter_count | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
+| intervals   | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. |
+| germline_resource_gnomad_vcf | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
 
-For special input, such as tumour-only sample and one patient's multiple samples, the pipeline will define `params.tumour_only_mode`, `params.multi_tumour_sample`, and `params.multi_normal_sample`. For tumour-only samples, leave the normal input in `input.yaml` empty, as [template_tumour_only.yaml](input/example-test-tumour-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, as [template_multi_sample.yaml](input/example-test-multi-sample.yaml).
 
 #### MuSE Specific Configuration
-| Input       | Type   | Description                               | Location    |
-|-------------|--------|-------------------------------------------|-------------|
-| dbSNP | path | The path to dbSNP database's `*.vcf.gz` | Config File |
+| Input       | Type   | Description                               |
+|-------------|--------|-------------------------------------------|
+| dbSNP | path | The path to dbSNP database's `*.vcf.gz` |
 
 ## Outputs
 | Output                                         | Type         | Description                   |
@@ -247,7 +248,7 @@ Therefore, we strongly suggest to use the `--callRegions` if the non-canonical r
 
 
 #### MuSE v2.0
-MuSE v2.0 was tested with a normal/tumour paired CPCG0196 WGS sample on a F32 slurm-dev node.
+MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
 Duration: 1d 11h 6m 54s
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
@@ -270,7 +271,7 @@ Authors: Mao Tian (maotian@mednet.ucla.edu), Bugh Caden, Helena Winata (HWinata@
 
 pipeline-call-sSNV is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
-This pipeline performs somatic SNV calling on a pair of normal/tumour BAMs, utilizing SomaticSniper, Strelka2, Mutect2 and MuSE.
+This pipeline performs somatic SNV calling on a pair of normal/tumor BAMs, utilizing SomaticSniper, Strelka2, Mutect2 and MuSE.
 
 Copyright (C) 2020-2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
