@@ -3,8 +3,7 @@
 - [call-sSNV](#pipeline-call-ssnv)
   - [Overview](#overview)
   - [How To Run](#how-to-run)
-  - [Flow Diagrams](#flow-diagram)
-  - [Pipeline Steps](#pipeline-steps)
+  - [Flow Diagrams](#flow-diagrams)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -14,7 +13,9 @@
   - [License](#license)
 
 ## Overview
-The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 & MuSE. The user may request one or more callers, and each caller produces an independently generated filtered vcf file.  SomaticSniper, Strelka2, & MuSE require there to be exactly one pair of input tumor/normal bam files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal bam pairs from multiple samples from the same individual.
+The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 & MuSE. The user may request one or more callers, and each caller produces an independently generated filtered vcf file.  
+
+SomaticSniper, Strelka2, & MuSE require there to be **exactly one pair of input tumor/normal** bam files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal bam pairs from multiple samples from the same individual.
 
 ### Somatic SNV callers:
 * [SomaticSniper](https://github.com/genome/somatic-sniper)
@@ -24,16 +25,17 @@ The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tum
 
 
 ## How To Run
-Below is a summary of how to run the pipeline.  See [here](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=How+to+run+a+nextflow+pipeline) for more information on running nextflow pipelines.
+Below is a summary of how to run the pipeline.  See [here](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
 
-1. The recommended way of running the pipeline is to directly use the source code located here: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/, rather than cloning a copy of the pipeline.
+> **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry|Setup) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
+> 
+1. The recommended way of running the pipeline is to directly use the source code located here: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/`, rather than cloning a copy of the pipeline.
 
     * The source code should never be modified when running our pipelines
 
 2. Copy and edit the [config file](config/template.config)
-> The reference .fa file in config file should be the same with the reference genome that genereates the input bam files.
-3. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
-> 
+> Make sure the reference .fa file in config file matches the reference genome in the input bam files.
+3. Copy and edit the [input YAML](input/call-sSNV-template.yaml
 4. The pipeline can be executed locally using the command below:
 
 ```bash
@@ -56,7 +58,7 @@ python path/to/submit_nextflow_pipeline.py \
     --email jdoe@mednet.ucla.edu
 ```
 
-> **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry|Setup) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
+
 
 ---
 
@@ -102,8 +104,6 @@ MuSE source: https://github.com/wwylab/MuSE
 Version: 2.0 (Released on Aug 25, 2021)
 GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
-## Pipeline Steps
-TBD
 
 ## Inputs
 To run the pipeline, one `input.yaml` and one `template.config` are needed, as follows.
@@ -144,7 +144,6 @@ input:
 | save_intermediate_files | yes | boolean | Whether to save intermediate files |
 | work_dir | string | no | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
 | docker_container_registry | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
-| log_output_dir | no | string | The location where log files (.command.\*) will be saved |
 
 #### Module Specific Configuration
 | Input       | Required | Type   | Description                               |
