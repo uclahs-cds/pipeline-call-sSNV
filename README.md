@@ -147,13 +147,13 @@ input:
 
 #### Module Specific Configuration
 | Input       | Required | Type   | Description                               |
-|-------------|--------|-------------------------------------------|
+|-------------|----|--------|-------------------------------------------|
 | bgzip_extra_args       | no | string | The extra option used for compressing VCFs |
 | tabix_extra_args       | no | string | The extra option used for indexing VCFs |
 
 #### Strelka2 Specific Configuration
 | Input       | Required | Type   | Description                               |
-|-------------|--------|-------------------------------------------|
+|-------------|----|--------|-------------------------------------------|
 | call_region | no | string | Adds '--callRegions' option when running manta and strelka2 |
 * Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the `--callRegions` configuration option. See the `--callRegions` documentations here: [Strelka2](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions), [Manta](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions). `--callRegions` is optional for Strelka2, but can be used to specify canonical regions to save the running time. An example of call region's bed.gz can be found and used here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`.
 
@@ -175,7 +175,7 @@ input:
 
 #### MuSE Specific Configuration
 | Input       | Required | Type   | Description                               |
-|-------------|--------|-------------------------------------------|
+|-------------|----|--------|-------------------------------------------|
 | dbSNP | yes | path | The path to dbSNP database's `*.vcf.gz` |
 
 ## Outputs
