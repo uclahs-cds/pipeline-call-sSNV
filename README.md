@@ -33,17 +33,17 @@ Below is a summary of how to run the pipeline.  See [here](https://confluence.me
 
     * The source code should never be modified when running our pipelines
 
-2. Copy and edit the [config file](config/template.config)
+2. Copy and edit the [input config file](config/template.config)
 > Make sure the reference .fa file in config file matches the reference genome in the input bam files.
-3. Copy and edit the [input YAML](input/call-sSNV-template.yaml
+3. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
 4. The pipeline can be executed locally using the command below:
 
 ```bash
-nextflow run path/to/main.nf -config path/to/template.config -params-file input.yaml`
+nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
 ```
 
 * For example, `path/to/main.nf` could be: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf`
-* `path/to/template.config` is the path to where you saved your project-specific copy of [template.config](config/template.config) 
+* `path/to/input.config` is the path to where you saved your project-specific copy of [template.config](config/template.config) 
 * `path/to/input.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml) 
 
 To submit to UCLAHS-CDS's Azure cloud, use the submission script [here](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
@@ -51,11 +51,11 @@ To submit to UCLAHS-CDS's Azure cloud, use the submission script [here](https://
 ```bash
 python path/to/submit_nextflow_pipeline.py \
     --nextflow_script path/to/main.nf \
-    --nextflow_config path/to/template.config\
+    --nextflow_config path/to/input.config\
     --nextflow_yaml path/to/input.yaml \
     --pipeline_run_name <run_name> \
     --partition_type F72 \
-    --email jdoe@mednet.ucla.edu
+    --email jdoe@ucla.edu
 ```
 
 
@@ -106,9 +106,9 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
 
 ## Inputs
-To run the pipeline, one `input.yaml` and one `template.config` are needed, as follows.
+To run the pipeline, one `input.yaml` and one `input.config` are needed, as follows.
 
-### Input project.yaml. ([input.yaml](input/call-sSNV-template.yaml))
+### input.yaml. ([see template](input/call-sSNV-template.yaml))
 
 | Input       | Type   | Description                               |
 |-------------|--------|-------------------------------------------|
@@ -133,13 +133,13 @@ input:
 * Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm, otherwise the pipeline will fail. 
 
 
-### Input project.config ([template.config](config/template.config))
-| Input       | Required | Type   | Description                               |
-|-------------|--------|-------------------------------------------|
+### input.config ([see template](config/template.config))
+| Input | Required | Type   | Description                               |
+|--------|---|--------|-------------------------------------------|
 | algorithm   | yes | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
 | reference   | yes | string | The reference .fa file (.fai and .dict file must exist in same directory) |
 | output_dir  | yes | string | The location where outputs will be saved  |
-| dataset_id | yes | string | Boutros lab dataset id    |
+| dataset_id | yes | string | The name/ID of the dataset    |
 | exome       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. |
 | save_intermediate_files | yes | boolean | Whether to save intermediate files |
 | work_dir | string | no | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
