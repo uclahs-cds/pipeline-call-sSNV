@@ -13,9 +13,9 @@
   - [License](#license)
 
 ## Overview
-The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 & MuSE. The user may request one or more callers, and each caller produces an independently generated filtered vcf file.  
+The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file.  
 
-SomaticSniper, Strelka2, & MuSE require there to be **exactly one pair of input tumor/normal** bam files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal bam pairs from multiple samples from the same individual.
+SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs from multiple samples from the same individual.
 
 ### Somatic SNV callers:
 * [SomaticSniper](https://github.com/genome/somatic-sniper)
@@ -34,7 +34,7 @@ Below is a summary of how to run the pipeline.  See [here](https://confluence.me
     * The source code should never be modified when running our pipelines
 
 2. Copy and edit the [input config file](config/template.config)
-> Make sure the reference .fa file in config file matches the reference genome in the input bam files.
+> Make sure the reference .fa file in config file matches the reference genome in the input BAM files.
 3. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
 4. The pipeline can be executed locally using the command below:
 
@@ -130,7 +130,7 @@ input:
       BAM: /path/to/tumor.bam
 ```
 
-* Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input bams in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm, otherwise the pipeline will fail. 
+* Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm, otherwise the pipeline will fail. 
 
 
 ### input.config ([see template](config/template.config))
@@ -186,7 +186,7 @@ input:
 | Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf.gz | .vcf.gz         | Filterd Indel VCF (strelka2)     |
 | Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (mutect2)      |
 | MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (MuSE)   |
-| report.html, timeline.html, trace.txt          | .html & .txt | Nextflow logs                 |
+| report.html, timeline.html, trace.txt          | .html, .txt | Nextflow logs                 |
 
 
 ## Testing and Validation
@@ -272,7 +272,7 @@ pipeline-call-sSNV is licensed under the GNU General Public License version 2. S
 
 This pipeline performs somatic SNV calling on a pair of normal/tumor BAMs, utilizing SomaticSniper, Strelka2, Mutect2 and MuSE.
 
-Copyright (C) 2020-2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2020-2023 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
