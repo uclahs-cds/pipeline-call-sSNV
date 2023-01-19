@@ -88,6 +88,7 @@ Channel
     .multiMap{ it ->
         tumor_bam: it['BAM']
         tumor_index: indexFile(it['BAM'])
+        contamination_est: it['contamination_table']
     }
     .set { tumor_input }
 
@@ -98,7 +99,6 @@ Channel
         normal_index: indexFile(it['BAM'])
     }
     .set { normal_input }
-
 
 workflow {
     reference_ch = Channel.from(
@@ -150,7 +150,8 @@ workflow {
             tumor_input.tumor_bam.collect(),
             tumor_input.tumor_index.collect(),
             normal_input.normal_bam.collect(),
-            normal_input.normal_index.collect()
+            normal_input.normal_index.collect(),
+            tumor_input.contamination_est.collect()
         )
     }
     if ('muse' in params.algorithm) {

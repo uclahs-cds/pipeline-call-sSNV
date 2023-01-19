@@ -8,5 +8,6 @@ input:
   tumor:
     - id: tumor_sample_id
       BAM: /path/to/tumor.bam
+      contamination_table: /path/to/contamination.table
 # Add extra parameters to overwrite parameters in template.config
 gatk_command_mem_diff: 300.MB
