@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Specify `task.index` in log output directories.
 
 ### Added
+- Add `contamination_table` input to `input.yaml`. Contamination estimate table was generated from [CalculateContamination](https://gatk.broadinstitute.org/hc/en-us/articles/9570322332315-CalculateContamination) from GATK.
 
 ## [5.0.0] - 2022-10-04
 ### Changed
