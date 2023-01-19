@@ -7,3 +7,4 @@ input:
   tumor:
     - id: tumor_sample_id
       BAM: /path/to/tumor.bam
+      contamination_table: /path/to/contamination.table

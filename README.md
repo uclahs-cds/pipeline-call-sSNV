@@ -117,6 +117,7 @@ To run the pipeline, one `input.yaml` and one `input.config` are needed, as foll
 | tumor_id | string | The name/ID of the tumor sample    |
 | normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) |
 | normal_id | string | The name/ID of the normal sample      |
+| contamination_table | path | Optional, but only for tumor samples. The path of the `contamination.table`, which is generated from the GATK's `CalculateContamination` in `pipeline-call-gSNP`. The contamination.table path can be found under `pipeline-call-gSNP`'s output `QC` folder.
 
 * `input.yaml` should follow the standardized structure:
 ```
@@ -128,6 +129,7 @@ input:
   tumor:
     - id: tumor_id
       BAM: /path/to/tumor.bam
+      contamination_table: /path/to/contamination.table
 ```
 
 * Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm. 
@@ -188,7 +190,6 @@ input:
 | MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (MuSE)   |
 | report.html, timeline.html, trace.txt          | .html, .txt | Nextflow logs                 |
 
-
 ## Testing and Validation
 
 Testing was performed primarily in the Boutros Lab SLURM Development cluster using F72 node. Metrics below will be updated where relevant with additional testing and tuning outputs.
@@ -211,7 +212,6 @@ Duration: 3h 25m 24s
 |call_sSNVInNonAssembledChromosomes_Mutect2   | 32m 44s         | 142.0% |33.1 GB       |
 |call_sSNVInAssembledChromosomes_Mutect2      |1h 20m 12s       | 123.8% |7.8 GB        |
 |run_LearnReadOrientationModel_GATK           |31m 5s         |106.8%  |10.2 GB       |
-
 
 #### SomaticSniper
 Duration: 9h 21m 23s
@@ -245,7 +245,6 @@ Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-
 
 Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary. `-callRegions`'s input `bed.gz` file can be found here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`. For other genome version, you can use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
 
-
 #### MuSE v2.0
 MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
 Duration: 1d 11h 6m 54s
@@ -254,7 +253,6 @@ Duration: 1d 11h 6m 54s
 |:------------------------|:-------------------|:-------|:-------------|
 |call_sSNV_MuSE        | 3h 44m 15s   | 3181.7% | 60.4 GB   |
 |run_sump_MuSE         | 1d 7h 22m 2s | 100.0%  | 41.6 GB   |
-
 
 ---
 
@@ -277,4 +275,3 @@ Copyright (C) 2020-2023 University of California Los Angeles ("Boutros Lab") All
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
