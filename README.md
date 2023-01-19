@@ -42,7 +42,8 @@ Below is a summary of how to run the pipeline.  See [here](https://confluence.me
 nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
 ```
 
-* For example, `path/to/main.nf` could be: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf`
+For example, 
+* `path/to/main.nf` could be: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf`
 * `path/to/input.config` is the path to where you saved your project-specific copy of [template.config](config/template.config) 
 * `path/to/input.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml) 
 
@@ -162,10 +163,10 @@ input:
 > Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
 #### Mutect2 Specific Configuration
-| Input       | Required |Description                               |
-|-------------|--------|-------------------------------------------|
+| Input       | Required | Type | Description                               |
+|-------------|--|----|-------------------------------------------|
 | split_intervals_extra_args | no | string | Additional arguments for the SplitIntervals command |
-| mutect2_extra_args | string | no | Additional arguments for the Mutect2 command |
+| mutect2_extra_args | no | string | Additional arguments for the Mutect2 command |
 | filter_mutect_calls_extra_args | no | string | Additional arguments for the FilterMutectCalls command |
 | gatk_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
 | scatter_count | yes | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
