@@ -280,8 +280,7 @@ process run_FilterMutectCalls_GATK {
                saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
     publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
                mode: "copy",
-               pattern: "*_filteringStats.tsv",
-               enabled: params.save_intermediate_files
+               pattern: "*.tsv"
 
     input:
     path reference
