@@ -278,6 +278,9 @@ process run_FilterMutectCalls_GATK {
                mode: "copy",
                pattern: ".command.*",
                saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
+               mode: "copy",
+               pattern: "*.tsv"
 
     input:
     path reference
@@ -292,6 +295,7 @@ process run_FilterMutectCalls_GATK {
     output:
     path "*_filtered.vcf.gz", emit: filtered
     path ".command.*"
+    path "*_filteringStats.tsv"
 
     script:
     contamination = params.use_contamination_estimation ? contamination_estimation.collect { "--contamination-table '$it'" }.join(' ') : ""
@@ -302,6 +306,7 @@ process run_FilterMutectCalls_GATK {
         -V $unfiltered \
         --ob-priors $read_orientation_model \
         -O ${params.output_filename}_filtered.vcf.gz \
+        --filtering-stats ${params.output_filename}_filteringStats.tsv \
         $contamination \
         ${params.filter_mutect_calls_extra_args}
     """
