@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Update to use `set_resources_allocation` from pipeline-Nextflow-config repo
 - Update SAMtools to v1.16.1
 - Switch Docker Hub images to GitHub packages.
 - Remove redundant directories in log output directories and intermediate directories.
