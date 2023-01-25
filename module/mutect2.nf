@@ -16,6 +16,7 @@ workflow mutect2 {
     tumor_index
     normal_bam
     normal_index
+    contamination_table
 
     main:
         if (params.tumor_only_mode) {
@@ -25,6 +26,15 @@ workflow mutect2 {
             normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
                 .map{return (it in List) ? it : [it]}
         }
+        // to avoid input file name collision or null input error in Mutect2
+        if ( params.multi_tumor_sample ) {
+            contamination_table
+                .flatten()
+                .unique()
+                .filter{ it !== null }
+                .set { contamination_table }
+        }
+
         if (params.intervals) {
             intervals = params.intervals
         } else {
@@ -103,7 +113,6 @@ workflow mutect2 {
         run_MergeVcfs_GATK(ich_MergeVcfs)
         run_MergeMutectStats_GATK(ich_MergeMutectStats)
         run_LearnReadOrientationModel_GATK(ich_LearnReadOrientationModel)
-
         run_FilterMutectCalls_GATK(
             params.reference,
             params.reference_index,
@@ -111,7 +120,8 @@ workflow mutect2 {
             run_MergeVcfs_GATK.out.unfiltered,
             run_MergeVcfs_GATK.out.unfiltered_index,
             run_MergeMutectStats_GATK.out.merged_stats,
-            run_LearnReadOrientationModel_GATK.out.read_orientation_model
+            run_LearnReadOrientationModel_GATK.out.read_orientation_model,
+            contamination_table.collect()
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
         index_compress_ch = filter_VCF.out.mutect2_vcf
