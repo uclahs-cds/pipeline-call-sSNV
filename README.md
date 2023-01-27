@@ -105,6 +105,30 @@ MuSE source: https://github.com/wwylab/MuSE
 Version: 2.0 (Released on Aug 25, 2021)
 GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
+## Pipeline Steps
+
+### SomaticSniper
+#### 1. SomaticSniper v1.0.5.0
+Compares a pair of tumor and normal bam files and outputs unfiltered vcf file listing single nucleotide positions that are different between tumor and normal.
+#### 2. Filter out ambiguous positions.
+This takes several steps, listed below, and starts with the same input files given to SomaticSniper.
+##### a. Get pileup summaries
+Summarizes counts of reads that support reference, alternate and other alleles for given sites.  This is done for both input bam files and the results are used in the next step.
+##### b. Filter pileup outputs
+Uses `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filters each to keep only indels with QUAL > 20. `samtools.pl` is packaged with SomaticSniper. 
+##### c. Filter SomaticSniper vcf
+Uses `snpfilter.pl` (packaged with SomaticSniper):
+i. filter SomaticSniper vcf using normal indel pileup (from step `b`).
+ii. filter vcf output from step `i` using tumor indel pileup (from step `b`).
+##### d. Summarize alignment information for retained variant positions
+Extract positions from filtered vcf file and use with `bam-readcount` to generate a summary of read alignment metrics for each position.
+##### e. Final filtering of variants using metrics summarized above
+Uses `fpfilter.pl` (packaged with SomaticSniper), resulting in final high confidence vcf file.
+
+### Strelka2
+### Mutect 2
+### MuSE
+
 
 ## Inputs
 To run the pipeline, one `input.yaml` and one `input.config` are needed, as follows.
