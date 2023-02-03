@@ -79,7 +79,7 @@ process run_GetSampleName_Mutect2 {
     """
 }
 
-process call_sSNVInAssembledChromosomes_Mutect2 {
+process call_sSNVInAssembledChromosomes_Mutect2 { // Intervals do not have to be in assembled chromosomes
     container params.docker_image_GATK
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",

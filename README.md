@@ -19,6 +19,7 @@ SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of inpu
 
 ### Somatic SNV callers:
 * [SomaticSniper](https://github.com/genome/somatic-sniper)
+* add a sentence for each tool here?
 * [Strelka2](https://github.com/Illumina/strelka)
 * [Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
 * [MuSE](https://github.com/wwylab/MuSE)
@@ -109,24 +110,50 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
 ### SomaticSniper
 #### 1. SomaticSniper v1.0.5.0
-Compares a pair of tumor and normal bam files and outputs unfiltered vcf file listing single nucleotide positions that are different between tumor and normal.
+Compare a pair of tumor and normal bam files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in vcf format.
 #### 2. Filter out ambiguous positions.
 This takes several steps, listed below, and starts with the same input files given to SomaticSniper.
 ##### a. Get pileup summaries
-Summarizes counts of reads that support reference, alternate and other alleles for given sites.  This is done for both input bam files and the results are used in the next step.
+Summarize counts of reads that support reference, alternate and other alleles for given sites.  This is done for both of the input bam files and the results are used in the next step.
 ##### b. Filter pileup outputs
-Uses `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filters each to keep only indels with QUAL > 20. `samtools.pl` is packaged with SomaticSniper. 
+Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filters each to keep only indels with QUAL > 20. `samtools.pl` is packaged with SomaticSniper. 
 ##### c. Filter SomaticSniper vcf
-Uses `snpfilter.pl` (packaged with SomaticSniper):
+Use `snpfilter.pl` (packaged with SomaticSniper):
 i. filter SomaticSniper vcf using normal indel pileup (from step `b`).
 ii. filter vcf output from step `i` using tumor indel pileup (from step `b`).
 ##### d. Summarize alignment information for retained variant positions
 Extract positions from filtered vcf file and use with `bam-readcount` to generate a summary of read alignment metrics for each position.
 ##### e. Final filtering of variants using metrics summarized above
-Uses `fpfilter.pl` (packaged with SomaticSniper), resulting in final high confidence vcf file.
+Use `fpfilter.pl` (packaged with SomaticSniper), resulting in a final high confidence vcf file.
 
 ### Strelka2
+####1. Manta v1.6.0
+The input pair of tumor/normal bam files are used by Manta to produce candidate small indels via the Manta somatic configuration protocol. [Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.] 
+####2. Strelka2 v2.9.10
+The input pair of tumor/normal bam files, along with the candidate small indel file produced by Manta are used by Strelka2 to create lists of somatic single nucleotide and small indel variants, both in vcf format.  Lower quality variants that did not pass filtering are subsequently removed, yielding somatic_snvs_pass.vcf and somatic_indels_pass.vcf files
+
+
 ### Mutect 2
+
+####1. Intervals not provided
+In this case calls are made for the entire genome, first for the non-assembled canonical/assembled chromosomes, then for the canonical chromosomes.
+  - Split the set of non-canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter count.
+  - Call somatic variants in non-canonical chromosomes with `Mutect2`.
+  - Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter count.
+  - Call somatic variant in canonical chromosomes with `Mutect2`.
+  - Merge scattered canonical and non-canonical chromosome outputs (vcfs, statistics and read orientation information).
+  - Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
+  - Filter calls with GATK's `FilterMutectCalls`
+
+####2. Intervals provided
+In this case calls are made only for the intervals provided
+  - Split the set of provided intervals into x intervals for parallelization, where x is defined by the input scatter count. 
+  - Call somatic variants for these intervals with `Mutect2`.
+  - Merge all scattered outputs (vcfs, statistics and read orientation information).
+  - Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
+  - Filter calls with GATK's `FilterMutectCalls`
+
+
 ### MuSE
 
 
