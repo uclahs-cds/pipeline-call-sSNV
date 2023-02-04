@@ -137,9 +137,9 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
 
 ####1. Intervals not provided
 In this case calls are made for the entire genome, first for the non-assembled canonical/assembled chromosomes, then for the canonical chromosomes.
-  - Split the set of non-canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter count.
+  - Split the set of non-canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
   - Call somatic variants in non-canonical chromosomes with `Mutect2`.
-  - Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter count.
+  - Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
   - Call somatic variant in canonical chromosomes with `Mutect2`.
   - Merge scattered canonical and non-canonical chromosome outputs (vcfs, statistics and read orientation information).
   - Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
@@ -155,6 +155,12 @@ In this case calls are made only for the intervals provided
 
 
 ### MuSE
+####1.`MuSE call`
+This step carries out pre-filtering and calculating position-specific summary statistics using the Markov substitution model.
+####2.`MuSE sump`
+This step computes tier-based cutoffs from a sample-specific error model.
+####3.Filter vcf
+`MuSE` output has variants labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only variants labeled `PASS`.
 
 
 ## Inputs
