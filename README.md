@@ -19,14 +19,13 @@ The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tum
 SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs from multiple samples from the same individual.
 
 ### Somatic SNV callers:
-* [SomaticSniper](https://github.com/genome/somatic-sniper)
-  `SomaticSniper` is an older tool yielding high specificity single nucleotide somatic variants.
-* [Strelka2](https://github.com/Illumina/strelka)
-  `Strelka2` here uses candidate indels from `Manta` and calls somatic short mutations (single nucleotide and small indel) filtered with a random forest model.
-* [Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
-  `GATK Mutect2` calls somatic short mutations via local assembly of haplotypes.
-* [MuSE](https://github.com/wwylab/MuSE)
-  `Muse` accounts for tumor heterogeneity and calls single nucleotide somatic variants.
+* [SomaticSniper](https://github.com/genome/somatic-sniper) is an older tool yielding high specificity single nucleotide somatic variants.
+
+* [Strelka2](https://github.com/Illumina/strelka) here uses candidate indels from `Manta` and calls somatic short mutations (single nucleotide and small indel) filtered with a random forest model.
+
+* [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2) calls somatic short mutations via local assembly of haplotypes.
+
+* [MuSE](https://github.com/wwylab/MuSE) accounts for tumor heterogeneity and calls single nucleotide somatic variants.
 
 ## How To Run
 Below is a summary of how to run the pipeline.  See [here](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
@@ -112,17 +111,17 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 ## Pipeline Steps
 
 ### SomaticSniper
-#### 1. SomaticSniper v1.0.5.0
+#### 1. `SomaticSniper` v1.0.5.0
 Compare a pair of tumor and normal bam files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in vcf format.
 #### 2. Filter out ambiguous positions.
-This takes several steps, listed below, and starts with the same input files given to SomaticSniper.
+This takes several steps, listed below, and starts with the same input files given to `SomaticSniper`.
 ##### a. Get pileup summaries
 Summarize counts of reads that support reference, alternate and other alleles for given sites.  This is done for both of the input bam files and the results are used in the next step.
 ##### b. Filter pileup outputs
-Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filters each to keep only indels with QUAL > 20. `samtools.pl` is packaged with SomaticSniper. 
+Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filters each to keep only indels with QUAL > 20. `samtools.pl` is packaged with `SomaticSniper`. 
 ##### c. Filter SomaticSniper vcf
-Use `snpfilter.pl` (packaged with SomaticSniper):
-i. filter SomaticSniper vcf using normal indel pileup (from step `b`).
+Use `snpfilter.pl` (packaged with `SomaticSniper`):
+i. filter vcf using normal indel pileup (from step `b`).
 ii. filter vcf output from step `i` using tumor indel pileup (from step `b`).
 ##### d. Summarize alignment information for retained variant positions
 Extract positions from filtered vcf file and use with `bam-readcount` to generate a summary of read alignment metrics for each position.
@@ -130,10 +129,10 @@ Extract positions from filtered vcf file and use with `bam-readcount` to generat
 Use `fpfilter.pl` (packaged with SomaticSniper), resulting in a final high confidence vcf file.
 
 ### Strelka2
-#### 1. Manta v1.6.0
-The input pair of tumor/normal bam files are used by Manta to produce candidate small indels via the Manta somatic configuration protocol. [Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.] 
-#### 2. Strelka2 v2.9.10
-The input pair of tumor/normal bam files, along with the candidate small indel file produced by Manta are used by Strelka2 to create lists of somatic single nucleotide and small indel variants, both in vcf format.  Lower quality variants that did not pass filtering are subsequently removed, yielding somatic_snvs_pass.vcf and somatic_indels_pass.vcf files
+#### 1. `Manta` v1.6.0
+The input pair of tumor/normal bam files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. [Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.] 
+#### 2. `Strelka2` v2.9.10
+The input pair of tumor/normal bam files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in vcf format.  Lower quality variants that did not pass filtering are subsequently removed, yielding somatic_snvs_pass.vcf and somatic_indels_pass.vcf files
 
 
 ### GATK Mutect 2
@@ -203,7 +202,7 @@ input:
       contamination_table: /path/to/contamination.table
 ```
 
-* Mutect2 can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm. 
+* `Mutect2` can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm. 
 
 
 ### input.config ([see template](config/template.config))
