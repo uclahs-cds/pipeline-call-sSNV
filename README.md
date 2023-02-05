@@ -4,6 +4,7 @@
   - [Overview](#overview)
   - [How To Run](#how-to-run)
   - [Flow Diagrams](#flow-diagrams)
+  - [Pipeline Steps](#pipeline-steps)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -19,11 +20,13 @@ SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of inpu
 
 ### Somatic SNV callers:
 * [SomaticSniper](https://github.com/genome/somatic-sniper)
-* add a sentence for each tool here?
+  `SomaticSniper` is an older tool yielding high specificity single nucleotide somatic variants.
 * [Strelka2](https://github.com/Illumina/strelka)
+  `Strelka2` here uses candidate indels from `Manta` and calls somatic short mutations (single nucleotide and small indel) filtered with a random forest model.
 * [Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2)
+  `GATK Mutect2` calls somatic short mutations via local assembly of haplotypes.
 * [MuSE](https://github.com/wwylab/MuSE)
-
+  `Muse` accounts for tumor heterogeneity and calls single nucleotide somatic variants.
 
 ## How To Run
 Below is a summary of how to run the pipeline.  See [here](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
@@ -59,7 +62,7 @@ python path/to/submit_nextflow_pipeline.py \
     --partition_type F72 \
     --email jdoe@ucla.edu
 ```
-
+> **Note**: Although --partition_type F2 is an available option for small data sets, Mutect2 and Muse will fail due to lack of memory.
 
 
 ---
@@ -127,39 +130,49 @@ Extract positions from filtered vcf file and use with `bam-readcount` to generat
 Use `fpfilter.pl` (packaged with SomaticSniper), resulting in a final high confidence vcf file.
 
 ### Strelka2
-####1. Manta v1.6.0
+#### 1. Manta v1.6.0
 The input pair of tumor/normal bam files are used by Manta to produce candidate small indels via the Manta somatic configuration protocol. [Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.] 
-####2. Strelka2 v2.9.10
+#### 2. Strelka2 v2.9.10
 The input pair of tumor/normal bam files, along with the candidate small indel file produced by Manta are used by Strelka2 to create lists of somatic single nucleotide and small indel variants, both in vcf format.  Lower quality variants that did not pass filtering are subsequently removed, yielding somatic_snvs_pass.vcf and somatic_indels_pass.vcf files
 
 
-### Mutect 2
+### GATK Mutect 2
 
-####1. Intervals not provided
-In this case calls are made for the entire genome, first for the non-assembled canonical/assembled chromosomes, then for the canonical chromosomes.
-  - Split the set of non-canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
-  - Call somatic variants in non-canonical chromosomes with `Mutect2`.
-  - Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
-  - Call somatic variant in canonical chromosomes with `Mutect2`.
-  - Merge scattered canonical and non-canonical chromosome outputs (vcfs, statistics and read orientation information).
-  - Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-  - Filter calls with GATK's `FilterMutectCalls`
+#### 1. Intervals not provided
+  ##### a. Split non-canonical
+  Split the set of non-canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
+  ##### b. Call non-canonical
+  Call somatic variants in non-canonical chromosomes with `Mutect2`.
+  ##### c. Split canonical
+  Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
+  ##### d. Call canonical
+  Call somatic variant in canonical chromosomes with `Mutect2`.
+  ##### e. Merge
+  Merge scattered canonical and non-canonical chromosome outputs (vcfs, statistics).
+  ##### f. Learn read orientations
+  Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
+  ##### g. Filter
+  Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table as well as standard filters.
 
-####2. Intervals provided
-In this case calls are made only for the intervals provided
-  - Split the set of provided intervals into x intervals for parallelization, where x is defined by the input scatter count. 
-  - Call somatic variants for these intervals with `Mutect2`.
-  - Merge all scattered outputs (vcfs, statistics and read orientation information).
-  - Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-  - Filter calls with GATK's `FilterMutectCalls`
+#### 2. Intervals provided
+  ##### a. Split
+  Split the set of provided intervals into x intervals for parallelization, where x is defined by the input scatter count. 
+  ##### b. Call
+  Call somatic variants for the provided intervals with `Mutect2`.
+  ##### c. Merge
+  Merge scattered outputs (vcfs, statistics).
+  ##### d. Learn read orientations
+  Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
+  ##### e. Filter
+  Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table as well as standard filters.
 
 
 ### MuSE
-####1.`MuSE call`
+#### 1.`MuSE call`
 This step carries out pre-filtering and calculating position-specific summary statistics using the Markov substitution model.
-####2.`MuSE sump`
+#### 2.`MuSE sump`
 This step computes tier-based cutoffs from a sample-specific error model.
-####3.Filter vcf
+#### 3.Filter vcf
 `MuSE` output has variants labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only variants labeled `PASS`.
 
 
