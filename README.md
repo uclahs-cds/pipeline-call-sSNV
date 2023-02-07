@@ -112,7 +112,7 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
 ### SomaticSniper
 #### 1. `SomaticSniper` v1.0.5.0
-Compare a pair of tumor and normal bam files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in vcf format.
+Compare a pair of tumor and normal bam files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in VCF format.
 #### 2. Filter out ambiguous positions.
 This takes several steps, listed below, and starts with the same input files given to `SomaticSniper`.
 ##### a. Get pileup summaries
@@ -126,13 +126,13 @@ ii. filter vcf output from step `i` using tumor indel pileup (from step `b`).
 ##### d. Summarize alignment information for retained variant positions
 Extract positions from filtered vcf file and use with `bam-readcount` to generate a summary of read alignment metrics for each position.
 ##### e. Final filtering of variants using metrics summarized above
-Use `fpfilter.pl` (packaged with SomaticSniper), resulting in a final high confidence vcf file.
+Use `fpfilter.pl` and `highconfidence.pl` (packaged with SomaticSniper), resulting in a final high confidence vcf file.
 
 ### Strelka2
 #### 1. `Manta` v1.6.0
-The input pair of tumor/normal bam files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. [Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.] 
+The input pair of tumor/normal bam files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. *Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.* 
 #### 2. `Strelka2` v2.9.10
-The input pair of tumor/normal bam files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in vcf format.  Lower quality variants that did not pass filtering are subsequently removed, yielding somatic_snvs_pass.vcf and somatic_indels_pass.vcf files
+The input pair of tumor/normal bam files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in vcf format.  Lower quality variants that did not pass filtering are subsequently removed, yielding `somatic_snvs_pass.vcf` and `somatic_indels_pass.vcf` files.
 
 
 ### GATK Mutect 2
@@ -143,7 +143,7 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
   ##### b. Call non-canonical
   Call somatic variants in non-canonical chromosomes with `Mutect2`.
   ##### c. Split canonical
-  Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
+  Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
   ##### d. Call canonical
   Call somatic variant in canonical chromosomes with `Mutect2`.
   ##### e. Merge
@@ -151,7 +151,7 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
   ##### f. Learn read orientations
   Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
   ##### g. Filter
-  Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table as well as standard filters.
+  Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
 
 #### 2. Intervals provided
   ##### a. Split
