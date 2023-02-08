@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update `README`: add Pipeline Steps and Tool descriptions
 
+### Added
+- Add NF-test
+
 ## [6.0.0-rc.1] - 2023-1-30
 ### Changed
 - Update to use `set_resources_allocation` from pipeline-Nextflow-config repo
