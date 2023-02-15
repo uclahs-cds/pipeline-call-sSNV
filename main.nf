@@ -27,7 +27,7 @@ log.info """\
         call_region: ${params.call_region}
 
     - output:
-        output_dir: ${params.output_dir}
+        output_dir: ${params.output_dir_base}
         log_output_dir: ${params.log_output_dir}
 
     - option:
@@ -42,28 +42,28 @@ log.info """\
 
 include { run_validate_PipeVal } from './module/validation'
 include { somaticsniper } from './module/somaticsniper' addParams(
-    workflow_output_dir: "${params.output_dir}/SomaticSniper-${params.somaticsniper_version}",
+    workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
     output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { strelka2 } from './module/strelka2' addParams(
-    workflow_output_dir: "${params.output_dir}/Strelka2-${params.strelka2_version}",
+    workflow_output_dir: "${params.output_dir_base}/Strelka2-${params.strelka2_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
     output_filename: generate_standard_filename("Strelka2_${params.strelka2_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { mutect2 } from './module/mutect2' addParams(
-    workflow_output_dir: "${params.output_dir}/Mutect2-${params.GATK_version}",
+    workflow_output_dir: "${params.output_dir_base}/Mutect2-${params.GATK_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
     output_filename: generate_standard_filename("Mutect2_${params.strelka2_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { muse } from './module/muse' addParams(
-    workflow_output_dir: "${params.output_dir}/MuSE-${params.MuSE_version}",
+    workflow_output_dir: "${params.output_dir_base}/MuSE-${params.MuSE_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/MuSE-${params.MuSE_version}",
     output_filename: generate_standard_filename("MuSE_${params.MuSE_version}",
         params.dataset_id,
@@ -126,7 +126,7 @@ workflow {
 
     run_validate_PipeVal.out.val_file.collectFile(
         name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.output_dir}/validation"
+        storeDir: "${params.output_dir_base}/validation"
         )
 
     if ('somaticsniper' in params.algorithm) {
