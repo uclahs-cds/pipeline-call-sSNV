@@ -101,12 +101,15 @@ Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker Image: broadinstitute/gatk:4.2.4.1
 
 ### MuSE
-
+![alt text](docs/call_ssnv.svg?raw=true)
 #### Tools
 ##### MuSE
 MuSE source: https://github.com/wwylab/MuSE
 Version: 2.0 (Released on Aug 25, 2021)
 GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
+
+
+---
 
 ## Pipeline Steps
 
