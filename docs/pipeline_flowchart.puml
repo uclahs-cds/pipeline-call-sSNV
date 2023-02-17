@@ -1,4 +1,4 @@
-@startuml call_ssnv
+@startuml muse_chart
 
 !include pipeline_elements.iuml!string_functions
 !include pipeline_elements.iuml!output_rect
