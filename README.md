@@ -101,7 +101,7 @@ Version: 4.2.4.1 (Released on Jan 4, 2022)
 Docker Image: broadinstitute/gatk:4.2.4.1
 
 ### MuSE
-![alt text](docs/call_ssnv.svg?raw=true)
+![alt text](docs/muse_chart.svg?raw=true)
 #### Tools
 ##### MuSE
 MuSE source: https://github.com/wwylab/MuSE
