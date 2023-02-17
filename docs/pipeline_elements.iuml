@@ -8,6 +8,15 @@
 !endfunction
 @enduml
 
+@startuml(id=input_rect)
+!unquoted !procedure $input_process($alias, $title, $description)
+rectangle $alias #LightBlue as "
+$title
+====
+$description"
+!!endprocedure
+@enduml
+
 @startuml(id=intermediate_rect)
 !unquoted procedure $intermediate_process($alias, $title, $description)
 rectangle $alias #White as "
@@ -39,6 +48,7 @@ $description"
 !unquoted procedure $add_legend($pos="bottom right")
 legend $pos
   |Color|Process Type|
+  |<#LightBlue>| Input |
   |<#White>| Intermediate |
   |<#LightGreen>| Output |
   |<#Yellow>| QC |
