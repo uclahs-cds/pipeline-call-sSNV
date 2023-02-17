@@ -1,5 +1,11 @@
 @startuml call_ssnv
 
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!process_legend
+
 skinparam linetype ortho
 
 $intermediate_process(normal_bam, 'Normal bam', 'input normal bam file')
