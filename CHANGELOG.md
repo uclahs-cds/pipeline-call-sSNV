@@ -5,14 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Changed
-- Update `README`: add Pipeline Steps and Tool descriptions
 
 ### Added
 - Add NF-test
 
-## [6.0.0-rc.1] - 2023-1-30
+## [6.0.0-rc.1] - 2023-02-08
+
 ### Changed
+- Update `README`: add Pipeline Steps and Tool descriptions
 - Update to use `set_resources_allocation` from pipeline-Nextflow-config repo
 - Update SAMtools to v1.16.1
 - Switch Docker Hub images to GitHub packages.
