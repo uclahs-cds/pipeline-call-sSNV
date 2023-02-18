@@ -1,6 +1,7 @@
 @startuml muse_chart
 
 !include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
 !include pipeline_elements.iuml!output_rect
 !include pipeline_elements.iuml!intermediate_rect
 !include pipeline_elements.iuml!qc_rect
