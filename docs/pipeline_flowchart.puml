@@ -10,7 +10,6 @@ skinparam linetype ortho
 
 $input_process(normal_bam, 'Normal bam', 'input normal bam file')
 $input_process(tumor_bam, 'Tumor bam', 'input tumor bam file')
-$input_process(reference.fasta, 'Reference', 'Reference genome used for %newline()read alignments')
 
 rectangle muse as "MusE" {
     $intermediate_process(muse_call_run, "MuSE call", "Output: position-specific %newline()summary statistics")

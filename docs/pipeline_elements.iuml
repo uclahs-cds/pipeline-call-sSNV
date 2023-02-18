@@ -9,12 +9,12 @@
 @enduml
 
 @startuml(id=input_rect)
-!unquoted !procedure $input_process($alias, $title, $description)
+!unquoted procedure $input_process($alias, $title, $description)
 rectangle $alias #LightBlue as "
 $title
 ====
 $description"
-!!endprocedure
+!endprocedure
 @enduml
 
 @startuml(id=intermediate_rect)
