@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add NF-test
 ### Changed
+- update MuSE retry add memory to 48GB
 - output_dir changed to output_dir_base (methods.config and main.nf)
 
 ## [6.0.0-rc.1] - 2023-02-08
