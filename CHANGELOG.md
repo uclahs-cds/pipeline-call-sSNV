@@ -8,9 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add NF-test
 ### Changed
-- update to use MuSE v2.0.1 with MuSE sump parallelization
-- update MuSE retry add memory to 48GB
-- output_dir changed to output_dir_base (methods.config and main.nf)
+- Update to use `MuSE` v2.0.1 with `MuSE sump` parallelization
+- Update `MuSE` retry add memory to 48GB
+- Changed `output_dir` to `output_dir_base` (`methods.config` and `main.nf`)
 
 ## [6.0.0-rc.1] - 2023-02-08
 ### Changed
