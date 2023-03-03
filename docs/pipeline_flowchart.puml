@@ -12,17 +12,14 @@ skinparam linetype ortho
 $input_process(normal_bam, 'Normal bam', 'input normal bam file')
 $input_process(tumor_bam, 'Tumor bam', 'input tumor bam file')
 
-rectangle muse as "MusE" {
-    $intermediate_process(muse_call_run, "MuSE call", "Output: position-specific %newline()summary statistics")
-    $intermediate_process(dbsnp_file, 'dbSNP', 'dbSNP vcf')
-    $output_process(muse_sump_run, "MuSE sump", "Output: tier-based %newline()cutoffs")
+$intermediate_process(muse_call_run, "MuSE call", "Output: position-specific %newline()summary statistics")
+$input_process(dbsnp_file, 'dbSNP', 'dbSNP vcf')
+$output_process(muse_sump_run, "MuSE sump", "Output: tier-based %newline()cutoffs")
 
-    muse_call_run -d-> muse_sump_run
-    dbsnp_file -d-> muse_sump_run
-}
-
-tumor_bam -d-> muse
-normal_bam -d-> muse
+tumor_bam -d-> muse_call_run
+normal_bam -d-> muse_call_run
+muse_call_run -d-> muse_sump_run
+dbsnp_file -d-> muse_sump_run
 
 $add_legend("left")
 
