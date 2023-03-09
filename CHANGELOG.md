@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add plantUML action and MuSE flow chart
 - Add NF-test
 ### Changed
-- output_dir changed to output_dir_base (methods.config and main.nf)
+- Update to use `MuSE` v2.0.1 with `MuSE sump` parallelization
+- Update `MuSE` retry add memory to 48GB
+- Changed `output_dir` to `output_dir_base` (`methods.config` and `main.nf`)
 
 ## [6.0.0-rc.1] - 2023-02-08
 ### Changed
