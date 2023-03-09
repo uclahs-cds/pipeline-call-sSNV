@@ -47,7 +47,7 @@ $description"
 @startuml(id=process_legend)
 !unquoted procedure $add_legend($pos="bottom right")
 legend $pos
-  |Color|Process Type|
+  | Color | Process Type|
   |<#LightBlue>| Input |
   |<#White>| Intermediate |
   |<#LightGreen>| Output |
