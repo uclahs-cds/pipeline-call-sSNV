@@ -141,19 +141,17 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
 ### GATK Mutect 2
 
 #### 1. Intervals not provided
-  ##### a. Split non-canonical
-  Split the set of non-canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
-  ##### b. Call non-canonical
+  ##### a. Call non-canonical
   Call somatic variants in non-canonical chromosomes with `Mutect2`.
-  ##### c. Split canonical
+  ##### b. Split canonical
   Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
-  ##### d. Call canonical
+  ##### c. Call canonical
   Call somatic variant in canonical chromosomes with `Mutect2`.
-  ##### e. Merge
+  ##### d. Merge
   Merge scattered canonical and non-canonical chromosome outputs (vcfs, statistics).
-  ##### f. Learn read orientations
+  ##### e. Learn read orientations
   Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-  ##### g. Filter
+  ##### f. Filter
   Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
 
 #### 2. Intervals provided

@@ -13,16 +13,16 @@ skinparam linetype ortho
 $input_process(normal_bam, 'Normal bam', 'input normal bam file')
 $input_process(tumor_bam, 'Tumor bam', 'input tumor bam file')
 
-$intermediate_process(muse_call_run, "MuSE call", "Output: position-specific %newline()summary statistics")
-$input_process(dbsnp_file, 'dbSNP', 'dbSNP vcf')
-$output_process(muse_sump_run, "MuSE sump", "Output: tier-based %newline()cutoffs")
+$intermediate_process(muse_call_run, 'MuSE call', 'Output: position-specific %newline()summary statistics')
+$input_process(dbsnp_file, 'dbSNP', 'dbSNP VCF')
+$output_process(muse_sump_run, 'MuSE sump', 'Output: tier-based %newline()cutoffs')
 
 tumor_bam -d-> muse_call_run
 normal_bam -d-> muse_call_run
 muse_call_run -d-> muse_sump_run
 dbsnp_file -d-> muse_sump_run
 
-$add_legend("left")
+$add_legend('left')
 
 @enduml
 
@@ -31,18 +31,18 @@ $add_legend("left")
 
 $input_process(normal_bam, 'Normal bam', 'input normal bam file')
 $input_process(tumor_bam, 'Tumor bam', 'input tumor bam file')
-$input_process(contamination_table, 'Contamination Table', 'output of GATK\'s CalculateContamination')
-$input_process(reference_genome', 'Reference genome, 'fasta file')
-$input_process(germline_resource', 'Germline resource, 'gnomad vcf')
-$input_process(germline_resource', 'Germline resource, 'gnomad vcf')
+$input_process(contamination_table, 'Contamination Table', 'output of GATK CalculateContamination')
+$input_process(reference_genome, 'Reference genome', 'fasta file')
+$input_process(germline_resource, 'Germline resource', 'gnomad VCF')
 
-$intermediate_process(gatk_splitIntervals, "gatk SplitIntervals", "Output: reference genome intervals %newline()# = scattercount")
-$intermediate_process(mutect2_call_sSNV, "gatk Mutect2", "Output: unfiltered vcf(s), f1r2 file(s), stats file(s)")
-$intermediate_process(gatk_mergeVcfs, "gatk MergeVcfs", "Output: unfiltered vcf")
-$intermediate_process(mutect2_mergeStats, "gatk MergeMutectStats", "Output: Mutect2 stats")
-$intermediate_process(gatk_learnReadOrientation, "gatk LearnReadOrientationModel", "Output: read-orientation-model")
-$intermediate_process(mutect2_filterCalls, "gatk FilterMutectCalls", "Output: gatk filtered vcf, filtering stats")
-$output_process(awk_filterVCF, "remove non-PASSing variants", "Output: filtered vcf")
+
+$intermediate_process(gatk_splitIntervals, 'GATK SplitIntervals', 'Output: reference genome intervals %newline()# = scattercount')
+$intermediate_process(mutect2_call_sSNV, 'GATK Mutect2', 'Output: unfiltered VCF(s), f1r2 file(s), stats file(s)')
+$intermediate_process(gatk_mergeVcfs, 'GATK MergeVcfs', 'Output: unfiltered VCF')
+$intermediate_process(mutect2_mergeStats, 'GATK MergeMutectStats', 'Output: Mutect2 stats')
+$intermediate_process(gatk_learnReadOrientation, 'gatk LearnReadOrientationModel', 'Output: read-orientation-model')
+$intermediate_process(mutect2_filterCalls, 'gatk FilterMutectCalls', 'Output: gatk filtered VCF, filtering stats')
+$output_process(awk_filterVCF, 'remove non-PASSing variants', 'Output: filtered VCF')
 
 reference_genome -d-> gatk_splitIntervals
 tumor_bam -d-> muse_call_run
@@ -50,6 +50,6 @@ normal_bam -d-> muse_call_run
 muse_call_run -d-> muse_sump_run
 dbsnp_file -d-> muse_sump_run
 
-$add_legend("left")
+$add_legend('left')
 
 @enduml
