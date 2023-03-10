@@ -156,7 +156,7 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
 
 #### 2. Intervals provided
   ##### a. Split
-  Split the set of provided intervals into x intervals for parallelization, where x is defined by the input scatter count. 
+  Split the set of provided intervals into x intervals for parallelization, where x is defined by the input `params.scatter_count`. 
   ##### b. Call
   Call somatic variants for the provided intervals with `Mutect2`.
   ##### c. Merge
