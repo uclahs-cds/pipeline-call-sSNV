@@ -93,7 +93,7 @@ Version: v2.9.10 (Released on Nov 7, 2018)
 GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 
 ### Mutect 2
-
+![alt text](docs/mutect2_chart.svg?raw=true)
 #### Tools
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
