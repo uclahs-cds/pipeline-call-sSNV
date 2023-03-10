@@ -1,0 +1,48 @@
+
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!process_legend
+
+skinparam linetype ortho
+
+@startuml mutect2_chart
+
+$input_process(normal_bam, 'Normal bam', 'input normal bam file')
+$input_process(tumor_bam, 'Tumor bam', 'input tumor bam file')
+$input_process(contamination_table, 'Contamination Table: optional', 'output of GATK %newline()CalculateContamination')
+$input_process(reference_genome, 'Reference genome', 'fasta file')
+$input_process(germline_resource, 'Germline resource', 'gnomad VCF')
+
+
+$intermediate_process(gatk_splitIntervals, 'GATK SplitIntervals', 'Output: reference genome split into %newline()params.scatter_count intervals')
+$intermediate_process(mutect2_call_sSNV, 'GATK Mutect2: one process per interval', 'Output: unfiltered VCFs, variant stats, F1R2 metrics')
+$intermediate_process(gatk_mergeVcfs, 'GATK MergeVcfs', 'Output: unfiltered VCF')
+$intermediate_process(mutect2_mergeStats, 'GATK MergeMutectStats', 'Output: Mutect2 stats')
+$intermediate_process(gatk_learnReadOrientation, 'gatk LearnReadOrientationModel', 'Output: orientation bias artifacts table')
+$intermediate_process(mutect2_filterCalls, 'gatk FilterMutectCalls', 'Output: gatk filtered VCF %newline()Optional output: filtering stats')
+$output_process(awk_filterVCF, 'remove non-PASS variants', 'Output: filtered-pass.vcf.gz')
+$qc_process(gatk_filteringStats, 'Optional', 'Output: filteringStats.tsv')
+
+reference_genome -d-> gatk_splitIntervals
+normal_bam -d-> mutect2_call_sSNV
+tumor_bam -d-> mutect2_call_sSNV
+gatk_splitIntervals -d-> mutect2_call_sSNV
+germline_resource -d-> mutect2_call_sSNV
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+
+gatk_mergeVcfs -d-> mutect2_filterCalls : // unfiltered.vcf.gz //
+gatk_learnReadOrientation -d-> mutect2_filterCalls : // f1r2.tar.gz //
+mutect2_mergeStats -d-> mutect2_filterCalls : // unfiltered.vcf.stats.gz //
+reference_genome -d-> mutect2_filterCalls
+contamination_table -d-> mutect2_filterCalls
+mutect2_filterCalls -d-> gatk_filteringStats
+mutect2_filterCalls -d-> awk_filterVCF : // filtered.vcf.gz //
+
+$add_legend('left')
+
+@enduml
