@@ -1,0 +1,78 @@
+
+@startuml(id=string_functions)
+!unquoted function $comma_to_newline($input_str="")
+!local $arg_str = ''
+!foreach $item in %splitstr($input_str, ",")
+    !local $arg_str = $arg_str + " %newline()" + $item
+!endfor
+!return %substr($arg_str, 11)
+!endfunction
+@enduml
+
+@startuml(id=input_rect)
+!unquoted procedure $input_process($alias, $title, $description)
+rectangle $alias #LightBlue as "
+$title
+====
+$description"
+!endprocedure
+@enduml
+
+@startuml(id=intermediate_rect)
+!unquoted procedure $intermediate_process($alias, $title, $description)
+rectangle $alias #White as "
+$title
+====
+$description"
+!endprocedure
+@enduml
+
+@startuml(id=output_rect)
+!unquoted procedure $output_process($alias, $title, $description)
+rectangle $alias #LightGreen as "
+$title
+====
+$description"
+!endprocedure
+@enduml
+
+@startuml(id=qc_rect)
+!unquoted procedure $qc_process($alias, $title, $description)
+rectangle $alias #Yellow as "
+$title
+====
+$description"
+!endprocedure
+@enduml
+
+@startuml(id=process_legend)
+!unquoted procedure $add_legend($pos="bottom right")
+legend $pos
+  |Color|Process Type|
+  |<#LightBlue>| Input |
+  |<#White>| Intermediate |
+  |<#LightGreen>| Output |
+  |<#Yellow>| QC |
+endlegend
+!endprocedure
+@enduml
+
+skinparam linetype ortho
+
+@startuml muse_chart
+
+$input_process(normal_bam, 'Normal bam', 'input normal bam file')
+$input_process(tumor_bam, 'Tumor bam', 'input tumor bam file')
+
+$intermediate_process(muse_call_run, 'MuSE call', 'Output: position-specific %newline()summary statistics')
+$input_process(dbsnp_file, 'dbSNP', 'dbSNP VCF')
+$output_process(muse_sump_run, 'MuSE sump', 'Output: tier-based %newline()cutoffs')
+
+tumor_bam -d-> muse_call_run
+normal_bam -d-> muse_call_run
+muse_call_run -d-> muse_sump_run
+dbsnp_file -d-> muse_sump_run
+
+$add_legend('left')
+
+@enduml
