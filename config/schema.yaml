@@ -59,6 +59,8 @@ split_intervals_extra_args:
 mutect2_extra_args:
   type: 'String'
   required: false
+  allow_empty: true
+  help: 'Additional arguments for the Mutect2 command'
 filter_mutect_calls_extra_args:
   type: 'String'
   required: false
