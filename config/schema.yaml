@@ -59,8 +59,6 @@ split_intervals_extra_args:
 mutect2_extra_args:
   type: 'String'
   required: false
-  allow_empty: true
-  help: 'Additional arguments for the Mutect2 command'
 filter_mutect_calls_extra_args:
   type: 'String'
   required: false
@@ -70,12 +68,14 @@ bgzip_extra_args:
   type: 'String'
   required: false
   allow_empty: true
+  default: ''
   help: 'Additional arguments for bgzip command'
 tabix_extra_args:
   type: 'String'
   required: false
   allow_empty: true
-  help: 'Additional arguments for the FilterMutectCalls command'
+  default: ''
+  help: 'Additional arguments for tabix command'
 scatter_count:
   type: 'Integer'
   required: true
