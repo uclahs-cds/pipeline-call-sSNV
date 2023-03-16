@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update LearnRaadOrientationModel allocated memory
 - Update to use `MuSE` v2.0.1 with `MuSE sump` parallelization
+- Update to GATK v4.3.0.0
 - Update `MuSE` retry add memory to 48GB
 - Changed `output_dir` to `output_dir_base` (`methods.config` and `main.nf`)
 
