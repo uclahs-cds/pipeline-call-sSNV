@@ -1,65 +1,26 @@
 @startuml mutect2_chart
 
-!unquoted function $comma_to_newline($input_str="")
-!local $arg_str = ''
-!foreach $item in %splitstr($input_str, ",")
-    !local $arg_str = $arg_str + " %newline()" + $item
-!endfor
-!return %substr($arg_str, 11)
-!endfunction
-
-!unquoted procedure $input_process($alias, $title, $description)
-rectangle $alias #LightBlue as "
-$title
-====
-$description"
-!endprocedure
-
-!unquoted procedure $intermediate_process($alias, $title, $description)
-rectangle $alias #White as "
-$title
-====
-$description"
-!endprocedure
-
-!unquoted procedure $output_process($alias, $title, $description)
-rectangle $alias #LightGreen as "
-$title
-====
-$description"
-!endprocedure
-
-!unquoted procedure $qc_process($alias, $title, $description)
-rectangle $alias #Yellow as "
-$title
-====
-$description"
-!endprocedure
-
-!unquoted procedure $add_legend($pos="bottom right")
-legend $pos
-  |Color|Process Type|
-  |<#LightBlue>| Input |
-  |<#White>| Intermediate |
-  |<#LightGreen>| Output |
-  |<#Yellow>| QC |
-endlegend
-!endprocedure
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!process_legend
 
 skinparam linetype ortho
 
-$input_process(normal_bam, 'Normal bam', 'input normal bam file')
-$input_process(tumor_bam, 'Tumor bam', 'input tumor bam file')
-$input_process(contamination_table, 'Contamination Table: optional', 'output of GATK %newline()CalculateContamination')
-$input_process(reference_genome, 'Reference genome', 'fasta file')
-$input_process(germline_resource, 'Germline resource', 'gnomad VCF')
+$input_process(normal_bam, 'Normal BAM', 'Input: normal BAM file')
+$input_process(tumor_bam, 'Tumor BAM', 'Input: tumor BAM file')
+$input_process(contamination_table, 'Contamination Table: optional', 'Input: output of GATK %newline()CalculateContamination')
+$input_process(reference_genome, 'Reference genome', 'Input: fasta file')
+$input_process(germline_resource, 'Germline resource', 'Input: stripped gnomad VCF')
 
 $intermediate_process(gatk_splitIntervals, 'GATK SplitIntervals', 'Output: reference genome split into %newline()params.scatter_count intervals')
 $intermediate_process(mutect2_call_sSNV, 'GATK Mutect2: one process per interval', 'Output: unfiltered VCFs, variant stats, F1R2 metrics')
 $intermediate_process(gatk_mergeVcfs, 'GATK MergeVcfs', 'Output: unfiltered VCF')
 $intermediate_process(mutect2_mergeStats, 'GATK MergeMutectStats', 'Output: Mutect2 stats')
-$intermediate_process(gatk_learnReadOrientation, 'gatk LearnReadOrientationModel', 'Output: orientation bias artifacts table')
-$intermediate_process(mutect2_filterCalls, 'gatk FilterMutectCalls', 'Output: gatk filtered VCF %newline()Optional output: filtering stats')
+$intermediate_process(gatk_learnReadOrientation, 'GATK LearnReadOrientationModel', 'Output: orientation bias artifacts table')
+$intermediate_process(mutect2_filterCalls, 'GATK FilterMutectCalls', 'Output: GATK filtered VCF %newline()Optional output: filtering stats')
 $output_process(awk_filterVCF, 'remove non-PASS variants', 'Output: filtered-pass.vcf.gz')
 $qc_process(gatk_filteringStats, 'Optional', 'Output: filteringStats.tsv')
 
@@ -69,6 +30,12 @@ tumor_bam -d-> mutect2_call_sSNV
 gatk_splitIntervals -d-> mutect2_call_sSNV
 germline_resource -d-> mutect2_call_sSNV
 mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
 mutect2_call_sSNV -d-> gatk_learnReadOrientation
 mutect2_call_sSNV -d-> mutect2_mergeStats
 

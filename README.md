@@ -93,7 +93,7 @@ Version: v2.9.10 (Released on Nov 7, 2018)
 GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 
 ### Mutect 2
-![alt text](docs/mutect2_chart.svg?raw=true)
+![Diagram](image/mutect2.png)
 #### Tools
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
@@ -243,7 +243,7 @@ input:
 | gatk_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
 | scatter_count | yes | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
 | intervals   | no | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. |
-| germline_resource_gnomad_vcf | no | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
+| germline_resource_gnomad_vcf | no | path | A stripped down version of the [gnomAD VCF](https://gnomad.broadinstitute.org/) stripped of all unneeded INFO fields, keeping only AF, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
 
 
 #### MuSE Specific Configuration
