@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add plantUML action and MuSE flow chart
 - Add NF-test
 ### Changed
 - Update `MuSE` retry add memory to 48GB
