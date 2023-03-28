@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add Mutect2 flow chart
 - Add plantUML action and MuSE flow chart
 - Add NF-test
 

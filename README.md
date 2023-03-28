@@ -93,7 +93,7 @@ Version: v2.9.10 (Released on Nov 7, 2018)
 GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 
 ### Mutect 2
-
+![alt text](docs/mutect2_chart.svg)
 #### Tools
 ##### GATK
 GATK source: https://github.com/broadinstitute/gatk
@@ -141,24 +141,22 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
 ### GATK Mutect 2
 
 #### 1. Intervals not provided
-  ##### a. Split non-canonical
-  Split the set of non-canonical chromosomes into x intervals for parallelization, where x is defined by the input scatter_count.
-  ##### b. Call non-canonical
+  ##### a. Call non-canonical
   Call somatic variants in non-canonical chromosomes with `Mutect2`.
-  ##### c. Split canonical
+  ##### b. Split canonical
   Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
-  ##### d. Call canonical
+  ##### c. Call canonical
   Call somatic variant in canonical chromosomes with `Mutect2`.
-  ##### e. Merge
+  ##### d. Merge
   Merge scattered canonical and non-canonical chromosome outputs (vcfs, statistics).
-  ##### f. Learn read orientations
+  ##### e. Learn read orientations
   Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-  ##### g. Filter
+  ##### f. Filter
   Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
 
 #### 2. Intervals provided
   ##### a. Split
-  Split the set of provided intervals into x intervals for parallelization, where x is defined by the input scatter count. 
+  Split the set of provided intervals into x intervals for parallelization, where x is defined by the input `params.scatter_count`. 
   ##### b. Call
   Call somatic variants for the provided intervals with `Mutect2`.
   ##### c. Merge
@@ -245,7 +243,7 @@ input:
 | gatk_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
 | scatter_count | yes | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
 | intervals   | no | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. |
-| germline_resource_gnomad_vcf | no | path | A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
+| germline_resource_gnomad_vcf | no | path | A stripped down version of the [gnomAD VCF](https://gnomad.broadinstitute.org/) stripped of all unneeded INFO fields, keeping only AF, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
 
 
 #### MuSE Specific Configuration
