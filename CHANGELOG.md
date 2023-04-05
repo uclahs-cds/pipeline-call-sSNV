@@ -5,14 +5,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added
 - Add Mutect2 flow chart
 - Add plantUML action and MuSE flow chart
 - Add NF-test
+
 ### Changed
+- Update LearnRaadOrientationModel allocated memory
+- Update to use `MuSE` v2.0.1 with `MuSE sump` parallelization
 - Update to GATK v4.4.0.0
 - Update `MuSE` retry add memory to 48GB
 - Changed `output_dir` to `output_dir_base` (`methods.config` and `main.nf`)
+
+### Fixed
+- Specify empty string as default for bgzip and tabix extra args
 
 ## [6.0.0-rc.1] - 2023-02-08
 ### Changed
