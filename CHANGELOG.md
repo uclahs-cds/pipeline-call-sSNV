@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [6.0.0] - 2023-03-02
+## [6.0.0] - 2023-04-05
 
 ### Added
 - Add Mutect2 flow chart
