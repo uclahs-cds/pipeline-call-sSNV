@@ -1,4 +1,4 @@
-include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF; rm_Indels_VCF } from './mutect2-processes'
 
 include { generate_sha512sum } from './common'
 
@@ -124,7 +124,8 @@ workflow mutect2 {
             contamination_table.collect()
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
-        index_compress_ch = filter_VCF.out.mutect2_vcf
+        rm_Indels_VCF(filter_VCF.out.with_indels_vcf)
+        index_compress_ch = rm_Indels_VCF.out.mutect2_vcf
             .map{
                 it -> [params.sample_id, it]
             }

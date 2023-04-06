@@ -327,12 +327,37 @@ process filter_VCF {
     path filtered
 
     output:
-    path "*.vcf", emit: mutect2_vcf
+    path "*.vcf", emit: with_indels_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
+    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_all-variants_filtered-pass.vcf
+    """
+}
+
+process rm_Indels_VCF {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+            mode: "copy",
+            pattern: "*.vcf",
+            enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+            mode: "copy",
+            pattern: ".command.*",
+            saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+
+    input:
+    path with_indels_vcf
+
+    output:
+    path "*_filtered-pass.vcf", emit: mutect2_vcf
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    bcftools view --types snps ${with_indels_vcf} > ${params.output_filename}_filtered-pass.vcf
     """
 }
