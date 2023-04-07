@@ -153,6 +153,8 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
   Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
   ##### f. Filter
   Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
+  ##### g. Keep only SNVs
+  Remove multi-nucleotide variants from the final output VCF.
 
 #### 2. Intervals provided
   ##### a. Split
@@ -165,6 +167,8 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
   Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
   ##### e. Filter
   Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table as well as standard filters.
+  ##### f. Keep only SNVs
+  Remove multi-nucleotide variants from the final output VCF.
 
 
 ### MuSE

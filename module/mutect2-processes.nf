@@ -327,7 +327,7 @@ process filter_VCF {
     path filtered
 
     output:
-    path "*.vcf", emit: with_indels_vcf
+    path "*.vcf", emit: with_mnvs_vcf
     path ".command.*"
 
     script:
@@ -337,7 +337,7 @@ process filter_VCF {
     """
 }
 
-process rm_Indels_VCF {
+process rm_MNVs_VCF { // multi-nucleotide variants, mostly indels
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
             mode: "copy",
@@ -349,7 +349,7 @@ process rm_Indels_VCF {
             saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
-    path with_indels_vcf
+    path with_mnvs_vcf
 
     output:
     path "*_filtered-pass.vcf", emit: mutect2_vcf
@@ -358,6 +358,6 @@ process rm_Indels_VCF {
     script:
     """
     set -euo pipefail
-    bcftools view --types snps ${with_indels_vcf} > ${params.output_filename}_filtered-pass.vcf
+    bcftools view --types snps ${with_mnvs_vcf} > ${params.output_filename}_filtered-pass.vcf
     """
 }
