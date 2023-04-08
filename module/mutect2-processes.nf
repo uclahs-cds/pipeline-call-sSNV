@@ -327,17 +327,17 @@ process filter_VCF {
     path filtered
 
     output:
-    path "*.vcf", emit: with_mnvs_vcf
+    path "*.vcf", emit: passing_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_all-variants_filtered-pass.vcf
+    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_pass.vcf
     """
 }
 
-process rm_MNVs_VCF { // multi-nucleotide variants, mostly indels
+process split_VCF {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
             mode: "copy",
@@ -352,7 +352,9 @@ process rm_MNVs_VCF { // multi-nucleotide variants, mostly indels
     path with_mnvs_vcf
 
     output:
-    path "*_filtered-pass.vcf", emit: mutect2_vcf
+    path "*_pass_snvs.vcf", emit: snvs_vcf
+    path "*_pass_mnvs.vcf", emit: mnvs_vcf
+    path "*_pass_indels.vcf", emit: indels_vcf
     path ".command.*"
 
     script:
