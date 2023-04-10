@@ -142,34 +142,19 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
 
 #### 1. Intervals not provided
   ##### a. Call non-canonical
-  Call somatic variants in non-canonical chromosomes with `Mutect2`.
+  Unless genome intervals were provided, the pipeline starts by calling somatic variants in non-canonical chromosomes with `Mutect2`.
   ##### b. Split canonical
-  Split the set of canonical chromosomes into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
+  Split the set of canonical chromosomes (or provided intervals) into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
   ##### c. Call canonical
-  Call somatic variant in canonical chromosomes with `Mutect2`.
+  Call somatic variants with `Mutect2`.
   ##### d. Merge
-  Merge scattered canonical and non-canonical chromosome outputs (vcfs, statistics).
+  Merge scattered outputs (vcfs, statistics).
   ##### e. Learn read orientations
   Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
   ##### f. Filter
   Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
-  ##### g. Keep only SNVs
-  Remove multi-nucleotide variants from the final output VCF.
-
-#### 2. Intervals provided
-  ##### a. Split
-  Split the set of provided intervals into x intervals for parallelization, where x is defined by the input `params.scatter_count`. 
-  ##### b. Call
-  Call somatic variants for the provided intervals with `Mutect2`.
-  ##### c. Merge
-  Merge scattered outputs (vcfs, statistics).
-  ##### d. Learn read orientations
-  Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-  ##### e. Filter
-  Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table as well as standard filters.
-  ##### f. Keep only SNVs
-  Remove multi-nucleotide variants from the final output VCF.
-
+  ##### g. Split VCF
+  Split filtered VCF into separate files for each variant type: SNVs, MNVs and INDELs.
 
 ### MuSE
 #### 1.`MuSE call`

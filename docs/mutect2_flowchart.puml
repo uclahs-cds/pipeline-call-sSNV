@@ -21,8 +21,8 @@ $intermediate_process(gatk_mergeVcfs, 'GATK MergeVcfs', 'Output: unfiltered VCF'
 $intermediate_process(mutect2_mergeStats, 'GATK MergeMutectStats', 'Output: Mutect2 stats')
 $intermediate_process(gatk_learnReadOrientation, 'GATK LearnReadOrientationModel', 'Output: orientation bias artifacts table')
 $intermediate_process(mutect2_filterCalls, 'GATK FilterMutectCalls', 'Output: GATK filtered VCF %newline()Optional output: filtering stats')
-$intermediate_process(awk_filterVCF, 'remove non-PASS variants', 'Output: all-variants_filtered-pass.vcf.gz')
-$output_process(bcftools_rmIndels, 'remove indel variants', 'Output: filtered-pass.vcf.gz')
+$intermediate_process(awk_filterVCF, 'remove non-PASS variants', 'Output: VCF with exclusively variants passing filters')
+$output_process(bcftools_splitVCF, 'split by variant type', 'Output: %newline()pass.snvs.vcf.gz %newline()pass.mnvs.vcf.gz %newline()pass.indels.vcf.gz')
 $qc_process(gatk_filteringStats, 'Optional', 'Output: filteringStats.tsv')
 
 reference_genome -d-> gatk_splitIntervals
@@ -46,8 +46,8 @@ mutect2_mergeStats -d-> mutect2_filterCalls : // unfiltered.vcf.stats.gz //
 reference_genome -d-> mutect2_filterCalls
 contamination_table -d-> mutect2_filterCalls
 mutect2_filterCalls -d-> gatk_filteringStats
-mutect2_filterCalls -d-> awk_filterVCF : // all-variants_filtered.vcf.gz //
-awk_filterVCF -d-> bcftools_rmIndels : // filtered.vcf.gz //
+mutect2_filterCalls -d-> awk_filterVCF : // filtered.vcf.gz //
+awk_filterVCF -d-> bcftools_splitVCF : // pass.vcf //
 
 $add_legend('left')
 

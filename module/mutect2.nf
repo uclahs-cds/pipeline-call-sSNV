@@ -1,14 +1,6 @@
-include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF; rm_MNVs_VCF } from './mutect2-processes'
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF; split_VCF } from './mutect2-processes'
 
 include { generate_sha512sum } from './common'
-
-include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
-    options: [
-        output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir,
-        bgzip_extra_args: params.bgzip_extra_args,
-        tabix_extra_args: params.tabix_extra_args
-        ])
 
 workflow mutect2 {
     take:
@@ -124,15 +116,11 @@ workflow mutect2 {
             contamination_table.collect()
         )
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
-        rm_MNVs_VCF(filter_VCF.out.with_mnvs_vcf)
-        index_compress_ch = rm_MNVs_VCF.out.mutect2_vcf
-            .map{
-                it -> [params.sample_id, it]
-            }
-        compress_index_VCF(index_compress_ch)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
-                            .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
+        split_VCF(filter_VCF.out.passing_vcf)
+        file_for_sha512 = split_VCF.out.snvs_vcf
+            .mix(split_VCF.out.mnvs_vcf)
+            .mix(split_VCF.out.indels_vcf)
         generate_sha512sum(file_for_sha512)
     emit:
-        compress_index_VCF.out.index_out
+        split_VCF.out.snvs_vcf
 }

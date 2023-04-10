@@ -341,7 +341,7 @@ process split_VCF {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
             mode: "copy",
-            pattern: "*.vcf",
+            pattern: "*.vcf.gz",
             enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
             mode: "copy",
@@ -349,17 +349,19 @@ process split_VCF {
             saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
-    path with_mnvs_vcf
+    path passing_vcf
 
     output:
-    path "*_pass_snvs.vcf", emit: snvs_vcf
-    path "*_pass_mnvs.vcf", emit: mnvs_vcf
-    path "*_pass_indels.vcf", emit: indels_vcf
+    path "*_pass_snvs.vcf.gz", emit: snvs_vcf
+    path "*_pass_mnvs.vcf.gz"
+    path "*_pass_indels.vcf.gz"
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view --types snps ${with_mnvs_vcf} > ${params.output_filename}_filtered-pass.vcf
+    bcftools view --types snps --output-type z --output ${params.output_filename}_pass-snvs.vcf.gz ${passing_vcf}
+    bcftools view --types mnvs --output-type z --output ${params.output_filename}_pass-mnvs.vcf.gz ${passing_vcf}
+    bcftools view --types indels --output-type z --output ${params.output_filename}_pass-indels.vcf.gz ${passing_vcf}{passing_vcf}
     """
 }
