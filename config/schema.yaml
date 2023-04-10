@@ -66,6 +66,18 @@ filter_mutect_calls_extra_args:
   required: false
   allow_empty: true
   help: 'Additional arguments for the FilterMutectCalls command'
+bgzip_extra_args:
+  type: 'String'
+  required: false
+  allow_empty: true
+  default: ''
+  help: 'Additional arguments for bgzip command'
+tabix_extra_args:
+  type: 'String'
+  required: false
+  allow_empty: true
+  default: ''
+  help: 'Additional arguments for tabix command'
 scatter_count:
   type: 'Integer'
   required: true
