@@ -6,14 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.0] - 2023-04-05
+
 ### Added
 - Add Mutect2 flow chart
 - Add plantUML action and MuSE flow chart
 - Add NF-test
 
 ### Changed
-- Update LearnRaadOrientationModel allocated memory
-- Update to use `MuSE` v2.0.1 with `MuSE sump` parallelization
+- Update LearnReadOrientationModel allocated memory and cpus
 - Update to GATK v4.4.0.0
 - Update `MuSE` retry add memory to 48GB
 - Changed `output_dir` to `output_dir_base` (`methods.config` and `main.nf`)
