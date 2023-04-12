@@ -118,8 +118,9 @@ workflow mutect2 {
         filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
         split_VCF(filter_VCF.out.passing_vcf)
         file_for_sha512 = split_VCF.out.snvs_vcf
-            .mix(split_VCF.out.mnvs_vcf)
-            .mix(split_VCF.out.indels_vcf)
+            .map{
+                it -> [params.sample_id, it]
+            }
         generate_sha512sum(file_for_sha512)
     emit:
         split_VCF.out.snvs_vcf

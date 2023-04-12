@@ -316,7 +316,7 @@ process filter_VCF {
     container "ubuntu:20.04"
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
-        pattern: "*filtered-pass.vcf",
+        pattern: "*_pass.vcf",
         enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
@@ -339,14 +339,13 @@ process filter_VCF {
 
 process split_VCF {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-            mode: "copy",
-            pattern: "*.vcf.gz",
-            enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
             mode: "copy",
             pattern: ".command.*",
             saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    publishDir path: "${params.workflow_output_dir}/output",
+            mode: "copy",
+            pattern: "*.vcf.gz*"
 
     input:
     path passing_vcf
@@ -355,13 +354,17 @@ process split_VCF {
     path "*_pass_snvs.vcf.gz", emit: snvs_vcf
     path "*_pass_mnvs.vcf.gz"
     path "*_pass_indels.vcf.gz"
+    path "*.vcf.gz.tbi"
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view --types snps --output-type z --output ${params.output_filename}_pass-snvs.vcf.gz ${passing_vcf}
-    bcftools view --types mnvs --output-type z --output ${params.output_filename}_pass-mnvs.vcf.gz ${passing_vcf}
-    bcftools view --types indels --output-type z --output ${params.output_filename}_pass-indels.vcf.gz ${passing_vcf}{passing_vcf}
+    bcftools view --types snps --output-type z --output ${params.output_filename}_pass_snvs.vcf.gz ${passing_vcf}
+    bcftools index --tbi ${params.output_filename}_pass_snvs.vcf.gz
+    bcftools view --types mnps --output-type z --output ${params.output_filename}_pass_mnvs.vcf.gz ${passing_vcf}
+    bcftools index --tbi ${params.output_filename}_pass_mnvs.vcf.gz
+    bcftools view --types indels --output-type z --output ${params.output_filename}_pass_indels.vcf.gz ${passing_vcf}
+    bcftools index --tbi ${params.output_filename}_pass_indels.vcf.gz
     """
 }
