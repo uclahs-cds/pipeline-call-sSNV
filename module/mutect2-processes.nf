@@ -352,8 +352,8 @@ process split_VCF {
 
     output:
     path "*_pass_snvs.vcf.gz", emit: snvs_vcf
-    path "*_pass_mnvs.vcf.gz"
-    path "*_pass_indels.vcf.gz"
+    path "*_pass_mnvs.vcf.gz", emit: mnvs_vcf
+    path "*_pass_indels.vcf.gz", emit: indels_vcf
     path "*.vcf.gz.tbi"
     path ".command.*"
 
