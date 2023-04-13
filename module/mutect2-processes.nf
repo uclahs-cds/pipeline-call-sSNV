@@ -318,7 +318,6 @@ process filter_VCF_bcftools {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*_pass.vcf.gz",
-        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
