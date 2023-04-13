@@ -140,26 +140,25 @@ The input pair of tumor/normal bam files, along with the candidate small indel f
 
 ### GATK Mutect 2
 
-#### 1. Intervals not provided
-  ##### a. Call non-canonical
-  Unless genome intervals were provided, the pipeline starts by calling somatic variants in non-canonical chromosomes with `Mutect2`.
-  ##### b. Split canonical
-  Split the set of canonical chromosomes (or provided intervals) into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
-  ##### c. Call canonical
-  Call somatic variants with `Mutect2`.
-  ##### d. Merge
-  Merge scattered outputs (vcfs, statistics).
-  ##### e. Learn read orientations
-  Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-  ##### f. Filter
-  Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
-  ##### g. Split VCF
-  Split filtered VCF into separate files for each variant type: SNVs, MNVs and INDELs.
+##### 1. Call non-canonical
+Unless genome intervals were provided, the pipeline starts by calling somatic variants in non-canonical chromosomes with `Mutect2`.
+##### 2. Split canonical
+Split the set of canonical chromosomes (or provided intervals) into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
+##### 3. Call canonical
+Call somatic variants with `Mutect2`.
+##### 4. Merge
+Merge scattered outputs (vcfs, statistics).
+##### 5. Learn read orientations
+Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
+##### 6. Filter
+Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
+##### 7. Split VCF
+Split filtered VCF into separate files for each variant type: SNVs, MNVs and INDELs.
 
 ### MuSE
-#### 1.`MuSE call`
+#### 1. `MuSE call`
 This step carries out pre-filtering and calculating position-specific summary statistics using the Markov substitution model.
-#### 2.`MuSE sump`
+#### 2. `MuSE sump`
 This step computes tier-based cutoffs from a sample-specific error model.
 #### 3.Filter vcf
 `MuSE` output has variants labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only variants labeled `PASS`.
