@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating snvs, mnvs and indels
-- Add Mutect2 process to remove multi-nucleotide variants
 - Add Mutect2 flow chart
 - Add plantUML action and MuSE flow chart
 - Add NF-test
