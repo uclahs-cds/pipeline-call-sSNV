@@ -1,6 +1,6 @@
-include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF; split_VCF } from './mutect2-processes'
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF_bcftools; split_VCF } from './mutect2-processes'
 
-include { generate_sha512sum } from './common'
+include { index_VCF_bcftools; generate_sha512sum } from './common'
 
 workflow mutect2 {
     take:
@@ -115,12 +115,14 @@ workflow mutect2 {
             run_LearnReadOrientationModel_GATK.out.read_orientation_model,
             contamination_table.collect()
         )
-        filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
-        split_VCF(filter_VCF.out.passing_vcf)
-        file_for_sha512 = split_VCF.out.snvs_vcf.map{ it -> [params.sample_id, it] }
-            .mix( split_VCF.out.mnvs_vcf.map{ it -> [params.sample_id, it] } )
-            .mix( split_VCF.out.indels_vcf.map{ it -> [params.sample_id, it] } )
-        generate_sha512sum(file_for_sha512)
-    emit:
-        split_VCF.out.snvs_vcf
+        filter_VCF_bcftools(run_FilterMutectCalls_GATK.out.filtered)
+        split_VCF(filter_VCF_bcftools.out.passing_vcf, ['snps', 'mnps', 'indels'])
+        index_VCF_ch = split_VCF.out.split_vcf
+            .map{
+                it -> [params.sample_id, it] 
+            }
+        index_VCF_bcftools(index_VCF_ch)
+        generate_sha512sum(index_VCF_ch)
+//    emit:
+//        split_VCF.out.snps_vcf
 }

@@ -4,6 +4,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_GATK:           ${params.docker_image_GATK}
+- docker_image_BCFtools        ${params.docker_image_BCFtools}
 Mutect2 Options:
 - split_intervals_extra_args:     ${params.split_intervals_extra_args}
 - mutect2_extra_args:             ${params.mutect2_extra_args}
@@ -312,11 +313,11 @@ process run_FilterMutectCalls_GATK {
     """
 }
 
-process filter_VCF {
-    container "ubuntu:20.04"
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+process filter_VCF_bcftools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*_pass.vcf",
+        pattern: "*_pass.vcf.gz",
         enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
@@ -327,13 +328,13 @@ process filter_VCF {
     path filtered
 
     output:
-    path "*.vcf", emit: passing_vcf
+    path "*.vcf.gz", emit: passing_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_pass.vcf
+    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz $filtered
     """
 }
 
@@ -342,29 +343,23 @@ process split_VCF {
     publishDir path: "${params.workflow_log_output_dir}",
             mode: "copy",
             pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+            saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
     publishDir path: "${params.workflow_output_dir}/output",
             mode: "copy",
             pattern: "*.vcf.gz*"
 
     input:
     path passing_vcf
+    each var_type
 
     output:
-    path "*_pass_snvs.vcf.gz", emit: snvs_vcf
-    path "*_pass_mnvs.vcf.gz", emit: mnvs_vcf
-    path "*_pass_indels.vcf.gz", emit: indels_vcf
-    path "*.vcf.gz.tbi"
+    path "*.vcf.gz", emit: split_vcf
     path ".command.*"
+    val var_type
 
     script:
     """
     set -euo pipefail
-    bcftools view --types snps --output-type z --output ${params.output_filename}_pass_snvs.vcf.gz ${passing_vcf}
-    bcftools index --tbi ${params.output_filename}_pass_snvs.vcf.gz
-    bcftools view --types mnps --output-type z --output ${params.output_filename}_pass_mnvs.vcf.gz ${passing_vcf}
-    bcftools index --tbi ${params.output_filename}_pass_mnvs.vcf.gz
-    bcftools view --types indels --output-type z --output ${params.output_filename}_pass_indels.vcf.gz ${passing_vcf}
-    bcftools index --tbi ${params.output_filename}_pass_indels.vcf.gz
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass_${var_type}.vcf.gz ${passing_vcf}
     """
 }
