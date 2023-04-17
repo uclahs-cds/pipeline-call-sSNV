@@ -8,6 +8,33 @@ Docker Images:
 - docker_image_samtools: ${params.docker_image_samtools}
 """
 
+process get_sample_names_samtools {
+    container params.docker_image_samtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "samples.txt",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${id}-${task-index}/log${file(it).getName()}" }
+
+    input:
+    path tumor_bam
+    path normal_bam
+
+    output:
+    path "samples.txt", emit: samples_txt
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    echo -e 'NORMAL\t'`samtools samples normal_bam | cut -f 1` > samples.txt
+    echo -e 'TUMOR\t'`samtools samples tumor_bam | cut -f 1` >> samples.txt
+    """
+}
+
 process index_VCF_bcftools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
@@ -56,30 +83,28 @@ process generate_sha512sum {
    """
    }
 
-process run_GetSampleName_samtools {
-    container params.docker_image_samtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+process fix_sample_names_VCF {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*.txt",
-        enabled: params.save_intermediate_files
+        pattern: "*-reheader.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${id}-${task-index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}-${id}-${task.index}/log${file(it).getName()}" }
+
     input:
-    path bam
+    tuple val(name), path(vcf)
+    path samples_txt
 
     output:
-    env name_ch
-    path "sampleName.txt"
+    tuple val(name), path("reheader.vcf.gz"), emit: rehead_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-
-    samtools samples -o sampleName.txt $bam 
-    sample_name=`cut -f 1 sampleName.txt`
-
+    bcftools reheader -s $samples_txt --output ${vcf}-reheader.vcf.gz $vcf
+    bcftools index --tbi ${vcf}-reheader.vcf.gz
     """
-}
+    }

@@ -317,7 +317,7 @@ process filter_VCF_bcftools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*_pass.vcf.gz",
+        pattern: "*_pass.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -337,28 +337,30 @@ process filter_VCF_bcftools {
     """
 }
 
-process split_VCF {
-    container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_log_output_dir}",
-            mode: "copy",
-            pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
-    publishDir path: "${params.workflow_output_dir}/output",
-            mode: "copy",
-            pattern: "*.vcf.gz*"
-
-    input:
-    path passing_vcf
-    each var_type
-
-    output:
-    path "*.vcf.gz", emit: split_vcf
-    path ".command.*"
-    val var_type
-
-    script:
-    """
-    set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass_${var_type}.vcf.gz ${passing_vcf}
-    """
-}
+//process split_VCF {
+//    container params.docker_image_BCFtools
+//    publishDir path: "${params.workflow_output_dir}/output",
+//        mode: "copy",
+//        pattern: "*.vcf.gz*"
+//    publishDir path: "${params.workflow_log_output_dir}",
+//        mode: "copy",
+//        pattern: ".command.*",
+//        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+//
+//    input:
+//    path passing_vcf
+//    each var_type
+//
+//    output:
+//    path "*.vcf.gz", emit: split_vcf
+//    path "*snps.vcf.gz", emit: snvs_vcf if (var_type == 'snps')
+//    path ".command.*"
+//    val var_type
+//
+//    script:
+//    """
+//    set -euo pipefail
+//    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass_${var_type}.vcf.gz ${passing_vcf}
+//    bcftools index --tbi ${params.output_filename}_pass_${var_type}.vcf.gz
+//    """
+//}

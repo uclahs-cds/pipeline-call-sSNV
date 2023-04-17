@@ -2,6 +2,7 @@
 
 nextflow.enable.dsl=2
 include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
+include { get_sample_names_samtools } from './module/common'
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
@@ -101,6 +102,10 @@ Channel
     .set { normal_input }
 
 workflow {
+    if (!(params.tumor_only_mode || params.multi_tumor_sample)) {
+         get_sample_names_samtools(tumor_input.tumor_bam, normal_input.normal_bam)
+        }
+
     reference_ch = Channel.from(
         params.reference,
         params.reference_index,
@@ -134,7 +139,7 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
         )
     }
     if ('strelka2' in params.algorithm) {
@@ -142,7 +147,8 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
+            get_sample_names_samtools.out.samples_txt
         )
     }
     if ('mutect2' in params.algorithm) {
