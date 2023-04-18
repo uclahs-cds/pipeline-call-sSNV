@@ -2,7 +2,6 @@
 
 nextflow.enable.dsl=2
 include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-include { get_sample_names_samtools } from './module/common'
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
@@ -42,6 +41,7 @@ log.info """\
 """
 
 include { run_validate_PipeVal } from './module/validation'
+include { get_sample_names_samtools } from './module/common'
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",

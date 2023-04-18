@@ -10,14 +10,14 @@ Docker Images:
 
 process get_sample_names_samtools {
     container params.docker_image_samtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+    publishDir path: "${params.output_dir_base}/intermediate/",
         mode: "copy",
         pattern: "samples.txt",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
+    publishDir path: "${params.log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${id}-${task-index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}-${task-index}/log${file(it).getName()}" }
 
     input:
     path tumor_bam
