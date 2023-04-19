@@ -315,9 +315,10 @@ process run_FilterMutectCalls_GATK {
 
 process filter_VCF_bcftools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
-        pattern: "*_pass.vcf.gz",
+        pattern: "*_pass.vcf",
+        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -327,13 +328,13 @@ process filter_VCF_bcftools {
     path filtered
 
     output:
-    path "*.vcf.gz", emit: passing_vcf
+    path "*.vcf", emit: passing_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz $filtered
+    bcftools view -f PASS --output-type v --output ${params.output_filename}_pass.vcf $filtered
     """
 }
 
@@ -345,20 +346,20 @@ process split_VCF {
             saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
     publishDir path: "${params.workflow_output_dir}/output",
             mode: "copy",
-            pattern: "*.vcf.gz*"
+            pattern: "*.vcf"
 
     input:
     path passing_vcf
     each var_type
 
     output:
-    path "*.vcf.gz", emit: split_vcf
+    path "*.vcf", emit: split_vcf
     path ".command.*"
     val var_type
 
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass_${var_type}.vcf.gz ${passing_vcf}
+    bcftools view --types $var_type --output-type v --output ${params.output_filename}_pass_${var_type}.vcf ${passing_vcf}
     """
 }
