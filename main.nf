@@ -127,8 +127,7 @@ workflow {
         )
     }
 
-    // add validate mode to list of files to validate
-    file_to_validate = file_to_validate.collect { ['file-input', it] }
+    file_to_validate = file_to_validate.collect()
     run_validate_PipeVal(file_to_validate)
 
     run_validate_PipeVal.out.validation_result.collectFile(
