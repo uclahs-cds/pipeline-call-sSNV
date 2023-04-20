@@ -328,7 +328,7 @@ process filter_VCF_bcftools {
     path filtered
 
     output:
-    path "*.vcf", emit: passing_vcf
+    tuple val(params.sample_id), path("*.vcf"), emit: passing_vcf
     path ".command.*"
 
     script:
@@ -349,13 +349,12 @@ process split_VCF {
             pattern: "*.vcf"
 
     input:
-    path passing_vcf
+    tuple val(id), path(passing_vcf)
     each var_type
 
     output:
-    path "*.vcf", emit: split_vcf
+    tuple val(var_type), path("*.vcf"), emit: split_vcf
     path ".command.*"
-    val var_type
 
     script:
     """

@@ -127,9 +127,6 @@ workflow mutect2 {
         split_VCF(filter_VCF_bcftools.out.passing_vcf, ['snps', 'mnps', 'indels'])
         index_compress_ch = split_VCF.out.split_vcf.mix(
             filter_VCF_bcftools.out.passing_vcf)
-            .map{
-                it -> [params.sample_id, it]
-            }
         compress_index_VCF(index_compress_ch)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
             .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
