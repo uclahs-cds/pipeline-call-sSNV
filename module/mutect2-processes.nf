@@ -344,7 +344,7 @@ process split_VCF {
             mode: "copy",
             pattern: ".command.*",
             saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/intermediate",
             mode: "copy",
             pattern: "*.vcf"
 
