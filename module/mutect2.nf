@@ -1,7 +1,15 @@
 //include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF_bcftools; split_VCF } from './mutect2-processes'
 include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF_bcftools } from './mutect2-processes'
 
-include { index_VCF_bcftools; generate_sha512sum } from './common'
+include { generate_sha512sum } from './common'
+
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args
+        ])
 
 workflow mutect2 {
     take:
@@ -117,9 +125,13 @@ workflow mutect2 {
             contamination_table.collect()
         )
         filter_VCF_bcftools(run_FilterMutectCalls_GATK.out.filtered)
-//        split_VCF(filter_VCF_bcftools.out.passing_vcf, ['snps', 'mnps', 'indels'])
-//        file_for_sha512 = split_VCF.out.split_vcf.map{it -> [params.sample_id, it]}
-//        generate_sha512sum(file_for_sha512)
-//    emit:
-//        split_VCF.out.snvs_vcf
+        split_VCF(filter_VCF_bcftools.out.passing_vcf, ['snps', 'mnps', 'indels'])
+        index_compress_ch = split_VCF.out.split_vcf.mix(
+            filter_VCF_bcftools.out.passing_vcf)
+        compress_index_VCF(index_compress_ch)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
+        generate_sha512sum(file_for_sha512)
+    emit:
+        compress_index_VCF.out.index_out
 }
