@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Update to use sample ID from input tumor BAM file (single tumor BAM input only) 
+- Update to use sample ID from input BAM files (single tumor/normal BAM input only) 
 
 ## [6.0.0] - 2023-04-05
 
