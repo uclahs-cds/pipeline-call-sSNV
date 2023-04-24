@@ -20,7 +20,7 @@ workflow mutect2 {
 
     main:
         if (params.tumor_only_mode) {
-            normal_name_ch = Channel.from('normal_name')
+            normal_name_ch = Channel.from('NO_FILE')
         } else {
             run_GetSampleName_Mutect2(normal_bam.flatten())
             normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
