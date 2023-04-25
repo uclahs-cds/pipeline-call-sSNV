@@ -359,7 +359,7 @@ process split_VCF {
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass_${var_type}.vcf.gz ${passing_vcf}
-    bcftools index --tbi ${params.output_filename}_pass_${var_type}.vcf.gz
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass-${var_type}.vcf.gz ${passing_vcf}
+    bcftools index --tbi ${params.output_filename}_pass-${var_type}.vcf.gz
     """
 }
