@@ -2,14 +2,6 @@ include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembl
 
 include { generate_sha512sum } from './common'
 
-include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
-    options: [
-        output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir,
-        bgzip_extra_args: params.bgzip_extra_args,
-        tabix_extra_args: params.tabix_extra_args
-        ])
-
 workflow mutect2 {
     take:
     tumor_bam
@@ -125,12 +117,11 @@ workflow mutect2 {
         )
         filter_VCF_bcftools(run_FilterMutectCalls_GATK.out.filtered)
         split_VCF(filter_VCF_bcftools.out.passing_vcf, ['snps', 'mnps', 'indels'])
-        index_compress_ch = split_VCF.out.split_vcf.mix(
+        file_for_sha512 = split_VCF.out.split_vcf.mix(
             filter_VCF_bcftools.out.passing_vcf)
-        compress_index_VCF(index_compress_ch)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
-            .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-        compress_index_VCF.out.index_out
+        split_VCF.out.split_vcf
+            .filter { it[0] == 'snps' }
+            .map { it -> it[1] }
 }
