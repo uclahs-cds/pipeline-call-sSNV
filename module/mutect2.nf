@@ -123,5 +123,4 @@ workflow mutect2 {
     emit:
         split_VCF.out.split_vcf
             .filter { it[0] == 'snps' }
-            .map { it -> it[1] }
 }
