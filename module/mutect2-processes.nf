@@ -315,10 +315,9 @@ process run_FilterMutectCalls_GATK {
 
 process filter_VCF_bcftools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+    publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*_pass.vcf",
-        enabled: params.save_intermediate_files
+        pattern: "*_pass.vcf.gz*"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -328,37 +327,39 @@ process filter_VCF_bcftools {
     path filtered
 
     output:
-    tuple val(params.sample_id), path("*.vcf"), emit: passing_vcf
+    tuple val(params.sample_id), path("*.vcf.gz"), path("*.vcf.gz.tbi"), emit: passing_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS --output-type v --output ${params.output_filename}_pass.vcf $filtered
+    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz $filtered
+    bcftools index --tbi ${params.output_filename}_pass.vcf.gz
     """
 }
 
 process split_VCF {
     container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
+            mode: "copy",
+            pattern: "*.vcf.gz*"
     publishDir path: "${params.workflow_log_output_dir}",
             mode: "copy",
             pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
-    publishDir path: "${params.workflow_output_dir}/intermediate",
-            mode: "copy",
-            pattern: "*.vcf"
+            saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
 
     input:
     tuple val(id), path(passing_vcf)
     each var_type
 
     output:
-    tuple val(var_type), path("*.vcf"), emit: split_vcf
+    tuple val(var_type), path("*.vcf.gz"), path("*.vcf.gz.tbi"), emit: split_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type v --output ${params.output_filename}_pass_${var_type}.vcf ${passing_vcf}
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass_${var_type}.vcf.gz ${passing_vcf}
+    bcftools index --tbi ${params.output_filename}_pass_${var_type}.vcf.gz
     """
 }

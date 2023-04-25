@@ -168,4 +168,5 @@ workflow {
             normal_input.normal_index
         )
     }
+System.out.println(mutect2.out)
 }

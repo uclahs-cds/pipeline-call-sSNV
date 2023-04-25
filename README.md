@@ -115,44 +115,44 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
 ### SomaticSniper
 #### 1. `SomaticSniper` v1.0.5.0
-Compare a pair of tumor and normal bam files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in VCF format.
+Compare a pair of tumor and normal BAM files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in VCF format.
 #### 2. Filter out ambiguous positions.
 This takes several steps, listed below, and starts with the same input files given to `SomaticSniper`.
 ##### a. Get pileup summaries
-Summarize counts of reads that support reference, alternate and other alleles for given sites.  This is done for both of the input bam files and the results are used in the next step.
+Summarize counts of reads that support reference, alternate and other alleles for given sites.  This is done for both of the input BAM files and the results are used in the next step.
 ##### b. Filter pileup outputs
 Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filters each to keep only indels with QUAL > 20. `samtools.pl` is packaged with `SomaticSniper`. 
-##### c. Filter SomaticSniper vcf
+##### c. Filter SomaticSniper VCF
 Use `snpfilter.pl` (packaged with `SomaticSniper`):
-i. filter vcf using normal indel pileup (from step `b`).
-ii. filter vcf output from step `i` using tumor indel pileup (from step `b`).
+i. filter VCF using normal indel pileup (from step `b`).
+ii. filter VCF output from step `i` using tumor indel pileup (from step `b`).
 ##### d. Summarize alignment information for retained variant positions
-Extract positions from filtered vcf file and use with `bam-readcount` to generate a summary of read alignment metrics for each position.
+Extract positions from filtered VCF file and use with `bam-readcount` to generate a summary of read alignment metrics for each position.
 ##### e. Final filtering of variants using metrics summarized above
-Use `fpfilter.pl` and `highconfidence.pl` (packaged with SomaticSniper), resulting in a final high confidence vcf file.
+Use `fpfilter.pl` and `highconfidence.pl` (packaged with SomaticSniper), resulting in a final high confidence VCF file.
 
 ### Strelka2
 #### 1. `Manta` v1.6.0
-The input pair of tumor/normal bam files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. *Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.* 
+The input pair of tumor/normal BAM files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. *Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.* 
 #### 2. `Strelka2` v2.9.10
-The input pair of tumor/normal bam files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in vcf format.  Lower quality variants that did not pass filtering are subsequently removed, yielding `somatic_snvs_pass.vcf` and `somatic_indels_pass.vcf` files.
+The input pair of tumor/normal BAM files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in VCF format.  Lower quality variants that did not pass filtering are subsequently removed, yielding `somatic_snvs_pass.vcf` and `somatic_indels_pass.vcf` files.
 
 
-### GATK Mutect 2
+### GATK Mutect2
 
-##### 1. Call non-canonical
+#### 1. Call non-canonical
 Unless genome intervals were provided, the pipeline starts by calling somatic variants in non-canonical chromosomes with `Mutect2`.
-##### 2. Split canonical
+#### 2. Split canonical
 Split the set of canonical chromosomes (or provided intervals) into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
-##### 3. Call canonical
+#### 3. Call canonical
 Call somatic variants with `Mutect2`.
-##### 4. Merge
-Merge scattered outputs (vcfs, statistics).
-##### 5. Learn read orientations
+#### 4. Merge
+Merge scattered outputs (VCFs, statistics).
+#### 5. Learn read orientations
 Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-##### 6. Filter
+#### 6. Filter
 Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
-##### 7. Split VCF
+#### 7. Split VCF
 Split filtered VCF into separate files for each variant type: SNVs, MNVs and INDELs.
 
 ### MuSE
@@ -160,7 +160,7 @@ Split filtered VCF into separate files for each variant type: SNVs, MNVs and IND
 This step carries out pre-filtering and calculating position-specific summary statistics using the Markov substitution model.
 #### 2. `MuSE sump`
 This step computes tier-based cutoffs from a sample-specific error model.
-#### 3.Filter vcf
+#### 3.Filter VCF
 `MuSE` output has variants labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only variants labeled `PASS`.
 
 
