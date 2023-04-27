@@ -36,7 +36,10 @@ process fix_sample_names_VCF {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: ["*_reheader.vcf.gz*", "samples.txt"]
+        pattern: "*-reheader.vcf.gz*"
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "samples.txt"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -48,7 +51,7 @@ process fix_sample_names_VCF {
     tuple val(name), path(gz_vcf)
 
     output:
-    tuple val(name), path("*_reheader.vcf.gz"), path("*_reheader.vcf.gz.tbi"), emit: rehead_vcf
+    tuple val(name), path("*-reheader.vcf.gz"), path("*-reheader.vcf.gz.tbi"), emit: rehead_vcf
     path ".command.*"
     path "samples.txt"
 
@@ -58,7 +61,7 @@ process fix_sample_names_VCF {
     echo -e 'NORMAL\t${normal_id}' > samples.txt
     echo -e 'TUMOR\t${tumor_id}' >> samples.txt
     input_basename=\$(basename ${gz_vcf} .vcf.gz)
-    output_filename="\${input_basename}_reheader.vcf.gz"
+    output_filename="\${input_basename}-reheader.vcf.gz"
     bcftools reheader -s samples.txt --output \${output_filename} ${gz_vcf}
     bcftools index --tbi \${output_filename}
     """

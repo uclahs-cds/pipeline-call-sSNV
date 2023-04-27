@@ -9,10 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update to use sample ID from input BAM files (single tumor/normal BAM input only) 
 
+### Added
+- Add `fix_sample_names_VCF`, tumor and normal sample IDs from input BAMs in VCFs
+- Add `split_VCF_bcftools` to `Mutect2` workflow, separating snvs, mnvs and indels
+
 ## [6.0.0] - 2023-04-05
 
 ### Added
-- Add `split_VCF_bcftools` to `Mutect2` workflow, separating snvs, mnvs and indels
 - Add Mutect2 flow chart
 - Add plantUML action and MuSE flow chart
 - Add NF-test
