@@ -313,7 +313,7 @@ process run_FilterMutectCalls_GATK {
     """
 }
 
-process filter_VCF_bcftools {
+process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
@@ -338,7 +338,7 @@ process filter_VCF_bcftools {
     """
 }
 
-process split_VCF {
+process split_VCF_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
             mode: "copy",
