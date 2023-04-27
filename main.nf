@@ -41,7 +41,6 @@ log.info """\
 """
 
 include { run_validate_PipeVal } from './module/validation'
-include { get_sample_names_samtools } from './module/common'
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
@@ -102,9 +101,6 @@ Channel
     .set { normal_input }
 
 workflow {
-    if (!(params.tumor_only_mode || params.multi_tumor_sample)) {
-         get_sample_names_samtools(tumor_input.tumor_bam, normal_input.normal_bam)
-        }
 
     reference_ch = Channel.from(
         params.reference,
@@ -168,5 +164,4 @@ workflow {
             normal_input.normal_index
         )
     }
-System.out.println(mutect2.out)
 }
