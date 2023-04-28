@@ -38,3 +38,11 @@ workflow strelka2 {
 //    emit:
 //        fix_sample_names_VCF.out.snvs_vcf
 }        
+        compress_index_VCF(filter_VCF.out.strelka2_vcf)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
+        generate_sha512sum(file_for_sha512)
+    emit:
+        compress_index_VCF.out.index_out
+
+}

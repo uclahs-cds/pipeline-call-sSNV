@@ -55,6 +55,8 @@ workflow somaticsniper {
                 .map{ it -> [it[0], it[1]] })
             .mix( compress_index_VCF.out
                 .map{ it -> [it[0], it[2]] } )
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
         fix_sample_names_VCF.out.rehead_vcf

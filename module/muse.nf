@@ -32,6 +32,13 @@ workflow muse {
             .map{ it -> [it[0], it[1]] }
             .mix( fix_sample_names_VCF.out.rehead_vcf
                 .map{ it -> [it[0], it[2]] } )
+        index_compress_ch = filter_VCF.out.vcf
+            .map{
+                it -> [params.sample_id, it]
+            }
+        compress_index_VCF(index_compress_ch)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
         fix_sample_names_VCF.out.rehead_vcf
