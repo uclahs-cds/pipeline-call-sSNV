@@ -26,9 +26,13 @@ workflow muse {
         filter_VCF(run_sump_MuSE.out.vcf)
         // MuSE output VCF has sample order: TUMOR NORMAL, opposite of all other tools. Need to reorder.
         reorder_samples(filter_VCF.out.vcf)
-        fix_sample_names_VCF(reorder_samples.out.ordered_vcf)
-        file_for_sha512 = fix_sample_names_VCF.out.snvs_vcf.map{ it -> [params.sample_id, it]}
+        fix_sample_names_VCF( params.normal_id, params.tumor_id, reorder_samples.out.ordered_vcf
+            .map{ it -> [params.sample_id, it] } )
+        file_for_sha512 = fix_sample_names_VCF.out.rehead_vcf
+            .map{ it -> [it[0], it[1]] }
+            .mix( fix_sample_names_VCF.out.rehead_vcf
+                .map{ it -> [it[0], it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-        fix_sample_names_VCF.out.snvs_vcf
+        fix_sample_names_VCF.out.rehead_vcf
 }
