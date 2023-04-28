@@ -43,7 +43,7 @@ process fix_sample_names_VCF {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}-${name}/log${file(it).getName()}" }
 
     input:
     val normal_id 

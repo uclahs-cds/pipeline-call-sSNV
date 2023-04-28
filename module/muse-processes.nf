@@ -114,17 +114,18 @@ process reorder_samples {
         saveAs: { "${task.process.replace(':', '/')}-${id}-${task.index}/log${file(it).getName()}" }
 
     input:
-    gz_vcf
+    path gz_vcf
 
     output:
-    path ".ordered.vcf.gz", emit ordered_vcf
+    path "*-reorder.vcf.gz", emit: reorder_vcf
     path ".command.*"
 
     script:
-    out_vcf = $vcf.replaceFirst(/.vcf.gz/, ".ordered.vcf.gz")
     """
     set -euo pipefail
-    bcftools view -s NORMAL,TUMOR --output $out_vcf $vcf
-    bcftools index --tbi $out_vcf
+    input_basename=\$(basename ${gz_vcf} .vcf.gz)
+    output_filename="\${input_basename}-reorder.vcf.gz"
+    bcftools view -s NORMAL,TUMOR --output \${output_filename} ${gz_vcf}
+    bcftools index --tbi \${output_filename}
     """
 }

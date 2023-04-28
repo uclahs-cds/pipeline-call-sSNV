@@ -98,28 +98,29 @@ process call_sSNV_Strelka2 {
     """
 }
 
-process filter_VCF {
-    container params.docker_image_strelka2
+process filter_VCF_BCFtools {
+    container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.vcf",
-               enabled: params.save_intermediate_files
+            mode: "copy",
+            pattern: "*.vcf.gz",
+            enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}-${name}/log${file(it).getName()}" }
+            mode: "copy",
+            pattern: ".command.*",
+            saveAs: { "${task.process.split(':')[-1]}-${name}/log${file(it).getName()}" }
 
     input:
-    tuple val(name), path(vcf_gz)
+    tuple val(name), path(gz_vcf)
 
     output:
-    tuple val(name), path("*.vcf"), emit: strelka2_vcf
+    tuple val(name), path("*.vcf.gz"), emit: gz_vcf
     path ".command.*"
 
-    // https://www.biostars.org/p/206488/
     script:
+    out_vcf = ${gz_vcf}.replaceFirst(/.vcf.gz$/, "_pass.vcf.gz")
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_${name}-filtered-pass.vcf
+    bcftools view -f PASS  --output-type z --output ${out_vcf} ${gz_vcf}
+    bcftools index --tbi ${out_vcf}
     """
 }

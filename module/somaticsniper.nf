@@ -48,14 +48,13 @@ workflow somaticsniper {
         fix_sample_names_VCF( params.normal_id, params.tumor_id, compress_index_VCF.out.index_out
             .map{ it -> [it[0], it[1]] } )
         file_for_sha512 = fix_sample_names_VCF.out.rehead_vcf
-            .map{ it -> [it[0], it[1]] }
+            .map{ it -> ["${it[0]}-vcf", it[1]] }
             .mix( fix_sample_names_VCF.out.rehead_vcf
-                .map{ it -> [it[0], it[2]] } )
+                .map{ it -> ["${it[0]}-index", it[2]] } )
             .mix( compress_index_VCF.out
-                .map{ it -> [it[0], it[1]] })
+                .map{ it -> ["${it[0]}-vcf", it[1]] })
             .mix( compress_index_VCF.out
-                .map{ it -> [it[0], it[2]] } )
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+                .map{ it -> ["${it[0]}-index", it[2]] } )
             .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:

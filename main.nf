@@ -144,7 +144,6 @@ workflow {
             tumor_input.tumor_index,
             normal_input.normal_bam,
             normal_input.normal_index,
-            get_sample_names_samtools.out.samples_txt
         )
     }
     if ('mutect2' in params.algorithm) {
