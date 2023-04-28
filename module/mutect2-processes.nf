@@ -330,7 +330,7 @@ process filter_VCF_BCFtools {
     tuple val(params.sample_id), path("*.vcf.gz"), path("*.vcf.gz.tbi"), emit: passing_vcf
     path ".command.*"
 
-    script:
+    script:    
     """
     set -euo pipefail
     bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz $filtered
@@ -341,15 +341,15 @@ process filter_VCF_BCFtools {
 process split_VCF_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
-            mode: "copy",
-            pattern: "*.vcf.gz*"
+        mode: "copy",
+        pattern: "*.vcf.gz*"
     publishDir path: "${params.workflow_log_output_dir}",
-            mode: "copy",
-            pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
 
     input:
-    tuple val(id), path(passing_vcf)
+    tuple val(id), path(vcf), path(index)
     each var_type
 
     output:
@@ -359,7 +359,7 @@ process split_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass-${var_type}.vcf.gz ${passing_vcf}
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_pass-${var_type}.vcf.gz ${vcf}
     bcftools index --tbi ${params.output_filename}_pass-${var_type}.vcf.gz
     """
 }
