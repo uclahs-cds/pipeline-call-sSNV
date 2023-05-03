@@ -127,7 +127,7 @@ workflow {
         )
     }
 
-    file_to_validate = file_to_validate.collect()
+    file_to_validate = file_to_validate.flatten()
     run_validate_PipeVal(file_to_validate)
 
     run_validate_PipeVal.out.validation_result.collectFile(
