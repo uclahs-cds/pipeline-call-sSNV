@@ -1,4 +1,4 @@
-include { call_sSNV_MuSE; run_sump_MuSE; filter_VCF } from './muse-processes'
+include { call_sSNV_MuSE; run_sump_MuSE; filter_VCF_BCFtools } from './muse-processes'
 include { generate_sha512sum } from './common'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
@@ -28,8 +28,8 @@ workflow muse {
             params.dbSNP,
             "${params.dbSNP}.tbi"
         )
-        filter_VCF(run_sump_MuSE.out.vcf)
-        index_compress_ch = filter_VCF.out.vcf
+        filter_VCF_BCFtools(run_sump_MuSE.out.vcf)
+        index_compress_ch = filter_VCF_BCFtools.out.pass_vcf
             .map{
                 it -> [params.sample_id, it]
             }

@@ -77,12 +77,11 @@ process run_sump_MuSE {
     """
 }
 
-process filter_VCF {
+process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+    publishDir path: "${params.workflow_output_dir}/output",
             mode: "copy",
-            pattern: "*.vcf",
-            enabled: params.save_intermediate_files
+            pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
             mode: "copy",
             pattern: ".command.*",
@@ -92,12 +91,12 @@ process filter_VCF {
     path vcf
 
     output:
-    path "*.vcf", emit: vcf
+    path "*.vcf", emit: pass_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS ${vcf} > ${params.output_filename}_filtered-pass.vcf
+    bcftools view -f PASS ${vcf} > ${params.output_filename}_pass.vcf
     """
 }
