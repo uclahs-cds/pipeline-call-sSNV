@@ -1,4 +1,4 @@
-include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF } from './strelka2-processes'
+include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF_BCFtools } from './strelka2-processes'
 
 include { generate_sha512sum } from './common'
 
@@ -39,8 +39,8 @@ workflow strelka2 {
             params.call_region,
             params.call_region_index
         )
-        filter_VCF(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
-        compress_index_VCF(filter_VCF.out.strelka2_vcf)
+        filter_VCF_BCFtools(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
+        compress_index_VCF(filter_VCF_BCFtools.out.pass_vcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)

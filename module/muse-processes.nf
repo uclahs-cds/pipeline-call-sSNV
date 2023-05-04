@@ -97,6 +97,6 @@ process filter_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz
+    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz ${vcf}
     """
 }
