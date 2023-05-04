@@ -91,12 +91,12 @@ process filter_VCF_BCFtools {
     path vcf
 
     output:
-    path "*.vcf", emit: pass_vcf
+    path "*.vcf.gz", emit: pass_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS ${vcf} > ${params.output_filename}_pass.vcf
+    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz
     """
 }
