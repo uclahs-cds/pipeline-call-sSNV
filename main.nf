@@ -101,7 +101,6 @@ Channel
     .set { normal_input }
 
 workflow {
-
     reference_ch = Channel.from(
         params.reference,
         params.reference_index,
