@@ -322,7 +322,7 @@ process filter_VCF_BCFtools {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }        
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
     tuple val(var_type), path(vcf)
