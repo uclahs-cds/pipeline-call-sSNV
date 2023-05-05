@@ -135,7 +135,7 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index,
+            normal_input.normal_index
         )
     }
     if ('strelka2' in params.algorithm) {
@@ -143,7 +143,7 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index,
+            normal_input.normal_index
         )
     }
     if ('mutect2' in params.algorithm) {
