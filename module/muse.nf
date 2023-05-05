@@ -28,26 +28,14 @@ workflow muse {
             params.dbSNP,
             "${params.dbSNP}.tbi"
         )
-        filter_VCF_BCFtools(run_sump_MuSE.out.vcf)
+        filter_VCF_BCFtools(run_sump_MuSE.out.vcf.map { it -> ['snvs', it] } )
         // MuSE output VCF has sample order: TUMOR NORMAL, opposite of all other tools. Need to reorder.
         reorder_samples(filter_VCF_BCFtools.out.pass_vcf)
-        fix_sample_names_VCF( params.normal_id, params.tumor_id, reorder_samples.out.reorder_vcf
-            .map{ it -> [params.sample_id, it] } )
-        index_compress_ch = filter_VCF_BCFtools.out.pass_vcf
-            .map{
-                it -> [params.sample_id, it]
-            }
-
-        compress_index_VCF(index_compress_ch)
-        file_for_sha512 = fix_sample_names_VCF.out.rehead_vcf
-            .map{ it -> ["${it[0]}-vcf", it[1]] }
-            .mix( fix_sample_names_VCF.out.rehead_vcf
-                .map{ it -> ["${it[0]}-index", it[2]] } )
-
+        fix_sample_names_VCF( params.normal_id, params.tumor_id, reorder_samples.out.reorder_vcf)
+        compress_index_VCF(fix_sample_names_VCF.out.fix_vcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
-
         generate_sha512sum(file_for_sha512)
     emit:
-        fix_sample_names_VCF.out.rehead_vcf
+        fix_sample_names_VCF.out.fix_vcf
 }

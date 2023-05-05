@@ -75,8 +75,8 @@ process call_sSNV_Strelka2 {
     path call_region_index
 
     output:
-    tuple val("somatic-snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
-    tuple val("somatic-indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
+    tuple val("snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
+    tuple val("indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
     path "StrelkaSomaticWorkflow"
     path ".command.*"
 
@@ -100,13 +100,14 @@ process call_sSNV_Strelka2 {
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/output",
-            mode: "copy",
-            pattern: "*.vcf.gz"
+   publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.vcf.gz",
+        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
-            mode: "copy",
-            pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
     tuple val(var_type), path(vcf)
