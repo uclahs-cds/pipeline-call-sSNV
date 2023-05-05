@@ -1,5 +1,12 @@
 include { call_sSNV_MuSE; run_sump_MuSE; filter_VCF_BCFtools; reorder_samples } from './muse-processes'
 include { fix_sample_names_VCF; generate_sha512sum } from './common'
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args
+        ])
 workflow muse {
     take:
     tumor_bam
@@ -23,13 +30,23 @@ workflow muse {
         )
         filter_VCF_BCFtools(run_sump_MuSE.out.vcf)
         // MuSE output VCF has sample order: TUMOR NORMAL, opposite of all other tools. Need to reorder.
-        reorder_samples(filter_VCF_BCFtools.out.gz_vcf)
+        reorder_samples(filter_VCF_BCFtools.out.pass_vcf)
         fix_sample_names_VCF( params.normal_id, params.tumor_id, reorder_samples.out.reorder_vcf
             .map{ it -> [params.sample_id, it] } )
+        index_compress_ch = filter_VCF_BCFtools.out.pass_vcf
+            .map{
+                it -> [params.sample_id, it]
+            }
+
+        compress_index_VCF(index_compress_ch)
         file_for_sha512 = fix_sample_names_VCF.out.rehead_vcf
             .map{ it -> ["${it[0]}-vcf", it[1]] }
             .mix( fix_sample_names_VCF.out.rehead_vcf
                 .map{ it -> ["${it[0]}-index", it[2]] } )
+
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
+
         generate_sha512sum(file_for_sha512)
     emit:
         fix_sample_names_VCF.out.rehead_vcf

@@ -1,6 +1,12 @@
 include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF_BCFtools; split_VCF_BCFtools } from './mutect2-processes'
-
 include { generate_sha512sum } from './common'
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args
+        ])
 
 workflow mutect2 {
     take:
@@ -116,15 +122,13 @@ workflow mutect2 {
             contamination_table.collect()
         )
         filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered)
-        split_VCF_BCFtools(filter_VCF_BCFtools.out.passing_vcf, ['snps', 'mnps', 'indels'])
-        file_for_sha512 = split_VCF_BCFtools.out.split_vcf
-                .map{ it -> ["${it[0]}-vcf", it[1]] }
-            .mix( split_VCF_BCFtools.out.split_vcf
-                .map{ it -> ["${it[0]}-index", it[2]] } )
-            .mix( filter_VCF_BCFtools.out.passing_vcf
-                .map{ it -> ["${it[0]}-vcf", it[1]] } )
-            .mix( filter_VCF_BCFtools.out.passing_vcf
-                .map{ it -> ["${it[0]}-index", it[2]] } )
+        split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf, ['snps', 'mnps', 'indels'])
+        index_ch = filter_VCF_BCFtools.out.pass_vcf
+            .map{ it -> [params.sample_id, it] }
+            .mix( split_VCF_BCFtools.out.split_vcf)
+        compress_index_VCF(index_ch)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
         split_VCF_BCFtools.out.split_vcf

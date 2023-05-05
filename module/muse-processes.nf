@@ -79,10 +79,9 @@ process run_sump_MuSE {
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+    publishDir path: "${params.workflow_output_dir}/output",
             mode: "copy",
-            pattern: "*.vcf.gz",
-            enabled: params.save_intermediate_files
+            pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
             mode: "copy",
             pattern: ".command.*",
@@ -92,14 +91,13 @@ process filter_VCF_BCFtools {
     path vcf
 
     output:
-    path "*.vcf.gz", emit: gz_vcf
+    path "*.vcf.gz", emit: pass_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
     bcftools view -f PASS  --output-type z --output ${params.output_filename}_pass.vcf.gz ${vcf}
-    bcftools index --tbi ${params.output_filename}_pass.vcf.gz
     """
 }
 
@@ -123,9 +121,6 @@ process reorder_samples {
     script:
     """
     set -euo pipefail
-    input_basename=\$(basename ${gz_vcf} .vcf.gz)
-    output_filename="\${input_basename}-reorder.vcf.gz"
-    bcftools view -s NORMAL,TUMOR --output \${output_filename} ${gz_vcf}
-    bcftools index --tbi \${output_filename}
+    bcftools view -s NORMAL,TUMOR --output ${params.output_filename}_pass-reorder.vcf.gz ${gz_vcf}
     """
 }

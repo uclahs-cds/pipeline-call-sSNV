@@ -100,27 +100,24 @@ process call_sSNV_Strelka2 {
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+    publishDir path: "${params.workflow_output_dir}/output",
             mode: "copy",
-            pattern: "*.vcf.gz",
-            enabled: params.save_intermediate_files
+            pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
             mode: "copy",
             pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}-${name}/log${file(it).getName()}" }
+            saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    tuple val(name), path(gz_vcf)
+    tuple val(var_type), path(vcf)
 
     output:
-    tuple val(name), path("*.vcf.gz"), emit: gz_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: pass_vcf
     path ".command.*"
 
     script:
-    out_vcf = ${gz_vcf}.replaceFirst(/.vcf.gz$/, "_pass.vcf.gz")
     """
     set -euo pipefail
-    bcftools view -f PASS  --output-type z --output ${out_vcf} ${gz_vcf}
-    bcftools index --tbi ${out_vcf}
+    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}_pass.vcf.gz ${vcf}
     """
 }

@@ -1,6 +1,14 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF_BCFtools } from './strelka2-processes'
 include { fix_sample_names_VCF; generate_sha512sum } from './common'
 
+include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args
+        ])
+
 workflow strelka2 {
     take:
     tumor_bam
@@ -31,7 +39,8 @@ workflow strelka2 {
             params.call_region_index
         )
         filter_VCF_BCFtools(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
-        fix_sample_names_VCF( params.normal_id, params.tumor_id, filter_VCF_BCFtools.out.gz_vcf)
+        fix_sample_names_VCF( params.normal_id, params.tumor_id, filter_VCF_BCFtools.out.pass_vcf)
+        compress_index_VCF(filter_VCF_BCFtools.out.pass_vcf)
         file_for_sha512 = fix_sample_names_VCF.out.rehead_vcf
             .map{ it -> ["${it[0]}-vcf", it[1]] }
             .mix( fix_sample_names_VCF.out.rehead_vcf
@@ -40,6 +49,13 @@ workflow strelka2 {
                 .map{ it -> ["${it[0]}-vcf", it[1]] } )
             .mix( filter_VCF_BCFtools.out.gz_vcf
                 .map{ it -> ["${it[0]}-index", it[2]] } )
+
+###
+        compress_index_VCF(filter_VCF_BCFtools.out.pass_vcf)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
+###
+
         generate_sha512sum(file_for_sha512)
     emit:
         fix_sample_names_VCF.out.rehead_vcf
