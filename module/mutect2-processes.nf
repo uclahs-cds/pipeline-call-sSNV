@@ -358,6 +358,6 @@ process split_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'snvs')}.vcf.gz ${vcf}
     """
 }

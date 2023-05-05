@@ -132,5 +132,5 @@ workflow mutect2 {
         generate_sha512sum(file_for_sha512)
     emit:
         split_VCF_BCFtools.out.split_vcf
-            .filter { it[0] == 'snps' }
+            .filter { it[0] == 'snvs' }
 }
