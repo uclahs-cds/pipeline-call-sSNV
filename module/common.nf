@@ -3,7 +3,7 @@ log.info """\
           C O M M O N
 ====================================
 Docker Images:
-- docker_image_samtools: ${params.docker_image_samtools}
+- docker_image_validate_params = ${params.docker_image_validate_params}
 """
 
 process generate_sha512sum {
