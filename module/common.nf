@@ -8,6 +8,30 @@ Docker Images:
 - docker_image_samtools: ${params.docker_image_samtools}
 """
 
+process run_GetSampleName_SAMtools {
+    container params.docker_image_samtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.txt",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${id}-${task-index}/log${file(it).getName()}" }
+    input:
+    path bam
+
+    output:
+    val(sample_name), emit: sample_name
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    sample_name = `samtools samples $bam | cut -f 1`
+    """
+    }
+
 process generate_sha512sum {
     container params.docker_image_validate_params
     publishDir path: "${params.workflow_output_dir}/output",

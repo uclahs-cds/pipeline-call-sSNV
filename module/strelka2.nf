@@ -39,7 +39,7 @@ workflow strelka2 {
             params.call_region_index
         )
         filter_VCF_BCFtools(call_sSNV_Strelka2.out.snvs_vcf.mix(call_sSNV_Strelka2.out.indels_vcf))
-        fix_sample_names_VCF(params.normal_id, params.tumor_id, filter_VCF_BCFtools.out.pass_vcf)
+        fix_sample_names_VCF(normal_id, tumor_id, filter_VCF_BCFtools.out.pass_vcf)
         compress_index_VCF(fix_sample_names_VCF.out.fix_vcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )

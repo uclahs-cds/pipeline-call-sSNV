@@ -44,7 +44,7 @@ workflow somaticsniper {
         // fix_sample_names needs bgzipped input
         compress_index_VCF_hc(call_HighConfidenceSNV_SomaticSniper.out.hc
             .map{ it -> ['snvs', it] })
-        fix_sample_names_VCF(params.normal_id, params.tumor_id, compress_index_VCF_hc.out.index_out
+        fix_sample_names_VCF(normal_id, tumor_id, compress_index_VCF_hc.out.index_out
             .map{ it -> [it[0], it[1]] })
         compress_index_VCF_fix(fix_sample_names_VCF.out.fix_vcf)
         file_for_sha512 = compress_index_VCF_hc.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
