@@ -15,6 +15,8 @@ workflow strelka2 {
     tumor_index
     normal_bam
     normal_index
+    normal_id
+    tumor_id
 
     main:
         call_sIndel_Manta(

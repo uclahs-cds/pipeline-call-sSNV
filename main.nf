@@ -158,7 +158,9 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
         )
     }
     if ('mutect2' in params.algorithm) {
@@ -175,7 +177,9 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
         )
     }
 }

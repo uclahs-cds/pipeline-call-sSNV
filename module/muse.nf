@@ -13,6 +13,8 @@ workflow muse {
     tumor_index
     normal_bam
     normal_index
+    normal_id
+    tumor_id
 
     main:
         call_sSNV_MuSE(
@@ -31,10 +33,10 @@ workflow muse {
         filter_VCF_BCFtools(run_sump_MuSE.out.vcf.map { it -> ['snvs', it] } )
         // MuSE output VCF has sample order: TUMOR NORMAL, opposite of all other tools. Need to reorder.
         reorder_samples(filter_VCF_BCFtools.out.pass_vcf)
-        fix_sample_names_VCF( params.normal_id, params.tumor_id, reorder_samples.out.reorder_vcf)
+        fix_sample_names_VCF(normal_id, tumor_id, reorder_samples.out.reorder_vcf)
         compress_index_VCF(fix_sample_names_VCF.out.fix_vcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
-            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
+            .mix(compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] })
         generate_sha512sum(file_for_sha512)
     emit:
         fix_sample_names_VCF.out.fix_vcf
