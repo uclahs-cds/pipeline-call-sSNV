@@ -106,6 +106,7 @@ workflow {
         params.reference_index,
         params.reference_dict
     )
+    // Input file validation
     if (params.tumor_only_mode) {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
@@ -121,14 +122,13 @@ workflow {
             )
         )
     }
-
     run_validate_PipeVal(file_to_validate)
-
     run_validate_PipeVal.out.val_file.collectFile(
         name: 'input_validation.txt', newLine: true,
         storeDir: "${params.output_dir_base}/validation"
         )
 
+    // Run tools
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,

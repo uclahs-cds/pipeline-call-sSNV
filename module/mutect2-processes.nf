@@ -63,10 +63,10 @@ process run_GetSampleName_Mutect2 {
         pattern: ".command.*",
         saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
     input:
-    path normal_bam
+    path bam
 
     output:
-    env normal_name, emit: name_ch
+    env sample_name, emit: name_ch
     path "sampleName.txt"
     path ".command.*"
 
@@ -74,8 +74,8 @@ process run_GetSampleName_Mutect2 {
     """
     set -euo pipefail
 
-    gatk GetSampleName -I $normal_bam -O sampleName.txt
-    normal_name=`cat sampleName.txt`
+    gatk GetSampleName -I $bam -O sampleName.txt
+    sample_name=`cat sampleName.txt`
 
     """
 }
