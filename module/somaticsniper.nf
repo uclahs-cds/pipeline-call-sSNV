@@ -1,6 +1,15 @@
 include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
 include { fix_sample_names_VCF; generate_sha512sum } from './common'
-include { compress_index_VCF as compress_index_VCF_hc ; compress_index_VCF as compress_index_VCF_fix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
+include { compress_index_VCF as compress_index_VCF_hc } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args,
+        save_intermediate_files: true,
+        is_output_file: false
+        ])
+include { compress_index_VCF as compress_index_VCF_fix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
     options: [
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir,
@@ -49,9 +58,7 @@ workflow somaticsniper {
         fix_sample_names_VCF(normal_id, tumor_id, compress_index_VCF_hc.out.index_out
             .map{ it -> [it[0], it[1]] })
         compress_index_VCF_fix(fix_sample_names_VCF.out.fix_vcf)
-        file_for_sha512 = compress_index_VCF_hc.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
-            .mix(compress_index_VCF_hc.out.index_out.map{ it -> ["${it[0]}-index", it[2]] })
-            .mix(compress_index_VCF_fix.out.index_out.map{ it -> ["${it[0]}-index", it[1]] })
+        file_for_sha512 = compress_index_VCF_fix.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
             .mix(compress_index_VCF_fix.out.index_out.map{ it -> ["${it[0]}-index", it[2]] })
         generate_sha512sum(file_for_sha512)
     emit:
