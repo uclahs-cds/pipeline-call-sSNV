@@ -41,6 +41,13 @@ log.info """\
 """
 
 include { run_validate_PipeVal } from './module/validation'
+include { 
+    run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_normal
+    run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_tumor 
+    } from './module/mutect2-processes' addParams(
+    workflow_output_dir: "${params.output_dir_base}/sample-names",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/sample-names"
+    )
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
@@ -128,13 +135,22 @@ workflow {
         storeDir: "${params.output_dir_base}/validation"
         )
 
+    // Extract sample names from bam files (single tumor/normal input only)
+        // Only Mutect2 will be run if input in non-standard
+    if ( ! params.tumor_only_mode && ! params.multi_tumor_sample && ! params.multi_normal_sample ) {
+        run_GetSampleName_Mutect2_normal(normal_input.normal_bam)
+        run_GetSampleName_Mutect2_tumor(tumor_input.tumor_bam)
+    }
+
     // Run tools
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
         )
     }
     if ('strelka2' in params.algorithm) {

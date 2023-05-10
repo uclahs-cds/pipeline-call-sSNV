@@ -14,6 +14,8 @@ workflow somaticsniper {
     tumor_index
     normal_bam
     normal_index
+    normal_id
+    tumor_id
 
     main:
         call_sSNV_SomaticSniper(tumor_bam, normal_bam, params.reference)
