@@ -10,8 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update to use sample ID from input BAM files (single tumor/normal BAM input only) 
 
 ### Added
-- Add `fix_sample_names_VCF`, tumor and normal sample IDs from input BAMs in VCFs
-- Add `split_VCF_bcftools` to `Mutect2` workflow, separating snvs, mnvs and indels
+- Add `fix_sample_names_VCF`, tumor and normal sample IDs from input BAMs used in output VCFs
+- Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
+
+### Changed
+- Use BCFtools to compress PASS variants instead of bgzip
+- Use BCFtools to extract PASS variants instead of awk
+- Update to use external `run_validate_PipeVal`
 
 ## [6.0.0] - 2023-04-05
 
