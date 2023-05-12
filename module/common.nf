@@ -62,3 +62,37 @@ process fix_sample_names_VCF {
     bcftools reheader -s samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
     """
     }
+
+process intersect_VCFs {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.vcf.gz*"
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "sites.txt"
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "README.txt",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}-${var_type}/log${file(it).getName()}" }
+
+    input:
+    path vcf_list
+
+    output:
+    path "*.vcf.gz"
+    path ".command.*"
+    path "samples.txt"
+
+    script:
+    vcfs = vcf_list.collect.join(' ')
+    """
+    set -euo pipefail
+    bcftools isec --nfiles +2 $vcfs --output-type z --prefix isec-2-or-more
+    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | while read a b c ; do mv $c $a ; done
+    """
+    }
