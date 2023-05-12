@@ -141,11 +141,11 @@ workflow {
         )
 
     // Extract sample names from bam files (single tumor/normal input only)
-        // Only Mutect2 will be run if input in non-standard
+        // Only Mutect2 will run if input is non-standard
     if ( ! params.tumor_only_mode && ! params.multi_tumor_sample && ! params.multi_normal_sample ) {
         run_GetSampleName_Mutect2_normal(normal_input.normal_bam)
         run_GetSampleName_Mutect2_tumor(tumor_input.tumor_bam)
-    }
+        }
 
     // Run tools
     if ('somaticsniper' in params.algorithm) {
