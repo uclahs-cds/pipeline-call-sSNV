@@ -5,7 +5,6 @@ log.info """\
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 - docker_image_validate_params: ${params.docker_image_validate_params}
-- docker_image_samtools: ${params.docker_image_samtools}
 """
 
 process generate_sha512sum {

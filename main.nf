@@ -46,7 +46,6 @@ log.info """\
         tumor_only_mode: ${params.tumor_only_mode}
 """
 
-include { run_validate_PipeVal } from './module/validation'
 include { 
     run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_normal
     run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_tumor 
@@ -136,7 +135,7 @@ workflow {
         )
     }
     run_validate_PipeVal(file_to_validate)
-    run_validate_PipeVal.out.val_file.collectFile(
+    run_validate_PipeVal.out.validation_result.collectFile(
         name: 'input_validation.txt', newLine: true,
         storeDir: "${params.output_dir_base}/validation"
         )
