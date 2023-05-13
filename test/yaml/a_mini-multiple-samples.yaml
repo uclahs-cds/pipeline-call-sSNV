@@ -10,5 +10,5 @@ input:
       BAM: /hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
       contamination_table: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table
     - id: 'TWGSAMIN000001-T002-S02-F'
-      BAM: /hot/user/sfitzgibbon/git/pipeline-call-sSNV/sf-testing/adjusted-infiles/S2.T-n1.SMadjust.bam
-      contamination_table: /hot/user/sfitzgibbon/git/pipeline-call-sSNV/sf-testing/adjusted-infiles/S2.T-n1_getpileupsummaries_calculatecontamination.table
+      BAM: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n1_SMadjust.bam
+      contamination_table: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n1_SMadjust_getpileupsummaries_calculatecontamination.table
