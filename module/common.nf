@@ -78,21 +78,24 @@ process intersect_VCFs {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${var_type}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
-    path vcf_list
+    path vcfs
+    path indices
 
     output:
-    path "*.vcf.gz"
+    path "*.vcf.gz", emit: common_vcf
     path ".command.*"
     path "samples.txt"
 
     script:
-    vcfs = vcf_list.collect.join(' ')
+
+    vcf_list = vcfs.join(' ')
+
     """
     set -euo pipefail
-    bcftools isec --nfiles +2 $vcfs --output-type z --prefix isec-2-or-more
-    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | while read a b c ; do mv $c $a ; done
+    bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more ${vcf_list}
+    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/vcf.gz\$/common-variants.vcf.gz/' | while read a b c ; do mv \$c \$a ; done
     """
     }
