@@ -82,7 +82,7 @@ include { muse } from './module/muse' addParams(
         params.sample_id,
         [:]))
 
-include { intersect_VCFs } from './module/common' addParams(
+include { intersect } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/intersect",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect",
     output_filename: generate_standard_filename("common-variants",
@@ -195,23 +195,22 @@ workflow {
             run_GetSampleName_Mutect2_tumor.out.name_ch
         )
     }
- //   if (params.algorithm.size() > 1) {
-        tool_vcfs = (somaticsniper.out.vcf.map{ it -> it[1]}
-            .mix(strelka2.out.vcf.map{ it -> it[1] })
-            .mix(mutect2.out.vcf.map{ it -> it[1] })
-            .mix(muse.out.vcf.map{ it -> it[1] }))
+    if (params.algorithm.size() > 1) {
+        tool_vcfs = (somaticsniper.out.vcf
+            .mix(strelka2.out.vcf)
+            .mix(mutect2.out.vcf)
+            .mix(muse.out.vcf))
             .collect()
 
-        tool_indices = (somaticsniper.out.idx.map{ it -> it[1]}
-            .mix(strelka2.out.idx.map{ it -> it[1] })
-            .mix(mutect2.out.idx.map{ it -> it[1] })
-            .mix(muse.out.idx.map{ it -> it[1] }))
+        tool_indices = (somaticsniper.out.idx
+            .mix(strelka2.out.idx)
+            .mix(mutect2.out.idx)
+            .mix(muse.out.idx))
             .collect()
 
-        intersect_VCFs(
+        intersect(
             tool_vcfs,
             tool_indices
         )
-        emit:intersect_VCFs.out.common_vcf
-//    }
+    }
 }

@@ -70,15 +70,15 @@ process intersect_VCFs {
         pattern: "*.vcf.gz*"
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "sites.txt"
+        pattern: "**sites.txt"
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
-        pattern: "README.txt",
+        pattern: "isec-2-or-more",
         enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
     path vcfs
@@ -86,8 +86,10 @@ process intersect_VCFs {
 
     output:
     path "*.vcf.gz", emit: common_vcf
+    path "*.vcf.gz.tbi", emit: common_idx
     path ".command.*"
-    path "samples.txt"
+    path "isec-2-or-more"
+    path "**sites.txt"
 
     script:
 
@@ -96,6 +98,6 @@ process intersect_VCFs {
     """
     set -euo pipefail
     bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more ${vcf_list}
-    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/vcf.gz\$/common-variants.vcf.gz/' | while read a b c ; do mv \$c \$a ; done
+    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/vcf.gz\$/common-variants.vcf.gz/' | while read a b c d; do mv \$a \$d ; mv \$a.tbi \$d.tbi ; done
     """
     }
