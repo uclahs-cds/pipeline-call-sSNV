@@ -4,6 +4,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_GATK:           ${params.docker_image_GATK}
+- docker_image_BCFtools        ${params.docker_image_BCFtools}
 Mutect2 Options:
 - split_intervals_extra_args:     ${params.split_intervals_extra_args}
 - mutect2_extra_args:             ${params.mutect2_extra_args}
@@ -312,12 +313,11 @@ process run_FilterMutectCalls_GATK {
     """
 }
 
-process filter_VCF {
-    container "ubuntu:20.04"
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+process filter_VCF_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*filtered-pass.vcf",
-        enabled: params.save_intermediate_files
+        pattern: "*_pass.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -327,12 +327,37 @@ process filter_VCF {
     path filtered
 
     output:
-    path "*.vcf", emit: mutect2_vcf
+    path "*.vcf.gz", emit: pass_vcf
+    path ".command.*"
+
+    script:    
+    """
+    set -euo pipefail
+    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz $filtered
+    """
+}
+
+process split_VCF_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.vcf.gz"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
+
+    input:
+    path vcf
+    each var_type
+
+    output:
+    tuple val(var_type), path("*.vcf.gz"), emit: split_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'snvs')}.vcf.gz ${vcf}
     """
 }

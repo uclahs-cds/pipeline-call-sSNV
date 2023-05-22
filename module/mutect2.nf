@@ -1,7 +1,5 @@
-include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
-
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF_BCFtools; split_VCF_BCFtools } from './mutect2-processes'
 include { generate_sha512sum } from './common'
-
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -123,15 +121,16 @@ workflow mutect2 {
             run_LearnReadOrientationModel_GATK.out.read_orientation_model,
             contamination_table.collect()
         )
-        filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
-        index_compress_ch = filter_VCF.out.mutect2_vcf
-            .map{
-                it -> [params.sample_id, it]
-            }
-        compress_index_VCF(index_compress_ch)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
-                            .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
+        filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered)
+        split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf, ['snps', 'mnps', 'indels'])
+        index_ch = filter_VCF_BCFtools.out.pass_vcf
+            .map{ it -> [params.sample_id, it] }
+            .mix( split_VCF_BCFtools.out.split_vcf)
+        compress_index_VCF(index_ch)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-        compress_index_VCF.out.index_out
+        split_VCF_BCFtools.out.split_vcf
+            .filter { it[0] == 'snps' }
 }

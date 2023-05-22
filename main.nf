@@ -63,7 +63,7 @@ include { strelka2 } from './module/strelka2' addParams(
 include { mutect2 } from './module/mutect2' addParams(
     workflow_output_dir: "${params.output_dir_base}/Mutect2-${params.GATK_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
-    output_filename: generate_standard_filename("Mutect2_${params.strelka2_version}",
+    output_filename: generate_standard_filename("Mutect2_${params.GATK_version}",
         params.dataset_id,
         params.sample_id,
         [:]))

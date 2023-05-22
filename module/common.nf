@@ -5,6 +5,7 @@ log.info """\
 Docker Images:
 - docker_image_validate_params = ${params.docker_image_validate_params}
 """
+
 process generate_sha512sum {
     container params.docker_image_validate_params
    publishDir path: "${params.workflow_output_dir}/output",
