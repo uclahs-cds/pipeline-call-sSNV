@@ -50,8 +50,8 @@ include {
     run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_normal
     run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_tumor 
     } from './module/mutect2-processes' addParams(
-    workflow_output_dir: "${params.output_dir_base}/sample-names",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/sample-names"
+        workflow_output_dir: "${params.output_dir_base}",
+        workflow_log_output_dir: "${params.log_output_dir}/process-log/"
     )
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
