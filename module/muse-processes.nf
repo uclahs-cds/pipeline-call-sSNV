@@ -102,7 +102,7 @@ process filter_VCF_BCFtools {
     """
 }
 
-process reorder_samples {
+process reorder_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",

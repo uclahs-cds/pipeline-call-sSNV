@@ -6,7 +6,6 @@ include { compress_index_VCF as compress_index_VCF_hc } from '../external/pipeli
         log_output_dir: params.workflow_log_output_dir,
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args,
-        save_intermediate_files: true,
         is_output_file: false
         ])
 include { compress_index_VCF as compress_index_VCF_fix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
@@ -58,8 +57,8 @@ workflow somaticsniper {
         fix_sample_names_VCF(normal_id, tumor_id, compress_index_VCF_hc.out.index_out
             .map{ it -> [it[0], it[1]] })
         compress_index_VCF_fix(fix_sample_names_VCF.out.fix_vcf)
-        file_for_sha512 = compress_index_VCF_fix.out.index_out.map{ it -> ['somaticsniper', "${it[0]}-vcf", it[1]] }
-            .mix(compress_index_VCF_fix.out.index_out.map{ it -> ['somaticsniper', "${it[0]}-index", it[2]] })
+        file_for_sha512 = compress_index_VCF_fix.out.index_out.map{ it -> ["${it[0]}-somaticsniper-vcf", it[1]] }
+            .mix(compress_index_VCF_fix.out.index_out.map{ it -> ["${it[0]}-somaticsniper-index", it[2]] })
         generate_sha512sum(file_for_sha512)
     emit:
         fix_sample_names_VCF.out.fix_vcf
