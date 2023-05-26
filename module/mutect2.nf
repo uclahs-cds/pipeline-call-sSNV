@@ -124,8 +124,8 @@ workflow mutect2 {
         filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered.map{ it -> ['all', it] })
         split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf.map{ it -> it[1] }, ['snps', 'mnps', 'indels'])
         compress_index_VCF(split_VCF_BCFtools.out.split_vcf)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-mutect2-vcf", it[1]] }
-            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-mutect2-index", it[2]] } )
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
         split_VCF_BCFtools.out.split_vcf

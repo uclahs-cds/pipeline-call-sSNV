@@ -15,7 +15,7 @@ process generate_sha512sum {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${id}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}-${id}/log${file(it).getName()}" }
 
     input:
     tuple val(id), path (file_for_sha512)
@@ -36,13 +36,14 @@ process fix_sample_names_VCF {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.vcf.gz*"
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/intermediate",
         mode: "copy",
-        pattern: "*_samples.txt"
+        pattern: "*_samples.txt",
+        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${var_type}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
     val normal_id 
