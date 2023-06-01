@@ -1,5 +1,5 @@
 include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
-include { fix_sample_names_VCF; generate_sha512sum } from './common'
+include { rename_samples_BCFtools; generate_sha512sum } from './common'
 include { compress_index_VCF as compress_index_VCF_hc } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -51,15 +51,15 @@ workflow somaticsniper {
         generate_ReadCount_bam_readcount(params.reference,create_ReadCountPosition_SomaticSniper.out.snp_positions, tumor_bam, tumor_index)
         filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
-        // fix_sample_names needs bgzipped input
+        // rename_samples_BCFtools needs bgzipped input
         compress_index_VCF_hc(call_HighConfidenceSNV_SomaticSniper.out.hc
             .map{ it -> ['SNV', it] })
-        fix_sample_names_VCF(normal_id, tumor_id, compress_index_VCF_hc.out.index_out
+        rename_samples_BCFtools(normal_id, tumor_id, compress_index_VCF_hc.out.index_out
             .map{ it -> [it[0], it[1]] })
-        compress_index_VCF_fix(fix_sample_names_VCF.out.fix_vcf)
+        compress_index_VCF_fix(rename_samples_BCFtools.out.fix_vcf)
         file_for_sha512 = compress_index_VCF_fix.out.index_out.map{ it -> ["somaticsniper-${it[0]}-vcf", it[1]] }
             .mix(compress_index_VCF_fix.out.index_out.map{ it -> ["somaticsniper-${it[0]}-index", it[2]] })
         generate_sha512sum(file_for_sha512)
     emit:
-        fix_sample_names_VCF.out.fix_vcf
+        rename_samples_BCFtools.out.fix_vcf
 }
