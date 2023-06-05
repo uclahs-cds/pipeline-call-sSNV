@@ -50,7 +50,7 @@ process call_sIndel_Manta {
 
     MantaWorkflow/runWorkflow.py -j ${task.cpus}
     """
-}
+    }
 
 process call_sSNV_Strelka2 {
     container params.docker_image_strelka2
@@ -96,7 +96,7 @@ process call_sSNV_Strelka2 {
 
     StrelkaSomaticWorkflow/runWorkflow.py -m local -j ${task.cpus}
     """
-}
+    }
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
@@ -121,4 +121,4 @@ process filter_VCF_BCFtools {
     set -euo pipefail
     bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
     """
-}
+    }

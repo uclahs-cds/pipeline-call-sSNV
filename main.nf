@@ -52,7 +52,7 @@ include {
     } from './module/mutect2-processes' addParams(
         workflow_output_dir: "${params.output_dir_base}",
         workflow_log_output_dir: "${params.log_output_dir}/process-log/"
-    )
+        )
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
@@ -94,14 +94,14 @@ include { intersect } from './module/intersect' addParams(
 def indexFile(bam_or_vcf) {
     if(bam_or_vcf.endsWith('.bam')) {
         return "${bam_or_vcf}.bai"
-    }
+        }
     else if(bam_or_vcf.endsWith('vcf.gz')) {
         return "${bam_or_vcf}.tbi"
-    }
+        }
     else {
         throw new Exception("Index file for ${bam_or_vcf} file type not supported. Use .bam or .vcf.gz files.")
+        }
     }
-}
 
 Channel
     .from( params.input['tumor'] )
@@ -109,7 +109,7 @@ Channel
         tumor_bam: it['BAM']
         tumor_index: indexFile(it['BAM'])
         contamination_est: it['contamination_table']
-    }
+        }
     .set { tumor_input }
 
 Channel
@@ -117,7 +117,7 @@ Channel
     .multiMap{ it ->
         normal_bam: it['BAM']
         normal_index: indexFile(it['BAM'])
-    }
+        }
     .set { normal_input }
 
 workflow {
@@ -125,23 +125,24 @@ workflow {
         params.reference,
         params.reference_index,
         params.reference_dict
-    )
+        )
     // Input file validation
     if (params.tumor_only_mode) {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
-    } else {
+        }
+    else {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
-    }
+        }
     if (params.use_call_region) {
         file_to_validate = file_to_validate.mix(
             Channel.from(
                 params.call_region,
                 params.call_region_index
+                )
             )
-        )
-    }
+        }
     run_validate_PipeVal(file_to_validate)
     run_validate_PipeVal.out.validation_result.collectFile(
         name: 'input_validation.txt', newLine: true,
@@ -162,8 +163,8 @@ workflow {
             normal_input.normal_index,
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
-        )
-    }
+            )
+        }
     if ('strelka2' in params.algorithm) {
         strelka2(
             tumor_input.tumor_bam,
@@ -172,8 +173,8 @@ workflow {
             normal_input.normal_index,
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
-        )
-    }
+            )
+        }
     if ('mutect2' in params.algorithm) {
         mutect2(
             tumor_input.tumor_bam.collect(),
@@ -181,8 +182,8 @@ workflow {
             normal_input.normal_bam.collect(),
             normal_input.normal_index.collect(),
             tumor_input.contamination_est.collect()
-        )
-    }
+            )
+        }
     if ('muse' in params.algorithm) {
         muse(
             tumor_input.tumor_bam,
@@ -191,8 +192,8 @@ workflow {
             normal_input.normal_index,
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
-        )
-    }
+            )
+        }
     if (params.algorithm.size() > 1) {
         tool_vcfs = (somaticsniper.out.vcf
             .mix(strelka2.out.vcf)
@@ -209,6 +210,6 @@ workflow {
         intersect(
             tool_vcfs,
             tool_indices
-        )
+            )
+        }
     }
-}

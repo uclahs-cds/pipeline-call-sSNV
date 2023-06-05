@@ -27,4 +27,4 @@ workflow intersect {
         generate_sha512sum(file_for_sha512)
     emit:
         intersect_VCFs.out.common_vcf
-}
+    }
