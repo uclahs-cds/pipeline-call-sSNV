@@ -1,5 +1,5 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta; filter_VCF_BCFtools } from './strelka2-processes'
-include { fix_sample_names_VCF; generate_sha512sum } from './common'
+include { rename_samples_BCFtools; generate_sha512sum } from './common'
 
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
@@ -44,10 +44,10 @@ workflow strelka2 {
             .mix(call_sSNV_Strelka2.out.indels_vcf))
         normal_id.combine(filter_VCF_BCFtools.out.pass_vcf).map{ it[0] }.set{ normal_id_fix }
         tumor_id.combine(filter_VCF_BCFtools.out.pass_vcf).map{ it[0] }.set{ tumor_id_fix }
-        fix_sample_names_VCF(normal_id_fix, tumor_id_fix, filter_VCF_BCFtools.out.pass_vcf)
-        compress_index_VCF(fix_sample_names_VCF.out.fix_vcf)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
-            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
+        rename_samples_BCFtools(normal_id_fix, tumor_id_fix, filter_VCF_BCFtools.out.pass_vcf)
+        compress_index_VCF(rename_samples_BCFtools.out.fix_vcf)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["strelka2-${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["strelka2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
         vcf = compress_index_VCF.out.index_out
@@ -57,4 +57,4 @@ workflow strelka2 {
             .filter { it[0] == 'snvs' }
             .map{ it -> ["${it[2]}"] }
 
-}
+    }

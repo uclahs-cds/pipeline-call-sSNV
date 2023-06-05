@@ -98,11 +98,11 @@ process filter_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}_pass.vcf.gz ${vcf}
+    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
     """
 }
 
-process reorder_samples {
+process reorder_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
@@ -111,7 +111,7 @@ process reorder_samples {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${var_type}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
     tuple val(var_type), path(vcf)

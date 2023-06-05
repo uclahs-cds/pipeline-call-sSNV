@@ -334,7 +334,7 @@ process filter_VCF_BCFtools {
     script:    
     """
     set -euo pipefail
-    bcftools view -f PASS --output-type z --output ${params.output_filename}_${var_type}_pass.vcf.gz ${vcf}
+    bcftools view -f PASS --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
     """
 }
 
@@ -359,6 +359,6 @@ process split_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'snvs')}.vcf.gz ${vcf}
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz ${vcf}
     """
 }

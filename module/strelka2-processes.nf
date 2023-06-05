@@ -75,8 +75,8 @@ process call_sSNV_Strelka2 {
     path call_region_index
 
     output:
-    tuple val("snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
-    tuple val("indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
+    tuple val("SNV"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
+    tuple val("INDEL"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
     path "StrelkaSomaticWorkflow"
     path ".command.*"
 
@@ -100,7 +100,7 @@ process call_sSNV_Strelka2 {
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
-   publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*.vcf.gz",
         enabled: params.save_intermediate_files
@@ -119,6 +119,6 @@ process filter_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}_pass.vcf.gz ${vcf}
+    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
     """
 }

@@ -15,7 +15,7 @@ process generate_sha512sum {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${id}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}-${id}/log${file(it).getName()}" }
 
     input:
     tuple val(id), path (file_for_sha512)
@@ -31,18 +31,19 @@ process generate_sha512sum {
     """
     }
 
-process fix_sample_names_VCF {
+process rename_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.vcf.gz*"
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
-        pattern: "samples.txt"
+        pattern: "*_samples.txt",
+        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${var_type}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
     val normal_id 
@@ -52,14 +53,14 @@ process fix_sample_names_VCF {
     output:
     tuple val(var_type), path("*.vcf.gz"), emit: fix_vcf
     path ".command.*"
-    path "samples.txt"
+    path "*_samples.txt"
 
     script:
     """
     set -euo pipefail
-    echo -e 'NORMAL\t${normal_id}' > samples.txt
-    echo -e 'TUMOR\t${tumor_id}' >> samples.txt
-    bcftools reheader -s samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
+    echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
+    echo -e 'TUMOR\t${tumor_id}' >> ${params.output_filename}_samples.txt
+    bcftools reheader -s ${params.output_filename}_samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
     """
     }
 
