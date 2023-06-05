@@ -46,6 +46,13 @@ log.info """\
         tumor_only_mode: ${params.tumor_only_mode}
 """
 
+include { 
+    run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_normal
+    run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_tumor 
+    } from './module/mutect2-processes' addParams(
+        workflow_output_dir: "${params.output_dir_base}",
+        workflow_log_output_dir: "${params.log_output_dir}/process-log/"
+    )
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
@@ -111,6 +118,7 @@ workflow {
         params.reference_index,
         params.reference_dict
     )
+    // Input file validation
     if (params.tumor_only_mode) {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
@@ -126,21 +134,26 @@ workflow {
             )
         )
     }
-
-    file_to_validate = file_to_validate.flatten()
     run_validate_PipeVal(file_to_validate)
-
     run_validate_PipeVal.out.validation_result.collectFile(
         name: 'input_validation.txt', newLine: true,
         storeDir: "${params.output_dir_base}/validation"
         )
+
+    // Extract sample names from bam files (single tumor/normal input only)
+    if ( ! params.tumor_only_mode && ! params.multi_tumor_sample && ! params.multi_normal_sample ) {
+        run_GetSampleName_Mutect2_normal(normal_input.normal_bam)
+        run_GetSampleName_Mutect2_tumor(tumor_input.tumor_bam)
+        }
 
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
         )
     }
     if ('strelka2' in params.algorithm) {
@@ -148,7 +161,9 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
         )
     }
     if ('mutect2' in params.algorithm) {
@@ -165,7 +180,9 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index
+            normal_input.normal_index,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
         )
     }
 }

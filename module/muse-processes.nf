@@ -79,24 +79,50 @@ process run_sump_MuSE {
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/output",
-            mode: "copy",
-            pattern: "*.vcf.gz"
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.vcf.gz",
+        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
-            mode: "copy",
-            pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    path vcf
+    tuple val(var_type), path(vcf)
 
     output:
-    path "*.vcf.gz", emit: pass_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: pass_vcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    bcftools view -f PASS --output-type z --output ${params.output_filename}_pass.vcf.gz ${vcf}
+    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
+    """
+}
+
+process reorder_samples_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.vcf.gz",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+
+    input:
+    tuple val(var_type), path(vcf)
+
+    output:
+    tuple val(var_type), path("*.vcf.gz"), emit: reorder_vcf
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    bcftools view -s NORMAL,TUMOR --output ${params.output_filename}_pass-reorder.vcf.gz ${vcf}
     """
 }
