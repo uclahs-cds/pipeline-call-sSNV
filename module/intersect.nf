@@ -18,13 +18,13 @@ workflow intersect {
             tool_vcfs,
             tool_indices
         )
-        file_for_sha512 = intersect_VCFs.out.common_vcf
+        file_for_sha512 = intersect_VCFs.out.consensus_vcf
             .flatten()
             .map{ it -> ['snvs-vcf', it]}
-            .mix(intersect_VCFs.out.common_idx
+            .mix(intersect_VCFs.out.consensus_idx
                 .flatten()
                 .map{ it -> ['snvs-idx', it]})
         generate_sha512sum(file_for_sha512)
     emit:
-        intersect_VCFs.out.common_vcf
+        intersect_VCFs.out.consensus_vcf
     }

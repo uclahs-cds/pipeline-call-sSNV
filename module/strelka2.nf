@@ -51,10 +51,11 @@ workflow strelka2 {
         generate_sha512sum(file_for_sha512)
     emit:
         vcf = compress_index_VCF.out.index_out
-            .filter { it[0] == 'snvs' }
+            .filter { it[0] == 'SNV' }
             .map{ it -> ["${it[1]}"] }
         idx = compress_index_VCF.out.index_out
-            .filter { it[0] == 'snvs' }
+            .filter { it[0] == 'SNV' }
             .map{ it -> ["${it[2]}"] }
 
     }
+

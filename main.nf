@@ -85,7 +85,7 @@ include { muse } from './module/muse' addParams(
 include { intersect } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/intersect",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect",
-    output_filename: generate_standard_filename("common-variants",
+    output_filename: generate_standard_filename("consensus-variants",
         params.dataset_id,
         params.sample_id,
         [:]))
@@ -155,6 +155,16 @@ workflow {
         run_GetSampleName_Mutect2_tumor(tumor_input.tumor_bam)
         }
 
+    Channel.empty().set { somaticsniper_vcf_ch }
+    Channel.empty().set { strelka2_vcf_ch }
+    Channel.empty().set { mutect2_vcf_ch }
+    Channel.empty().set { muse_vcf_ch }
+
+    Channel.empty().set { somaticsniper_idx_ch }
+    Channel.empty().set { strelka2_idx_ch }
+    Channel.empty().set { mutect2_idx_ch }
+    Channel.empty().set { muse_idx_ch }
+
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,
@@ -164,6 +174,8 @@ workflow {
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
             )
+            somaticsniper.out.vcf.set { somaticsniper_vcf_ch }
+            somaticsniper.out.idx.set { somaticsniper_idx_ch }
         }
     if ('strelka2' in params.algorithm) {
         strelka2(
@@ -174,6 +186,8 @@ workflow {
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
             )
+            strelka2.out.vcf.set { strelka2_vcf_ch }
+            strelka2.out.idx.set { strelka2_idx_ch }
         }
     if ('mutect2' in params.algorithm) {
         mutect2(
@@ -183,6 +197,8 @@ workflow {
             normal_input.normal_index.collect(),
             tumor_input.contamination_est.collect()
             )
+            mutect2.out.vcf.set { mutect2_vcf_ch }
+            mutect2.out.idx.set { mutect2_idx_ch }
         }
     if ('muse' in params.algorithm) {
         muse(
@@ -193,18 +209,20 @@ workflow {
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
             )
+            muse.out.vcf.set { muse_vcf_ch }
+            muse.out.idx.set { muse_idx_ch }
         }
     if (params.algorithm.size() > 1) {
-        tool_vcfs = (somaticsniper.out.vcf
-            .mix(strelka2.out.vcf)
-            .mix(mutect2.out.vcf)
-            .mix(muse.out.vcf))
+        tool_vcfs = (somaticsniper_vcf_ch
+            .mix(strelka2_vcf_ch)
+            .mix(mutect2_vcf_ch)
+            .mix(muse_vcf_ch))
             .collect()
 
-        tool_indices = (somaticsniper.out.idx
-            .mix(strelka2.out.idx)
-            .mix(mutect2.out.idx)
-            .mix(muse.out.idx))
+        tool_indices = (somaticsniper_idx_ch
+            .mix(strelka2_idx_ch)
+            .mix(mutect2_idx_ch)
+            .mix(muse_idx_ch))
             .collect()
 
         intersect(
