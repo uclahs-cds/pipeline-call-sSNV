@@ -73,6 +73,7 @@ process run_sump_MuSE {
         -I $MuSE_txt \
         $arg_seq_type \
         -O ${params.output_filename}-raw.vcf \
+        -n ${task.cpus} \
         -D $dbSNP
     """
 }
