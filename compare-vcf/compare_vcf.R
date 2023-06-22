@@ -6,6 +6,18 @@ library('BoutrosLab.plotting.general');
 library('BoutrosLab.utilities');
 library('VennDiagram');
 
+# tmp: for testing
+#args <- list();
+##args$path <- 'NULL';
+##args$file <- '/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/sfitz-intersect-vcfs/maotian06-compare-vcf/input-vcfs.txt';
+#args$path <- '/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/sfitz-intersect-vcfs/call-sSNV-6.0.0/CPCG0000000196-T001-P01'
+#args$file <- 'NULL';
+#args$valid_algorithm <- 'NULL';
+#args$dataset.id <- 'CPCG';
+#args$output.dir <- paste(getwd(), paste(gsub(' |:', '-', Sys.time()), 'VCF-Comparison-Result', sep = '_'), sep = '/');
+#args$pairwise_comparsion <- 'FALSE';
+#args$global_comparsion <- 'TRUE';
+
 ### 2. Dataset Argument Parser ########################################
 parse.args <- function() {
     data.parser <- ArgumentParser();
@@ -15,7 +27,7 @@ parse.args <- function() {
     data.parser$add_argument('-d', '--dataset.id', help = 'dataset id will be used to generate the output directory that will store both intermediate and output files', default = 'test');
     data.parser$add_argument('-o', '--output.dir', help = 'the output directory, default is current working directory', default = 'NULL');
     data.parser$add_argument('--pairwise_comparsion', help = 'the option to do pairwise comparsion, deflaut is FALSE.', default = 'FALSE');
-    data.parser$add_argument('--global_comparsion', help = 'the output directory, default is current working directory, deflaut is TRUE', default = 'Y');
+    data.parser$add_argument('--global_comparsion', help = 'the output directory, default is current working directory, deflaut is TRUE', default = 'TRUE');
     ### Set the arg_parase
     args <- data.parser$parse_args();
     if ( args$output.dir == 'NULL') {
@@ -27,19 +39,19 @@ parse.args <- function() {
 read.inputs <- function(args) {
     if (args$path != 'NULL') {
         vcf.list <- list.files(path = args$path,
-                                    pattern = '*.vcf.gz$',
+                                    pattern = '*snvs.vcf.gz$',
                                     all.files = TRUE,
                                     full.names = TRUE,
                                     recursive = TRUE);
         } else if (args$file != 'NULL') {
-            vcf.list <- as.character(read.table(args$file, header = FALSE));
+            vcf.list <- as.list(t(read.table(args$file, header = FALSE)));
         } else {
             print( 'No input file or input directory!');
         };
     # set the default valid algorithm, the default are four algorithms used in call-sSNV
     if (args$valid_algorithm == 'NULL') {
         algorithm.list <- c('MuSE', 'Mutect2', 'SomaticSniper', 'Strelka2');
-        args$valid_algorithm <- algorithm.list;
+#        args$valid_algorithm <- algorithm.list;
         } else {
             algorithm.list <- args$valid_algorithm
         };
@@ -53,14 +65,15 @@ read.inputs <- function(args) {
         };
     };
     # Strelka2 has an output with indel variants, removed it here
-    vcf.list <- vcf.list[ - grep('indel', vcf.list)];
+#    vcf.list <- vcf.list[ - grep('indel', vcf.list)];
+    vcf.list <- vcf.list[ - grep('intermediate', vcf.list)];
     vcf.list.name <- unlist(lapply(vcf.list, extract.algorithm));
     names(vcf.list) <- vcf.list.name;
     vcf.count <- c();
     # count each vcf file variant
     for (file in vcf.list) {
         count <- system(paste('zcat', file, '| grep -v "^#" | wc -l', sep = ' '), intern = TRUE);
-        vcf.count <- c(vcf.count, count);
+        vcf.count <- c(vcf.count, as.numeric(count));
     }
     vcf.summary <- data.frame(vcf.list, vcf.list.name, vcf.count);
     colnames(vcf.summary) <- c('filename', 'algorithm', 'variant.count');
@@ -75,15 +88,15 @@ read.inputs <- function(args) {
     return(vcf.list);
     };
 
-### 4. Run VCF check with system() ##################################
-run.vcf.check <- function(vcf.list, args) {
+### 4. Run VCF compare with system() ##################################
+run.vcf.compare <- function(vcf.list, args) {
     docker.command <- 'docker run --rm -v /hot/:/hot/ -u `id -u` biocontainers/vcftools:v0.1.16-1-deb_cv1 vcf-compare';
     if (args$global_comparsion == 'TRUE') {
         vcf.list.text <- paste(vcf.list, collapse = ' ');
-        vcf.check.command <- paste(docker.command,  vcf.list.text, '> global_comparison.txt', sep = ' ');
+        vcf.compare.command <- paste(docker.command,  vcf.list.text, '> global_comparison.txt', sep = ' ');
         futile.logger::flog.info('Running the following command to check VCF overlap:');
-        print(vcf.check.command);
-        system(vcf.check.command, intern = TRUE, ignore.stderr = TRUE);
+        print(vcf.compare.command);
+        system(vcf.compare.command, intern = TRUE, ignore.stderr = TRUE);
 
     };
     if (args$pairwise_comparsion == 'TRUE') {
@@ -99,7 +112,7 @@ run.vcf.check <- function(vcf.list, args) {
     system('mv *.txt intermediate/');
 };
 
-### 5. Gather VCF check results ##################################
+### 5. Gather VCF compare results ##################################
 gather.vcf.compare.result <- function( args ){
     setwd(args$output.dir);
 
@@ -166,7 +179,7 @@ gather.vcf.compare.result <- function( args ){
                     quote = FALSE);
         return(overlap.count);
         }
-    if (args$pairwise_comparsion == 'Y') {
+    if (args$pairwise_comparsion == 'TRUE') {
         file.list <- list.files(path = getwd(),
                                 pattern = 'intermediate/*_vcf_comparsion.txt$',
                                 full.names = TRUE);
@@ -221,46 +234,64 @@ plot.quad.venn.plot <- function (overlap.count, vcf.list) {
         count.from.overlap.sum <- sum(
             overlap.count$count[grep(algo, overlap.count$category)]
             );
-    if (count.from.summary == count.from.overlap.sum) {
-        futile.logger::flog.info(paste(algo, 'Match!', sep = ' '));
-    } else {
-        futile.logger::flog.info(paste(algo, 'Not Match! The sum of the vcf_compare tool does not equal to the summary of vcf', sep = ' '));
+        if (count.from.summary == count.from.overlap.sum) {
+            futile.logger::flog.info(paste(algo, 'Match!', sep = ' '));
+        } else {
+            futile.logger::flog.info(paste(algo, 'Not Match! The sum of the vcf_compare tool does not equal to the summary of vcf', sep = ' '));
+        }
     }
-    }
-    u1 = vcf.summary$variant.count[1];
-    u2 = vcf.summary$variant.count[2];
-    u3 = vcf.summary$variant.count[3];
-    u4 = vcf.summary$variant.count[4];
-    u12 = overlap.count$count[match('12', overlap.count$compare.group)];
-    u13 = overlap.count$count[match('13', overlap.count$compare.group)];
-    u14 = overlap.count$count[match('14', overlap.count$compare.group)];
-    u23 = overlap.count$count[match('23', overlap.count$compare.group)];
-    u24 = overlap.count$count[match('24', overlap.count$compare.group)];
-    u34 = overlap.count$count[match('34', overlap.count$compare.group)];
-    u123 = overlap.count$count[match('123', overlap.count$compare.group)];
-    u124 = overlap.count$count[match('124', overlap.count$compare.group)];
-    u134 = overlap.count$count[match('134', overlap.count$compare.group)];
-    u234 = overlap.count$count[match('234', overlap.count$compare.group)];
-    u1234 = overlap.count$count[match('1234', overlap.count$compare.group)];
-    area.vector <- c(u3, u34, u4, u13, u134, u1234, u234, u24, u1, u14,  u124, u123, u23, u2, u12)
-    print(area.vector);
+#    u1 = vcf.summary$variant.count[1];
+#    u2 = vcf.summary$variant.count[2];
+#    u3 = vcf.summary$variant.count[3];
+#    u4 = vcf.summary$variant.count[4];
+#
+#    combination2 <- combn(1:4, 2);
+#    combination3 <- combn(1:4, 3);
+#    combination4 <- combn(1:4, 4);
+#    comb.list <- c(
+#        apply(combination2, 2, paste0, collapse=""),
+#        apply(combination3, 2, paste0, collapse=""),
+#        apply(combination4, 2, paste0, collapse="")
+#        );
+
+    count <- function(x) {
+        cnt <- overlap.count$count[match(x, overlap.count$compare.group)];
+        if (is.na(cnt)) {
+            return(0);
+        } else {
+            return(cnt);
+        }
+    };
+#    u12 = overlap.count$count[match('12', overlap.count$compare.group)];
+#    u13 = overlap.count$count[match('13', overlap.count$compare.group)];
+#    u14 = overlap.count$count[match('14', overlap.count$compare.group)];
+#    u23 = overlap.count$count[match('23', overlap.count$compare.group)];
+#    u24 = overlap.count$count[match('24', overlap.count$compare.group)];
+#    u34 = overlap.count$count[match('34', overlap.count$compare.group)];
+#    u123 = overlap.count$count[match('123', overlap.count$compare.group)];
+#    u124 = overlap.count$count[match('124', overlap.count$compare.group)];
+#    u134 = overlap.count$count[match('134', overlap.count$compare.group)];
+#    u234 = overlap.count$count[match('234', overlap.count$compare.group)];
+#    u1234 = overlap.count$count[match('1234', overlap.count$compare.group)];
+#    area.vector <- c(u3, u34, u4, u13, u134, u1234, u234, u24, u1, u14,  u124, u123, u23, u2, u12);
+#    print(area.vector);
     # plot qual.venn.plot
     venn.plot <- draw.quad.venn(
         area1 = vcf.summary$variant.count[1],
         area2 = vcf.summary$variant.count[2],
         area3 = vcf.summary$variant.count[3],
         area4 = vcf.summary$variant.count[4],
-        n12 = (u12 + u123 + u124 + u1234),
-        n13 = (u13 + u123 + u134 + u1234),
-        n14 = (u14 + u124 + u134 + u1234),
-        n23 = (u23 + u123 + u234 + u1234),
-        n24 = (u24 + u124 + u234 + u1234),
-        n34 = (u34 + u134 + u234 + u1234),
-        n123 = (u123 + u1234),
-        n124 = (u124 + u1234),
-        n134 = (u134 + u1234),
-        n234 = (u234 + u1234),
-        n1234 = u1234,
+        n12 = (count('12') + count('123') + count('124') + count('1234')),
+        n13 = (count('13') + count('123') + count('134') + count('1234')),
+        n14 = (count('14') + count('124') + count('134') + count('1234')),
+        n23 = (count('23') + count('123') + count('234') + count('1234')),
+        n24 = (count('24') + count('124') + count('234') + count('1234')),
+        n34 = (count('34') + count('134') + count('234') + count('1234')),
+        n123 = (count('123') + count('1234')),
+        n124 = (count('124') + count('1234')),
+        n134 = (count('134') + count('1234')),
+        n234 = (count('234') + count('1234')),
+        n1234 = count('1234'),
         category = vcf.summary$algorithm,
         fill = c("orange", "red", "green", "blue"),
         lty = "dashed",
@@ -284,8 +315,8 @@ plot.quad.venn.plot <- function (overlap.count, vcf.list) {
 
 args <- parse.args();
 vcf.list <- read.inputs(args);
-run.vcf.check(vcf.list, args);
-if (args$global_comparsion == 'Y') {
+run.vcf.compare(vcf.list, args);
+if (args$global_comparsion == 'TRUE') {
     overlap.count <- gather.vcf.compare.result(args);
 } else {
     gather.vcf.compare.result(args);
