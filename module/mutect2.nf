@@ -18,7 +18,7 @@ workflow mutect2 {
 
     main:
         if (params.tumor_only_mode) {
-            normal_name_ch = Channel.from('normal_name')
+            normal_name_ch = Channel.from('NO_NAME')
         } else {
             run_GetSampleName_Mutect2(normal_bam.flatten())
             normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
@@ -121,14 +121,11 @@ workflow mutect2 {
             run_LearnReadOrientationModel_GATK.out.read_orientation_model,
             contamination_table.collect()
         )
-        filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered)
-        split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf, ['snps', 'mnps', 'indels'])
-        index_ch = filter_VCF_BCFtools.out.pass_vcf
-            .map{ it -> [params.sample_id, it] }
-            .mix( split_VCF_BCFtools.out.split_vcf)
-        compress_index_VCF(index_ch)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-vcf", it[1]] }
-            .mix( compress_index_VCF.out.index_out.map{ it -> ["${it[0]}-index", it[2]] } )
+        filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered.map{ it -> ['all', it] })
+        split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf.map{ it -> it[1] }, ['snps', 'mnps', 'indels'])
+        compress_index_VCF(split_VCF_BCFtools.out.split_vcf)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
         split_VCF_BCFtools.out.split_vcf
