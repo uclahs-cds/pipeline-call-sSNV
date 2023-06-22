@@ -214,7 +214,7 @@ plot.quad.venn.plot <- function (overlap.count, vcf.list) {
         cat.col = 'black'
         );
     tiff(
-        filename = generate.filename(args$dataset.id, 'Quad-Venn-diagram', '.tiff' ),
+        filename = generate.filename(args$dataset.id, 'Quad-Venn-diagram', 'tiff' ),
         compression = "lzw"
         );
     grid.rect(x = unit(1, "npc"), y = unit(1, "npc"),
