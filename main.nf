@@ -84,7 +84,8 @@ include { muse } from './module/muse' addParams(
 
 include { intersect } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/intersect-BCFtools-${params.BCFtools_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect-BCFtools-${params.BCFtools_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect-BCFtools-${params.BCFtools_version}"
+    )
 
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {
