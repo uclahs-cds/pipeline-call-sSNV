@@ -49,7 +49,7 @@ process run_SplitIntervals_GATK {
         ${params.split_intervals_extra_args} \
         -O interval-files
     """
-}
+    }
 
 
 process run_GetSampleName_Mutect2 {
@@ -78,7 +78,7 @@ process run_GetSampleName_Mutect2 {
     sample_name=`cat sampleName.txt`
 
     """
-}
+    }
 
 process call_sSNVInAssembledChromosomes_Mutect2 { // Intervals do not have to be in assembled chromosomes
     container params.docker_image_GATK
@@ -132,7 +132,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 { // Intervals do not have to be
         $germline \
         ${params.mutect2_extra_args}
     """
-}
+    }
 
 process call_sSNVInNonAssembledChromosomes_Mutect2 {
     container params.docker_image_GATK
@@ -185,7 +185,7 @@ process call_sSNVInNonAssembledChromosomes_Mutect2 {
         $germline \
         ${params.mutect2_extra_args}
     """
-}
+    }
 
 process run_MergeVcfs_GATK {
     container params.docker_image_GATK
@@ -212,7 +212,7 @@ process run_MergeVcfs_GATK {
     set -euo pipefail
     gatk MergeVcfs $unfiltered_vcfs -O ${params.output_filename}_unfiltered.vcf.gz
     """
-}
+    }
 
 process run_MergeMutectStats_GATK {
     container params.docker_image_GATK
@@ -238,7 +238,7 @@ process run_MergeMutectStats_GATK {
     set -euo pipefail
     gatk MergeMutectStats $unfiltered_stats -O ${params.output_filename}_unfiltered.vcf.gz.stats
     """
-}
+    }
 
 process run_LearnReadOrientationModel_GATK {
     container params.docker_image_GATK
@@ -267,7 +267,7 @@ process run_LearnReadOrientationModel_GATK {
     --tmp-dir ${params.work_dir} \
     -O read-orientation-model.tar.gz
     """
-}
+    }
 
 process run_FilterMutectCalls_GATK {
     container params.docker_image_GATK
@@ -311,7 +311,7 @@ process run_FilterMutectCalls_GATK {
         $contamination \
         ${params.filter_mutect_calls_extra_args}
     """
-}
+    }
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
@@ -336,7 +336,7 @@ process filter_VCF_BCFtools {
     set -euo pipefail
     bcftools view -f PASS --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
     """
-}
+    }
 
 process split_VCF_BCFtools {
     container params.docker_image_BCFtools
@@ -361,4 +361,4 @@ process split_VCF_BCFtools {
     set -euo pipefail
     bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz ${vcf}
     """
-}
+    }

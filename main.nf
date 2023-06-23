@@ -52,7 +52,7 @@ include {
     } from './module/mutect2-processes' addParams(
         workflow_output_dir: "${params.output_dir_base}",
         workflow_log_output_dir: "${params.log_output_dir}/process-log/"
-    )
+        )
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
@@ -82,18 +82,23 @@ include { muse } from './module/muse' addParams(
         params.sample_id,
         [:]))
 
+include { intersect } from './module/intersect' addParams(
+    workflow_output_dir: "${params.output_dir_base}/intersect-BCFtools-${params.BCFtools_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect-BCFtools-${params.BCFtools_version}"
+    )
+
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {
     if(bam_or_vcf.endsWith('.bam')) {
         return "${bam_or_vcf}.bai"
-    }
+        }
     else if(bam_or_vcf.endsWith('vcf.gz')) {
         return "${bam_or_vcf}.tbi"
-    }
+        }
     else {
         throw new Exception("Index file for ${bam_or_vcf} file type not supported. Use .bam or .vcf.gz files.")
+        }
     }
-}
 
 Channel
     .from( params.input['tumor'] )
@@ -101,7 +106,7 @@ Channel
         tumor_bam: it['BAM']
         tumor_index: indexFile(it['BAM'])
         contamination_est: it['contamination_table']
-    }
+        }
     .set { tumor_input }
 
 Channel
@@ -109,7 +114,7 @@ Channel
     .multiMap{ it ->
         normal_bam: it['BAM']
         normal_index: indexFile(it['BAM'])
-    }
+        }
     .set { normal_input }
 
 workflow {
@@ -117,23 +122,24 @@ workflow {
         params.reference,
         params.reference_index,
         params.reference_dict
-    )
+        )
     // Input file validation
     if (params.tumor_only_mode) {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index)
-    } else {
+        }
+    else {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
-    }
+        }
     if (params.use_call_region) {
         file_to_validate = file_to_validate.mix(
             Channel.from(
                 params.call_region,
                 params.call_region_index
+                )
             )
-        )
-    }
+        }
     run_validate_PipeVal(file_to_validate)
     run_validate_PipeVal.out.validation_result.collectFile(
         name: 'input_validation.txt', newLine: true,
@@ -146,6 +152,16 @@ workflow {
         run_GetSampleName_Mutect2_tumor(tumor_input.tumor_bam)
         }
 
+    Channel.empty().set { somaticsniper_vcf_ch }
+    Channel.empty().set { strelka2_vcf_ch }
+    Channel.empty().set { mutect2_vcf_ch }
+    Channel.empty().set { muse_vcf_ch }
+
+    Channel.empty().set { somaticsniper_idx_ch }
+    Channel.empty().set { strelka2_idx_ch }
+    Channel.empty().set { mutect2_idx_ch }
+    Channel.empty().set { muse_idx_ch }
+
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
             tumor_input.tumor_bam,
@@ -154,8 +170,10 @@ workflow {
             normal_input.normal_index,
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
-        )
-    }
+            )
+            somaticsniper.out.vcf.set { somaticsniper_vcf_ch }
+            somaticsniper.out.idx.set { somaticsniper_idx_ch }
+        }
     if ('strelka2' in params.algorithm) {
         strelka2(
             tumor_input.tumor_bam,
@@ -164,8 +182,10 @@ workflow {
             normal_input.normal_index,
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
-        )
-    }
+            )
+            strelka2.out.vcf.set { strelka2_vcf_ch }
+            strelka2.out.idx.set { strelka2_idx_ch }
+        }
     if ('mutect2' in params.algorithm) {
         mutect2(
             tumor_input.tumor_bam.collect(),
@@ -173,8 +193,10 @@ workflow {
             normal_input.normal_bam.collect(),
             normal_input.normal_index.collect(),
             tumor_input.contamination_est.collect()
-        )
-    }
+            )
+            mutect2.out.vcf.set { mutect2_vcf_ch }
+            mutect2.out.idx.set { mutect2_idx_ch }
+        }
     if ('muse' in params.algorithm) {
         muse(
             tumor_input.tumor_bam,
@@ -183,6 +205,26 @@ workflow {
             normal_input.normal_index,
             run_GetSampleName_Mutect2_normal.out.name_ch,
             run_GetSampleName_Mutect2_tumor.out.name_ch
-        )
+            )
+            muse.out.vcf.set { muse_vcf_ch }
+            muse.out.idx.set { muse_idx_ch }
+        }
+    if (params.algorithm.size() > 1) {
+        tool_vcfs = (somaticsniper_vcf_ch
+            .mix(strelka2_vcf_ch)
+            .mix(mutect2_vcf_ch)
+            .mix(muse_vcf_ch))
+            .collect()
+
+        tool_indices = (somaticsniper_idx_ch
+            .mix(strelka2_idx_ch)
+            .mix(mutect2_idx_ch)
+            .mix(muse_idx_ch))
+            .collect()
+
+        intersect(
+            tool_vcfs,
+            tool_indices
+            )
+        }
     }
-}
