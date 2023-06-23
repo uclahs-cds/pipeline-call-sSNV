@@ -1,5 +1,5 @@
 include { generate_sha512sum } from './common'
-include { intersect_VCFs } from './intersect-processes.nf'
+include { intersect_VCFs_BCFtools } from './intersect-processes.nf'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -15,17 +15,17 @@ workflow intersect {
     tool_indices
 
     main:
-        intersect_VCFs(
+        intersect_VCFs_BCFtools(
             tool_vcfs,
             tool_indices
         )
-        file_for_sha512 = intersect_VCFs.out.consensus_vcf
+        file_for_sha512 = intersect_VCFs_BCFtools.out.consensus_vcf
             .flatten()
             .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-vcf", it]}
-            .mix(intersect_VCFs.out.consensus_idx
+            .mix(intersect_VCFs_BCFtools.out.consensus_idx
                 .flatten()
                 .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-idx", it]})
         generate_sha512sum(file_for_sha512)
     emit:
-        intersect_VCFs.out.consensus_vcf
+        intersect_VCFs_BCFtools.out.consensus_vcf
     }

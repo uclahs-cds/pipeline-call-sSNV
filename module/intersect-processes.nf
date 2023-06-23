@@ -6,7 +6,7 @@ Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 """
 
-process intersect_VCFs {
+process intersect_VCFs_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
