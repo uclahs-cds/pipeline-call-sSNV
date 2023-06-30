@@ -48,7 +48,7 @@ process intersect_VCFs_BCFtools {
 
 
 process plot_venn_R
-    container params.docker_image_r_scripts
+    container test-rvenn
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.tiff"
@@ -68,6 +68,6 @@ process plot_venn_R
     script:
     """
     set -euo pipefail
-    Rscript ${script_dir}/plot_venn.R --isec_dir ${isec_dir} --dataset params.dataset_id
+    Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset params.dataset_id
     """
     }

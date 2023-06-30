@@ -17,11 +17,10 @@ COPY --from=builder /usr/local /usr/local
 RUN groupadd -g 500001 bldocker \
     && useradd -r -u 500001 -g bldocker bldocker
 
-WORKDIR /usr/src
 # where's a better place to get this package?
 COPY r-scripts/BoutrosLab.utilities_1.9.10.tar.gz /usr/src
 RUN R -e "install.packages('BoutrosLab.utilities_1.9.10.tar.gz', repos = NULL, type = 'source')"
-RUN rm BoutrosLab.utilities_1.9.10.tar.gz
+# RUN rm BoutrosLab.utilities_1.9.10.tar.gz
 
 # Change the default user to bldocker from root
 USER bldocker
