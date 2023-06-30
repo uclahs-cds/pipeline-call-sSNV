@@ -25,11 +25,11 @@ algorithms <- algorithms[grep(paste0('^', args$isec_dir), algorithms)];
 algorithms <- gsub(paste0(args$isec_dir,'.*\t'), '', algorithms);
 algorithms <- gsub('-.*', '', algorithms);
 sites <- read.table(paste0(args$isec_dir,'/sites.txt'), header = FALSE, colClasses = 'character');
-split_col <- strsplit(as.character(sites$V5), "");
-sites$col1 <- sapply(split_col, "[", 1);
-sites$col2 <- sapply(split_col, "[", 2);
-sites$col3 <- sapply(split_col, "[", 3);
-sites$col4 <- sapply(split_col, "[", 4);
+split.col <- strsplit(as.character(sites$V5), '');
+sites$col1 <- sapply(split.col, '[', 1);
+sites$col2 <- sapply(split.col, '[', 2);
+sites$col3 <- sapply(split.col, '[', 3);
+sites$col4 <- sapply(split.col, '[', 4);
 sites$V5 <- NULL;
 header <- c('chrom', 'pos', 'ref', 'alt', algorithms);
 colnames(sites) <- header
@@ -40,8 +40,8 @@ tool.variants.ordered <- tool.variants[order(lengths(tool.variants), decreasing 
 VennDiagram::venn.diagram(
     tool.variants.ordered,
     filename = generate.filename(args$dataset, 'Venn-diagram', 'tiff' ),
-    fill = c("orange", "red", "green", "blue"),
-    lty = "dashed",
+    fill = c('orange', 'red', 'green', 'blue'),
+    lty = 'dashed',
     cex = 1,
     cat.cex = 0.8,
     cat.col = 'black'
