@@ -4,7 +4,8 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
-
+- docker_image_r_scripts: ${params.docker_image_r_scripts}
+====================================
 """
 process intersect_VCFs_BCFtools {
     container params.docker_image_BCFtools
@@ -33,8 +34,7 @@ process intersect_VCFs_BCFtools {
     path "*.vcf.gz.tbi", emit: consensus_idx
     path ".command.*"
     path "isec-2-or-more"
-    path "isec-1-or-more/sites.txt"
-    path "isec-1-or-more/README.txt"
+    path "isec-1-or-more" emit: isec_dir
 
     script:
     vcf_list = vcfs.join(' ')
@@ -43,5 +43,31 @@ process intersect_VCFs_BCFtools {
     bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more --regions-file ${call_region} ${vcf_list}
     awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' | while read a b c d; do mv \$a \$d ; mv \$a.tbi \$d.tbi ; done
     bcftools isec --output-type z --prefix isec-1-or-more --regions-file ${call_region} ${vcf_list}
+    """
+    }
+
+
+process plot_venn_R
+    container params.docker_image_r_scripts
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.tiff"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path isec_dir
+    path script_dir
+
+    output:
+    path ".command.*"
+    path "*.tiff"
+
+    script:
+    """
+    set -euo pipefail
+    Rscript ${script_dir}/plot_venn.R --isec_dir ${isec_dir} --dataset params.dataset_id
     """
     }
