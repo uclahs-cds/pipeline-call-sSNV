@@ -47,7 +47,7 @@ process call_sSNV_SomaticSniper {
         $normal \
         ${params.output_filename}.vcf
     """
-}
+    }
 
 
 // Generate pileup files using samtools. Include some basic base and mapping
@@ -79,7 +79,7 @@ process convert_BAM2Pileup_SAMtools {
         $bam \
         > ${params.output_filename}_raw-${type}.pileup
     """
-}
+    }
 
 
 // Filter pileup (from both normal.bam and tumor.bam) using vcfutils.pl varFilter,
@@ -111,7 +111,7 @@ process create_IndelCandidate_SAMtools {
         | grep -P "\t\\*\t" \
         > ${params.output_filename}_filtered-${type}.pileup
     """
-}
+    }
 
 
 // Remove potential false positive SNVs close to Indels detected in the pileup data
@@ -141,7 +141,7 @@ process apply_NormalIndelFilter_SomaticSniper {
         --indel-file $indel_file \
         --out-file ${params.output_filename}_normal.vcf
     """
-}
+    }
 
 
 // Remove potential false positive SNVs close to Indels detected in the pileup data
@@ -171,7 +171,7 @@ process apply_TumorIndelFilter_SomaticSniper {
         --indel-file $indel_file \
         --out-file ${params.output_filename}.SNPfilter
     """
-}
+    }
 
 
 // Adapt the remainder for use with bam-readcount to get SNP positions
@@ -200,7 +200,7 @@ process create_ReadCountPosition_SomaticSniper {
         --snp-file $snp_file \
         --out-file ${params.output_filename}.SNPfilter.pos
     """
-}
+    }
 
 // Run bam-readcount
 // Recommend to use the same mapping quality -q setting as SomaticSniper
@@ -238,8 +238,7 @@ process generate_ReadCount_bam_readcount {
         $tumor \
         > ${params.output_filename}.readcount
     """
-}
-
+    }
 
 // Run the false positive filter
 process filter_FalsePositive_SomaticSniper {
@@ -268,8 +267,7 @@ process filter_FalsePositive_SomaticSniper {
         --snp-file $snp_file \
         --readcount-file $readcount_file
     """
-}
-
+    }
 
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process call_HighConfidenceSNV_SomaticSniper {
@@ -300,4 +298,4 @@ process call_HighConfidenceSNV_SomaticSniper {
         --lq-output "${params.output_filename}_lc.vcf" \
         --out-file "${params.output_filename}_hc.vcf"
     """
-}
+    }
