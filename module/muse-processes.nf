@@ -43,7 +43,7 @@ process call_sSNV_MuSE {
         $tumor \
         $normal
     """
-}
+    }
 
 process run_sump_MuSE {
     container params.docker_image_MuSE
@@ -76,7 +76,7 @@ process run_sump_MuSE {
         -n ${task.cpus} \
         -D $dbSNP
     """
-}
+    }
 
 process filter_VCF_BCFtools {
     container params.docker_image_BCFtools
@@ -101,7 +101,7 @@ process filter_VCF_BCFtools {
     set -euo pipefail
     bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
     """
-}
+    }
 
 process reorder_samples_BCFtools {
     container params.docker_image_BCFtools
@@ -126,4 +126,4 @@ process reorder_samples_BCFtools {
     set -euo pipefail
     bcftools view -s NORMAL,TUMOR --output ${params.output_filename}_pass-reorder.vcf.gz ${vcf}
     """
-}
+    }
