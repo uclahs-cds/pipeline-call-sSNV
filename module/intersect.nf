@@ -1,5 +1,5 @@
 include { generate_sha512sum } from './common'
-include { intersect_VCFs_BCFtools } from './intersect-processes.nf'
+include { intersect_VCFs_BCFtools; plot_venn_R } from './intersect-processes.nf'
 
 workflow intersect {
     // pass bin directory in project folder as channel into docker

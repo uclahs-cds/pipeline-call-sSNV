@@ -34,7 +34,7 @@ process intersect_VCFs_BCFtools {
     path "*.vcf.gz.tbi", emit: consensus_idx
     path ".command.*"
     path "isec-2-or-more"
-    path "isec-1-or-more" emit: isec_dir
+    path "isec-1-or-more", emit: isec_dir
 
     script:
     vcf_list = vcfs.join(' ')
@@ -46,9 +46,8 @@ process intersect_VCFs_BCFtools {
     """
     }
 
-
-process plot_venn_R
-    container test-rvenn
+process plot_venn_R {
+    container 'test-rvenn'
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.tiff"
