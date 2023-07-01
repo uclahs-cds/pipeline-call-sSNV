@@ -1,5 +1,10 @@
 # Script to plot the Venn diagram of the intersection of the VCF files
 # Initial commit: Sorel Fitz-Gibbon 2023-06-29
+# Input:
+#  -i, --isec_dir: The directory containing the output from BCFtools intersect
+#  -d, --dataset: The dataset ID passed from nextflow
+# Output:
+# - A Venn diagram of the intersection of the VCF files
 
 ## 1. Setup the environment ########################################################################
 library('argparse');

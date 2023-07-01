@@ -17,7 +17,7 @@ COPY --from=builder /usr/local /usr/local
 RUN groupadd -g 500001 bldocker \
     && useradd -r -u 500001 -g bldocker bldocker
 
-# where's a better place to get this package?
+# BoutrosLab.utilities_1.9.10.tar.gz is soft-linked to /hot/resource/R-package/Bout...gz
 COPY r-scripts/BoutrosLab.utilities_1.9.10.tar.gz /usr/src
 RUN R -e "install.packages('BoutrosLab.utilities_1.9.10.tar.gz', repos = NULL, type = 'source')"
 # RUN rm BoutrosLab.utilities_1.9.10.tar.gz
