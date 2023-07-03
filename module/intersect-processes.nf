@@ -47,7 +47,7 @@ process intersect_VCFs_BCFtools {
     }
 
 process plot_venn_R {
-    container 'test-rvenn'
+    container params.docker_image_r_scripts
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.tiff"

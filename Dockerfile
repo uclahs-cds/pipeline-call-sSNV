@@ -19,7 +19,7 @@ RUN groupadd -g 500001 bldocker \
 
 # BoutrosLab.utilities_1.9.10.tar.gz is soft-linked to /hot/resource/R-package/Bout...gz
 COPY r-scripts/BoutrosLab.utilities_1.9.10.tar.gz /usr/src
-RUN R -e "install.packages('BoutrosLab.utilities_1.9.10.tar.gz', repos = NULL, type = 'source')"
+RUN R -e "install.packages('/usr/src/BoutrosLab.utilities_1.9.10.tar.gz', repos = NULL, type = 'source')"
 # RUN rm BoutrosLab.utilities_1.9.10.tar.gz
 
 # Change the default user to bldocker from root
