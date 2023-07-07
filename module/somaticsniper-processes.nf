@@ -206,10 +206,9 @@ process create_ReadCountPosition_SomaticSniper {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
     container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
                mode: "copy",
-               pattern: "*.readcount",
-               enabled: params.save_intermediate_files
+               pattern: "*.readcount"
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
