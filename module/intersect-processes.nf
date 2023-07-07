@@ -57,8 +57,9 @@ process plot_venn_R {
         saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
     input:
-    path isec_dir
     path script_dir
+    path isec_dir
+    path call_region
 
     output:
     path ".command.*"
@@ -67,6 +68,6 @@ process plot_venn_R {
     script:
     """
     set -euo pipefail
-    Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset params.dataset_id
+    Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset ${params.dataset_id} --regions ${params.call_region}
     """
     }

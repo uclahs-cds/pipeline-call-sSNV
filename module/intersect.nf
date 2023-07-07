@@ -25,7 +25,8 @@ workflow intersect {
                 )
         generate_sha512sum(file_for_sha512)
         plot_venn_R(
+            script_dir_ch,
             intersect_VCFs_BCFtools.out.isec_dir,
-            script_dir_ch
+            params.call_region
         )
     }
