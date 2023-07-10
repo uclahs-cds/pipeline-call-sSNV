@@ -38,7 +38,7 @@ process call_sIndel_Manta {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region_command = params.use_call_region ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_canonical_regions ? "--callRegions ${call_region}" : ""
     """
     configManta.py \
         --normalBam $normal \
@@ -82,7 +82,7 @@ process call_sSNV_Strelka2 {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region_command = params.use_call_region ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_canonical_regions ? "--callRegions ${call_region}" : ""
     """
     set -euo pipefail
     configureStrelkaSomaticWorkflow.py \
