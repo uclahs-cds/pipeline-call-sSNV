@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
 
 ### Changed
+- Keep `bam-readcount` output in `SomaticSniper` QC folder
 - Update `MuSE` to `v2.0.2`
 - Update to use sample ID from input BAM files (single tumor/normal BAM input only)
 - Use BCFtools to compress PASS variants instead of bgzip
