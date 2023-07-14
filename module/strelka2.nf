@@ -26,8 +26,8 @@ workflow strelka2 {
             normal_index,
             params.reference,
             "${params.reference}.fai",
-            params.canonical_regions,
-            params.canonical_regions_index
+            params.intersect_regions,
+            params.intersect_regions_index
         )
         call_sSNV_Strelka2(
             tumor_bam,
@@ -37,8 +37,8 @@ workflow strelka2 {
             params.reference,
             "${params.reference}.fai",
             call_sIndel_Manta.out[0],
-            params.canonical_regions,
-            params.canonical_regions_index
+            params.intersect_regions,
+            params.intersect_regions_index
         )
         filter_VCF_BCFtools(call_sSNV_Strelka2.out.snvs_vcf
             .mix(call_sSNV_Strelka2.out.indels_vcf))
@@ -58,4 +58,3 @@ workflow strelka2 {
             .map{ it -> ["${it[2]}"] }
 
     }
-

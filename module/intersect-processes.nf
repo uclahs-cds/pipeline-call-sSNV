@@ -25,8 +25,8 @@ process intersect_VCFs_BCFtools {
     input:
     path vcfs
     path indices
-    path call_region
-    path call_region_index
+    path intersect_region
+    path intersect_region_index
 
     output:
     path "*.vcf.gz", emit: consensus_vcf
@@ -40,8 +40,8 @@ process intersect_VCFs_BCFtools {
     vcf_list = vcfs.join(' ')
     """
     set -euo pipefail
-    bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more --regions-file ${call_region} ${vcf_list}
+    bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more --regions-file ${intersect_region} ${vcf_list}
     awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' | while read a b c d; do mv \$a \$d ; mv \$a.tbi \$d.tbi ; done
-    bcftools isec --output-type z --prefix isec-1-or-more --regions-file ${call_region} ${vcf_list}
+    bcftools isec --output-type z --prefix isec-1-or-more --regions-file ${intersect_region} ${vcf_list}
     """
     }

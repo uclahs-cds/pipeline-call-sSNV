@@ -46,10 +46,14 @@ exome:
   required: false
   default: false
   help: 'The exome option when running manta and strelka2'
-canonical_regions:
+intersect_regions:
   type: 'Path'
   required: true
-  help: 'canonical regions used by mutect2, strelka2 and intersect'
+  help: 'call regions used by mutect2, strelka2 and intersect'
+use_intersect_regions:
+  type: 'Bool'
+  required: true
+  default: true
 split_intervals_extra_args:
   type: 'String'
   required: false
