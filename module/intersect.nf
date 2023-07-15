@@ -13,8 +13,8 @@ workflow intersect {
         intersect_VCFs_BCFtools(
             tool_vcfs,
             tool_indices,
-            params.call_region,
-            params.call_region_index
+            params.intersect_regions,
+            params.intersect_regions_index
             )
         file_for_sha512 = intersect_VCFs_BCFtools.out.consensus_vcf
             .flatten()

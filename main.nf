@@ -30,7 +30,7 @@ log.info """\
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
-        call_region: ${params.call_region}
+        intersect_region: ${params.intersect_region}
 
     - output:
         output_dir: ${params.output_dir_base}
@@ -132,11 +132,11 @@ workflow {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
         }
-    if (params.use_call_region) {
+    if (params.use_intersect_regions) {
         file_to_validate = file_to_validate.mix(
             Channel.from(
-                params.call_region,
-                params.call_region_index
+                params.intersect_regions,
+                params.intersect_regions_index
                 )
             )
         }

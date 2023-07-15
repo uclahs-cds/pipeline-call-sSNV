@@ -46,11 +46,14 @@ exome:
   required: false
   default: false
   help: 'The exome option when running manta and strelka2'
-call_region:
+intersect_regions:
   type: 'Path'
-  required: false
-  default: '/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz'
-  help: 'A call region bed file for strelka2 to save runtime or for a targeted region'
+  required: true
+  help: 'call regions used by mutect2, strelka2 and intersect'
+use_intersect_regions:
+  type: 'Bool'
+  required: true
+  default: true
 split_intervals_extra_args:
   type: 'String'
   required: false

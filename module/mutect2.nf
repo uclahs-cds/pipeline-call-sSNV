@@ -36,8 +36,7 @@ workflow mutect2 {
         if (params.intervals) {
             intervals = params.intervals
         } else {
-            intervals = "${projectDir}/config/hg38_chromosomes_canonical.list"
-
+            intervals = "${projectDir}/config/hg38_chromosomes_canonical.bed"
             // process non-canonical chromosome regions seperately
             // as this region requires more memory than the canonical regions
             call_sSNVInNonAssembledChromosomes_Mutect2(
