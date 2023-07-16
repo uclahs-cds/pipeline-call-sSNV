@@ -206,9 +206,10 @@ process create_ReadCountPosition_SomaticSniper {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
     container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
                mode: "copy",
                pattern: "*.readcount"
+               enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
@@ -265,6 +266,30 @@ process filter_FalsePositive_SomaticSniper {
     fpfilter.pl \
         --snp-file $snp_file \
         --readcount-file $readcount_file
+    """
+    }
+
+// After running fpfilter.pl above, readcount_file can now be compressed
+process compress_readcount_SomaticSniper {
+    container params.docker_image_somaticsniper
+    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
+               mode: "copy",
+               pattern: "*.readcount.gz",
+    publishDir path: "${params.workflow_log_output_dir}",
+               mode: "copy",
+               pattern: ".command.*",
+               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+
+    input:
+    path readcount_file
+
+    output:
+    path "*.readcount.gz"
+    path ".command.*"
+
+    """
+    set -euo pipefail
+        gzip $readcount_file
     """
     }
 
