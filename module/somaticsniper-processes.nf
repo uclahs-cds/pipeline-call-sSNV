@@ -208,7 +208,7 @@ process generate_ReadCount_bam_readcount {
     container params.docker_image_bam_readcount
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
                mode: "copy",
-               pattern: "*.readcount"
+               pattern: "*.readcount",
                enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
@@ -269,12 +269,12 @@ process filter_FalsePositive_SomaticSniper {
     """
     }
 
-// After running fpfilter.pl above, readcount_file can now be compressed
+// After running fpfilter.pl above, readcount file can now be compressed
 process compress_readcount_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
                mode: "copy",
-               pattern: "*.readcount.gz",
+               pattern: "*.readcount.gz"
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
