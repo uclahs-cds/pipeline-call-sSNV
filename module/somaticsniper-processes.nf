@@ -271,7 +271,7 @@ process filter_FalsePositive_SomaticSniper {
 
 // After running fpfilter.pl above, readcount file can now be compressed
 process compress_readcount_SomaticSniper {
-    container params.docker_image_somaticsniper
+    container params.docker_image_bam_readcount
     publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
                mode: "copy",
                pattern: "*.readcount.gz"
@@ -289,7 +289,7 @@ process compress_readcount_SomaticSniper {
 
     """
     set -euo pipefail
-        gzip $readcount_file
+    gzip --stdout $readcount_file > ${readcount_file}.gz
     """
     }
 
