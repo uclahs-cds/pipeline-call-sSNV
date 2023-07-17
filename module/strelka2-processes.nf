@@ -27,8 +27,8 @@ process call_sIndel_Manta {
     path normal_index
     path reference
     path reference_index
-    path call_region
-    path call_region_index
+    path intersect_regions
+    path intersect_regions_index
 
     output:
     tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
@@ -38,7 +38,7 @@ process call_sIndel_Manta {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region_command = params.use_intersect_regions ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_intersect_regions ? "--callRegions ${intersect_regions}" : ""
     """
     configManta.py \
         --normalBam $normal \
@@ -71,8 +71,8 @@ process call_sSNV_Strelka2 {
     path reference
     path reference_index
     tuple path(indel_candidates), path(indel_candidates_index)
-    path call_region
-    path call_region_index
+    path intersect_regions
+    path intersect_regions_index
 
     output:
     tuple val("SNV"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
@@ -82,7 +82,7 @@ process call_sSNV_Strelka2 {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region_command = params.use_intersect_regions ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_intersect_regions ? "--callRegions ${intersect_regions}" : ""
     """
     set -euo pipefail
     configureStrelkaSomaticWorkflow.py \
