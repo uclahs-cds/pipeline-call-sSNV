@@ -30,7 +30,7 @@ log.info """\
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
-        intersect_region: ${params.intersect_region}
+        intersect_regions: ${params.intersect_regions}
 
     - output:
         output_dir: ${params.output_dir_base}
