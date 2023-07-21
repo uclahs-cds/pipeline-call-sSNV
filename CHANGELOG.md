@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add regions filter to variant intersections, limiting output to main chromosome variants
+- Add second BCFtools step to create full presence/absence variant table (including private)
 - Add workflow to create a `consensus.vcf` that includes SNVs found by two or more variant callers
 - Add `fix_sample_names_VCF`, tumor and normal sample IDs from input BAMs used in output VCFs
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
 
 ### Changed
+- reconfigure call_regions to intersect_regions 
+- Update to BCFtools v1.17
 - Keep `bam-readcount` output in `SomaticSniper` QC folder
 - Update `MuSE` to `v2.0.2`
 - Update to use sample ID from input BAM files (single tumor/normal BAM input only)

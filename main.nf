@@ -30,7 +30,7 @@ log.info """\
         reference: ${params.reference}
         reference_index: ${params.reference_index}
         reference_dict: ${params.reference_dict}
-        call_region: ${params.call_region}
+        intersect_regions: ${params.intersect_regions}
 
     - output:
         output_dir: ${params.output_dir_base}
@@ -132,14 +132,12 @@ workflow {
         file_to_validate = reference_ch
         .mix (tumor_input.tumor_bam, tumor_input.tumor_index, normal_input.normal_bam, normal_input.normal_index)
         }
-    if (params.use_call_region) {
-        file_to_validate = file_to_validate.mix(
-            Channel.from(
-                params.call_region,
-                params.call_region_index
-                )
+    file_to_validate = file_to_validate.mix(
+        Channel.from(
+            params.intersect_regions,
+            params.intersect_regions_index
             )
-        }
+        )
     run_validate_PipeVal(file_to_validate)
     run_validate_PipeVal.out.validation_result.collectFile(
         name: 'input_validation.txt', newLine: true,
