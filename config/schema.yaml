@@ -48,12 +48,8 @@ exome:
   help: 'The exome option when running manta and strelka2'
 intersect_regions:
   type: 'Path'
-  required: true
+  required: false
   help: 'call regions bed file used by mutect2, strelka2 and intersect'
-use_intersect_regions:
-  type: 'Bool'
-  required: true
-  default: true
 split_intervals_extra_args:
   type: 'String'
   required: false
@@ -85,11 +81,6 @@ scatter_count:
   type: 'Integer'
   required: true
   default: 50
-intervals:
-  type: 'String'
-  required: false
-  allow_empty: true
-  help: 'A GATK accepted interval list file'
 germline_resource_gnomad_vcf:
   type: 'Path'
   required: false
