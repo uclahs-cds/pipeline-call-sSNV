@@ -11,7 +11,7 @@ Mutect2 Options:
 - filter_mutect_calls_extra_args: ${params.filter_mutect_calls_extra_args}
 - gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
 - scatter_count:                  ${params.scatter_count}
-- intervals:                      ${params.intervals}
+- intervals:                      ${params.intersect_regions}
 - tumor_only_mode:                ${params.tumor_only_mode}
 - use_contamination_estimation:   ${params.use_contamination_estimation}
 - contamination_table:            ${params.input.tumor.contamination_table}
@@ -30,7 +30,8 @@ process run_SplitIntervals_GATK {
         saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
-    path intervals
+    path intersect_regions
+    path intersect_regions_index
     path reference
     path reference_index
     path reference_dict
@@ -39,12 +40,14 @@ process run_SplitIntervals_GATK {
     path 'interval-files/*-scattered.interval_list', emit: interval_list
     path ".command.*"
 
+    script:
+    intervals_command = params.use_intersect_regions ? "-L ${intersect_regions}" : ""
     """
     set -euo pipefail
 
     gatk SplitIntervals \
         -R $reference \
-        -L $intervals \
+        ${intervals_command} \
         -scatter ${params.scatter_count} \
         ${params.split_intervals_extra_args} \
         -O interval-files
@@ -80,7 +83,7 @@ process run_GetSampleName_Mutect2 {
     """
     }
 
-process call_sSNVInAssembledChromosomes_Mutect2 { // Intervals do not have to be in assembled chromosomes
+process call_sSNV_Mutect2 {
     container params.docker_image_GATK
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
@@ -128,59 +131,6 @@ process call_sSNVInAssembledChromosomes_Mutect2 { // Intervals do not have to be
         -L $interval \
         --f1r2-tar-gz ${params.output_filename}_unfiltered-${interval.baseName}-f1r2.tar.gz \
         -O ${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz \
-        --tmp-dir \$PWD \
-        $germline \
-        ${params.mutect2_extra_args}
-    """
-    }
-
-process call_sSNVInNonAssembledChromosomes_Mutect2 {
-    container params.docker_image_GATK
-
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "${params.output_filename}_unfiltered*",
-        enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
-
-    input:
-    path interval // canonical intervals to *exclude*
-    path tumor
-    path tumor_index
-    path normal
-    path normal_index
-    path reference
-    path reference_index
-    path reference_dict
-    val normal_name
-    path germline_resource_gnomad_vcf
-    path germline_resource_gnomad_vcf_index
-
-    output:
-    path "*.vcf.gz", emit: unfiltered
-    path "*.vcf.gz.tbi", emit: unfiltered_index
-    path "*.vcf.gz.stats", emit: unfiltered_stats
-    path "*-f1r2.tar.gz", emit: f1r2
-    path ".command.*"
-
-    script:
-    tumors = tumor.collect { "-I '$it'" }.join(' ')
-    normals = normal.collect { "-I '$it'" }.join(' ')
-    normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam = params.tumor_only_mode ? "$tumors" : "$tumors $normals $normal_names"
-    germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
-    """
-    set -euo pipefail
-
-    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
-        -R $reference \
-        -XL $interval \
-        $bam \
-        --f1r2-tar-gz ${params.output_filename}_unfiltered-non-canonical-f1r2.tar.gz \
-        -O ${params.output_filename}_unfiltered-non-canonical.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
         ${params.mutect2_extra_args}
