@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add variant intersection Venn diagram
 - Add regions filter to variant intersections
 - Add second BCFtools step to create full presence/absence variant table (including private)
 - Add workflow to create a `consensus.vcf` that includes SNVs found by two or more variant callers
@@ -14,12 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
 
 ### Changed
-- Keep `bam-readcount` output in `SomaticSniper` QC folder
-- reconfigure call_regions to intersect_regions 
-- Update to BCFtools v1.17
-=======
 - reconfigure intersect_regions to use all contigs except `decoy`
-- reconfigure call_regions to intersect_regions 
+- reconfigure call_regions to intersect_regions
 - Update to BCFtools v1.17
 - Keep `bam-readcount` output in `SomaticSniper` QC folder
 - Update `MuSE` to `v2.0.2`

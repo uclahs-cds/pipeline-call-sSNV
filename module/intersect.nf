@@ -27,6 +27,5 @@ workflow intersect {
         plot_venn_R(
             script_dir_ch,
             intersect_VCFs_BCFtools.out.isec_dir,
-            params.call_region
         )
     }

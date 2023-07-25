@@ -50,28 +50,27 @@ process intersect_VCFs_BCFtools {
     """
     }
 
-process plot_venn_R {
-    container params.docker_image_r_scripts
-    publishDir path: "${params.workflow_output_dir}/output",
-        mode: "copy",
-        pattern: "*.tiff"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+ process plot_venn_R {
+     container params.docker_image_r_scripts
+     publishDir path: "${params.workflow_output_dir}/output",
+         mode: "copy",
+         pattern: "*.tiff"
+     publishDir path: "${params.workflow_log_output_dir}",
+         mode: "copy",
+         pattern: ".command.*",
+         saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
 
-    input:
-    path script_dir
-    path isec_dir
-    path call_region
+     input:
+     path script_dir
+     path isec_dir
 
-    output:
-    path ".command.*"
-    path "*.tiff"
+     output:
+     path ".command.*"
+     path "*.tiff"
 
-    script:
-    """
-    set -euo pipefail
-    Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset ${params.dataset_id} --regions ${params.call_region}
-    """
-    }
+     script:
+     """
+     set -euo pipefail
+     Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset ${params.dataset_id}
+     """
+     }
