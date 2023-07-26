@@ -16,6 +16,10 @@ workflow intersect {
             params.intersect_regions,
             params.intersect_regions_index
             )
+        concat_VCFS_BCFtools(
+            intersect_VCFs_BCFtools.out.consensus_vcf,
+            intersect_VCFs_BCFtools.out.consenus_idx,
+            )
         file_for_sha512 = intersect_VCFs_BCFtools.out.consensus_vcf
             .flatten()
             .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-vcf", it]}

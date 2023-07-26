@@ -74,3 +74,32 @@ process intersect_VCFs_BCFtools {
      Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset ${params.dataset_id}
      """
      }
+
+process concat_VCFs_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*concat.vcf.gz*"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path vcfs
+    path indices
+
+    output:
+    path "*concat.vcf.gz"
+    path ".command.*"
+
+    script:
+    vcf_list = vcfs.join(' ')
+    """
+    set -euo pipefail
+    # BCFtools concat to create a single VCF with all nfiles +2 variants
+    # output header is a uniquified concatenation of all headers
+    # output `INFO` `FORMAT` `NORMAL` and `TUMOR` fields are from the first listed VCF that has the variant
+    bcftools concat --output-type z --output ${params.output_filename}_SNV-concat.vcf.gz --allow-overlaps --rm-dups all ${vcf_list}
+    """
+    }
