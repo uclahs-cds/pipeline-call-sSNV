@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add concatenation of consensus variants to one VCF
 - Add variant intersection Venn diagram
 - Add regions filter to variant intersections
 - Add second BCFtools step to create full presence/absence variant table (including private)
