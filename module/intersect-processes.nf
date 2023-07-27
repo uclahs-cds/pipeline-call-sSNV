@@ -103,3 +103,25 @@ process concat_VCFs_BCFtools {
     bcftools concat --output-type z --output ${params.output_filename}_SNV-concat.vcf.gz --allow-overlaps --rm-dups all ${vcf_list}
     """
     }
+
+process convert_VCF_vcf2maf {
+    container params.docker_image_vcf2maf
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.maf"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+
+    input:
+    path vcf
+
+    output:
+    path "*maf"
+    path ".command.*"
+
+    script:
+    """
+    """
+    }
