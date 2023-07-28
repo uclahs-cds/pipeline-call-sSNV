@@ -1,5 +1,5 @@
 include { generate_sha512sum } from './common'
-include { intersect_VCFs_BCFtools; plot_venn_R; concat_VCFs_BCFtools } from './intersect-processes.nf'
+include { intersect_VCFs_BCFtools; plot_venn_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf; compress_MAF_vcf2maf } from './intersect-processes.nf'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -31,9 +31,13 @@ workflow intersect {
             intersect_VCFs_BCFtools.out.consensus_vcf,
             intersect_VCFs_BCFtools.out.consensus_idx
             )
+        convert_VCF_vcf2maf(
+            concat_VCFs_BCFtools.out.concat_vcf,
+            params.reference)
         compress_index_VCF(concat_VCFs_BCFtools.out.concat_vcf
             .map{ it -> ['SNV', it]}
             )
+        compress_MAF_vcf2maf(convert_VCF_vcf2maf.out.concat_maf)
         file_for_sha512 = intersect_VCFs_BCFtools.out.consensus_vcf
             .flatten()
             .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-vcf", it]}
@@ -46,6 +50,9 @@ workflow intersect {
                 )
             .mix(compress_index_VCF.out.index_out
                 .map{ it -> ["intersect-${it[0]}-index", it[2]] }
+                )
+            .mix(compress_MAF_vcf2maf.out.concat_maf_gz
+                .map{ it -> ["intersect-${file(it).getName().split('_')[0]}-maf", it]}
                 )
         generate_sha512sum(file_for_sha512)
     }
