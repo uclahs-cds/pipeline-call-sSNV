@@ -77,9 +77,10 @@ process intersect_VCFs_BCFtools {
 
 process concat_VCFs_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
-        pattern: "*concat.vcf.gz*"
+        pattern: "*concat.vcf",
+        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -90,7 +91,7 @@ process concat_VCFs_BCFtools {
     path indices
 
     output:
-    path "*concat.vcf.gz"
+    path "*concat.vcf", emit: concat_vcf
     path ".command.*"
 
     script:
@@ -100,7 +101,7 @@ process concat_VCFs_BCFtools {
     # BCFtools concat to create a single VCF with all nfiles +2 variants
     # output header is a uniquified concatenation of all headers
     # output `INFO` `FORMAT` `NORMAL` and `TUMOR` fields are from the first listed VCF that has the variant
-    bcftools concat --output-type z --output ${params.output_filename}_SNV-concat.vcf.gz --allow-overlaps --rm-dups all ${vcf_list}
+    bcftools concat --output-type v --output ${params.output_filename}_SNV-concat.vcf --allow-overlaps --rm-dups all ${vcf_list}
     """
     }
 
