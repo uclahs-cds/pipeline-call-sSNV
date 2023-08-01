@@ -14,7 +14,7 @@
   - [License](#license)
 
 ## Overview
-The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file.  
+The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file. If two or more callers are requested, a Venn Diagram is produced showing counts of shared and private variants as well as VCF and MAF files with the set of variants shared by two or more tool outputs.
 
 SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs from multiple samples from the same individual.
 
@@ -117,11 +117,11 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 #### 1. `SomaticSniper` v1.0.5.0
 Compare a pair of tumor and normal BAM files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in VCF format.
 #### 2. Filter out ambiguous positions.
-This takes several steps, listed below, and starts with the same input files given to `SomaticSniper`.
-##### a. Get pileup summaries
+This takes several steps, listed below, and starts with the same input files given to `SomaticSniper`. These are used to generate a list of high confidence indels to assist SNV filtering.
+##### a. Get indel pileup summaries
 Summarize counts of reads that support reference, alternate and other alleles for given sites.  This is done for both of the input BAM files and the results are used in the next step.
-##### b. Filter pileup outputs
-Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filters each to keep only indels with QUAL > 20. `samtools.pl` is packaged with `SomaticSniper`. 
+##### b. Filter indel pileup outputs
+Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filter each to keep only indels with QUAL > 20. `samtools.pl` is packaged with `SomaticSniper`. 
 ##### c. Filter SomaticSniper VCF
 Use `snpfilter.pl` (packaged with `SomaticSniper`):
 i. filter VCF using normal indel pileup (from step `b`).
@@ -140,19 +140,17 @@ The input pair of tumor/normal BAM files, along with the candidate small indel f
 
 ### GATK Mutect2
 
-#### 1. Call non-canonical
-Unless genome intervals were provided, the pipeline starts by calling somatic variants in non-canonical chromosomes with `Mutect2`.
-#### 2. Split canonical
-Split the set of canonical chromosomes (or provided intervals) into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
-#### 3. Call canonical
+#### 1. Define intervals for scattering
+`params.intersect_regions` if defined, other the entire reference genome is split into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
+#### 2. Call small somatic variants
 Call somatic variants with `Mutect2`.
-#### 4. Merge
+#### 3. Merge
 Merge scattered outputs (VCFs, statistics).
-#### 5. Learn read orientations
+#### 4. Learn read orientations
 Create artifact prior table based on read orientations with GATK's `LearnReadOrientationModel`.
-#### 6. Filter
+#### 5. Filter
 Filter variants with GATK's `FilterMutectCalls`, using read orientation prior table and contamination table as well as standard filters.
-#### 7. Split VCF
+#### 6. Split VCF
 Split filtered VCF into separate files for each variant type: SNVs, MNVs and INDELs.
 
 ### MuSE
@@ -176,7 +174,7 @@ To run the pipeline, one `input.yaml` and one `input.config` are needed, as foll
 | tumor_id | string | The name/ID of the tumor sample    |
 | normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) |
 | normal_id | string | The name/ID of the normal sample      |
-| contamination_table | path | Optional, but only for tumor samples. The path of the `contamination.table`, which is generated from the GATK's `CalculateContamination` in `pipeline-call-gSNP`. The contamination.table path can be found under `pipeline-call-gSNP`'s output `QC` folder.
+| contamination_table | path | Optional, but only for tumor samples. The path of the `contamination.table`, which is generated from the GATK's `CalculateContamination` in `pipeline-call-gSNP`. The contamination.table path can be found under `pipeline-call-gSNP`'s output `QC` folder
 
 * `input.yaml` should follow the standardized structure:
 ```
@@ -199,11 +197,12 @@ input:
 |--------|---|--------|-------------------------------------------|
 | algorithm   | yes | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
 | reference   | yes | string | The reference .fa file (.fai and .dict file must exist in same directory) |
+| intersect_regions | tbd | string | A bed file listing the genomic regions for variant calling. All regions other than `decoy` are recommended
 | output_dir  | yes | string | The location where outputs will be saved  |
 | dataset_id | yes | string | The name/ID of the dataset    |
-| exome       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE. |
+| exome       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE |
 | save_intermediate_files | yes | boolean | Whether to save intermediate files |
-| work_dir | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
+| work_dir | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively |
 | docker_container_registry | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
 
 #### Module Specific Configuration
@@ -211,16 +210,6 @@ input:
 |-------------|----|--------|-------------------------------------------|
 | bgzip_extra_args       | no | string | The extra option used for compressing VCFs |
 | tabix_extra_args       | no | string | The extra option used for indexing VCFs |
-
-#### Strelka2 Specific Configuration
-| Input       | Required | Type   | Description                               |
-|-------------|----|--------|-------------------------------------------|
-| call_region | no | string | Adds '--callRegions' option when running manta and strelka2 |
-* Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the `--callRegions` configuration option. See the `--callRegions` documentations here: [Strelka2](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions), [Manta](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions). `--callRegions` is optional for Strelka2, but can be used to specify canonical regions to save the running time. An example of call region's bed.gz can be found and used here: `/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`.
-
-* The BED file's index file `bed.gz.tbi` needs to be stored in the same folder.
-* In particular, as noted in Strelka's [User Guide](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions):
-> Even when `--callRegions` is specified, the `--exome` flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.
 
 #### Mutect2 Specific Configuration
 | Input       | Required | Type | Description                               |
@@ -230,9 +219,7 @@ input:
 | filter_mutect_calls_extra_args | no | string | Additional arguments for the FilterMutectCalls command |
 | gatk_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
 | scatter_count | yes | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
-| intervals   | no | string | A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched. |
 | germline_resource_gnomad_vcf | no | path | A stripped down version of the [gnomAD VCF](https://gnomad.broadinstitute.org/) stripped of all unneeded INFO fields, keeping only AF, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
-
 
 #### MuSE Specific Configuration
 | Input       | Required | Type   | Description                               |
@@ -240,15 +227,26 @@ input:
 | dbSNP | yes | path | The path to dbSNP database's `*.vcf.gz` |
 
 ## Outputs
-| Output                                         | Type         | Description                   |
+| Tool Outputs                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| SomaticSniper-{version}_{sample_id}_hc.vcf.gz             | .vcf.gz         | Filtered SNV VCF (somaticsniper)|
-| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf.gz   | .vcf.gz         | Filtered SNV VCF(strelka2)     |
-| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf.gz | .vcf.gz         | Filtered Indel VCF (strelka2)     |
-| Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filtered SNV VCF (mutect2)      |
-| MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filtered SNV VCF (MuSE)   |
+| SomaticSniper-{version}_{sample_id}_SNV.vcf.gz             | .vcf.gz         | Filtered SNV VCF (somaticsniper)|
+| Strelka2-{version}_{sample_id}_SNV.vcf.gz   | .vcf.gz         | Filtered SNV VCF(strelka2)     |
+| Strelka2-{version}_{sample_id}_Indel.vcf.gz | .vcf.gz         | Filtered Indel VCF (strelka2)     |
+| Mutect2-{version}_{sample_id}_SNV.vcf.gz        | .vcf.gz         | Filtered SNV VCF (mutect2)      |
+| Mutect2-{version}_{sample_id}_Indel.vcf.gz        | .vcf.gz         | Filtered Indel VCF (mutect2)      |
+| Mutect2-{version}_{sample_id}_MNV.vcf.gz        | .vcf.gz         | Filtered MNV VCF (mutect2)      |
+| Mutect2-{version}_{sample_id}_filteringStats.tsv        | .tsv         | FilterMutectCalls output (mutect2 QC)      |
+| MuSE-{version}_{sample_id}_SNV.vcf.gz        | .vcf.gz         | Filtered SNV VCF (MuSE)   |
 | report.html, timeline.html, trace.txt          | .html, .txt | Nextflow logs                 |
 
+| Intersect Outputs                                         | Type         | Description                   |
+|------------------------------------------------|--------------|-------------------------------|
+| isec-1-or-more | directory | BCFtools isec output, all variants |
+| isec-2-or-more | directory | BCFtools isec output, variants shared by 2 or more tools |
+| SomaticSniper-{version}_{sample_id}_consensus-variants.vcf.gz             | .vcf.gz         | Filtered SNV VCF (somaticsniper)|
+| Strelka2-{version}_{sample_id}_consensus-variants.vcf.gz   | .vcf.gz         | Filtered SNV VCF(strelka2)     |
+| Mutect2-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | Filtered SNV VCF (mutect2)      |
+| MuSE-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | Filtered SNV VCF (MuSE)   |
 ## Testing and Validation
 
 Testing was performed primarily in the Boutros Lab SLURM Development cluster using F72 node. Metrics below will be updated where relevant with additional testing and tuning outputs.
