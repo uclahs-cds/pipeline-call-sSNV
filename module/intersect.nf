@@ -21,9 +21,9 @@ workflow intersect {
             params.intersect_regions,
             params.intersect_regions_index
             )
-        plot_venn_R(
+        plot_VennDiagram_R(
             script_dir_ch,
-            intersect_VCFs_BCFtools.out.isec_dir
+            intersect_VCFs_BCFtools.out.isec_dir,
             )
         concat_VCFs_BCFtools(
             intersect_VCFs_BCFtools.out.consensus_vcf,
@@ -46,8 +46,4 @@ workflow intersect {
                 .map{ it -> ["intersect-${it[0]}-index", it[2]] }
                 )
         generate_sha512sum(file_for_sha512)
-        plot_VennDiagram_R(
-            script_dir_ch,
-            intersect_VCFs_BCFtools.out.isec_dir,
-        )
     }
