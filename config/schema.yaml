@@ -18,6 +18,10 @@ reference:
   mode: 'r'
   required: true
   help: 'Absolute path to reference directory'
+intersect_regions:
+  type: 'Path'
+  required: true
+  help: 'call regions bed file used by mutect2, strelka2 and intersect'
 output_dir:
   type: 'Path'
   mode: 'w'
@@ -46,10 +50,6 @@ exome:
   required: false
   default: false
   help: 'The exome option when running manta and strelka2'
-intersect_regions:
-  type: 'Path'
-  required: false
-  help: 'call regions bed file used by mutect2, strelka2 and intersect'
 split_intervals_extra_args:
   type: 'String'
   required: false
