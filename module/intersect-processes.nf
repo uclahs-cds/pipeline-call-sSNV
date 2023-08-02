@@ -4,7 +4,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
-- docker_image_r_scripts: ${params.docker_image_r_scripts}
+- docker_image_r_scripts: ${params.docker_image_r_VennDiagram}
 ====================================
 """
 process intersect_VCFs_BCFtools {
@@ -51,7 +51,7 @@ process intersect_VCFs_BCFtools {
     }
 
  process plot_venn_R {
-     container params.docker_image_r_scripts
+     container params.docker_image_r_VennDiagram
      publishDir path: "${params.workflow_output_dir}/output",
          mode: "copy",
          pattern: "*.tiff"
