@@ -4,7 +4,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
-- docker_image_r_scripts: ${params.docker_image_r_VennDiagram}
+- docker_image_r_VennDiagram: ${params.docker_image_r_VennDiagram}
 ====================================
 """
 process intersect_VCFs_BCFtools {
@@ -71,6 +71,6 @@ process intersect_VCFs_BCFtools {
      script:
      """
      set -euo pipefail
-     Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset ${params.dataset_id}
+     Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --outfile ${params.output_filename}_Venn-diagram.tiff
      """
      }

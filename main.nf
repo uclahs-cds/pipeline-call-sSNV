@@ -84,8 +84,11 @@ include { muse } from './module/muse' addParams(
 
 include { intersect } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/intersect-BCFtools-${params.BCFtools_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect-BCFtools-${params.BCFtools_version}"
-    )
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect-BCFtools-${params.BCFtools_version}",
+    output_filename: generate_standard_filename("Consensus",
+        params.dataset_id,
+        params.sample_id,
+        [:]))
 
 // Returns the index file for the given bam or vcf
 def indexFile(bam_or_vcf) {
@@ -117,12 +120,18 @@ Channel
         }
     .set { normal_input }
 
+    script_dir_ch = Channel.fromPath(
+        "$projectDir/r-scripts",
+        checkIfExists: true
+        )
+
 workflow {
     reference_ch = Channel.from(
         params.reference,
         params.reference_index,
         params.reference_dict
         )
+
     // Input file validation
     if (params.tumor_only_mode) {
         file_to_validate = reference_ch
@@ -227,7 +236,8 @@ workflow {
 
         intersect(
             tool_vcfs,
-            tool_indices
+            tool_indices,
+            script_dir_ch
             )
         }
     }

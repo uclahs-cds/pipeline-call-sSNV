@@ -2,12 +2,10 @@ include { generate_sha512sum } from './common'
 include { intersect_VCFs_BCFtools; plot_VennDiagram_R } from './intersect-processes.nf'
 
 workflow intersect {
-    // pass bin directory in project folder as channel into docker
-    script_dir_ch = Channel.fromPath("$projectDir/r-scripts", checkIfExists: true)
-
     take:
     tool_vcfs
     tool_indices
+    script_dir_ch
 
     main:
         intersect_VCFs_BCFtools(
