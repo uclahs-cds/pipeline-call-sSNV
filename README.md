@@ -242,11 +242,11 @@ input:
 ## Outputs
 | Output                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| SomaticSniper-{version}_{sample_id}_hc.vcf.gz             | .vcf.gz         | Filterd SNV VCF (somaticsniper)|
-| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf.gz   | .vcf.gz         | Filterd SNV VCF(strelka2)     |
-| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf.gz | .vcf.gz         | Filterd Indel VCF (strelka2)     |
-| Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (mutect2)      |
-| MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filterd SNV VCF (MuSE)   |
+| SomaticSniper-{version}_{sample_id}_hc.vcf.gz             | .vcf.gz         | Filtered SNV VCF (somaticsniper)|
+| Strelka2-{version}_{sample_id}_somatic-snvs-pass.vcf.gz   | .vcf.gz         | Filtered SNV VCF(strelka2)     |
+| Strelka2-{version}_{sample_id}_somatic-indels-pass.vcf.gz | .vcf.gz         | Filtered Indel VCF (strelka2)     |
+| Mutect2-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filtered SNV VCF (mutect2)      |
+| MuSE-{version}_{sample_id}_filtered-pass.vcf.gz        | .vcf.gz         | Filtered SNV VCF (MuSE)   |
 | report.html, timeline.html, trace.txt          | .html, .txt | Nextflow logs                 |
 
 ## Testing and Validation

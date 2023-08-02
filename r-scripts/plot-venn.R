@@ -8,13 +8,12 @@
 
 ## Setup the environment ###########################################################################
 library('argparse');
-library('BoutrosLab.utilities');
 library('VennDiagram');
 
 ## Parse the arguments #############################################################################
 parser <- ArgumentParser();
 parser$add_argument('-i', '--isec_dir', help = 'The directory containing the output from BCFtools intersect', type = 'character');
-parser$add_argument('-d', '--dataset', help = 'The dataset ID passed from nextflow', type = 'character');
+parser$add_argument('-o', '--outfile', help = 'Output filename', type = 'character');
 args <- parser$parse_args();
 
 ## Function: plot venn diagram #####################################################################
@@ -48,4 +47,4 @@ colnames(sites) <- header
 variants <- paste(sites$chrom, sites$pos, sep = '_');
 tool.variants <- lapply(sites[, algorithms], function(x) variants[x == 1])
 tool.variants.ordered <- tool.variants[order(lengths(tool.variants), decreasing = TRUE)];
-plot.venn(tool.variants.ordered, generate.filename(args$dataset, 'Venn-diagram', 'tiff'));
+plot.venn(tool.variants.ordered, args$outfile);

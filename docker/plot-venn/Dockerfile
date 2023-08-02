@@ -5,7 +5,6 @@ FROM condaforge/mambaforge:${MINIFORGE_VERSION} AS builder
 
 RUN mamba create -qy -p /usr/local \
         'r-base>=4.2.1' \
-        # R packages
         r-argparse \
         r-VennDiagram
 
@@ -16,11 +15,6 @@ COPY --from=builder /usr/local /usr/local
 # Add a new user/group called bldocker
 RUN groupadd -g 500001 bldocker \
     && useradd -r -u 500001 -g bldocker bldocker
-
-# BoutrosLab.utilities_1.9.10.tar.gz is soft-linked to /hot/resource/R-package/Bout...gz
-COPY r-scripts/BoutrosLab.utilities_1.9.10.tar.gz /usr/src
-RUN R -e "install.packages('/usr/src/BoutrosLab.utilities_1.9.10.tar.gz', repos = NULL, type = 'source')"
-# RUN rm BoutrosLab.utilities_1.9.10.tar.gz
 
 # Change the default user to bldocker from root
 USER bldocker
