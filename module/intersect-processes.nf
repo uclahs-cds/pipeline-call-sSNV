@@ -50,7 +50,7 @@ process intersect_VCFs_BCFtools {
     """
     }
 
- process plot_venn_R {
+ process plot_VennDiagram_R {
      container params.docker_image_r_VennDiagram
      publishDir path: "${params.workflow_output_dir}/output",
          mode: "copy",
