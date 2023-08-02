@@ -7,6 +7,7 @@ Docker Images:
 - docker_image_manta:     ${params.docker_image_manta}
 Strelka2 Options:
 - exome:                  ${params.exome}
+- use_intersect_regions:  ${params.use_intersect_regions}
 """
 
 process call_sIndel_Manta {

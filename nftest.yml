@@ -55,3 +55,10 @@ cases:
     params_file: ./test/yaml/a_mini_n2-std-input.yaml
     skip: true
     verbose: true
+  - name: a_mini_n2-all-tools-std-input-no-intersect
+    message: test development branch without intersect using all tools and standard paired tumor and normal a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-all-tools-no-intersect.config
+    params_file: ./test/yaml/a_mini_n2-std-input.yaml
+    skip: true
+    verbose: true

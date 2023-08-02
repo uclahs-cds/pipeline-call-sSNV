@@ -38,13 +38,14 @@ process intersect_VCFs_BCFtools {
 
     script:
     vcf_list = vcfs.join(' ')
+    regions_command = params.use_intersect_regions ? "--regions-file ${intersect_regions}" : ""
     """
     set -euo pipefail
     # intersect keeping only variants that are present in at least 2 VCFs
     # Use README.txt to rename output files to include sample names
-    bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more ${vcf_list}
+    bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more ${regions_command} ${vcf_list}
     awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' | while read a b c d; do mv \$a \$d ; mv \$a.tbi \$d.tbi ; done
     # intersect, keeping all variants, to create presence/absence list of variants in each VCF
-    bcftools isec --output-type z --prefix isec-1-or-more --regions-file ${intersect_regions} ${vcf_list}
+    bcftools isec --output-type z --prefix isec-1-or-more ${regions_command} ${vcf_list}
     """
     }
