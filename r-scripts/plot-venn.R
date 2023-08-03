@@ -1,8 +1,9 @@
 # Script to plot a Venn diagram of shared variants from the different SNV calling algorithms, using the output of BCFtools isec
 # Initial commit: Sorel Fitz-Gibbon 2023-06-29
 # Input:
-#  -i, --isec_dir: The directory containing the output from BCFtools intersect
-#  -d, --dataset: The dataset ID passed from nextflow
+#  -r, --isec_readme: The README.txt file from BCFtools intersect
+#  -s, --isec_sites: The sites.txt file from BCFtools intersect
+#  -o, --outfile: The output filename
 # Output:
 # - A Venn diagram of shared variant counts from the BCFtools intersection of the VCF files
 
@@ -12,7 +13,8 @@ library('VennDiagram');
 
 ## Parse the arguments #############################################################################
 parser <- ArgumentParser();
-parser$add_argument('-i', '--isec_dir', help = 'The directory containing the output from BCFtools intersect', type = 'character');
+parser$add_argument('-r', '--isec_readme', help = 'The directory containing the output from BCFtools intersect', type = 'character');
+parser$add_argument('-s', '--isec_sites', help = 'The directory containing the output from BCFtools intersect', type = 'character');
 parser$add_argument('-o', '--outfile', help = 'Output filename', type = 'character');
 args <- parser$parse_args();
 
@@ -31,11 +33,11 @@ plot.venn <- function(tool.variants, outfile) {
 
 ### Main ###########################################################################################
 # Get intersection counts from BCFtools isec output and format for plotting
-algorithms <- readLines(file.path(args$isec_dir,'README.txt'));
-algorithms <- algorithms[grep(paste0('^', args$isec_dir), algorithms)];
-algorithms <- gsub(paste0(args$isec_dir,'.*\t'), '', algorithms);
+algorithms <- readLines(args$isec_readme);
+algorithms <- algorithms[grep('^isec-1-or-more', algorithms)];
+algorithms <- gsub('isec-1-or-more.*\t', '', algorithms);
 algorithms <- gsub('-.*', '', algorithms);
-sites <- read.table(file.path(args$isec_dir,'sites.txt'), header = FALSE, colClasses = 'character');
+sites <- read.table(args$isec_sites, header = FALSE, colClasses = 'character');
 split.col <- strsplit(as.character(sites$V5), '');
 sites$col1 <- sapply(split.col, '[', 1);
 sites$col2 <- sapply(split.col, '[', 2);

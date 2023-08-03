@@ -15,6 +15,9 @@ process intersect_VCFs_BCFtools {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "isec-2-or-more"
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "isec-1-or-more/*.txt"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -31,7 +34,7 @@ process intersect_VCFs_BCFtools {
     path "*.vcf.gz.tbi", emit: consensus_idx
     path ".command.*"
     path "isec-2-or-more"
-    path "isec-1-or-more", emit: isec_dir
+    path "isec-1-or-more/*.txt", emit: isec
 
     script:
     vcf_list = vcfs.join(' ')
@@ -52,9 +55,6 @@ process intersect_VCFs_BCFtools {
      publishDir path: "${params.workflow_output_dir}/output",
          mode: "copy",
          pattern: "*.tiff"
-    publishDir path: "${params.workflow_output_dir}/output",
-        mode: "copy",
-        pattern: "isec-1-or-more/*.txt"
      publishDir path: "${params.workflow_log_output_dir}",
          mode: "copy",
          pattern: ".command.*",
@@ -62,17 +62,16 @@ process intersect_VCFs_BCFtools {
 
      input:
      path script_dir
-     path isec_dir
+     path isec
 
      output:
-     path "isec-1-or-more/*.txt"
      path ".command.*"
      path "*.tiff"
 
      script:
      """
      set -euo pipefail
-     Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --outfile ${params.output_filename}_Venn-diagram.tiff
+     Rscript ${script_dir}/plot-venn.R --isec_readme README.txt --isec_sites sites.txt --outfile ${params.output_filename}_Venn-diagram.tiff
      """
      }
 

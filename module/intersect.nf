@@ -23,7 +23,7 @@ workflow intersect {
             )
         plot_VennDiagram_R(
             script_dir_ch,
-            intersect_VCFs_BCFtools.out.isec_dir,
+            intersect_VCFs_BCFtools.out.isec,
             )
         concat_VCFs_BCFtools(
             intersect_VCFs_BCFtools.out.consensus_vcf,
