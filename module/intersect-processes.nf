@@ -15,13 +15,10 @@ process intersect_VCFs_BCFtools {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "isec-2-or-more"
-    publishDir path: "${params.workflow_output_dir}/output",
-        mode: "copy",
-        pattern: "isec-1-or-more/*.txt"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
     path vcfs
@@ -55,16 +52,20 @@ process intersect_VCFs_BCFtools {
      publishDir path: "${params.workflow_output_dir}/output",
          mode: "copy",
          pattern: "*.tiff"
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "isec-1-or-more/*.txt"
      publishDir path: "${params.workflow_log_output_dir}",
          mode: "copy",
          pattern: ".command.*",
-         saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+         saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
      input:
      path script_dir
      path isec_dir
 
      output:
+     path "isec-1-or-more/*.txt"
      path ".command.*"
      path "*.tiff"
 
@@ -84,7 +85,7 @@ process concat_VCFs_BCFtools {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
     path vcfs
