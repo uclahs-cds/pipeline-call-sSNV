@@ -85,7 +85,7 @@ include { muse } from './module/muse' addParams(
 include { intersect } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/intersect-BCFtools-${params.BCFtools_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/intersect-BCFtools-${params.BCFtools_version}",
-    output_filename: generate_standard_filename("Intersect",
+    output_filename: generate_standard_filename("BCFtools_${params.BCFtools_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
@@ -120,12 +120,18 @@ Channel
         }
     .set { normal_input }
 
+    script_dir_ch = Channel.fromPath(
+        "$projectDir/r-scripts",
+        checkIfExists: true
+        )
+
 workflow {
     reference_ch = Channel.from(
         params.reference,
         params.reference_index,
         params.reference_dict
         )
+
     // Input file validation
     if (params.tumor_only_mode) {
         file_to_validate = reference_ch
@@ -155,6 +161,7 @@ workflow {
         run_GetSampleName_Mutect2_tumor(tumor_input.tumor_bam)
         }
 
+    // Set empty channels so any unused tools don't cause failure at intersect step
     Channel.empty().set { somaticsniper_vcf_ch }
     Channel.empty().set { strelka2_vcf_ch }
     Channel.empty().set { mutect2_vcf_ch }
@@ -212,6 +219,8 @@ workflow {
             muse.out.vcf.set { muse_vcf_ch }
             muse.out.idx.set { muse_idx_ch }
         }
+
+    // Intersect all vcf files
     if (params.algorithm.size() > 1) {
         tool_vcfs = (somaticsniper_vcf_ch
             .mix(strelka2_vcf_ch)
@@ -227,7 +236,8 @@ workflow {
 
         intersect(
             tool_vcfs,
-            tool_indices
+            tool_indices,
+            script_dir_ch
             )
         }
     }

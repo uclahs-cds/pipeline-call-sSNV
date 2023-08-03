@@ -4,7 +4,7 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
-- docker_image_r_scripts: ${params.docker_image_r_scripts}
+- docker_image_r_VennDiagram: ${params.docker_image_r_VennDiagram}
 ====================================
 """
 process intersect_VCFs_BCFtools {
@@ -21,7 +21,7 @@ process intersect_VCFs_BCFtools {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
     path vcfs
@@ -34,7 +34,7 @@ process intersect_VCFs_BCFtools {
     path "*.vcf.gz.tbi", emit: consensus_idx
     path ".command.*"
     path "isec-2-or-more"
-    path "isec-1-or-more", emit: isec_dir
+    path "isec-1-or-more/*.txt", emit: isec
 
     script:
     vcf_list = vcfs.join(' ')
@@ -50,19 +50,19 @@ process intersect_VCFs_BCFtools {
     """
     }
 
- process plot_venn_R {
-     container params.docker_image_r_scripts
+ process plot_VennDiagram_R {
+     container params.docker_image_r_VennDiagram
      publishDir path: "${params.workflow_output_dir}/output",
          mode: "copy",
          pattern: "*.tiff"
      publishDir path: "${params.workflow_log_output_dir}",
          mode: "copy",
          pattern: ".command.*",
-         saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+         saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
      input:
      path script_dir
-     path isec_dir
+     path isec
 
      output:
      path ".command.*"
@@ -71,7 +71,7 @@ process intersect_VCFs_BCFtools {
      script:
      """
      set -euo pipefail
-     Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --dataset ${params.dataset_id}
+     Rscript ${script_dir}/plot-venn.R --isec_readme README.txt --isec_sites sites.txt --outfile ${params.output_filename}_Venn-diagram.tiff
      """
      }
 
@@ -84,7 +84,7 @@ process concat_VCFs_BCFtools {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
     path vcfs

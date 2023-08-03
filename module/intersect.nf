@@ -1,5 +1,5 @@
 include { generate_sha512sum } from './common'
-include { intersect_VCFs_BCFtools; plot_venn_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf; compress_MAF_vcf2maf } from './intersect-processes.nf'
+include { intersect_VCFs_BCFtools; plot_VennDiagram_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf; compress_MAF_vcf2maf } from './intersect-processes.nf'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -9,12 +9,10 @@ include { compress_index_VCF } from '../external/pipeline-Nextflow-module/module
         ])
 
 workflow intersect {
-    // pass bin directory in project folder as channel into docker
-    script_dir_ch = Channel.fromPath("$projectDir/r-scripts", checkIfExists: true)
-
     take:
     tool_vcfs
     tool_indices
+    script_dir_ch
 
     main:
         intersect_VCFs_BCFtools(
@@ -23,9 +21,9 @@ workflow intersect {
             params.intersect_regions,
             params.intersect_regions_index
             )
-        plot_venn_R(
+        plot_VennDiagram_R(
             script_dir_ch,
-            intersect_VCFs_BCFtools.out.isec_dir
+            intersect_VCFs_BCFtools.out.isec,
             )
         concat_VCFs_BCFtools(
             intersect_VCFs_BCFtools.out.consensus_vcf,
