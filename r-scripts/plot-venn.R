@@ -13,8 +13,8 @@ library('VennDiagram');
 
 ## Parse the arguments #############################################################################
 parser <- ArgumentParser();
-parser$add_argument('-r', '--isec_readme', help = 'The directory containing the output from BCFtools intersect', type = 'character');
-parser$add_argument('-s', '--isec_sites', help = 'The directory containing the output from BCFtools intersect', type = 'character');
+parser$add_argument('-r', '--isec_readme', help = 'The README.txt file from BCFtools intersect', type = 'character');
+parser$add_argument('-s', '--isec_sites', help = 'The sites.txt file from BCFtools intersect', type = 'character');
 parser$add_argument('-o', '--outfile', help = 'Output filename', type = 'character');
 args <- parser$parse_args();
 
