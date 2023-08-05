@@ -114,7 +114,7 @@ process convert_VCF_vcf2maf {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
     path vcf
@@ -141,13 +141,14 @@ process compress_MAF_vcf2maf {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
     path maf
 
     output:
     path "*.gz", emit: concat_maf_gz
+    path ".command.*"
 
     script:
     """
