@@ -119,6 +119,8 @@ process convert_VCF_vcf2maf {
     input:
     path vcf
     path reference
+    val normal_id
+    val tumor_id
 
     output:
     path "*.maf", emit: concat_maf
@@ -127,7 +129,7 @@ process convert_VCF_vcf2maf {
     script:
     """
     set -euo pipefail
-    perl /opt/vcf2maf.pl --inhibit-vep --filter-vcf 0 --input-vcf ${vcf} --output-maf ${params.output_filename}_SNV-concat.maf --ref-fasta ${reference}
+    perl /opt/vcf2maf.pl --inhibit-vep --filter-vcf 0 --input-vcf ${vcf} --normal-id ${normal_id} --tumor-id ${tumor_id} --output-maf ${params.output_filename}_SNV-concat.maf --ref-fasta ${reference}
     """
     }
 

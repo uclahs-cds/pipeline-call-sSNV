@@ -237,7 +237,9 @@ workflow {
         intersect(
             tool_vcfs,
             tool_indices,
-            script_dir_ch
+            script_dir_ch,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
             )
         }
     }

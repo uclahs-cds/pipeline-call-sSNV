@@ -13,6 +13,8 @@ workflow intersect {
     tool_vcfs
     tool_indices
     script_dir_ch
+    normal_id
+    tumor_id
 
     main:
         intersect_VCFs_BCFtools(
@@ -31,7 +33,10 @@ workflow intersect {
             )
         convert_VCF_vcf2maf(
             concat_VCFs_BCFtools.out.concat_vcf,
-            params.reference)
+            params.reference,
+            normal_id,
+            tumor_id
+            )
         compress_index_VCF(concat_VCFs_BCFtools.out.concat_vcf
             .map{ it -> ['SNV', it]}
             )
