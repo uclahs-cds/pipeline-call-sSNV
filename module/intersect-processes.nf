@@ -37,7 +37,7 @@ process intersect_VCFs_BCFtools {
     path "isec-1-or-more/*.txt", emit: isec
 
     script:
-    vcf_list = vcfs.join(' ')
+    vcf_list = vcfs.toList().sort().join(' ')
     regions_command = params.use_intersect_regions ? "--regions-file ${intersect_regions}" : ""
     """
     set -euo pipefail
@@ -95,7 +95,7 @@ process concat_VCFs_BCFtools {
     path ".command.*"
 
     script:
-    vcf_list = vcfs.join(' ')
+    vcf_list = vcfs.toList().sort().join(' ')
     """
     set -euo pipefail
     # BCFtools concat to create a single VCF with all nfiles +2 variants
