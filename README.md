@@ -14,14 +14,16 @@
   - [License](#license)
 
 ## Overview
-The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file. If two or more callers are requested, a Venn Diagram is produced showing counts of shared and private variants as well as VCF and MAF files with the set of variants shared by two or more tool outputs.
+The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file.
 
-SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs from multiple samples from the same individual.
+If two or more callers are requested, additional output includes VCF and MAF files with the set of variants shared by two or more callers as well as a Venn Diagram showing counts of shared and private variants.
+
+SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs for multiple samples from the same individual.
 
 ### Somatic SNV callers:
 * [SomaticSniper](https://github.com/genome/somatic-sniper) is an older tool yielding high specificity single nucleotide somatic variants.
 
-* [Strelka2](https://github.com/Illumina/strelka) here uses candidate indels from `Manta` and calls somatic short mutations (single nucleotide and small indel) filtered with a random forest model.
+* [Strelka2](https://github.com/Illumina/strelka) uses candidate indels from `Manta` and calls somatic short mutations (single nucleotide and small indel), filtered with a random forest model.
 
 * [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2) calls somatic short mutations via local assembly of haplotypes.
 
