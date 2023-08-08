@@ -12,14 +12,14 @@ process intersect_VCFs_BCFtools {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.vcf.gz*"
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/output/isec-2-or-more",
         mode: "copy",
         pattern: "isec-2-or-more/*.txt",
-        saveAs: { "${params.output_filename}${file(it).getName()}" }
-    publishDir path: "${params.workflow_output_dir}/output",
+        saveAs: { "${params.output_filename}_${file(it).getName()}" }
+    publishDir path: "${params.workflow_output_dir}/output/isec-1-or-more",
         mode: "copy",
         pattern: "isec-1-or-more/*.txt",
-        saveAs: { "${params.output_filename}${file(it).getName()}" }
+        saveAs: { "${params.output_filename}_${file(it).getName()}" }
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -35,7 +35,7 @@ process intersect_VCFs_BCFtools {
     path "*.vcf.gz", emit: consensus_vcf
     path "*.vcf.gz.tbi", emit: consensus_idx
     path ".command.*"
-    path "isec-2-or-more"
+    path "isec-2-or-more/*.txt"
     path "isec-1-or-more/*.txt", emit: isec
 
     script:

@@ -37,6 +37,7 @@ algorithms <- readLines(args$isec_readme);
 algorithms <- algorithms[grep('^isec-1-or-more', algorithms)];
 algorithms <- gsub('isec-1-or-more.*\t', '', algorithms);
 algorithms <- gsub('-.*', '', algorithms);
+
 sites <- read.table(args$isec_sites, header = FALSE, colClasses = 'character');
 split.col <- strsplit(as.character(sites$V5), '');
 sites$col1 <- sapply(split.col, '[', 1);
@@ -44,9 +45,12 @@ sites$col2 <- sapply(split.col, '[', 2);
 sites$col3 <- sapply(split.col, '[', 3);
 sites$col4 <- sapply(split.col, '[', 4);
 sites$V5 <- NULL;
+
 header <- c('chrom', 'pos', 'ref', 'alt', algorithms);
 colnames(sites) <- header
+
 variants <- paste(sites$chrom, sites$pos, sep = '_');
 tool.variants <- lapply(sites[, algorithms], function(x) variants[x == 1]);
 tool.variants.ordered <- tool.variants[order(lengths(tool.variants), decreasing = TRUE)];
+
 plot.venn(tool.variants.ordered, args$outfile);
