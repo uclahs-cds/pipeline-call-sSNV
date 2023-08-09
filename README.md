@@ -110,6 +110,15 @@ MuSE source: https://github.com/wwylab/MuSE
 Version: 2.0 (Released on Aug 25, 2021)
 GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 
+### Intersect
+![alt text](docs/intersect_chart.svg?raw=true)
+#### Tools
+##### BCFtools
+BCFtools source: https://samtools.github.io/bcftools
+Version: 1.17 (Released on Feb 21, 2023)
+GitHub Package: https://github.com/uclahs-cds/bcftools:1.17
+##### VennDiagram
+##### vcf2maf
 
 ---
 
