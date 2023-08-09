@@ -14,10 +14,12 @@ process intersect_VCFs_BCFtools {
         pattern: "*.vcf.gz*"
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "isec-2-or-more"
+        pattern: "isec-2-or-more/*.txt",
+        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" }
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "isec-1-or-more/*.txt"
+        pattern: "isec-1-or-more/*.txt",
+        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" }
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -33,11 +35,11 @@ process intersect_VCFs_BCFtools {
     path "*.vcf.gz", emit: consensus_vcf
     path "*.vcf.gz.tbi", emit: consensus_idx
     path ".command.*"
-    path "isec-2-or-more"
+    path "isec-2-or-more/*.txt"
     path "isec-1-or-more/*.txt", emit: isec
 
     script:
-    vcf_list = vcfs.join(' ')
+    vcf_list = vcfs.toList().sort().join(' ')
     regions_command = params.use_intersect_regions ? "--regions-file ${intersect_regions}" : ""
     """
     set -euo pipefail
@@ -95,7 +97,7 @@ process concat_VCFs_BCFtools {
     path ".command.*"
 
     script:
-    vcf_list = vcfs.join(' ')
+    vcf_list = vcfs.toList().sort().join(' ')
     """
     set -euo pipefail
     # BCFtools concat to create a single VCF with all nfiles +2 variants
