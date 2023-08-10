@@ -15,8 +15,16 @@ workflow intersect {
     script_dir_ch
 
     main:
+        vcfs_ch = tool_vcfs
+            .map {
+                it.sort { a, b ->
+                def toolA = file(a).getName()
+                def toolB = file(b).getName()
+                return toolA.compareTo(toolB)
+                }
+            } 
         intersect_VCFs_BCFtools(
-            tool_vcfs,
+            vcfs_ch,
             tool_indices,
             params.intersect_regions,
             params.intersect_regions_index
@@ -25,8 +33,16 @@ workflow intersect {
             script_dir_ch,
             intersect_VCFs_BCFtools.out.isec,
             )
+        consensus_vcfs_ch = intersect_VCFs_BCFtools.out.consensus_vcf
+            .map {
+                it.sort { a, b ->
+                def toolA = file(a).getName()
+                def toolB = file(b).getName()
+                return toolA.compareTo(toolB)
+                }
+            } 
         concat_VCFs_BCFtools(
-            intersect_VCFs_BCFtools.out.consensus_vcf,
+            consensus_vcfs_ch,
             intersect_VCFs_BCFtools.out.consensus_idx
             )
         compress_index_VCF(concat_VCFs_BCFtools.out.concat_vcf
