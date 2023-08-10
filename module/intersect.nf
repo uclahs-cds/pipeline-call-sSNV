@@ -7,6 +7,13 @@ include { compress_index_VCF } from '../external/pipeline-Nextflow-module/module
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args
         ])
+def sortVcfs(List paths) {
+    paths.sort { a, b ->
+        def toolA = file(a).getName()
+        def toolB = file(b).getName()
+        return toolA.compareTo(toolB)
+    }
+}
 
 workflow intersect {
     take:
@@ -16,13 +23,7 @@ workflow intersect {
 
     main:
         vcfs_ch = tool_vcfs
-            .map {
-                it.sort { a, b ->
-                def toolA = file(a).getName()
-                def toolB = file(b).getName()
-                return toolA.compareTo(toolB)
-                }
-            } 
+            .map { sortVcfs(it)  }
         intersect_VCFs_BCFtools(
             vcfs_ch,
             tool_indices,
@@ -34,13 +35,7 @@ workflow intersect {
             intersect_VCFs_BCFtools.out.isec,
             )
         consensus_vcfs_ch = intersect_VCFs_BCFtools.out.consensus_vcf
-            .map {
-                it.sort { a, b ->
-                def toolA = file(a).getName()
-                def toolB = file(b).getName()
-                return toolA.compareTo(toolB)
-                }
-            } 
+            .map { sortVcfs(it) }
         concat_VCFs_BCFtools(
             consensus_vcfs_ch,
             intersect_VCFs_BCFtools.out.consensus_idx
