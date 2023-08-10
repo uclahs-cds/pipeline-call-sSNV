@@ -14,14 +14,16 @@ process intersect_VCFs_BCFtools {
         pattern: "*.vcf.gz*"
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "isec-2-or-more"
+        pattern: "isec-2-or-more/*.txt",
+        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" }
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "isec-1-or-more/*.txt"
+        pattern: "isec-1-or-more/*.txt",
+        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" }
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
     input:
     path vcfs
@@ -33,8 +35,8 @@ process intersect_VCFs_BCFtools {
     path "*.vcf.gz", emit: consensus_vcf
     path "*.vcf.gz.tbi", emit: consensus_idx
     path ".command.*"
-    path "isec-2-or-more"
-    path "isec-1-or-more", emit: isec_dir
+    path "isec-2-or-more/*.txt"
+    path "isec-1-or-more/*.txt", emit: isec
 
     script:
     vcf_list = vcfs.join(' ')
@@ -58,11 +60,11 @@ process intersect_VCFs_BCFtools {
      publishDir path: "${params.workflow_log_output_dir}",
          mode: "copy",
          pattern: ".command.*",
-         saveAs: { "${task.process.replace(':', '/')}-${task.index}/log${file(it).getName()}" }
+         saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
 
      input:
      path script_dir
-     path isec_dir
+     path isec
 
      output:
      path ".command.*"
@@ -71,6 +73,36 @@ process intersect_VCFs_BCFtools {
      script:
      """
      set -euo pipefail
-     Rscript ${script_dir}/plot-venn.R --isec_dir ${isec_dir} --outfile ${params.output_filename}_Venn-diagram.tiff
+     Rscript ${script_dir}/plot-venn.R --isec_readme README.txt --isec_sites sites.txt --outfile ${params.output_filename}_Venn-diagram.tiff
      """
      }
+
+process concat_VCFs_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*concat.vcf",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+
+    input:
+    path vcfs
+    path indices
+
+    output:
+    path "*concat.vcf", emit: concat_vcf
+    path ".command.*"
+
+    script:
+    vcf_list = vcfs.join(' ')
+    """
+    set -euo pipefail
+    # BCFtools concat to create a single VCF with all nfiles +2 variants
+    # output header is a uniquified concatenation of all headers
+    # output `INFO` `FORMAT` `NORMAL` and `TUMOR` fields are from the first listed VCF that has the variant
+    bcftools concat --output-type v --output ${params.output_filename}_SNV-concat.vcf --allow-overlaps --rm-dups all ${vcf_list}
+    """
+    }
