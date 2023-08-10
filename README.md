@@ -16,7 +16,7 @@
 ## Overview
 The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file.
 
-If two or more callers are requested, additional output includes VCF and MAF files with the set of variants shared by two or more callers as well as a Venn Diagram showing counts of shared and private variants.
+If two or more callers are requested, additional output includes both a VCF and an MAF file with the set of variants shared by two or more callers, and a Venn Diagram showing counts of shared and private variants.
 
 SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs for multiple samples from the same individual.
 
@@ -117,8 +117,14 @@ GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
 BCFtools source: https://samtools.github.io/bcftools
 Version: 1.17 (Released on Feb 21, 2023)
 GitHub Package: https://github.com/uclahs-cds/bcftools:1.17
+
 ##### VennDiagram
+VennDiagram source: https://github.com/uclahs-cds/public-R-VennDiagram
+Version: 1.7.3 (Released on Apr 12, 2022)
 ##### vcf2maf
+vcf2maf source: ghcr.io/mskcc/vcf2maf/vcf2maf
+Version: v1.6.18
+GitHub Package: https://github.com/mskcc/vcf2maf
 
 ---
 
@@ -146,13 +152,12 @@ Use `fpfilter.pl` and `highconfidence.pl` (packaged with SomaticSniper), resulti
 #### 1. `Manta` v1.6.0
 The input pair of tumor/normal BAM files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. *Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.* 
 #### 2. `Strelka2` v2.9.10
-The input pair of tumor/normal BAM files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in VCF format.  Lower quality variants that did not pass filtering are subsequently removed, yielding `somatic_snvs_pass.vcf` and `somatic_indels_pass.vcf` files.
-
+The input pair of tumor/normal BAM files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in VCF format.  Lower quality variants that did not pass filtering are subsequently removed, yielding `.SNV-pass.vcf.gz` and `.Indel-pass.vcf.gz` files.
 
 ### GATK Mutect2
 
 #### 1. Define intervals for scattering
-`params.intersect_regions` if defined, other the entire reference genome is split into x intervals for parallelization, where x is defined by the input `params.scatter_count`.
+The `params.intersect_regions` of the reference genome are split into x intervals for parallelization, where x is defined by `params.scatter_count`.
 #### 2. Call small somatic variants
 Call somatic variants with `Mutect2`.
 #### 3. Merge
@@ -181,9 +186,9 @@ To run the pipeline, one `input.yaml` and one `input.config` are needed, as foll
 | Input       | Type   | Description                               |
 |-------------|--------|-------------------------------------------|
 | patient_id | string | The name/ID of the patient
-| tumor_BAM | string | The path to the tumor .bam file (.bai file must exist in same directory) |
+| tumor_BAM | path | The path to the tumor .bam file (.bai file must exist in same directory) |
 | tumor_id | string | The name/ID of the tumor sample    |
-| normal_BAM | string | The path to the normal .bam file (.bai file must exist in same directory) |
+| normal_BAM | path | The path to the normal .bam file (.bai file must exist in same directory) |
 | normal_id | string | The name/ID of the normal sample      |
 | contamination_table | path | Optional, but only for tumor samples. The path of the `contamination.table`, which is generated from the GATK's `CalculateContamination` in `pipeline-call-gSNP`. The contamination.table path can be found under `pipeline-call-gSNP`'s output `QC` folder
 
@@ -208,13 +213,15 @@ input:
 |--------|---|--------|-------------------------------------------|
 | algorithm   | yes | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
 | reference   | yes | string | The reference .fa file (.fai and .dict file must exist in same directory) |
-| intersect_regions | tbd | string | A bed file listing the genomic regions for variant calling. All regions other than `decoy` are recommended
+| intersect_regions | yes | string | A bed file listing the genomic regions for variant calling. Excluding `decoy` regions is HIGHLY recommended *
 | output_dir  | yes | string | The location where outputs will be saved  |
 | dataset_id | yes | string | The name/ID of the dataset    |
 | exome       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE |
 | save_intermediate_files | yes | boolean | Whether to save intermediate files |
 | work_dir | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively |
 | docker_container_registry | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
+
+* Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. `Strelka2`, and to some extent `Mutect2` runtimes are very long when the thousands of small decoy contigs are included. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). A GRCh38 `bed.gz` file can be found here: `/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`. For other genome versions, you may be able to use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
 
 #### Module Specific Configuration
 | Input       | Required | Type   | Description                               |
@@ -252,12 +259,15 @@ input:
 
 | Intersect Outputs                                         | Type         | Description                   |
 |------------------------------------------------|--------------|-------------------------------|
-| isec-1-or-more | directory | BCFtools isec output, all variants |
-| isec-2-or-more | directory | BCFtools isec output, variants shared by 2 or more tools |
-| SomaticSniper-{version}_{sample_id}_consensus-variants.vcf.gz             | .vcf.gz         | Filtered SNV VCF (somaticsniper)|
-| Strelka2-{version}_{sample_id}_consensus-variants.vcf.gz   | .vcf.gz         | Filtered SNV VCF(strelka2)     |
-| Mutect2-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | Filtered SNV VCF (mutect2)      |
-| MuSE-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | Filtered SNV VCF (MuSE)   |
+| isec-1-or-more | directory | BCFtools isec README.txt and sites.txt, all variants |
+| isec-2-or-more | directory | BCFtools isec README.txt and sites.txt, variants shared by 2 or more tools |
+| SomaticSniper-{version}_{sample_id}_consensus-variants.vcf.gz             | .vcf.gz         | `2-or-more` SNV VCF|
+| Strelka2-{version}_{sample_id}_consensus-variants.vcf.gz   | .vcf.gz         | `2-or-more` SNV VCF     |
+| Mutect2-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | `2-or-more` SNV VCF      |
+| MuSE-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | `2-or-more` SNV VCF   |
+| BCFtools-{version}_{sample_id}_Venn-diagram.tiff | .tiff | Venn Diagram with intersection counts for all variants (`1-or-more`)
+| BCFtools-{version}_{sample_id}_SNV-concat.vcf.gz | .vcf.gz | Single SNV VCF with all `2-or-more` variants and mixed annotation |
+| BCFtools-{version}_{sample_id}_SNV-concat.maf.gz | .maf.gz | Single SNV MAF with all `2-or-more` variants and mixed annotation |
 ## Testing and Validation
 
 Testing was performed primarily in the Boutros Lab SLURM Development cluster using F72 node. Metrics below will be updated where relevant with additional testing and tuning outputs.
