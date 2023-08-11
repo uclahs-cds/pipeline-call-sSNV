@@ -223,7 +223,7 @@ input:
 |--------|---|--------|-------------------------------------------|
 | algorithm   | yes | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
 | reference   | yes | string | The reference .fa file (.fai and .dict file must exist in same directory) |
-| intersect_regions | yes | string | A bed file listing the genomic regions for variant calling. Excluding `decoy` regions is HIGHLY recommended *
+| intersect_regions* | yes | string | A bed file listing the genomic regions for variant calling. Excluding `decoy` regions is HIGHLY recommended *
 | output_dir  | yes | string | The location where outputs will be saved  |
 | dataset_id | yes | string | The name/ID of the dataset    |
 | exome       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE |
@@ -231,7 +231,7 @@ input:
 | work_dir | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively |
 | docker_container_registry | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
 
-* Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). A GRCh38 `bed.gz` file can be found here: `/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`. For other genome versions, you may be able to use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
+ *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). A GRCh38 `bed.gz` file can be found here: `/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`. For other genome versions, you may be able to use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
 
 #### Module Specific Configuration
 | Input       | Required | Type   | Description                               |
