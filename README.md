@@ -16,7 +16,7 @@
 ## Overview
 The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file.
 
-If two or more callers are requested, additional output includes both a VCF and an MAF file with the set of variants shared by two or more callers, and a Venn Diagram showing counts of shared and private variants.
+If two or more callers are requested, additional output includes both a VCF and an MAF file with the set of SNVs shared by two or more callers, and a Venn Diagram showing counts of shared and private SNVs.
 
 SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs for multiple samples from the same individual.
 
@@ -33,7 +33,7 @@ SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of inpu
 Below is a summary of how to run the pipeline.  See [here](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
 
 > **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry|Setup) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
-> 
+>
 1. The recommended way of running the pipeline is to directly use the source code located here: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/`, rather than cloning a copy of the pipeline.
 
     * The source code should never be modified when running our pipelines
@@ -47,10 +47,10 @@ Below is a summary of how to run the pipeline.  See [here](https://confluence.me
 nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
 ```
 
-For example, 
+For example,
 * `path/to/main.nf` could be: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf`
-* `path/to/input.config` is the path to where you saved your project-specific copy of [template.config](config/template.config) 
-* `path/to/input.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml) 
+* `path/to/input.config` is the path to where you saved your project-specific copy of [template.config](config/template.config)
+* `path/to/input.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml)
 
 To submit to UCLAHS-CDS's Azure cloud, use the submission script [here](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
 
@@ -138,19 +138,19 @@ This takes several steps, listed below, and starts with the same input files giv
 ##### a. Get indel pileup summaries
 Summarize counts of reads that support reference, alternate and other alleles for given sites.  This is done for both of the input BAM files and the results are used in the next step.
 ##### b. Filter indel pileup outputs
-Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filter each to keep only indels with QUAL > 20. `samtools.pl` is packaged with `SomaticSniper`. 
+Use `samtools.pl varFilter` to filter each pileup output (tumor and normal), then further filter each to keep only indels with QUAL > 20. `samtools.pl` is packaged with `SomaticSniper`.
 ##### c. Filter SomaticSniper VCF
 Use `snpfilter.pl` (packaged with `SomaticSniper`):
 i. filter VCF using normal indel pileup (from step `b`).
 ii. filter VCF output from step `i` using tumor indel pileup (from step `b`).
-##### d. Summarize alignment information for retained variant positions
+##### d. Summarize alignment information for retained SNV positions
 Extract positions from filtered VCF file and use with `bam-readcount` to generate a summary of read alignment metrics for each position.
-##### e. Final filtering of variants using metrics summarized above
+##### e. Final filtering of SNVs using metrics summarized above
 Use `fpfilter.pl` and `highconfidence.pl` (packaged with SomaticSniper), resulting in a final high confidence VCF file.
 
 ### Strelka2
 #### 1. `Manta` v1.6.0
-The input pair of tumor/normal BAM files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. *Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.* 
+The input pair of tumor/normal BAM files are used by Manta to produce candidate small indels via the `Manta` somatic configuration protocol. *Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.*
 #### 2. `Strelka2` v2.9.10
 The input pair of tumor/normal BAM files, along with the candidate small indel file produced by `Manta` are used by `Strelka2` to create lists of somatic single nucleotide and small indel variants, both in VCF format.  Lower quality variants that did not pass filtering are subsequently removed, yielding `.SNV-pass.vcf.gz` and `.Indel-pass.vcf.gz` files.
 
@@ -171,12 +171,22 @@ Split filtered VCF into separate files for each variant type: SNVs, MNVs and IND
 
 ### MuSE
 #### 1. `MuSE call`
-This step carries out pre-filtering and calculating position-specific summary statistics using the Markov substitution model.
+Pre-filtering and calculating position-specific summary statistics using the Markov substitution model.
 #### 2. `MuSE sump`
-This step computes tier-based cutoffs from a sample-specific error model.
+Computes tier-based cutoffs from a sample-specific error model.
 #### 3.Filter VCF
-`MuSE` output has variants labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only variants labeled `PASS`.
+`MuSE` output has SNVs labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only SNVs labeled `PASS`.
 
+### Intersect
+If two or more algorithms were selected the Intersect workflow will run. Currently the resulting VCF and MAF files include any SNVs found by two or more algorithms.
+#### 1. `BCFtools isec -n +1`
+Determines presence/absence of each SNV within each algorithm's set of filtered SNVs. Results are listed in the output files: `isec-1-or-more/README.txt` and `isec-1-or-more/sites.txt`, and are summarized in a Venn Diagram plot (TIFF format).
+#### 2. `BCFtools isec -n +2`
+Determines presence/absence of SNVs found in two or more of each algorithm's set of filtered SNVs, and outputs a `consensus` VCF for each algorithm containing SNVs found by that algorithm plus at least one other algorithm. Results are also listed in the output files: `isec-2-or-more/README.txt` and `isec-2-or-more/sites.txt`.
+#### 3. `BCFtools concat`
+Concatenates the 2+ algorithm `consensus` SNVs into one VCF (SNV-concat.vcf.gz).  The output header is a uniquified concatenation of all input VCF headers.  The output fields `INFO`, `FORMAT`, `NORMAL` and `TUMOR` are from the first listed VCF that has the SNV. Input VCFs are sorted alphanumerically by the algorithm name.
+#### 4. `vcf2maf`
+Converts SNV-concat.vcf.gz from step 3 into [MAF format](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/).  Output includes allele counts and flanking basepairs, but most fields are blank.  Details can be found [here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/222#discussion-5512332).
 
 ## Inputs
 To run the pipeline, one `input.yaml` and one `input.config` are needed, as follows.
@@ -205,7 +215,7 @@ input:
       contamination_table: /path/to/contamination.table
 ```
 
-* `Mutect2` can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm. 
+* `Mutect2` can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm.
 
 
 ### input.config ([see template](config/template.config))

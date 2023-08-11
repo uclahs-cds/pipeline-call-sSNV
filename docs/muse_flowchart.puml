@@ -15,12 +15,12 @@ $input_process(tumor_bam, 'Tumor BAM', 'Input: tumor BAM file')
 $intermediate_process(muse_call_run, "MuSE call", "Output: position-specific %newline()summary statistics")
 $input_process(dbsnp_file, 'dbSNP', 'Input: dbSNP VCF')
 $intermediate_process(muse_sump_run, "MuSE sump", "Output: VCF with tier-based %newline()quality cutoffs")
-$output_process(filter_vcf, 'Filter VCF', 'Output: VCF with top tier %newline()somatic variants')
+$output_process(filter_vcf, 'Filter VCF', 'Output: VCF with top tier %newline()somatic variants: %newline()SNV.vcf.gz')
 
 tumor_bam -d-> muse_call_run
 normal_bam -d-> muse_call_run
-muse_call_run -d-> muse_sump_run
-dbsnp_file -d-> muse_sump_run
+muse_call_run -d-> muse_sump_run: // .MuSE.txt //
+dbsnp_file -d-> muse_sump_run: // .raw.vcf //
 muse_sump_run -d-> filter_vcf
 
 $add_legend("left")
