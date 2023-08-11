@@ -19,7 +19,7 @@ $intermediate_process(intersect_vcfs_1, "BCFtools isec -n +1", "Output: All SNVs
 
 $output_process(plot_venn, 'VennDiagram', 'Output: plot in TIFF format showing %newline()intersection counts for all SNVs')
 $output_process(concat_vcfs, 'BCFtools concat', 'Output: Single VCF with all SNVs %newline()found by 2 or more algorithms')
-$output_process(vcf2maf, 'vcf2maf', 'Output: Single MAF with all SNVs %newline()found by 2 or more algorithms: %newline()SNV-concat.maf.gz')
+$output_process(vcf2maf, 'vcf2maf', 'Output: Single MAF with all SNVs %newline()found by 2 or more algorithms: %newline()//SNV-concat.maf.gz//')
 
 num_algos -d-> input_vcfs: true
 num_algos -d-> done: false

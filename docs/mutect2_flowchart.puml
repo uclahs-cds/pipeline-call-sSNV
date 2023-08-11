@@ -22,7 +22,7 @@ $intermediate_process(mutect2_mergeStats, 'GATK MergeMutectStats', 'Output: Mute
 $intermediate_process(gatk_learnReadOrientation, 'GATK LearnReadOrientationModel', 'Output: orientation bias artifacts table')
 $intermediate_process(mutect2_filterCalls, 'GATK FilterMutectCalls', 'Output: VCF with non-PASSing variants tagged %newline()Optional output: filtering stats')
 $intermediate_process(bcftools_filterVCF, 'remove non-PASS variants', 'Output: VCF including only variants that passed above filters')
-$output_process(bcftools_splitVCF, 'split by variant type', 'Output: %newline()SNV.vcf.gz %newline()MNV.vcf.gz %newline()Indel.vcf.gz')
+$output_process(bcftools_splitVCF, 'split by variant type', 'Output: %newline()//SNV.vcf.gz // %newline()//MNV.vcf.gz // %newline()//Indel.vcf.gz //')
 $qc_process(gatk_filteringStats, 'Optional', 'Output: filteringStats.tsv')
 
 reference_genome -d-> gatk_splitIntervals
