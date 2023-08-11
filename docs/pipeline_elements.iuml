@@ -44,6 +44,13 @@ $description"
 !endprocedure
 @enduml
 
+@startuml(id=test_rect)
+!unquoted procedure $test_process($alias, $title $description)
+rectangle $alias #Yellow as "
+$description"
+!endprocedure
+@enduml
+
 @startuml(id=process_legend)
 !unquoted procedure $add_legend($pos="bottom right")
 legend $pos

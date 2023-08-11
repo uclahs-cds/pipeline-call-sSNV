@@ -269,30 +269,6 @@ process filter_FalsePositive_SomaticSniper {
     """
     }
 
-// After running fpfilter.pl above, readcount file can now be compressed
-process compress_readcount_SomaticSniper {
-    container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.readcount.gz"
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
-
-    input:
-    path readcount_file
-
-    output:
-    path "*.readcount.gz"
-    path ".command.*"
-
-    """
-    set -euo pipefail
-    gzip --stdout $readcount_file > ${readcount_file}.gz
-    """
-    }
-
 // To obtain the "high confidence" set based on further filtering of the somatic score and mapping quality
 process call_HighConfidenceSNV_SomaticSniper {
     container params.docker_image_somaticsniper
@@ -321,5 +297,29 @@ process call_HighConfidenceSNV_SomaticSniper {
         --snp-file $fp_pass \
         --lq-output "${params.output_filename}_lc.vcf" \
         --out-file "${params.output_filename}_hc.vcf"
+    """
+    }
+
+    process compress_readcount_bam_readcount {
+    container params.docker_image_bam_readcount
+    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
+               mode: "copy",
+               pattern: "*readcount.gz"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+
+    input:
+    path readcount
+
+    output:
+    path "*readcount.gz"
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    gzip --stdout ${readcount} > ${readcount}.gz
     """
     }
