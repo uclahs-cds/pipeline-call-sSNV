@@ -106,3 +106,55 @@ process concat_VCFs_BCFtools {
     bcftools concat --output-type v --output ${params.output_filename}_SNV-concat.vcf --allow-overlaps --rm-dups all ${vcf_list}
     """
     }
+
+process convert_VCF_vcf2maf {
+    container params.docker_image_vcf2maf
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.maf",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+
+    input:
+    path vcf
+    path reference
+    val normal_id
+    val tumor_id
+
+    output:
+    path "*.maf", emit: concat_maf
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    perl /opt/vcf2maf.pl --inhibit-vep --filter-vcf 0 --input-vcf ${vcf} --normal-id ${normal_id} --tumor-id ${tumor_id} --output-maf ${params.output_filename}_SNV-concat.maf --ref-fasta ${reference}
+    """
+    }
+
+process compress_MAF_vcf2maf {
+    container params.docker_image_vcf2maf
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.gz"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+
+    input:
+    path maf
+
+    output:
+    path "*.gz", emit: concat_maf_gz
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    gzip --stdout ${maf} > ${maf}.gz
+    """
+    }

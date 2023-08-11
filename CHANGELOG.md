@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add conversion of concatenated VCF to MAF
 - Add concatenation of consensus variants to one VCF
 - Add variant intersection Venn diagram
 - Add regions filter to variant intersections
