@@ -40,7 +40,7 @@ mutect2_call_sSNV -d-> mutect2_mergeStats
 mutect2_call_sSNV -d-> gatk_learnReadOrientation
 mutect2_call_sSNV -d-> mutect2_mergeStats
 
-gatk_mergeVcfs -d-> mutect2_filterCalls : // unfiltered.vcf.gz //
+gatk_mergeVcfs -d-> mutect2_filterCalls : //unfiltered.vcf.gz//
 gatk_learnReadOrientation -d-> mutect2_filterCalls : // f1r2.tar.gz //
 mutect2_mergeStats -d-> mutect2_filterCalls : // unfiltered.vcf.stats.gz //
 reference_genome -d-> mutect2_filterCalls
