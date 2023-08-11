@@ -6,6 +6,7 @@
 !include pipeline_elements.iuml!intermediate_rect
 !include pipeline_elements.iuml!qc_rect
 !include pipeline_elements.iuml!process_legend
+!include pipeline_elements.iuml!test_process
 
 skinparam linetype ortho
 
