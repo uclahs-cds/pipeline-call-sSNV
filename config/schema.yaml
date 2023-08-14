@@ -32,24 +32,32 @@ work_dir:
   mode: 'w'
   required: false
   help: 'Absolute path to output directory'
-patient_id:
-  type: 'String'
-  required: true
-  help: 'Patient identifier'
 dataset_id:
   type: 'String'
   required: true
   help: 'Dataset identifier'
-save_intermediate_files:
-  type: 'Bool'
-  required: true
-  default: false
-  help: 'The option to save the intermediate files'
 exome:
   type: 'Bool'
   required: false
   default: false
   help: 'The exome option when running manta and strelka2'
+save_intermediate_files:
+  type: 'Bool'
+  required: true
+  default: false
+  help: 'The option to save the intermediate files'
+bgzip_extra_args:
+  type: 'String'
+  required: false
+  allow_empty: true
+  default: ''
+  help: 'Additional arguments for bgzip command'
+tabix_extra_args:
+  type: 'String'
+  required: false
+  allow_empty: true
+  default: ''
+  help: 'Additional arguments for tabix command'
 split_intervals_extra_args:
   type: 'String'
   required: false
@@ -65,26 +73,29 @@ filter_mutect_calls_extra_args:
   required: false
   allow_empty: true
   help: 'Additional arguments for the FilterMutectCalls command'
-bgzip_extra_args:
-  type: 'String'
-  required: false
-  allow_empty: true
-  default: ''
-  help: 'Additional arguments for bgzip command'
-tabix_extra_args:
-  type: 'String'
-  required: false
-  allow_empty: true
-  default: ''
-  help: 'Additional arguments for tabix command'
 scatter_count:
   type: 'Integer'
   required: true
-  default: 50
 germline_resource_gnomad_vcf:
   type: 'Path'
   required: false
   allow_empty: true
+dbSNP:
+  type: 'Path'
+  required: true
+ncbi_build:
+  type: 'String'
+  required: true
+  help: 'NCBI build version, e.g. GRCh38'
+vcf2maf_extra_args:
+  type: 'String'
+  required: false
+  allow_empty: true
+  help: 'Additional arguments for the vcf2maf command'
+patient_id:
+  type: 'String'
+  required: true
+  help: 'Patient identifier'
 input:
   type: 'InputNamespace'
   required: true
