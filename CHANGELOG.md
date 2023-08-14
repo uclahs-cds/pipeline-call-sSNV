@@ -6,7 +6,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add `ncbi_build` parameter
+- Add conversion of concatenated VCF to MAF
+- Add concatenation of consensus variants to one VCF
+- Add variant intersection Venn diagram
+- Add regions filter to variant intersections
+- Add second BCFtools step to create full presence/absence variant table (including private)
+- Add workflow to create a `consensus.vcf` that includes SNVs found by two or more variant callers
+- Add `fix_sample_names_VCF`, tumor and normal sample IDs from input BAMs used in output VCFs
+- Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
+
 ### Changed
+- Update `README.md`
+- Use `set_env` from `pipeline-Nextflow-config`
+- Update resource allocation to include new processes
+- Reconfigure `intersect_regions` to use all contigs except `decoy`
+- Reconfigure `call_regions` to `intersect_regions` 
+- Update to BCFtools v1.17
+- Keep `bam-readcount` output in `SomaticSniper` QC folder
+- Update `MuSE` to `v2.0.2`
+- Update to use sample ID from input BAM files (single tumor/normal BAM input only)
+- Use BCFtools to compress PASS variants instead of bgzip
+- Use BCFtools to extract PASS variants instead of awk
+- Update to use external `run_validate_PipeVal`
+
+## [6.0.0] - 2023-04-05
+
+### Added
+- Add Mutect2 flow chart
+- Add plantUML action and MuSE flow chart
+- Add NF-test
+
+### Changed
+- Update LearnReadOrientationModel allocated memory and cpus
+- Update to GATK v4.4.0.0
+- Update `MuSE` retry add memory to 48GB
+- Changed `output_dir` to `output_dir_base` (`methods.config` and `main.nf`)
+
+### Fixed
+- Specify empty string as default for bgzip and tabix extra args
+
+## [6.0.0-rc.1] - 2023-02-08
+### Changed
+- Update `README`: add Pipeline Steps and Tool descriptions
 - Update to use `set_resources_allocation` from pipeline-Nextflow-config repo
 - Update SAMtools to v1.16.1
 - Switch Docker Hub images to GitHub packages.

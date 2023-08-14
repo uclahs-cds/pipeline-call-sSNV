@@ -7,6 +7,7 @@ Docker Images:
 - docker_image_manta:     ${params.docker_image_manta}
 Strelka2 Options:
 - exome:                  ${params.exome}
+- use_intersect_regions:  ${params.use_intersect_regions}
 """
 
 process call_sIndel_Manta {
@@ -27,8 +28,8 @@ process call_sIndel_Manta {
     path normal_index
     path reference
     path reference_index
-    path call_region
-    path call_region_index
+    path intersect_regions
+    path intersect_regions_index
 
     output:
     tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
@@ -38,7 +39,7 @@ process call_sIndel_Manta {
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region_command = params.use_call_region ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_intersect_regions ? "--callRegions ${intersect_regions}" : ""
     """
     configManta.py \
         --normalBam $normal \
@@ -50,7 +51,7 @@ process call_sIndel_Manta {
 
     MantaWorkflow/runWorkflow.py -j ${task.cpus}
     """
-}
+    }
 
 process call_sSNV_Strelka2 {
     container params.docker_image_strelka2
@@ -71,18 +72,18 @@ process call_sSNV_Strelka2 {
     path reference
     path reference_index
     tuple path(indel_candidates), path(indel_candidates_index)
-    path call_region
-    path call_region_index
+    path intersect_regions
+    path intersect_regions_index
 
     output:
-    tuple val("somatic-snvs"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
-    tuple val("somatic-indels"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
+    tuple val("SNV"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
+    tuple val("INDEL"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
     path "StrelkaSomaticWorkflow"
     path ".command.*"
 
     script:
     exome = params.exome ? "--exome" : ""
-    call_region_command = params.use_call_region ? "--callRegions ${call_region}" : ""
+    call_region_command = params.use_intersect_regions ? "--callRegions ${intersect_regions}" : ""
     """
     set -euo pipefail
     configureStrelkaSomaticWorkflow.py \
@@ -96,30 +97,29 @@ process call_sSNV_Strelka2 {
 
     StrelkaSomaticWorkflow/runWorkflow.py -m local -j ${task.cpus}
     """
-}
+    }
 
-process filter_VCF {
-    container params.docker_image_strelka2
+process filter_VCF_BCFtools {
+    container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.vcf",
-               enabled: params.save_intermediate_files
+        mode: "copy",
+        pattern: "*.vcf.gz",
+        enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}-${name}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    tuple val(name), path(vcf_gz)
+    tuple val(var_type), path(vcf)
 
     output:
-    tuple val(name), path("*.vcf"), emit: strelka2_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: pass_vcf
     path ".command.*"
 
-    // https://www.biostars.org/p/206488/
     script:
     """
     set -euo pipefail
-    zcat ${vcf_gz} | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_${name}-filtered-pass.vcf
+    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
     """
-}
+    }

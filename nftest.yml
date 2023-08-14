@@ -1,0 +1,57 @@
+---
+global:
+  temp_dir: ./test/work
+  nf_config: test/global.config
+  remove_temp: false
+  clean_logs: true
+
+cases:
+  - name: a_mini_n2-all-tools-std-input
+    message: test development branch using all tools and standard paired tumor and normal a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-all-tools.config
+    params_file: ./test/yaml/a_mini_n2-std-input.yaml
+    skip: false
+    verbose: true
+  - name: a_mini_n2-mutect2-tumor-only
+    message: test development branch using mutect2 and only a single tumor a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-mutect2.config
+    params_file: ./test/yaml/a_mini_n2-tumor-only.yaml
+    skip: false
+    verbose: true
+  - name: a_mini-mutect2-multiple-samples
+    message: test development branch using mutect2, a-mini-n1 and a-mini-n2 input and a single matched normal
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-mutect2.config
+    params_file: ./test/yaml/a_mini-multiple-samples.yaml
+    skip: false
+    verbose: true
+  - name: a_mini-somaticsniper
+    message: test development branch using somaticsniper and standard paired tumor and normal a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-somaticsniper.config
+    params_file: ./test/yaml/a_mini_n2-std-input.yaml
+    skip: true
+    verbose: true
+  - name: a_mini-strelka2
+    message: test development branch using strelka2 and standard paired tumor and normal a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-strelka2.config
+    params_file: ./test/yaml/a_mini_n2-std-input.yaml
+    skip: true
+    verbose: true
+  - name: a_mini-mutect2
+    message: test development branch using mutect2 and standard paired tumor and normal a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-mutect2.config
+    params_file: ./test/yaml/a_mini_n2-std-input.yaml
+    skip: true
+    verbose: true
+  - name: a_mini-muse
+    message: test development branch using muse and standard paired tumor and normal a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-muse.config
+    params_file: ./test/yaml/a_mini_n2-std-input.yaml
+    skip: true
+    verbose: true

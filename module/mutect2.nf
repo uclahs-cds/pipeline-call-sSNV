@@ -1,7 +1,5 @@
-include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNVInAssembledChromosomes_Mutect2; call_sSNVInNonAssembledChromosomes_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF } from './mutect2-processes'
-
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNV_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF_BCFtools; split_VCF_BCFtools } from './mutect2-processes'
 include { generate_sha512sum } from './common'
-
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -20,7 +18,7 @@ workflow mutect2 {
 
     main:
         if (params.tumor_only_mode) {
-            normal_name_ch = Channel.from('normal_name')
+            normal_name_ch = Channel.from('NO_NAME')
         } else {
             run_GetSampleName_Mutect2(normal_bam.flatten())
             normal_name_ch = run_GetSampleName_Mutect2.out.name_ch.collect()
@@ -35,35 +33,15 @@ workflow mutect2 {
                 .set { contamination_table }
         }
 
-        if (params.intervals) {
-            intervals = params.intervals
-        } else {
-            intervals = "${projectDir}/config/hg38_chromosomes_canonical.list"
-
-            // process non-canonical chromosome regions seperately
-            // as this region requires more memory than the canonical regions
-            call_sSNVInNonAssembledChromosomes_Mutect2(
-                intervals, // canonical intervals to *exclude*
-                tumor_bam,
-                tumor_index,
-                normal_bam,
-                normal_index,
-                params.reference,
-                params.reference_index,
-                params.reference_dict,
-                normal_name_ch,
-                params.germline_resource_gnomad_vcf,
-                params.germline_resource_gnomad_vcf_index
-            )
-        }
         run_SplitIntervals_GATK(
-            intervals,
+            params.intersect_regions,
+            params.intersect_regions_index,
             params.reference,
             params.reference_index,
             params.reference_dict
         )
 
-        call_sSNVInAssembledChromosomes_Mutect2(
+        call_sSNV_Mutect2(
             run_SplitIntervals_GATK.out.interval_list.flatten(),
             tumor_bam
                 .map { [it] }
@@ -97,19 +75,9 @@ workflow mutect2 {
             params.germline_resource_gnomad_vcf_index
         )
 
-        if (params.intervals) {
-            ich_MergeVcfs = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.collect()
-            ich_MergeMutectStats = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.collect()
-            ich_LearnReadOrientationModel = call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.collect()
-        } else {
-            ich_MergeVcfs = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered.mix(
-                call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered).collect()
-            ich_MergeMutectStats = call_sSNVInAssembledChromosomes_Mutect2.out.unfiltered_stats.mix(
-                call_sSNVInNonAssembledChromosomes_Mutect2.out.unfiltered_stats).collect()
-            ich_LearnReadOrientationModel = call_sSNVInAssembledChromosomes_Mutect2.out.f1r2.mix(
-                call_sSNVInNonAssembledChromosomes_Mutect2.out.f1r2).collect()
-        }
-
+        ich_MergeVcfs = call_sSNV_Mutect2.out.unfiltered.collect()
+        ich_MergeMutectStats = call_sSNV_Mutect2.out.unfiltered_stats.collect()
+        ich_LearnReadOrientationModel = call_sSNV_Mutect2.out.f1r2.collect()
         run_MergeVcfs_GATK(ich_MergeVcfs)
         run_MergeMutectStats_GATK(ich_MergeMutectStats)
         run_LearnReadOrientationModel_GATK(ich_LearnReadOrientationModel)
@@ -123,15 +91,17 @@ workflow mutect2 {
             run_LearnReadOrientationModel_GATK.out.read_orientation_model,
             contamination_table.collect()
         )
-        filter_VCF(run_FilterMutectCalls_GATK.out.filtered)
-        index_compress_ch = filter_VCF.out.mutect2_vcf
-            .map{
-                it -> [params.sample_id, it]
-            }
-        compress_index_VCF(index_compress_ch)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
-                            .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
+        filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered.map{ it -> ['all', it] })
+        split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf.map{ it -> it[1] }, ['snps', 'mnps', 'indels'])
+        compress_index_VCF(split_VCF_BCFtools.out.split_vcf)
+        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-        compress_index_VCF.out.index_out
-}
+        vcf = compress_index_VCF.out.index_out
+            .filter { it[0] == 'snps' }
+            .map{ it -> ["${it[1]}"] }
+        idx = compress_index_VCF.out.index_out
+            .filter { it[0] == 'snps' }
+            .map{ it -> ["${it[2]}"] }
+    }

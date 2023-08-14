@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1016px" preserveAspectRatio="none" style="width:1023px;height:1016px;background:#FFFFFF;" version="1.1" viewBox="0 0 1023 1016" width="1023px" zoomAndPan="magnify"><defs/><g><!--MD5=[7208dd2ab11e4302e615decefbd72785]
+entity normal_bam--><g id="elem_normal_bam"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="169" x="7" y="136"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="83" x="17" y="158.9951">Normal BAM</text><line style="stroke:#181818;stroke-width:1.0;" x1="8" x2="175" y1="162.2969" y2="162.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="8" x2="175" y1="164.2969" y2="164.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="149" x="17" y="179.292">Input: normal BAM file</text></g><!--MD5=[f2d67d33cd25f2be41fb883452e52018]
+entity tumor_bam--><g id="elem_tumor_bam"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="163" x="519" y="136"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80" x="529" y="158.9951">Tumor BAM</text><line style="stroke:#181818;stroke-width:1.0;" x1="520" x2="681" y1="162.2969" y2="162.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="520" x2="681" y1="164.2969" y2="164.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143" x="529" y="179.292">Input: tumor BAM file</text></g><!--MD5=[74c7f44c598de063cb5332cea7c15ccf]
+entity contamination_table--><g id="elem_contamination_table"><rect fill="#ADD8E6" height="76.8906" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="226" x="791.5" y="386"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="206" x="801.5" y="408.9951">Contamination Table: optional</text><line style="stroke:#181818;stroke-width:1.0;" x1="792.5" x2="1016.5" y1="412.2969" y2="412.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="792.5" x2="1016.5" y1="414.2969" y2="414.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="149" x="801.5" y="429.292">Input: output of GATK</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="163" x="801.5" y="445.5889">CalculateContamination</text></g><!--MD5=[683848f6f89b4f10b76be1befce61c49]
+entity reference_genome--><g id="elem_reference_genome"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="154" x="631.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134" x="641.5" y="29.9951">Reference genome</text><line style="stroke:#181818;stroke-width:1.0;" x1="632.5" x2="784.5" y1="33.2969" y2="33.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="632.5" x2="784.5" y1="35.2969" y2="35.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="641.5" y="50.292">Input: fasta file</text></g><!--MD5=[cd7326b4d4d6b838cc6f0350607b00cc]
+entity germline_resource--><g id="elem_germline_resource"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="213" x="717" y="136"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128" x="727" y="158.9951">Germline resource</text><line style="stroke:#181818;stroke-width:1.0;" x1="718" x2="929" y1="162.2969" y2="162.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="718" x2="929" y1="164.2969" y2="164.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="193" x="727" y="179.292">Input: stripped gnomad VCF</text></g><!--MD5=[d63e1c22a2c9d43d1cb6d0e0c362f05c]
+entity gatk_splitIntervals--><g id="elem_gatk_splitIntervals"><rect fill="#FFFFFF" height="76.8906" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="272" x="211.5" y="128"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128" x="221.5" y="150.9951">GATK SplitIntervals</text><line style="stroke:#181818;stroke-width:1.0;" x1="212.5" x2="482.5" y1="154.2969" y2="154.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="212.5" x2="482.5" y1="156.2969" y2="156.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="248" x="221.5" y="171.292">Output: reference genome split into</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="211" x="221.5" y="187.5889">params.scatter_count intervals</text></g><!--MD5=[5c5a3373cc9c957a0696dfc32ceeb004]
+entity mutect2_call_sSNV--><g id="elem_mutect2_call_sSNV"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="371" x="162" y="265"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="275" x="172" y="287.9951">GATK Mutect2: one process per interval</text><line style="stroke:#181818;stroke-width:1.0;" x1="163" x2="532" y1="291.2969" y2="291.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="163" x2="532" y1="293.2969" y2="293.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="351" x="172" y="308.292">Output: unfiltered VCFs, variant stats, F1R2 metrics</text></g><!--MD5=[ab25e9f2a4aadf8e6384ce1eddb2238b]
+entity gatk_mergeVcfs--><g id="elem_gatk_mergeVcfs"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="173" x="45" y="394"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="115" x="55" y="416.9951">GATK MergeVcfs</text><line style="stroke:#181818;stroke-width:1.0;" x1="46" x2="217" y1="420.2969" y2="420.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="46" x2="217" y1="422.2969" y2="422.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="153" x="55" y="437.292">Output: unfiltered VCF</text></g><!--MD5=[eb6a33721836483982f72591d037a7d0]
+entity mutect2_mergeStats--><g id="elem_mutect2_mergeStats"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="189" x="253" y="394"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="169" x="263" y="416.9951">GATK MergeMutectStats</text><line style="stroke:#181818;stroke-width:1.0;" x1="254" x2="441" y1="420.2969" y2="420.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="254" x2="441" y1="422.2969" y2="422.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="263" y="437.292">Output: Mutect2 stats</text></g><!--MD5=[066298a3bc853470b378ec8acd27c500]
+entity gatk_learnReadOrientation--><g id="elem_gatk_learnReadOrientation"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="279" x="477" y="394"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="234" x="487" y="416.9951">GATK LearnReadOrientationModel</text><line style="stroke:#181818;stroke-width:1.0;" x1="478" x2="755" y1="420.2969" y2="420.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="478" x2="755" y1="422.2969" y2="422.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="259" x="487" y="437.292">Output: orientation bias artifacts table</text></g><!--MD5=[14dd0d302e44c7481d570142590ac780]
+entity mutect2_filterCalls--><g id="elem_mutect2_filterCalls"><rect fill="#FFFFFF" height="76.8906" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="343" x="445" y="523"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="155" x="455" y="545.9951">GATK FilterMutectCalls</text><line style="stroke:#181818;stroke-width:1.0;" x1="446" x2="787" y1="549.2969" y2="549.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="446" x2="787" y1="551.2969" y2="551.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="319" x="455" y="566.292">Output: VCF with non-PASSing variants tagged</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="204" x="455" y="582.5889">Optional output: filtering stats</text></g><!--MD5=[c25ec7b831d96bb09212e583edbcf411]
+entity bcftools_filterVCF--><g id="elem_bcftools_filterVCF"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="432" x="228.5" y="660"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="181" x="238.5" y="682.9951">remove non-PASS variants</text><line style="stroke:#181818;stroke-width:1.0;" x1="229.5" x2="659.5" y1="686.2969" y2="686.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="229.5" x2="659.5" y1="688.2969" y2="688.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="412" x="238.5" y="703.292">Output: VCF including only variants that passed above filters</text></g><!--MD5=[a549002efad02e637909bb77488bb140]
+entity bcftools_splitVCF--><g id="elem_bcftools_splitVCF"><rect fill="#90EE90" height="109.4844" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="151" x="369" y="781"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="131" x="379" y="803.9951">split by variant type</text><line style="stroke:#181818;stroke-width:1.0;" x1="370" x2="519" y1="807.2969" y2="807.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="370" x2="519" y1="809.2969" y2="809.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="53" x="379" y="824.292">Output:</text><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="74" x="379" y="840.5889">SNV.vcf.gz</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="457" y="840.5889"> </text><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="77" x="379" y="856.8857">MNV.vcf.gz</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="460" y="856.8857"> </text><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="78" x="379" y="873.1826">Indel.vcf.gz</text></g><!--MD5=[9b1214b938c93a64d708fcdc0b47a721]
+entity gatk_filteringStats--><g id="elem_gatk_filteringStats"><rect fill="#FFFF00" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="186" x="695.5" y="660"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="57" x="705.5" y="682.9951">Optional</text><line style="stroke:#181818;stroke-width:1.0;" x1="696.5" x2="880.5" y1="686.2969" y2="686.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="696.5" x2="880.5" y1="688.2969" y2="688.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="166" x="705.5" y="703.292">Output: filteringStats.tsv</text></g><!--MD5=[3386893aa5eefab30ad20dff733108bf]
+link reference_genome to gatk_splitIntervals--><g id="link_reference_genome_gatk_splitIntervals"><path codeLine="27" d="M656.75,68.18 C656.75,95.77 656.75,132 656.75,132 C656.75,132 488.59,132 488.59,132 " fill="none" id="reference_genome-to-gatk_splitIntervals" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="483.59,132,492.59,136,488.59,132,492.59,128,483.59,132" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[fc0b7ed7f606259674552d77317f528c]
+link normal_bam to mutect2_call_sSNV--><g id="link_normal_bam_mutect2_call_sSNV"><path codeLine="28" d="M169,197.07 C169,197.07 169,259.7 169,259.7 " fill="none" id="normal_bam-to-mutect2_call_sSNV" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="169,264.7,173,255.7,169,259.7,165,255.7,169,264.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2d91d11328249d87ebfea3ce08cefcf5]
+link tumor_bam to mutect2_call_sSNV--><g id="link_tumor_bam_mutect2_call_sSNV"><path codeLine="29" d="M526,197.07 C526,197.07 526,259.7 526,259.7 " fill="none" id="tumor_bam-to-mutect2_call_sSNV" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="526,264.7,530,255.7,526,259.7,522,255.7,526,264.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[0306e9952611d7cc7a2b180b25529a36]
+link gatk_splitIntervals to mutect2_call_sSNV--><g id="link_gatk_splitIntervals_mutect2_call_sSNV"><path codeLine="30" d="M347.5,205.2 C347.5,205.2 347.5,259.6 347.5,259.6 " fill="none" id="gatk_splitIntervals-to-mutect2_call_sSNV" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="347.5,264.6,351.5,255.6,347.5,259.6,343.5,255.6,347.5,264.6" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[771c1c15a96bb97bf9274ecd856be21d]
+link germline_resource to mutect2_call_sSNV--><g id="link_germline_resource_mutect2_call_sSNV"><path codeLine="31" d="M736.5,197.19 C736.5,235.48 736.5,296 736.5,296 C736.5,296 538.17,296 538.17,296 " fill="none" id="germline_resource-to-mutect2_call_sSNV" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="533.17,296,542.17,300,538.17,296,542.17,292,533.17,296" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[7f6efc773309f19364bd7483201aa21d]
+link mutect2_call_sSNV to gatk_mergeVcfs--><g id="link_mutect2_call_sSNV_gatk_mergeVcfs"><path codeLine="32" d="M176,326.07 C176,326.07 176,388.7 176,388.7 " fill="none" id="mutect2_call_sSNV-to-gatk_mergeVcfs" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="176,393.7,180,384.7,176,388.7,172,384.7,176,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[7f6efc773309f19364bd7483201aa21d]
+link mutect2_call_sSNV to gatk_mergeVcfs--><g id="link_mutect2_call_sSNV_gatk_mergeVcfs"><path codeLine="35" d="M190,326.07 C190,326.07 190,388.7 190,388.7 " fill="none" id="mutect2_call_sSNV-to-gatk_mergeVcfs-1" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="190,393.7,194,384.7,190,388.7,186,384.7,190,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[7f6efc773309f19364bd7483201aa21d]
+link mutect2_call_sSNV to gatk_mergeVcfs--><g id="link_mutect2_call_sSNV_gatk_mergeVcfs"><path codeLine="36" d="M204,326.07 C204,326.07 204,388.7 204,388.7 " fill="none" id="mutect2_call_sSNV-to-gatk_mergeVcfs-2" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="204,393.7,208,384.7,204,388.7,200,384.7,204,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[d5c0f7fa8080a826ce8308056617dede]
+link mutect2_call_sSNV to gatk_learnReadOrientation--><g id="link_mutect2_call_sSNV_gatk_learnReadOrientation"><path codeLine="33" d="M491,326.07 C491,326.07 491,388.7 491,388.7 " fill="none" id="mutect2_call_sSNV-to-gatk_learnReadOrientation" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="491,393.7,495,384.7,491,388.7,487,384.7,491,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[d5c0f7fa8080a826ce8308056617dede]
+link mutect2_call_sSNV to gatk_learnReadOrientation--><g id="link_mutect2_call_sSNV_gatk_learnReadOrientation"><path codeLine="37" d="M505,326.07 C505,326.07 505,388.7 505,388.7 " fill="none" id="mutect2_call_sSNV-to-gatk_learnReadOrientation-1" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="505,393.7,509,384.7,505,388.7,501,384.7,505,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[d5c0f7fa8080a826ce8308056617dede]
+link mutect2_call_sSNV to gatk_learnReadOrientation--><g id="link_mutect2_call_sSNV_gatk_learnReadOrientation"><path codeLine="39" d="M519,326.07 C519,326.07 519,388.7 519,388.7 " fill="none" id="mutect2_call_sSNV-to-gatk_learnReadOrientation-2" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="519,393.7,523,384.7,519,388.7,515,384.7,519,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2227ac900ce7a064eac327e4790d641c]
+link mutect2_call_sSNV to mutect2_mergeStats--><g id="link_mutect2_call_sSNV_mutect2_mergeStats"><path codeLine="34" d="M347.5,326.07 C347.5,326.07 347.5,388.7 347.5,388.7 " fill="none" id="mutect2_call_sSNV-to-mutect2_mergeStats" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="347.5,393.7,351.5,384.7,347.5,388.7,343.5,384.7,347.5,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2227ac900ce7a064eac327e4790d641c]
+link mutect2_call_sSNV to mutect2_mergeStats--><g id="link_mutect2_call_sSNV_mutect2_mergeStats"><path codeLine="38" d="M300.25,326.07 C300.25,326.07 300.25,388.7 300.25,388.7 " fill="none" id="mutect2_call_sSNV-to-mutect2_mergeStats-1" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="300.25,393.7,304.25,384.7,300.25,388.7,296.25,384.7,300.25,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2227ac900ce7a064eac327e4790d641c]
+link mutect2_call_sSNV to mutect2_mergeStats--><g id="link_mutect2_call_sSNV_mutect2_mergeStats"><path codeLine="40" d="M394.75,326.07 C394.75,326.07 394.75,388.7 394.75,388.7 " fill="none" id="mutect2_call_sSNV-to-mutect2_mergeStats-2" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="394.75,393.7,398.75,384.7,394.75,388.7,390.75,384.7,394.75,393.7" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[8a86630dfed2789a76147367d635dbcf]
+link gatk_mergeVcfs to mutect2_filterCalls--><g id="link_gatk_mergeVcfs_mutect2_filterCalls"><path codeLine="42" d="M131.5,455.02 C131.5,495.52 131.5,562 131.5,562 C131.5,562 439.82,562 439.82,562 " fill="none" id="gatk_mergeVcfs-to-mutect2_filterCalls" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="444.82,562,435.82,558,439.82,562,435.82,566,444.82,562" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="102" x="129.17" y="558.0669">unfiltered.vcf.gz</text></g><!--MD5=[c4e084b39786b9eec57b87ee4c86a3ec]
+link gatk_learnReadOrientation to mutect2_filterCalls--><g id="link_gatk_learnReadOrientation_mutect2_filterCalls"><path codeLine="43" d="M616.5,455.25 C616.5,455.25 616.5,517.76 616.5,517.76 " fill="none" id="gatk_learnReadOrientation-to-mutect2_filterCalls" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="616.5,522.76,620.5,513.76,616.5,517.76,612.5,513.76,616.5,522.76" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="66" x="545.5" y="482.5669">f1r2.tar.gz</text></g><!--MD5=[4c73a30cf6e878bc2bd5d8130666922a]
+link mutect2_mergeStats to mutect2_filterCalls--><g id="link_mutect2_mergeStats_mutect2_filterCalls"><path codeLine="44" d="M442,425 C453.34,425 461,425 461,425 C461,425 461,517.75 461,517.75 " fill="none" id="mutect2_mergeStats-to-mutect2_filterCalls" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="461,522.75,465,513.75,461,517.75,457,513.75,461,522.75" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="138" x="318" y="474.9469">unfiltered.vcf.stats.gz</text></g><!--MD5=[f987b60b6204010fefe5515131096e09]
+link reference_genome to mutect2_filterCalls--><g id="link_reference_genome_mutect2_filterCalls"><path codeLine="45" d="M699.5,68.25 C699.5,115.62 699.5,201 699.5,201 C699.5,201 766.67,201 766.67,201 C766.67,201 766.67,517.92 766.67,517.92 " fill="none" id="reference_genome-to-mutect2_filterCalls" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="766.67,522.92,770.67,513.92,766.67,517.92,762.67,513.92,766.67,522.92" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a07d6d6e6a5f60640a2f1ec822946363]
+link contamination_table to mutect2_filterCalls--><g id="link_contamination_table_mutect2_filterCalls"><path codeLine="46" d="M791.43,459 C782.78,459 777.33,459 777.33,459 C777.33,459 777.33,517.75 777.33,517.75 " fill="none" id="contamination_table-to-mutect2_filterCalls" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="777.33,522.75,781.33,513.75,777.33,517.75,773.33,513.75,777.33,522.75" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f7b8d66af89f1728a1bf2ccb3f72c260]
+link mutect2_filterCalls to gatk_filteringStats--><g id="link_mutect2_filterCalls_gatk_filteringStats"><path codeLine="47" d="M741.75,600.2 C741.75,600.2 741.75,654.6 741.75,654.6 " fill="none" id="mutect2_filterCalls-to-gatk_filteringStats" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="741.75,659.6,745.75,650.6,741.75,654.6,737.75,650.6,741.75,659.6" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[32c49e8d2fe37a4e24bfc5b3f15cfea8]
+link mutect2_filterCalls to bcftools_filterVCF--><g id="link_mutect2_filterCalls_bcftools_filterVCF"><path codeLine="48" d="M552.75,600.2 C552.75,600.2 552.75,654.6 552.75,654.6 " fill="none" id="mutect2_filterCalls-to-bcftools_filterVCF" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="552.75,659.6,556.75,650.6,552.75,654.6,548.75,650.6,552.75,659.6" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="86" x="461.75" y="623.4669">filtered.vcf.gz</text></g><!--MD5=[cf3348b5bc510f6d153bfe2634dbaf35]
+link bcftools_filterVCF to bcftools_splitVCF--><g id="link_bcftools_filterVCF_bcftools_splitVCF"><path codeLine="49" d="M444.5,721.25 C444.5,721.25 444.5,775.79 444.5,775.79 " fill="none" id="bcftools_filterVCF-to-bcftools_splitVCF" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="444.5,780.79,448.5,771.79,444.5,775.79,440.5,771.79,444.5,780.79" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="91" x="348.5" y="744.5869">all-pass.vcf.gz</text></g><rect fill="#DDDDDD" height="97.4844" rx="7.5" ry="7.5" style="stroke:#000000;stroke-width:1.0;" width="154" x="8" y="903.4844"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="36" x="18" y="924.4795">Color</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94" x="62" y="924.4795">Process Type</text><rect fill="#ADD8E6" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="927.7813"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="940.7764"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="62" y="940.7764">Input</text><rect fill="#FFFFFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="944.0781"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="957.0732"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87" x="62" y="957.0732">Intermediate</text><rect fill="#90EE90" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="960.375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="973.3701"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="48" x="62" y="973.3701">Output</text><rect fill="#FFFF00" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="976.6719"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="989.667"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="21" x="62" y="989.667">QC</text><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="911.4844" y2="911.4844"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="927.7813" y2="927.7813"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="944.0781" y2="944.0781"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="960.375" y2="960.375"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="976.6719" y2="976.6719"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="992.9688" y2="992.9688"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="14" y1="911.4844" y2="992.9688"/><line style="stroke:#000000;stroke-width:1.0;" x1="58" x2="58" y1="911.4844" y2="992.9688"/><line style="stroke:#000000;stroke-width:1.0;" x1="156" x2="156" y1="911.4844" y2="992.9688"/><!--MD5=[1016ba4ae14f6a1ad75100e0011ef5df]
+@startuml mutect2_chart
+
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!process_legend
+
+skinparam linetype ortho
+
+$input_process(normal_bam, 'Normal BAM', 'Input: normal BAM file')
+$input_process(tumor_bam, 'Tumor BAM', 'Input: tumor BAM file')
+$input_process(contamination_table, 'Contamination Table: optional', 'Input: output of GATK %newline()CalculateContamination')
+$input_process(reference_genome, 'Reference genome', 'Input: fasta file')
+$input_process(germline_resource, 'Germline resource', 'Input: stripped gnomad VCF')
+
+$intermediate_process(gatk_splitIntervals, 'GATK SplitIntervals', 'Output: reference genome split into %newline()params.scatter_count intervals')
+$intermediate_process(mutect2_call_sSNV, 'GATK Mutect2: one process per interval', 'Output: unfiltered VCFs, variant stats, F1R2 metrics')
+$intermediate_process(gatk_mergeVcfs, 'GATK MergeVcfs', 'Output: unfiltered VCF')
+$intermediate_process(mutect2_mergeStats, 'GATK MergeMutectStats', 'Output: Mutect2 stats')
+$intermediate_process(gatk_learnReadOrientation, 'GATK LearnReadOrientationModel', 'Output: orientation bias artifacts table')
+$intermediate_process(mutect2_filterCalls, 'GATK FilterMutectCalls', 'Output: VCF with non-PASSing variants tagged %newline()Optional output: filtering stats')
+$intermediate_process(bcftools_filterVCF, 'remove non-PASS variants', 'Output: VCF including only variants that passed above filters')
+$output_process(bcftools_splitVCF, 'split by variant type', 'Output: %newline()//SNV.vcf.gz // %newline()//MNV.vcf.gz // %newline()//Indel.vcf.gz //')
+$qc_process(gatk_filteringStats, 'Optional', 'Output: filteringStats.tsv')
+
+reference_genome -d-> gatk_splitIntervals
+normal_bam -d-> mutect2_call_sSNV
+tumor_bam -d-> mutect2_call_sSNV
+gatk_splitIntervals -d-> mutect2_call_sSNV
+germline_resource -d-> mutect2_call_sSNV
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+
+gatk_mergeVcfs -d-> mutect2_filterCalls : //unfiltered.vcf.gz//
+gatk_learnReadOrientation -d-> mutect2_filterCalls : // f1r2.tar.gz //
+mutect2_mergeStats -d-> mutect2_filterCalls : // unfiltered.vcf.stats.gz //
+reference_genome -d-> mutect2_filterCalls
+contamination_table -d-> mutect2_filterCalls
+mutect2_filterCalls -d-> gatk_filteringStats
+mutect2_filterCalls -d-> bcftools_filterVCF : // filtered.vcf.gz //
+bcftools_filterVCF -d-> bcftools_splitVCF : // all-pass.vcf.gz //
+
+$add_legend('left')
+
+@enduml
+
+@startuml mutect2_chart
+
+
+skinparam linetype ortho
+
+rectangle normal_bam #LightBlue as "
+Normal BAM
+====
+Input: normal BAM file"
+rectangle tumor_bam #LightBlue as "
+Tumor BAM
+====
+Input: tumor BAM file"
+rectangle contamination_table #LightBlue as "
+Contamination Table: optional
+====
+Input: output of GATK 
+CalculateContamination"
+rectangle reference_genome #LightBlue as "
+Reference genome
+====
+Input: fasta file"
+rectangle germline_resource #LightBlue as "
+Germline resource
+====
+Input: stripped gnomad VCF"
+
+rectangle gatk_splitIntervals #White as "
+GATK SplitIntervals
+====
+Output: reference genome split into 
+params.scatter_count intervals"
+rectangle mutect2_call_sSNV #White as "
+GATK Mutect2: one process per interval
+====
+Output: unfiltered VCFs, variant stats, F1R2 metrics"
+rectangle gatk_mergeVcfs #White as "
+GATK MergeVcfs
+====
+Output: unfiltered VCF"
+rectangle mutect2_mergeStats #White as "
+GATK MergeMutectStats
+====
+Output: Mutect2 stats"
+rectangle gatk_learnReadOrientation #White as "
+GATK LearnReadOrientationModel
+====
+Output: orientation bias artifacts table"
+rectangle mutect2_filterCalls #White as "
+GATK FilterMutectCalls
+====
+Output: VCF with non-PASSing variants tagged 
+Optional output: filtering stats"
+rectangle bcftools_filterVCF #White as "
+remove non-PASS variants
+====
+Output: VCF including only variants that passed above filters"
+rectangle bcftools_splitVCF #LightGreen as "
+split by variant type
+====
+Output: 
+//SNV.vcf.gz // 
+//MNV.vcf.gz // 
+//Indel.vcf.gz //"
+rectangle gatk_filteringStats #Yellow as "
+Optional
+====
+Output: filteringStats.tsv"
+
+reference_genome -d-> gatk_splitIntervals
+normal_bam -d-> mutect2_call_sSNV
+tumor_bam -d-> mutect2_call_sSNV
+gatk_splitIntervals -d-> mutect2_call_sSNV
+germline_resource -d-> mutect2_call_sSNV
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_mergeVcfs
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+mutect2_call_sSNV -d-> gatk_learnReadOrientation
+mutect2_call_sSNV -d-> mutect2_mergeStats
+
+gatk_mergeVcfs -d-> mutect2_filterCalls : //unfiltered.vcf.gz//
+gatk_learnReadOrientation -d-> mutect2_filterCalls : // f1r2.tar.gz //
+mutect2_mergeStats -d-> mutect2_filterCalls : // unfiltered.vcf.stats.gz //
+reference_genome -d-> mutect2_filterCalls
+contamination_table -d-> mutect2_filterCalls
+mutect2_filterCalls -d-> gatk_filteringStats
+mutect2_filterCalls -d-> bcftools_filterVCF : // filtered.vcf.gz //
+bcftools_filterVCF -d-> bcftools_splitVCF : // all-pass.vcf.gz //
+
+legend left
+  | Color | Process Type|
+  |<#LightBlue>| Input |
+  |<#White>| Intermediate |
+  |<#LightGreen>| Output |
+  |<#Yellow>| QC |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 17:34:49 GMT 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
