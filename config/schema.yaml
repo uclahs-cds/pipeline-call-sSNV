@@ -76,11 +76,13 @@ filter_mutect_calls_extra_args:
 scatter_count:
   type: 'Integer'
   required: true
-  default: 50
 germline_resource_gnomad_vcf:
   type: 'Path'
   required: false
   allow_empty: true
+dbSNP:
+  type: 'Path'
+  required: true
 ncbi_build:
   type: 'String'
   required: true
