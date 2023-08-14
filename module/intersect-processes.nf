@@ -45,10 +45,23 @@ process intersect_VCFs_BCFtools {
     set -euo pipefail
     # intersect keeping only variants that are present in at least 2 VCFs
     # Use README.txt to rename output files to include sample names
-    bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more ${regions_command} ${vcf_list}
-    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' | while read a b c d; do mv \$a \$d ; mv \$a.tbi \$d.tbi ; done
+    bcftools isec --nfiles +2 \
+        --output-type z \
+        --prefix isec-2-or-more \
+        ${regions_command} \
+        ${vcf_list}
+    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  \
+        | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' \
+        | while read a b c d; do
+            mv \$a \$d
+            mv \$a.tbi \$d.tbi
+            done
     # intersect, keeping all variants, to create presence/absence list of variants in each VCF
-    bcftools isec --output-type z --prefix isec-1-or-more ${regions_command} ${vcf_list}
+    bcftools isec \
+        --output-type z \
+        --prefix isec-1-or-more \
+        ${regions_command} \
+        ${vcf_list}
     """
     }
 
@@ -103,7 +116,12 @@ process concat_VCFs_BCFtools {
     # BCFtools concat to create a single VCF with all nfiles +2 variants
     # output header is a uniquified concatenation of all headers
     # output `INFO` `FORMAT` `NORMAL` and `TUMOR` fields are from the first listed VCF that has the variant
-    bcftools concat --output-type v --output ${params.output_filename}_SNV-concat.vcf --allow-overlaps --rm-dups all ${vcf_list}
+    bcftools concat \
+        --output-type v \
+        --output ${params.output_filename}_SNV-concat.vcf \
+        --allow-overlaps \
+        --rm-dups all \
+        ${vcf_list}
     """
     }
 
@@ -131,7 +149,15 @@ process convert_VCF_vcf2maf {
     script:
     """
     set -euo pipefail
-    perl /opt/vcf2maf.pl --inhibit-vep --filter-vcf 0 --input-vcf ${vcf} --normal-id ${normal_id} --tumor-id ${tumor_id} --output-maf ${params.output_filename}_SNV-concat.maf --ref-fasta ${reference}
+    perl /opt/vcf2maf.pl --inhibit-vep \
+        --filter-vcf 0 \
+        --ncbi-build ${params.ncbi_build} \
+        --input-vcf ${vcf} \
+        --normal-id ${normal_id} \
+        --tumor-id ${tumor_id} \
+        --output-maf ${params.output_filename}_SNV-concat.maf \
+        --ref-fasta ${reference} \
+        ${params.vcf2maf_extra_args}
     """
     }
 
