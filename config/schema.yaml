@@ -96,6 +96,19 @@ patient_id:
   type: 'String'
   required: true
   help: 'Patient identifier'
+base_resource_update:
+  type: 'ResourceUpdateNamespace'
+  required: false
+  help: 'User-defined modifications for adjusting base resource allocations for processes'
+  elements:
+    memory:
+      type: 'ResourceUpdateList'
+      required: false
+      help: 'List of memory updates'
+    cpus:
+      type: 'ResourceUpdateList'
+      required: false
+      help: 'List of CPU updates'
 input:
   type: 'InputNamespace'
   required: true

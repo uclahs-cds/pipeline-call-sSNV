@@ -221,17 +221,66 @@ input:
 ### input.config ([see template](config/template.config))
 | Input | Required | Type   | Description                               |
 |--------|---|--------|-------------------------------------------|
-| algorithm   | yes | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
-| reference   | yes | string | The reference .fa file (.fai and .dict file must exist in same directory) |
-| intersect_regions* | yes | string | A bed file listing the genomic regions for variant calling. Excluding `decoy` regions is HIGHLY recommended *
-| output_dir  | yes | string | The location where outputs will be saved  |
-| dataset_id | yes | string | The name/ID of the dataset    |
-| exome       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE |
-| save_intermediate_files | yes | boolean | Whether to save intermediate files |
-| work_dir | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively |
-| docker_container_registry | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
+| `algorithm`   | yes | list   | List containing a combination of somaticsniper, strelka2, mutect2 and muse |
+| `reference`   | yes | string | The reference .fa file (.fai and .dict file must exist in same directory) |
+| `intersect_regions`* | yes | string | A bed file listing the genomic regions for variant calling. Excluding `decoy` regions is HIGHLY recommended *
+| `output_dir`  | yes | string | The location where outputs will be saved  |
+| `dataset_id` | yes | string | The name/ID of the dataset    |
+| `exome`       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE |
+| `save_intermediate_files` | yes | boolean | Whether to save intermediate files |
+| `work_dir` | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively |
+| `docker_container_registry` | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
+| `base_resource_update` | optional | namespace | Namespace of parameters to update base resource allocations in the pipeline. Usage and structure are detailed in `template.config` and below. |
 
  *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). A GRCh38 `bed.gz` file can be found here: `/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`. For other genome versions, you may be able to use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
+
+ #### Base resource allocation updaters
+To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts. The default allocations can be found in the [node-specific config files](./config/)
+
+```Nextflow
+base_resource_update {
+    memory = [
+        [['process_name', 'process_name2'], <multiplier for resource>],
+        [['process_name3', 'process_name4'], <different multiplier for resource>]
+    ]
+    cpus = [
+        [['process_name', 'process_name2'], <multiplier for resource>],
+        [['process_name3', 'process_name4'], <different multiplier for resource>]
+    ]
+}
+```
+> **Note** Resource updates will be applied in the order they're provided so if a process is included twice in the memory list, it will be updated twice in the order it's given.
+
+Examples:
+
+- To double memory of all processes:
+```Nextflow
+base_resource_update {
+    memory = [
+        [[], 2]
+    ]
+}
+```
+- To double memory for `run_ApplyVQSR_GATK` and triple memory for `run_validate_PipeVal` and `run_HaplotypeCallerVCF_GATK`:
+```Nextflow
+base_resource_update {
+    memory = [
+        ['run_ApplyVQSR_GATK', 2],
+        [['run_validate_PipeVal', 'run_HaplotypeCallerVCF_GATK'], 3]
+    ]
+}
+```
+- To double CPUs and memory for `run_ApplyVQSR_GATK` and double memory for `run_validate_PipeVal`:
+```Nextflow
+base_resource_update {
+    cpus = [
+        ['run_ApplyVQSR_GATK', 2]
+    ]
+    memory = [
+        [['run_ApplyVQSR_GATK', 'run_validate_PipeVal'], 2]
+    ]
+}
+```
 
 #### Module Specific Configuration
 | Input       | Required | Type   | Description                               |
