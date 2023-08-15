@@ -36,11 +36,11 @@ workflow intersect {
             script_dir_ch,
             intersect_VCFs_BCFtools.out.isec,
             )
-        consensus_vcfs_ch = intersect_VCFs_BCFtools.out.consensus_vcf
+        intersect_vcfs_ch = intersect_VCFs_BCFtools.out.intersect_vcf
             .map { sortVcfs(it) }
         concat_VCFs_BCFtools(
-            consensus_vcfs_ch,
-            intersect_VCFs_BCFtools.out.consensus_idx
+            intersect_vcfs_ch,
+            intersect_VCFs_BCFtools.out.intersect_idx
             )
         convert_VCF_vcf2maf(
             concat_VCFs_BCFtools.out.concat_vcf,
@@ -52,10 +52,10 @@ workflow intersect {
             .map{ it -> ['SNV', it]}
             )
         compress_MAF_vcf2maf(convert_VCF_vcf2maf.out.concat_maf)
-        file_for_sha512 = intersect_VCFs_BCFtools.out.consensus_vcf
+        file_for_sha512 = intersect_VCFs_BCFtools.out.intersect_vcf
             .flatten()
             .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-vcf", it]}
-            .mix(intersect_VCFs_BCFtools.out.consensus_idx
+            .mix(intersect_VCFs_BCFtools.out.intersect_idx
                 .flatten()
                 .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-idx", it]}
                 )

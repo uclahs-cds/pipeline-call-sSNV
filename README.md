@@ -68,7 +68,7 @@ python path/to/submit_nextflow_pipeline.py \
 
 ---
 
-## [Flow Diagrams and Tool Links](docs/flowcharts.md)
+## [Flow Diagrams and Tool Info](docs/flowcharts.md)
 
 ### [SomaticSniper](docs/flowcharts.md#somaticsniper)
 ### [Strelka2](docs/flowcharts.md#strelka2)
