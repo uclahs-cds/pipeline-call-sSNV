@@ -45,10 +45,23 @@ process intersect_VCFs_BCFtools {
     set -euo pipefail
     # intersect keeping only variants that are present in at least 2 VCFs
     # Use README.txt to rename output files to include sample names
-    bcftools isec --nfiles +2 --output-type z --prefix isec-2-or-more ${regions_command} ${vcf_list}
-    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' | while read a b c d; do mv \$a \$d ; mv \$a.tbi \$d.tbi ; done
+    bcftools isec --nfiles +2 \
+        --output-type z \
+        --prefix isec-2-or-more \
+        ${regions_command} \
+        ${vcf_list}
+    awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  \
+        | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' \
+        | while read a b c d; do
+            mv \$a \$d
+            mv \$a.tbi \$d.tbi
+            done
     # intersect, keeping all variants, to create presence/absence list of variants in each VCF
-    bcftools isec --output-type z --prefix isec-1-or-more ${regions_command} ${vcf_list}
+    bcftools isec \
+        --output-type z \
+        --prefix isec-1-or-more \
+        ${regions_command} \
+        ${vcf_list}
     """
     }
 
@@ -103,6 +116,71 @@ process concat_VCFs_BCFtools {
     # BCFtools concat to create a single VCF with all nfiles +2 variants
     # output header is a uniquified concatenation of all headers
     # output `INFO` `FORMAT` `NORMAL` and `TUMOR` fields are from the first listed VCF that has the variant
-    bcftools concat --output-type v --output ${params.output_filename}_SNV-concat.vcf --allow-overlaps --rm-dups all ${vcf_list}
+    bcftools concat \
+        --output-type v \
+        --output ${params.output_filename}_SNV-concat.vcf \
+        --allow-overlaps \
+        --rm-dups all \
+        ${vcf_list}
+    """
+    }
+
+process convert_VCF_vcf2maf {
+    container params.docker_image_vcf2maf
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.maf",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+
+    input:
+    path vcf
+    path reference
+    val normal_id
+    val tumor_id
+
+    output:
+    path "*.maf", emit: concat_maf
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    perl /opt/vcf2maf.pl --inhibit-vep \
+        --filter-vcf 0 \
+        --ncbi-build ${params.ncbi_build} \
+        --input-vcf ${vcf} \
+        --normal-id ${normal_id} \
+        --tumor-id ${tumor_id} \
+        --output-maf ${params.output_filename}_SNV-concat.maf \
+        --ref-fasta ${reference} \
+        ${params.vcf2maf_extra_args}
+    """
+    }
+
+process compress_MAF_vcf2maf {
+    container params.docker_image_vcf2maf
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.gz"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+
+    input:
+    path maf
+
+    output:
+    path "*.gz", emit: concat_maf_gz
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    gzip --stdout ${maf} > ${maf}.gz
     """
     }
