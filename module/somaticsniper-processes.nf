@@ -6,6 +6,7 @@ log.info """\
 Docker Images:
 - docker_image_somaticsniper:   ${params.docker_image_somaticsniper}
 - docker_image_bam_readcount:   ${params.docker_image_bam_readcount}
+- docker_image_blarchive:   ${params.docker_image_blarchive}
 
 """
 
@@ -300,11 +301,11 @@ process call_HighConfidenceSNV_SomaticSniper {
     """
     }
 
-    process compress_readcount_bam_readcount {
-    container params.docker_image_bam_readcount
+    process compress_readcount_blarchive {
+    container params.docker_image_blarchive
     publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
                mode: "copy",
-               pattern: "*readcount.gz"
+               pattern: "*readcount.bz2"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -314,12 +315,12 @@ process call_HighConfidenceSNV_SomaticSniper {
     path readcount
 
     output:
-    path "*readcount.gz"
+    path "*readcount.bz2"
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    gzip --stdout ${readcount} > ${readcount}.gz
+    blarchive compress_files --input ${readcount}
     """
     }
