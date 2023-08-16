@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Add compression of `SomaticSniper` `bam-readcount` QC output
 - Add `ncbi_build` parameter
 - Add conversion of concatenated VCF to MAF
 - Add concatenation of consensus variants to one VCF
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
 
 ### Changed
+- Change compression of intersect MAF file to bzip2
 - Update `README.md`
 - Use `set_env` from `pipeline-Nextflow-config`
 - Update resource allocation to include new processes
