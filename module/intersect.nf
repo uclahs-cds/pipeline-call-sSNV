@@ -65,7 +65,7 @@ workflow intersect {
             .mix(compress_index_VCF.out.index_out
                 .map{ it -> ["intersect-${it[0]}-index", it[2]] }
                 )
-            .mix(compress_MAF_vcf2maf.out.concat_maf_gz
+            .mix(compress_MAF_vcf2maf.out.concat_maf_bz2
                 .map{ it -> ["intersect-${file(it).getName().split('_')[0]}-maf", it]}
                 )
         generate_sha512sum(file_for_sha512)

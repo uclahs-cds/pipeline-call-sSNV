@@ -5,6 +5,7 @@ log.info """\
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 - docker_image_r_VennDiagram: ${params.docker_image_r_VennDiagram}
+- docker_image_blarchive: ${params.docker_image_blarchive}
 ====================================
 """
 process intersect_VCFs_BCFtools {
@@ -162,10 +163,10 @@ process convert_VCF_vcf2maf {
     }
 
 process compress_MAF_vcf2maf {
-    container params.docker_image_vcf2maf
+    container params.docker_image_blarchive
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*.gz"
+        pattern: "*.bz2"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -175,12 +176,14 @@ process compress_MAF_vcf2maf {
     path maf
 
     output:
-    path "*.gz", emit: concat_maf_gz
+    path "*.bz2", emit: concat_maf_bz2
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    gzip --stdout ${maf} > ${maf}.gz
+    dereferenced_readcount=\$(readlink -f ${maf})
+    blarchive compress_files --input \$dereferenced_maf --log ${params.work_dir}
+    ln -s \$dereferenced_maf.bz2 ${maf}.bz2
     """
     }
