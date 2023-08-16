@@ -321,6 +321,8 @@ process call_HighConfidenceSNV_SomaticSniper {
     script:
     """
     set -euo pipefail
-    blarchive compress_files --input ${readcount}
+    dereferenced_readcount=\$(readlink -f ${readcount})
+    blarchive compress_files --input \$dereferenced_readcount --log ${params.work_dir}
+    ln -s \$dereferenced_readcount.bz2 ${readcount}.bz2
     """
     }
