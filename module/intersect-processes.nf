@@ -162,7 +162,7 @@ process convert_VCF_vcf2maf {
     """
     }
 
-process compress_MAF_vcf2maf {
+process compress_MAF_blarchive {
     container params.docker_image_blarchive
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
@@ -182,8 +182,8 @@ process compress_MAF_vcf2maf {
     script:
     """
     set -euo pipefail
-    dereferenced_readcount=\$(readlink -f ${maf})
+    dereferenced_maf=\$(readlink -f ${maf})
     blarchive compress_files --input \$dereferenced_maf --log ${params.work_dir}
-    ln -s \$dereferenced_maf.bz2 ${maf}.bz2
+    ln -s \${dereferenced_maf}.bz2 ${maf}.bz2
     """
     }

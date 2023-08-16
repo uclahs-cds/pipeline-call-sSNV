@@ -315,7 +315,7 @@ process call_HighConfidenceSNV_SomaticSniper {
     path readcount
 
     output:
-    path "*readcount.bz2"
+    path "*readcount.bz2", emit: readcount_bz2
     path ".command.*"
 
     script:
