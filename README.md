@@ -6,13 +6,15 @@
   - [Flow Diagrams](#flow-diagrams---variant-calling)
     - [Variant Calling](#flow-diagrams---variant-calling)
     - [Variant Intersection](#flow-diagrams---variant-intersection)
-  - [Pipeline Steps - Variant Calling](#pipeline-steps---variant-calling)
+  - [Pipeline Steps](#pipeline-steps---variant-calling)
+    - [Variant Calling](#pipeline-steps---variant-calling)
        - [SomaticSniper](#somaticsniper-1)
        - [Strelka2](#strelka2-1)
        - [Mutect2](#gatk-mutect2)
        - [MuSE](#muse-1)
-  - [Pipeline Steps - Variant Intersection](#pipeline-steps---variant-intersection)
+    - [Variant Intersection](#pipeline-steps---variant-intersection)
        - [BCFtools and VennDiagram](#pipeline-steps---variant-intersection)
+       - [vcf2maf](#vcf2maf)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -137,7 +139,7 @@ Computes tier-based cutoffs from a sample-specific error model.
 
 ## Pipeline Steps - Variant Intersection
 If two or more algorithms were selected the Intersect workflow will run. Currently the resulting VCF and MAF files include any SNVs found by two or more algorithms.
-### BCFtools isec -n +1
+### BCFtools isec -n +1; VennDiagram
 Determines presence/absence of each SNV within each algorithm's set of filtered SNVs. Results are listed in the output files: `isec-1-or-more/README.txt` and `isec-1-or-more/sites.txt`, and are summarized in a Venn Diagram plot (TIFF format).
 ### BCFtools isec -n +2
 Determines presence/absence of SNVs found in two or more of each algorithm's set of filtered SNVs, and outputs a `consensus` VCF for each algorithm containing SNVs found by that algorithm plus at least one other algorithm. Results are also listed in the output files: `isec-2-or-more/README.txt` and `isec-2-or-more/sites.txt`.
