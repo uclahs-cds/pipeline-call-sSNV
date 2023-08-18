@@ -1,9 +1,11 @@
 # pipeline-call-sSNV Flow Diagrams and Tool Links
 
+## Variant Calling
 - [SomaticSniper](#somaticsniper)
 - [Strelka2](#strelka2)
 - [Mutect2](#mutect2)
 - [MuSE](#muse)
+## Variant Intersection
 - [Intersect](#intersect)
 
 ## SomaticSniper
