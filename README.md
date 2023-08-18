@@ -9,6 +9,7 @@
      - [Strelka2](#strelka2-1)
      - [Mutect2](#gatk-mutect2)
      - [MuSE](#muse-1)
+     - [Intersect](#intersect-1)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
@@ -76,7 +77,7 @@ python path/to/submit_nextflow_pipeline.py \
 
 ### [SomaticSniper](docs/flowcharts.md#somaticsniper)
 ### [Strelka2](docs/flowcharts.md#strelka2)
-### [Mutect 2](docs/flowcharts.md#mutect-2)
+### [Mutect2](docs/flowcharts.md#mutect2)
 ### [MuSE](docs/flowcharts.md#muse)
 ### [Intersect](docs/flowcharts.md#intersect)
 

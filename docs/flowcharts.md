@@ -2,7 +2,7 @@
 
 - [SomaticSniper](#somaticsniper)
 - [Strelka2](#strelka2)
-- [Mutect 2](#mutect-2)
+- [Mutect2](#mutect2)
 - [MuSE](#muse)
 - [Intersect](#intersect)
 
@@ -30,7 +30,7 @@ Strelka2 source: https://github.com/Illumina/strelka
 Version: v2.9.10 (Released on Nov 7, 2018)
 GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
 
-## Mutect 2
+## Mutect2
 ![alt text](mutect2_chart.svg)
 ### Tools
 #### GATK
