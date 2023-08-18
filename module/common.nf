@@ -63,3 +63,29 @@ process rename_samples_BCFtools {
     bcftools reheader -s ${params.output_filename}_samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
     """
     }
+
+process compress_file_blarchive {
+    container params.docker_image_blarchive
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.bz2"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${file_type}/log${file(it).getName()}" }
+
+    input:
+    tuple val(file_type), path(file_to_compress)
+
+    output:
+    tuple val(file_type), path("*.bz2"), emit: file_bz2
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    dereferenced_file=\$(readlink -f ${file_to_compress})
+    blarchive compress_files --input \$dereferenced_file --log ${params.work_dir}
+    ln -s \${dereferenced_file}.bz2 ${file_to_compress}.bz2
+    """
+    }

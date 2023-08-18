@@ -300,29 +300,3 @@ process call_HighConfidenceSNV_SomaticSniper {
         --out-file "${params.output_filename}_hc.vcf"
     """
     }
-
-    process compress_readcount_blarchive {
-    container params.docker_image_blarchive
-    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*readcount.bz2"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
-
-    input:
-    path readcount
-
-    output:
-    path "*readcount.bz2", emit: readcount_bz2
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-    dereferenced_readcount=\$(readlink -f ${readcount})
-    blarchive compress_files --input \$dereferenced_readcount --log ${params.work_dir}
-    ln -s \$dereferenced_readcount.bz2 ${readcount}.bz2
-    """
-    }

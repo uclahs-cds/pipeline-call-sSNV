@@ -161,29 +161,3 @@ process convert_VCF_vcf2maf {
         ${params.vcf2maf_extra_args}
     """
     }
-
-process compress_MAF_blarchive {
-    container params.docker_image_blarchive
-    publishDir path: "${params.workflow_output_dir}/output",
-        mode: "copy",
-        pattern: "*.bz2"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
-
-    input:
-    path maf
-
-    output:
-    path "*.bz2", emit: concat_maf_bz2
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-    dereferenced_maf=\$(readlink -f ${maf})
-    blarchive compress_files --input \$dereferenced_maf --log ${params.work_dir}
-    ln -s \${dereferenced_maf}.bz2 ${maf}.bz2
-    """
-    }

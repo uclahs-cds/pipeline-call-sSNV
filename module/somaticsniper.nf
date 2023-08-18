@@ -1,4 +1,4 @@
-include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper; compress_readcount_blarchive } from './somaticsniper-processes'
+include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
 include { rename_samples_BCFtools; generate_sha512sum } from './common'
 include { compress_index_VCF as compress_index_VCF_hc } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
     options: [
@@ -14,6 +14,11 @@ include { compress_index_VCF as compress_index_VCF_fix } from '../external/pipel
         log_output_dir: params.workflow_log_output_dir,
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args
+        ])
+include { compress_file_blarchive} from './common'  addParams(
+    options: [
+        output_dir: "${params.workflow_output_dir}/QC",
+        blarchive_extra_args: params.blarchive_extra_args
         ])
 
 workflow somaticsniper {
@@ -51,7 +56,8 @@ workflow somaticsniper {
         generate_ReadCount_bam_readcount(params.reference,create_ReadCountPosition_SomaticSniper.out.snp_positions, tumor_bam, tumor_index)
         filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
-        compress_readcount_blarchive(generate_ReadCount_bam_readcount.out.readcount)
+        compress_file_blarchive(generate_ReadCount_bam_readcount.out.readcount
+            .map{ it -> ['readcount', it] })
         // rename_samples_BCFtools needs bgzipped input
         compress_index_VCF_hc(call_HighConfidenceSNV_SomaticSniper.out.hc
             .map{ it -> ['SNV', it] })
