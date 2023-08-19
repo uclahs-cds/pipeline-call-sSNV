@@ -32,8 +32,8 @@ process intersect_VCFs_BCFtools {
     path intersect_regions_index
 
     output:
-    path "*.vcf.gz", emit: consensus_vcf
-    path "*.vcf.gz.tbi", emit: consensus_idx
+    path "*.vcf.gz", emit: intersect_vcf
+    path "*.vcf.gz.tbi", emit: intersect_idx
     path ".command.*"
     path "isec-2-or-more/*.txt"
     path "isec-1-or-more/*.txt", emit: isec
@@ -51,7 +51,7 @@ process intersect_VCFs_BCFtools {
         ${regions_command} \
         ${vcf_list}
     awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  \
-        | sed 's/.vcf.gz\$/-consensus-variants.vcf.gz/' \
+        | sed 's/.vcf.gz\$/-intersect.vcf.gz/' \
         | while read a b c d; do
             mv \$a \$d
             mv \$a.tbi \$d.tbi
