@@ -195,8 +195,8 @@ input:
 
  *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). A GRCh38 `bed.gz` file can be found here: `/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`. For other genome versions, you may be able to use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
 
- #### Base resource allocation updaters
-To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts. The default allocations can be found in the [node-specific config files](./config/)
+ ### Base resource allocation updaters
+To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the [input.config](config/template.config) file. The default allocations can be found in the [node-specific config files](./config/)
 
 ```Nextflow
 base_resource_update {
@@ -222,23 +222,23 @@ base_resource_update {
     ]
 }
 ```
-- To double memory for `run_ApplyVQSR_GATK` and triple memory for `run_validate_PipeVal` and `run_HaplotypeCallerVCF_GATK`:
+- To double memory for `call_sSNV_Mutect2` and triple memory for `run_validate_PipeVal` and `run_sump_MuSE`:
 ```Nextflow
 base_resource_update {
     memory = [
-        ['run_ApplyVQSR_GATK', 2],
-        [['run_validate_PipeVal', 'run_HaplotypeCallerVCF_GATK'], 3]
+        ['call_sSNV_Mutect2', 2],
+        [['run_validate_PipeVal', 'run_sump_MuSE'], 3]
     ]
 }
 ```
-- To double CPUs and memory for `run_ApplyVQSR_GATK` and double memory for `run_validate_PipeVal`:
+- To double CPUs and memory for `run_sump_MuSE` and double memory for `run_validate_PipeVal`:
 ```Nextflow
 base_resource_update {
     cpus = [
-        ['run_ApplyVQSR_GATK', 2]
+        ['run_sump_MuSE', 2]
     ]
     memory = [
-        [['run_ApplyVQSR_GATK', 'run_validate_PipeVal'], 2]
+        [['run_sump_MuSE', 'run_validate_PipeVal'], 2]
     ]
 }
 ```
@@ -262,7 +262,13 @@ base_resource_update {
 #### MuSE Specific Configuration
 | Input       | Required | Type   | Description                               |
 |-------------|----|--------|-------------------------------------------|
-| dbSNP | yes | path | The path to dbSNP database's `*.vcf.gz` |
+| dbSNP | yes | path | The path to [NCBI's dbSNP database](https://www.ncbi.nlm.nih.gov/snp/) of known SNPs in VCF format, e.g. `GCF_000001405.40.gz` |
+
+#### Variant Intersection Specific Configuration
+| Input       | Required | Type   | Description                               |
+|-------------|----|--------|-------------------------------------------|
+| ncbi_build | yes | string | vcf2maf requires the reference genome build ID, e.g. GRCh38 |
+| vcf2maf_extra_args | no | string | additional arguments for the vcf2maf command|
 
 ## Outputs
 | Tool Outputs                                         | Type         | Description                   |
