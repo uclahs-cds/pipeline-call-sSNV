@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
 
 ### Changed
+- Remove redundant directories in Intersect log output directories
 - Change compression of intersect MAF file to bzip2
 - Update `README.md`
 - Use `set_env` from `pipeline-Nextflow-config`
