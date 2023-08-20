@@ -79,7 +79,7 @@ process compress_file_blarchive {
     tuple val(file_type), path(file_to_compress)
 
     output:
-    tuple val(file_type), path("*.bz2")
+    tuple val(file_type), path("*.bz2"), emit: compressed_file
     path ".command.*"
 
     script:

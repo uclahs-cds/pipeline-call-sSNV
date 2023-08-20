@@ -70,8 +70,8 @@ workflow intersect {
             .mix(compress_index_VCF.out.index_out
                 .map{ it -> ["concat-${it[0]}-index", it[2]] }
                 )
-//            .mix(compress_file_blarchive.out
-//                .map{ it -> ["concat-${it[0]}", it[1]]}
-//                )
+            .mix(compress_file_blarchive.out.compressed_file
+                .map{ it -> ["concat-${it[0]}", it[1]]}
+                )
         generate_sha512sum(file_for_sha512)
     }
