@@ -5,7 +5,9 @@ log.info """\
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 - docker_image_r_VennDiagram: ${params.docker_image_r_VennDiagram}
-- docker_image_blarchive: ${params.docker_image_blarchive}
+Intersect Options:
+- ncbi_build:             ${params.ncbi_build}
+- vcf2maf_extra_args:  ${params.vcf2maf_extra_args}
 ====================================
 """
 process intersect_VCFs_BCFtools {

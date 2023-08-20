@@ -234,12 +234,12 @@ workflow {
             .mix(muse_idx_ch))
             .collect()
 
-//        intersect(
-//            tool_vcfs,
-//            tool_indices,
-//            script_dir_ch,
-//            run_GetSampleName_Mutect2_normal.out.name_ch,
-//            run_GetSampleName_Mutect2_tumor.out.name_ch
-//            )
+        intersect(
+            tool_vcfs,
+            tool_indices,
+            script_dir_ch,
+            run_GetSampleName_Mutect2_normal.out.name_ch,
+            run_GetSampleName_Mutect2_tumor.out.name_ch
+            )
         }
     }

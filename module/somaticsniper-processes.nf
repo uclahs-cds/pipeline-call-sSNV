@@ -6,8 +6,6 @@ log.info """\
 Docker Images:
 - docker_image_somaticsniper:   ${params.docker_image_somaticsniper}
 - docker_image_bam_readcount:   ${params.docker_image_bam_readcount}
-- docker_image_blarchive:   ${params.docker_image_blarchive}
-
 """
 
 // Call SomaticSniper

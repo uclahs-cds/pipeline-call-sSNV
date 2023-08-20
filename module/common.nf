@@ -79,7 +79,7 @@ process compress_file_blarchive {
     tuple val(file_type), path(file_to_compress)
 
     output:
-    tuple val(file_type), path("*.bz2"), emit: file_bz2
+    tuple val(file_type), path("*.bz2")
     path ".command.*"
 
     script:
@@ -87,7 +87,7 @@ process compress_file_blarchive {
     set -euo pipefail
     dereferenced_file=\$(readlink -f ${file_to_compress})
     blarchive compress_files --input \$dereferenced_file \
-        --log ${params.work_dir} \
+        --log ${params.work_dir}
     ln -s \${dereferenced_file}.bz2 ${file_to_compress}.bz2
     """
     }
