@@ -1,16 +1,27 @@
 # pipeline-call-sSNV
-
 - [call-sSNV](#pipeline-call-ssnv)
   - [Overview](#overview)
   - [How To Run](#how-to-run)
-  - [Flow Diagrams](#flow-diagrams)
-  - [Pipeline Steps](#pipeline-steps)
+  - [Flow Diagrams](#flow-diagrams---variant-calling)
+    - [Variant Calling](#flow-diagrams---variant-calling)
+    - [Variant Intersection](#flow-diagrams---variant-intersection)
+  - [Pipeline Steps](#pipeline-steps---variant-calling)
+    - [Variant Calling](#pipeline-steps---variant-calling)
+       - [SomaticSniper](#somaticsniper-1)
+       - [Strelka2](#strelka2-1)
+       - [Mutect2](#gatk-mutect2)
+       - [MuSE](#muse-1)
+    - [Variant Intersection](#pipeline-steps---variant-intersection)
+       - [BCFtools and VennDiagram](#pipeline-steps---variant-intersection)
+       - [vcf2maf](#vcf2maf)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Testing and Validation](#testing-and-validation)
     - [Test Data Set](#test-data-set)
     - [Performance Validation](#performance-validation)
   - [References](#references)
+  - [Discussions](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions)
+  - [Contributors](https://github.com/uclahs-cds/template-NextflowPipeline/graphs/contributors)
   - [License](#license)
 
 ## Overview
@@ -68,67 +79,17 @@ python path/to/submit_nextflow_pipeline.py \
 
 ---
 
-## Flow Diagrams
-
-### SomaticSniper
-![Diagram](image/somatic-sniper.svg)
-#### Tools
-##### SomaticSniper
-SomaticSniper source: https://github.com/genome/somatic-sniper
-Version: SomaticSniper v1.0.5.0 (Released on Jul 16, 2015)
-GitHub Package: ghcr.io/uclahs-cds/somaticsniper:1.0.5.0
-##### bam-readcount
-bam-readcount source: https://github.com/genome/bam-readcount
-Version: v0.8.0 Release (Released on Oct 21, 2016)
-GitHub Package: ghcr.io/uclahs-cds/bam-readcount:0.8.0
-
-### Strelka2
-![Diagram](image/strelka2.svg)
-#### Tools
-##### Manta
-Manta source: https://github.com/Illumina/manta
-Version: v1.6.0 (Released on Jul 9, 2019)
-GitHub Package: ghcr.io/uclahs-cds/manta:1.6.0
-##### Strelka2
-Strelka2 source: https://github.com/Illumina/strelka
-Version: v2.9.10 (Released on Nov 7, 2018)
-GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10
-
-### Mutect 2
-![alt text](docs/mutect2_chart.svg)
-#### Tools
-##### GATK
-GATK source: https://github.com/broadinstitute/gatk
-Version: 4.2.4.1 (Released on Jan 4, 2022)
-Docker Image: broadinstitute/gatk:4.2.4.1
-
-### MuSE
-![alt text](docs/muse_chart.svg?raw=true)
-#### Tools
-##### MuSE
-MuSE source: https://github.com/wwylab/MuSE
-Version: 2.0 (Released on Aug 25, 2021)
-GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
-
-### Intersect
-![alt text](docs/intersect_chart.svg?raw=true)
-#### Tools
-##### BCFtools
-BCFtools source: https://samtools.github.io/bcftools
-Version: 1.17 (Released on Feb 21, 2023)
-GitHub Package: https://github.com/uclahs-cds/bcftools:1.17
-
-##### VennDiagram
-VennDiagram source: https://github.com/uclahs-cds/public-R-VennDiagram
-Version: 1.7.3 (Released on Apr 12, 2022)
-##### vcf2maf
-vcf2maf source: ghcr.io/mskcc/vcf2maf/vcf2maf
-Version: v1.6.18
-GitHub Package: https://github.com/mskcc/vcf2maf
+## Flow Diagrams - Variant Calling
+### [SomaticSniper](docs/flowcharts.md#somaticsniper)
+### [Strelka2](docs/flowcharts.md#strelka2)
+### [Mutect2](docs/flowcharts.md#mutect2)
+### [MuSE](docs/flowcharts.md#muse)
+## Flow Diagrams - Variant Intersection
+### [BCFtools intersection and VennDiagram visualization using R](docs/flowcharts.md#intersect)
 
 ---
 
-## Pipeline Steps
+## Pipeline Steps - Variant Calling
 
 ### SomaticSniper
 #### 1. `SomaticSniper` v1.0.5.0
@@ -177,15 +138,15 @@ Computes tier-based cutoffs from a sample-specific error model.
 #### 3.Filter VCF
 `MuSE` output has SNVs labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only SNVs labeled `PASS`.
 
-### Intersect
+## Pipeline Steps - Variant Intersection
 If two or more algorithms were selected the Intersect workflow will run. Currently the resulting VCF and MAF files include any SNVs found by two or more algorithms.
-#### 1. `BCFtools isec -n +1`
+### BCFtools isec -n +1; VennDiagram
 Determines presence/absence of each SNV within each algorithm's set of filtered SNVs. Results are listed in the output files: `isec-1-or-more/README.txt` and `isec-1-or-more/sites.txt`, and are summarized in a Venn Diagram plot (TIFF format).
-#### 2. `BCFtools isec -n +2`
+### BCFtools isec -n +2
 Determines presence/absence of SNVs found in two or more of each algorithm's set of filtered SNVs, and outputs a `consensus` VCF for each algorithm containing SNVs found by that algorithm plus at least one other algorithm. Results are also listed in the output files: `isec-2-or-more/README.txt` and `isec-2-or-more/sites.txt`.
-#### 3. `BCFtools concat`
+### BCFtools concat
 Concatenates the 2+ algorithm `consensus` SNVs into one VCF (SNV-concat.vcf.gz).  The output header is a uniquified concatenation of all input VCF headers.  The output fields `INFO`, `FORMAT`, `NORMAL` and `TUMOR` are from the first listed VCF that has the SNV. Input VCFs are sorted alphanumerically by the algorithm name.
-#### 4. `vcf2maf`
+### vcf2maf
 Converts SNV-concat.vcf.gz from step 3 into [MAF format](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/).  Output includes allele counts and flanking basepairs, but most fields are blank.  Details can be found [here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/222#discussion-5512332).
 
 ## Inputs

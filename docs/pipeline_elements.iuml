@@ -46,7 +46,7 @@ $description"
 
 @startuml(id=test_rect)
 !unquoted procedure $test_process($alias, $title $description)
-rectangle $alias #Yellow as "
+rectangle $alias #Orange as "
 $description"
 !endprocedure
 @enduml

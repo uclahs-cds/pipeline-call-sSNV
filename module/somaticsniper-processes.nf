@@ -6,7 +6,6 @@ log.info """\
 Docker Images:
 - docker_image_somaticsniper:   ${params.docker_image_somaticsniper}
 - docker_image_bam_readcount:   ${params.docker_image_bam_readcount}
-
 """
 
 // Call SomaticSniper
@@ -297,29 +296,5 @@ process call_HighConfidenceSNV_SomaticSniper {
         --snp-file $fp_pass \
         --lq-output "${params.output_filename}_lc.vcf" \
         --out-file "${params.output_filename}_hc.vcf"
-    """
-    }
-
-    process compress_readcount_bam_readcount {
-    container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*readcount.gz"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
-
-    input:
-    path readcount
-
-    output:
-    path "*readcount.gz"
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-    gzip --stdout ${readcount} > ${readcount}.gz
     """
     }
