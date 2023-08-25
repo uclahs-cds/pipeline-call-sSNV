@@ -16,7 +16,7 @@ include { compress_index_VCF as compress_index_VCF_fix } from '../external/pipel
         tabix_extra_args: params.tabix_extra_args
         ])
 include { compress_file_blarchive} from './common'   addParams(
-    blarchive_publishDir : "${params.workflow_output_dir}/QC"
+    blarchive_publishDir : "${params.workflow_output_dir}/QC/compress_file_blarchive"
     ) 
 
 workflow somaticsniper {
