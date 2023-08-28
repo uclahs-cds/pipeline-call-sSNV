@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
 
 ### Changed
+- Fix CPU allocation behavior with Docker
 - Update `README.md`
 - Use `set_env` from `pipeline-Nextflow-config`
 - Update resource allocation to include new processes
