@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.0.0-rc.1] - 2023-08-28
+
 ### Added
 - Add `ncbi_build` parameter
 - Add conversion of concatenated VCF to MAF
