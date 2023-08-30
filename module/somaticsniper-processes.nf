@@ -6,7 +6,6 @@ log.info """\
 Docker Images:
 - docker_image_somaticsniper:   ${params.docker_image_somaticsniper}
 - docker_image_bam_readcount:   ${params.docker_image_bam_readcount}
-
 """
 
 // Call SomaticSniper
@@ -206,9 +205,6 @@ process create_ReadCountPosition_SomaticSniper {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
     container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.readcount"
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",

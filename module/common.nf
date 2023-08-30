@@ -5,6 +5,7 @@ log.info """\
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 - docker_image_validate_params: ${params.docker_image_validate_params}
+- docker_image_blarchive: ${params.docker_image_blarchive}
 """
 
 process generate_sha512sum {
@@ -61,5 +62,33 @@ process rename_samples_BCFtools {
     echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
     echo -e 'TUMOR\t${tumor_id}' >> ${params.output_filename}_samples.txt
     bcftools reheader -s ${params.output_filename}_samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
+    """
+    }
+
+process compress_file_blarchive {
+    container params.docker_image_blarchive
+    publishDir path: params.blarchive_publishDir,
+        mode: "copy",
+        pattern: "*.bz2",
+        enabled: params.blarchive_enabled
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${file_type}/log${file(it).getName()}" }
+
+    input:
+    tuple val(file_type), path(file_to_compress)
+
+    output:
+    tuple val(file_type), path("*.bz2"), emit: compressed_file
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    dereferenced_file=\$(readlink -f ${file_to_compress})
+    blarchive compress_files --input \$dereferenced_file \
+        --log ${params.work_dir}
+    ln -s \${dereferenced_file}.bz2 ${file_to_compress}.bz2
     """
     }
