@@ -69,7 +69,8 @@ process compress_file_blarchive {
     container params.docker_image_blarchive
     publishDir path: params.blarchive_publishDir,
         mode: "copy",
-        pattern: "*.bz2"
+        pattern: "*.bz2",
+        enabled: params.blarchive_enabled
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",

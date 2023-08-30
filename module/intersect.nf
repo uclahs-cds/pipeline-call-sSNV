@@ -1,6 +1,7 @@
 include { generate_sha512sum } from './common'
 include { compress_file_blarchive} from './common'  addParams(
-    blarchive_publishDir : "${params.workflow_output_dir}/output"
+    blarchive_publishDir : "${params.workflow_output_dir}/output",
+    blarchive_enabled : true
     )
 include { intersect_VCFs_BCFtools; plot_VennDiagram_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf } from './intersect-processes.nf'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
