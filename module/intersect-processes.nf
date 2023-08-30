@@ -5,6 +5,9 @@ log.info """\
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 - docker_image_r_VennDiagram: ${params.docker_image_r_VennDiagram}
+Intersect Options:
+- ncbi_build:             ${params.ncbi_build}
+- vcf2maf_extra_args:  ${params.vcf2maf_extra_args}
 ====================================
 """
 process intersect_VCFs_BCFtools {
@@ -23,7 +26,7 @@ process intersect_VCFs_BCFtools {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
     path vcfs
@@ -65,30 +68,30 @@ process intersect_VCFs_BCFtools {
     """
     }
 
- process plot_VennDiagram_R {
-     container params.docker_image_r_VennDiagram
-     publishDir path: "${params.workflow_output_dir}/output",
-         mode: "copy",
-         pattern: "*.tiff"
-     publishDir path: "${params.workflow_log_output_dir}",
-         mode: "copy",
-         pattern: ".command.*",
-         saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+process plot_VennDiagram_R {
+    container params.docker_image_r_VennDiagram
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.tiff"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
-     input:
-     path script_dir
-     path isec
+    input:
+    path script_dir
+    path isec
 
-     output:
-     path ".command.*"
-     path "*.tiff"
+    output:
+    path ".command.*"
+    path "*.tiff"
 
-     script:
-     """
-     set -euo pipefail
-     Rscript ${script_dir}/plot-venn.R --isec_readme README.txt --isec_sites sites.txt --outfile ${params.output_filename}_Venn-diagram.tiff
-     """
-     }
+    script:
+    """
+    set -euo pipefail
+    Rscript ${script_dir}/plot-venn.R --isec_readme README.txt --isec_sites sites.txt --outfile ${params.output_filename}_Venn-diagram.tiff
+    """
+    }
 
 process concat_VCFs_BCFtools {
     container params.docker_image_BCFtools
@@ -99,7 +102,7 @@ process concat_VCFs_BCFtools {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
     path vcfs
@@ -134,7 +137,7 @@ process convert_VCF_vcf2maf {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
     path vcf
@@ -158,29 +161,5 @@ process convert_VCF_vcf2maf {
         --output-maf ${params.output_filename}_SNV-concat.maf \
         --ref-fasta ${reference} \
         ${params.vcf2maf_extra_args}
-    """
-    }
-
-process compress_MAF_vcf2maf {
-    container params.docker_image_vcf2maf
-    publishDir path: "${params.workflow_output_dir}/output",
-        mode: "copy",
-        pattern: "*.gz"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.replace(':', '/')}/log${file(it).getName()}" }
-
-    input:
-    path maf
-
-    output:
-    path "*.gz", emit: concat_maf_gz
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-    gzip --stdout ${maf} > ${maf}.gz
     """
     }
