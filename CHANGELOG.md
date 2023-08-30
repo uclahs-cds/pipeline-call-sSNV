@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Add compression of `SomaticSniper` `bam-readcount` QC output
+- Add compression of `SomaticSniper` `bam-readcount` output and move to `intermediate` directory
 - Add `ncbi_build` parameter
 - Add conversion of concatenated VCF to MAF
 - Add concatenation of consensus variants to one VCF
