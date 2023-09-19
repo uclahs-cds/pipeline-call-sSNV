@@ -196,17 +196,6 @@ workflow {
             strelka2.out.vcf.set { strelka2_vcf_ch }
             strelka2.out.idx.set { strelka2_idx_ch }
         }
-    if ('mutect2' in params.algorithm) {
-        mutect2(
-            tumor_input.tumor_bam.collect(),
-            tumor_input.tumor_index.collect(),
-            normal_input.normal_bam.collect(),
-            normal_input.normal_index.collect(),
-            tumor_input.contamination_est.collect()
-            )
-            mutect2.out.vcf.set { mutect2_vcf_ch }
-            mutect2.out.idx.set { mutect2_idx_ch }
-        }
     if ('muse' in params.algorithm) {
         muse(
             tumor_input.tumor_bam,
@@ -218,6 +207,17 @@ workflow {
             )
             muse.out.vcf.set { muse_vcf_ch }
             muse.out.idx.set { muse_idx_ch }
+        }
+    if ('mutect2' in params.algorithm) {
+        mutect2(
+            tumor_input.tumor_bam.collect(),
+            tumor_input.tumor_index.collect(),
+            normal_input.normal_bam.collect(),
+            normal_input.normal_index.collect(),
+            tumor_input.contamination_est.collect()
+            )
+            mutect2.out.vcf.set { mutect2_vcf_ch }
+            mutect2.out.idx.set { mutect2_idx_ch }
         }
 
     // Intersect all vcf files
