@@ -19,7 +19,7 @@ parser$add_argument('-o', '--outfile', help = 'Output filename', type = 'charact
 args <- parser$parse_args();
 
 ## config ##########################################################################################
-color_map <- list(
+color.map <- list(
     Mutect2 = 'orange',
     SomaticSniper = 'red',
     MuSE = 'green',
@@ -31,7 +31,7 @@ plot.venn <- function(tool.variants, outfile) {
     VennDiagram::venn.diagram(
         tool.variants,
         filename = outfile,
-        fill = unlist(color_map[algorithms]),
+        fill = unlist(color.map[algorithms]),
         lty = 'dashed',
         cex = 1,
         cat.cex = 0.8,
@@ -52,7 +52,7 @@ if (length(split.col[[1]]) != length(algorithms)) {
     stop('Number of algorithms does not match number of columns in sites.txt file');
     }
 for (i in 1:length(split.col[[1]])) {
-    sites[,i+5] <- sapply(split.col, '[', i);
+    sites[, i + 5 ] <- sapply(split.col, '[', i);
     }
 sites$V5 <- NULL;
 colnames(sites) <- c('chrom', 'pos', 'ref', 'alt', algorithms);
