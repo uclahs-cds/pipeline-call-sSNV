@@ -55,7 +55,7 @@ workflow somaticsniper {
         generate_ReadCount_bam_readcount(params.reference,create_ReadCountPosition_SomaticSniper.out.snp_positions, tumor_bam, tumor_index)
         filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
-        compress_file_blarchive(generate_ReadCount_bam_readcount.out.readcount
+        compress_file_blarchive(filter_FalsePositive_SomaticSniper.out.readcount
             .map{ it -> ['readcount', it] })
         // rename_samples_BCFtools needs bgzipped input
         compress_index_VCF_hc(call_HighConfidenceSNV_SomaticSniper.out.hc
