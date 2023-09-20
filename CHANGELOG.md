@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [7.0.0-rc.1] - 2023-08-28
 
+### Changed
+- Update plot-venn.R to work with all numbers of algorithms greater than two
+
 ### Added
 - Add compression of `SomaticSniper` `bam-readcount` output and move to `intermediate` directory
 - Add `ncbi_build` parameter
