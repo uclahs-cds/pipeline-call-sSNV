@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add check for MuSE or Mutect2 on F2 node
+
+### Changed
+- Fix blarchive compression log output directory
+
 ## [7.0.0-rc.1] - 2023-08-28
 
 ### Added
