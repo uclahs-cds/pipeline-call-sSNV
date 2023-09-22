@@ -236,7 +236,6 @@ process generate_ReadCount_bam_readcount {
     }
 
 // Run the false positive filter
-// Output includes readcount file so compression can be delayed until after this process
 process filter_FalsePositive_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
@@ -255,7 +254,6 @@ process filter_FalsePositive_SomaticSniper {
     output:
     path "*.SNPfilter.fp_pass", emit: fp_pass
     path "*.SNPfilter.fp_fail", emit: fp_fail
-    path readcount_file, emit: readcount
     path ".command.*"
 
     """
