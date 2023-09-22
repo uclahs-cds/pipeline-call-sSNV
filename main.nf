@@ -37,6 +37,7 @@ log.info """\
         log_output_dir: ${params.log_output_dir}
 
     - option:
+        ucla_cds: ${params.ucla_cds}
         save_intermediate_files: ${params.save_intermediate_files}
         docker_container_registry: ${params.docker_container_registry}
         bgzip_extra_args = ${params.bgzip_extra_args}
