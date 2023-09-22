@@ -47,12 +47,13 @@ algorithms <- gsub('isec-1-or-more.*\t', '', algorithms);
 algorithms <- gsub('-.*', '', algorithms);
 
 sites <- read.table(args$isec_sites, header = FALSE, colClasses = 'character');
+sites.original.ncol <- ncol(sites);
 split.col <- strsplit(as.character(sites$V5), '');
 if (length(split.col[[1]]) != length(algorithms)) {
     stop('Number of algorithms does not match number of columns in sites.txt file');
     }
 for (i in 1:length(split.col[[1]])) {
-    sites[, i + 5 ] <- sapply(split.col, '[', i);
+    sites[, i + sites.original.ncol ] <- sapply(split.col, '[', i);
     }
 sites$V5 <- NULL;
 colnames(sites) <- c('chrom', 'pos', 'ref', 'alt', algorithms);
