@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Fix readcount compression: delayed
+- Delay readcount compression until original file is no longer needed
 
 ## [7.0.0-rc.1] - 2023-08-28
 
