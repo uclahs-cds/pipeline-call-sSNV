@@ -13,6 +13,27 @@ cases:
     params_file: ./test/yaml/a_mini_n2-std-input.yaml
     skip: false
     verbose: true
+    asserts:
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/output/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/7.0.0-rc.1/test-output/a_mini_n2-all-tools-std-input/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/output/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_Indel.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/7.0.0-rc.1/test-output/a_mini_n2-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_Indel.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/output/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_MNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/7.0.0-rc.1/test-output/a_mini_n2-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_MNV.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/output/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/7.0.0-rc.1/test-output/a_mini_n2-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/output/
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/7.0.0-rc.1/test-output/a_mini_n2-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/
+        script: test/assert_vcf.sh
+
   - name: a_mini_n2-mutect2-tumor-only
     message: test development branch using mutect2 and only a single tumor a-mini-n2 input
     nf_script: ./main.nf
