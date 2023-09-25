@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Fix blarchive compression log output directory
+- Delay readcount compression until original file is no longer needed
 
 ## [7.0.0-rc.1] - 2023-08-28
 
