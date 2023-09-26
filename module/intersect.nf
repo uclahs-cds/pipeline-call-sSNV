@@ -3,8 +3,16 @@ include { compress_file_blarchive} from './common'  addParams(
     blarchive_publishDir : "${params.workflow_output_dir}/output",
     blarchive_enabled : true
     )
-include { intersect_VCFs_BCFtools; plot_VennDiagram_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf } from './intersect-processes.nf'
-include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+include { reorder_samples_BCFtools; intersect_VCFs_BCFtools; plot_VennDiagram_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf } from './intersect-processes.nf'
+include { compress_index_VCF as compress_index_VCF_reordered } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args,
+        is_output_file: false
+        ])
+include { compress_index_VCF as compress_index_VCF_concat } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir,
@@ -28,11 +36,27 @@ workflow intersect {
     tumor_id
 
     main:
-        vcfs_ch = tool_vcfs
+//        vcfs_ch = tool_vcfs
+//            .map { sortVcfs(it)  }
+        reorder_samples_BCFtools(
+            tool_vcfs,
+            normal_id,
+            tumor_id
+            )
+        compress_index_VCF_reordered(reorder_samples_BCFtools.out.reorder_vcfs
+            .map{ it -> ['SNV', it]}
+            )
+        vcfs_ch = compress_index_VCF_reordered.out.index_out
+            .map{ it -> it[1] }
+            .collect()
+            .map { sortVcfs(it)  }
+        indices_ch = compress_index_VCF_reordered.out.index_out
+            .map{ it -> it[2] }
+            .collect()
             .map { sortVcfs(it)  }
         intersect_VCFs_BCFtools(
             vcfs_ch,
-            tool_indices,
+            indices_ch,
             params.intersect_regions,
             params.intersect_regions_index
             )
@@ -52,7 +76,7 @@ workflow intersect {
             normal_id,
             tumor_id
             )
-        compress_index_VCF(concat_VCFs_BCFtools.out.concat_vcf
+        compress_index_VCF_concat(concat_VCFs_BCFtools.out.concat_vcf
             .map{ it -> ['SNV', it]}
             )
         compress_file_blarchive(convert_VCF_vcf2maf.out.concat_maf
@@ -65,10 +89,10 @@ workflow intersect {
                 .flatten()
                 .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-idx", it]}
                 )
-            .mix(compress_index_VCF.out.index_out
+            .mix(compress_index_VCF_concat.out.index_out
                 .map{ it -> ["concat-${it[0]}-vcf", it[1]] }
                 )
-            .mix(compress_index_VCF.out.index_out
+            .mix(compress_index_VCF_concat.out.index_out
                 .map{ it -> ["concat-${it[0]}-index", it[2]] }
                 )
             .mix(compress_file_blarchive.out.compressed_file

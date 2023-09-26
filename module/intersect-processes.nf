@@ -10,6 +10,34 @@ Intersect Options:
 - vcf2maf_extra_args:  ${params.vcf2maf_extra_args}
 ====================================
 """
+process reorder_samples_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.vcf.gz",
+        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" }
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+
+    input:
+    path vcf
+    val tumor_id
+    val normal_id
+
+    output:
+    path "*.vcf.gz", emit: reorder_vcfs
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    bcftools view -s ${tumor_id},${normal_id} --output ${params.output_filename}_pass-reorder.vcf.gz ${vcf}
+    """
+    }
+
 process intersect_VCFs_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",

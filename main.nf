@@ -227,7 +227,7 @@ workflow {
             .mix(strelka2_vcf_ch)
             .mix(mutect2_vcf_ch)
             .mix(muse_vcf_ch))
-            .collect()
+//            .collect()
 
         tool_indices = (somaticsniper_idx_ch
             .mix(strelka2_idx_ch)
