@@ -37,6 +37,7 @@ log.info """\
         log_output_dir: ${params.log_output_dir}
 
     - option:
+        ucla_cds: ${params.ucla_cds}
         save_intermediate_files: ${params.save_intermediate_files}
         docker_container_registry: ${params.docker_container_registry}
         bgzip_extra_args = ${params.bgzip_extra_args}
@@ -45,6 +46,17 @@ log.info """\
         multi_normal_sample: ${params.multi_normal_sample}
         tumor_only_mode: ${params.tumor_only_mode}
 """
+
+if (params.max_cpus < 16 || params.max_memory < 30) {
+    if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
+        error """\
+        ------------------------------------
+        ERROR: Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory.
+        ------------------------------------
+        To run Mutect2 or MuSE. this pipeline requires at least 16 CPUs and 32 GB of memory.
+        """
+        }
+    }
 
 include { 
     run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_normal
