@@ -278,7 +278,7 @@ process filter_VCF_BCFtools {
     tuple val(var_type), path(vcf)
 
     output:
-    tuple val(var_type), path("*.vcf.gz"), emit: pass_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
 
     script:    
@@ -303,7 +303,7 @@ process split_VCF_BCFtools {
     each var_type
 
     output:
-    tuple val(var_type), path("*.vcf.gz"), emit: split_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
 
     script:

@@ -76,8 +76,8 @@ process call_sSNV_Strelka2 {
     path intersect_regions_index
 
     output:
-    tuple val("SNV"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_vcf
-    tuple val("Indel"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_vcf
+    tuple val("SNV"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_gzvcf
+    tuple val("Indel"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_gzvcf
     path "StrelkaSomaticWorkflow"
     path ".command.*"
 
@@ -114,7 +114,7 @@ process filter_VCF_BCFtools {
     tuple val(var_type), path(vcf)
 
     output:
-    tuple val(var_type), path("*.vcf.gz"), emit: pass_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
 
     script:

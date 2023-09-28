@@ -92,16 +92,19 @@ workflow mutect2 {
             contamination_table.collect()
         )
         filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered.map{ it -> ['all', it] })
-        split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf.map{ it -> it[1] }, ['snps', 'mnps', 'indels'])
-        compress_index_VCF(split_VCF_BCFtools.out.split_vcf)
+        split_VCF_BCFtools(filter_VCF_BCFtools.out.gzvcf.map{ it -> it[1] }, ['snps', 'mnps', 'indels'])
+        compress_index_VCF(split_VCF_BCFtools.out.gzvcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-        vcf = compress_index_VCF.out.index_out
-            .filter { it[0] == 'snps' }
-            .map{ it -> ["${it[1]}"] }
-        idx = compress_index_VCF.out.index_out
-            .filter { it[0] == 'snps' }
-            .map{ it -> ["${it[2]}"] }
+          gzvcf = split_VCF_BCFtools.out.gzvcf
+              .filter { it[0] == 'snps' }
+              .map{ it -> ["${it[1]}"] }
+//        vcf = compress_index_VCF.out.index_out
+//            .filter { it[0] == 'snps' }
+//            .map{ it -> ["${it[1]}"] }
+//        idx = compress_index_VCF.out.index_out
+//            .filter { it[0] == 'snps' }
+//            .map{ it -> ["${it[2]}"] }
     }

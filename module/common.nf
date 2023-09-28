@@ -52,15 +52,15 @@ process rename_samples_BCFtools {
     tuple val(var_type), path(vcf)
 
     output:
-    tuple val(var_type), path("*.vcf.gz"), emit: fix_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
     path "*_samples.txt"
 
     script:
     """
     set -euo pipefail
-    echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
     echo -e 'TUMOR\t${tumor_id}' >> ${params.output_filename}_samples.txt
+    echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
     bcftools reheader -s ${params.output_filename}_samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
     """
     }

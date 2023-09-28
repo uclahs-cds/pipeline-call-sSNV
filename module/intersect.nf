@@ -29,34 +29,37 @@ def sortVcfs(List paths) {
 
 workflow intersect {
     take:
-    tool_vcfs
-    tool_indices
+    tool_gzvcfs
+//    tool_indices
     script_dir_ch
     normal_id
     tumor_id
 
     main:
-//        vcfs_ch = tool_vcfs
-//            .map { sortVcfs(it)  }
+tool_gzvcfs.view {"tool_gzvcfs: $it"}
+        tool_gzvcfs_ch = tool_gzvcfs
+            .map { sortVcfs(it)  }
+            .flatten()
+tool_gzvcfs_ch.view {"tool_gzvcfs_ch: $it"}
         reorder_samples_BCFtools(
-            tool_vcfs,
+            tool_gzvcfs_ch,
             normal_id,
             tumor_id
             )
-        compress_index_VCF_reordered(reorder_samples_BCFtools.out.reorder_vcfs
+        compress_index_VCF_reordered(reorder_samples_BCFtools.out.gzvcf
             .map{ it -> ['SNV', it]}
             )
-        vcfs_ch = compress_index_VCF_reordered.out.index_out
+        tool_gzvcfs = compress_index_VCF_reordered.out.index_out
             .map{ it -> it[1] }
             .collect()
             .map { sortVcfs(it)  }
-        indices_ch = compress_index_VCF_reordered.out.index_out
+        tool_indices = compress_index_VCF_reordered.out.index_out
             .map{ it -> it[2] }
             .collect()
             .map { sortVcfs(it)  }
         intersect_VCFs_BCFtools(
-            vcfs_ch,
-            indices_ch,
+            tool_gzvcfs,
+            tool_indices,
             params.intersect_regions,
             params.intersect_regions_index
             )
@@ -64,28 +67,28 @@ workflow intersect {
             script_dir_ch,
             intersect_VCFs_BCFtools.out.isec,
             )
-        intersect_vcfs_ch = intersect_VCFs_BCFtools.out.intersect_vcf
+        intersect_vcfs = intersect_VCFs_BCFtools.out.gzvcf
             .map { sortVcfs(it) }
         concat_VCFs_BCFtools(
-            intersect_vcfs_ch,
-            intersect_VCFs_BCFtools.out.intersect_idx
+            intersect_vcfs,
+            intersect_VCFs_BCFtools.out.idx
             )
         convert_VCF_vcf2maf(
-            concat_VCFs_BCFtools.out.concat_vcf,
+            concat_VCFs_BCFtools.out.vcf,
             params.reference,
             normal_id,
             tumor_id
             )
-        compress_index_VCF_concat(concat_VCFs_BCFtools.out.concat_vcf
+        compress_index_VCF_concat(concat_VCFs_BCFtools.out.vcf
             .map{ it -> ['SNV', it]}
             )
-        compress_file_blarchive(convert_VCF_vcf2maf.out.concat_maf
+        compress_file_blarchive(convert_VCF_vcf2maf.out.maf
             .map{ it -> ['MAF', it]}
             )
-        file_for_sha512 = intersect_VCFs_BCFtools.out.intersect_vcf
+        file_for_sha512 = intersect_VCFs_BCFtools.out.gzvcf
             .flatten()
             .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-vcf", it]}
-            .mix(intersect_VCFs_BCFtools.out.intersect_idx
+            .mix(intersect_VCFs_BCFtools.out.idx
                 .flatten()
                 .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-idx", it]}
                 )

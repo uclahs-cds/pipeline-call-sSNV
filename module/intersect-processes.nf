@@ -15,7 +15,7 @@ process reorder_samples_BCFtools {
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*.vcf.gz",
-        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" }
+        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" },
         enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
@@ -23,18 +23,19 @@ process reorder_samples_BCFtools {
         saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    path vcf
+    path gzvcf
     val tumor_id
     val normal_id
 
     output:
-    path "*.vcf.gz", emit: reorder_vcfs
+    path "*.vcf.gz", emit: gzvcf
     path ".command.*"
 
     script:
+    outfile = gzvcf.getName().replace('.vcf.gz', '-reorder.vcf.gz')
     """
     set -euo pipefail
-    bcftools view -s ${tumor_id},${normal_id} --output ${params.output_filename}_pass-reorder.vcf.gz ${vcf}
+    bcftools view -s ${tumor_id},${normal_id} --output ${outfile} ${gzvcf}
     """
     }
 
@@ -57,20 +58,20 @@ process intersect_VCFs_BCFtools {
         saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
-    path vcfs
+    path gzvcf
     path indices
     path intersect_regions
     path intersect_regions_index
 
     output:
-    path "*.vcf.gz", emit: intersect_vcf
-    path "*.vcf.gz.tbi", emit: intersect_idx
+    path "*.vcf.gz", emit: gzvcf
+    path "*.vcf.gz.tbi", emit: idx
     path ".command.*"
     path "isec-2-or-more/*.txt"
     path "isec-1-or-more/*.txt", emit: isec
 
     script:
-    vcf_list = vcfs.join(' ')
+    vcf_list = gzvcf.join(' ')
     regions_command = params.use_intersect_regions ? "--regions-file ${intersect_regions}" : ""
     """
     set -euo pipefail
@@ -137,7 +138,7 @@ process concat_VCFs_BCFtools {
     path indices
 
     output:
-    path "*concat.vcf", emit: concat_vcf
+    path "*concat.vcf", emit: vcf
     path ".command.*"
 
     script:
@@ -174,7 +175,7 @@ process convert_VCF_vcf2maf {
     val tumor_id
 
     output:
-    path "*.maf", emit: concat_maf
+    path "*.maf", emit: maf
     path ".command.*"
 
     script:
