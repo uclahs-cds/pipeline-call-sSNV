@@ -90,7 +90,6 @@ workflow intersect {
             )
         file_for_sha512 = intersect_VCFs_BCFtools.out.gzvcf
             .flatten()
-                         "${file(it).getName().split('-')[0]}"
             .map{ it -> ["${file(it).getName().split('-')[0]}-vcf", it]}
             .mix(intersect_VCFs_BCFtools.out.idx
                 .flatten()
