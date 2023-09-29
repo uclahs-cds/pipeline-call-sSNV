@@ -167,11 +167,11 @@ workflow {
     Channel.empty().set { strelka2_gzvcf_ch }
     Channel.empty().set { mutect2_gzvcf_ch }
     Channel.empty().set { muse_gzvcf_ch }
-//
-//    Channel.empty().set { somaticsniper_idx_ch }
-//    Channel.empty().set { strelka2_idx_ch }
-//    Channel.empty().set { mutect2_idx_ch }
-//    Channel.empty().set { muse_idx_ch }
+
+    Channel.empty().set { somaticsniper_idx_ch }
+    Channel.empty().set { strelka2_idx_ch }
+    Channel.empty().set { mutect2_idx_ch }
+    Channel.empty().set { muse_idx_ch }
 
     if ('somaticsniper' in params.algorithm) {
         somaticsniper(
@@ -183,7 +183,7 @@ workflow {
             run_GetSampleName_Mutect2_tumor.out.name_ch
             )
             somaticsniper.out.gzvcf.set { somaticsniper_gzvcf_ch }
-//            somaticsniper.out.idx.set { somaticsniper_idx_ch }
+            somaticsniper.out.idx.set { somaticsniper_idx_ch }
         }
     if ('strelka2' in params.algorithm) {
         strelka2(
@@ -195,7 +195,7 @@ workflow {
             run_GetSampleName_Mutect2_tumor.out.name_ch
             )
             strelka2.out.gzvcf.set { strelka2_gzvcf_ch }
-//            strelka2.out.idx.set { strelka2_idx_ch }
+            strelka2.out.idx.set { strelka2_idx_ch }
         }
     if ('mutect2' in params.algorithm) {
         mutect2(
@@ -206,7 +206,7 @@ workflow {
             tumor_input.contamination_est.collect()
             )
             mutect2.out.gzvcf.set { mutect2_gzvcf_ch }
-//            mutect2.out.idx.set { mutect2_idx_ch }
+            mutect2.out.idx.set { mutect2_idx_ch }
         }
     if ('muse' in params.algorithm) {
         muse(
@@ -218,7 +218,7 @@ workflow {
             run_GetSampleName_Mutect2_tumor.out.name_ch
             )
             muse.out.gzvcf.set { muse_gzvcf_ch }
-//            muse.out.idx.set { muse_idx_ch }
+            muse.out.idx.set { muse_idx_ch }
         }
 
     // Intersect all vcf files
@@ -228,18 +228,17 @@ workflow {
             .mix(mutect2_gzvcf_ch)
             .mix(muse_gzvcf_ch))
             .collect()
-
-//        tool_indices = (somaticsniper_idx_ch
-//            .mix(strelka2_idx_ch)
-//            .mix(mutect2_idx_ch)
-//            .mix(muse_idx_ch))
-//            .collect()
-
+        tool_indices = (somaticsniper_idx_ch
+            .mix(strelka2_idx_ch)
+            .mix(mutect2_idx_ch)
+            .mix(muse_idx_ch))
+            .collect()
         intersect(
             tool_gzvcfs,
+            tool_indices,
             script_dir_ch,
-            run_GetSampleName_Mutect2_normal.out.name_ch,
-            run_GetSampleName_Mutect2_tumor.out.name_ch
+            run_GetSampleName_Mutect2_normal.out.name_ch.first(),
+            run_GetSampleName_Mutect2_tumor.out.name_ch.first()
             )
         }
     }

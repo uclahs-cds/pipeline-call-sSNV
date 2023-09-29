@@ -75,5 +75,5 @@ workflow somaticsniper {
         generate_sha512sum(file_for_sha512)
     emit:
         gzvcf = compress_index_VCF_fix.out.index_out.map{ it -> ["${it[1]}"] }
-//        idx = compress_index_VCF_fix.out.index_out.map{ it -> ["${it[2]}"] }
+        idx = compress_index_VCF_fix.out.index_out.map{ it -> ["${it[2]}"] }
     }

@@ -30,36 +30,44 @@ def sortVcfs(List paths) {
 workflow intersect {
     take:
     tool_gzvcfs
-//    tool_indices
+    tool_indices
     script_dir_ch
     normal_id
     tumor_id
 
     main:
-tool_gzvcfs.view {"tool_gzvcfs: $it"}
+ tool_gzvcfs.view {"input gzvcfs: $it"}
         tool_gzvcfs_ch = tool_gzvcfs
             .map { sortVcfs(it)  }
             .flatten()
-tool_gzvcfs_ch.view {"tool_gzvcfs_ch: $it"}
+        tool_indices_ch = tool_indices
+            .map { sortVcfs(it)  }
+            .flatten()
+tool_gzvcfs_ch.view {"gzvcfs channel: $it"}
+tool_indices_ch.view {"indices channel: $it"}
         reorder_samples_BCFtools(
             tool_gzvcfs_ch,
+            tool_indices_ch,
             normal_id,
             tumor_id
             )
+reorder_samples_BCFtools.out.gzvcf.view {"reorder gzvcfs: $it"}
         compress_index_VCF_reordered(reorder_samples_BCFtools.out.gzvcf
             .map{ it -> ['SNV', it]}
             )
-        tool_gzvcfs = compress_index_VCF_reordered.out.index_out
+        gzvcfs = compress_index_VCF_reordered.out.index_out
             .map{ it -> it[1] }
             .collect()
             .map { sortVcfs(it)  }
-        tool_indices = compress_index_VCF_reordered.out.index_out
+        indices = compress_index_VCF_reordered.out.index_out
             .map{ it -> it[2] }
             .collect()
             .map { sortVcfs(it)  }
+gzvcfs.view { "compressed gzvcfs: $it" }
+indices.view { "compressed indices: $it" }
         intersect_VCFs_BCFtools(
-            tool_gzvcfs,
-            tool_indices,
+            gzvcfs,
+            indices,
             params.intersect_regions,
             params.intersect_regions_index
             )

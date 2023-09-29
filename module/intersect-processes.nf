@@ -15,7 +15,6 @@ process reorder_samples_BCFtools {
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*.vcf.gz",
-        saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" },
         enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
@@ -24,18 +23,20 @@ process reorder_samples_BCFtools {
 
     input:
     path gzvcf
+    path indices
     val tumor_id
     val normal_id
 
     output:
-    path "*.vcf.gz", emit: gzvcf
+    path "*-reorder.vcf.gz", emit: gzvcf
     path ".command.*"
 
     script:
-    outfile = gzvcf.getName().replace('.vcf.gz', '-reorder.vcf.gz')
     """
     set -euo pipefail
-    bcftools view -s ${tumor_id},${normal_id} --output ${outfile} ${gzvcf}
+    infile=\$(basename ${gzvcf} .vcf.gz)
+    outfile="\${infile}-reorder.vcf.gz"
+    bcftools view -s ${tumor_id},${normal_id} --output \${outfile} ${gzvcf}
     """
     }
 
@@ -83,13 +84,13 @@ process intersect_VCFs_BCFtools {
         ${regions_command} \
         ${vcf_list}
     awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  \
-        | sed 's/.vcf.gz\$/-intersect.vcf.gz/' \
+        | sed 's/.-reorder.vcf.gz\$/-intersect.vcf.gz/' \
         | while read a b c d; do
             mv \$a \$d
             mv \$a.tbi \$d.tbi
             done
     # intersect, keeping all variants, to create presence/absence list of variants in each VCF
-    bcftools isec \
+    bcftools isec --nfiles +1\
         --output-type z \
         --prefix isec-1-or-more \
         ${regions_command} \
