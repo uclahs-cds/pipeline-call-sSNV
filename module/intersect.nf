@@ -36,7 +36,6 @@ workflow intersect {
     tumor_id
 
     main:
- tool_gzvcfs.view {"input gzvcfs: $it"}
         tool_gzvcfs_ch = tool_gzvcfs
             .map { sortVcfs(it)  }
             .flatten()
@@ -44,15 +43,12 @@ workflow intersect {
         tool_indices_ch = tool_indices
             .map { sortVcfs(it)  }
             .flatten()
-tool_gzvcfs_ch.view {"gzvcfs channel: $it"}
-tool_indices_ch.view {"indices channel: $it"}
         reorder_samples_BCFtools(
             tool_gzvcfs_ch,
             tool_indices_ch,
             normal_id,
             tumor_id
             )
-reorder_samples_BCFtools.out.gzvcf.view {"reorder gzvcfs: $it"}
         compress_index_VCF_reordered(reorder_samples_BCFtools.out.gzvcf
             .map{ it -> ['SNV', it]}
             )
@@ -64,8 +60,6 @@ reorder_samples_BCFtools.out.gzvcf.view {"reorder gzvcfs: $it"}
             .map{ it -> it[2] }
             .collect()
             .map { sortVcfs(it)  }
-gzvcfs.view { "compressed gzvcfs: $it" }
-indices.view { "compressed indices: $it" }
         intersect_VCFs_BCFtools(
             gzvcfs,
             indices,
@@ -96,10 +90,11 @@ indices.view { "compressed indices: $it" }
             )
         file_for_sha512 = intersect_VCFs_BCFtools.out.gzvcf
             .flatten()
-            .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-vcf", it]}
+                         "${file(it).getName().split('-')[0]}"
+            .map{ it -> ["${file(it).getName().split('-')[0]}-vcf", it]}
             .mix(intersect_VCFs_BCFtools.out.idx
                 .flatten()
-                .map{ it -> ["${file(it).getName().split('_')[0]}-SNV-idx", it]}
+                .map{ it -> ["${file(it).getName().split('-')[0]}-idx", it]}
                 )
             .mix(compress_index_VCF_concat.out.index_out
                 .map{ it -> ["concat-${it[0]}-vcf", it[1]] }

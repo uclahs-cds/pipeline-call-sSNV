@@ -98,13 +98,10 @@ workflow mutect2 {
             .mix( compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-          gzvcf = split_VCF_BCFtools.out.gzvcf
-              .filter { it[0] == 'snps' }
-              .map{ it -> ["${it[1]}"] }
-//        vcf = compress_index_VCF.out.index_out
-//            .filter { it[0] == 'snps' }
-//            .map{ it -> ["${it[1]}"] }
-//        idx = compress_index_VCF.out.index_out
-//            .filter { it[0] == 'snps' }
-//            .map{ it -> ["${it[2]}"] }
+        gzvcf = compress_index_VCF.out.index_out
+            .filter { it[0] == 'snps' }
+            .map{ it -> ["${it[1]}"] }
+        idx = compress_index_VCF.out.index_out
+            .filter { it[0] == 'snps' }
+            .map{ it -> ["${it[2]}"] }
     }
