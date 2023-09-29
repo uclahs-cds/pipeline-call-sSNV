@@ -263,31 +263,6 @@ process run_FilterMutectCalls_GATK {
     """
     }
 
-process filter_VCF_BCFtools {
-    container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*.vcf.gz",
-        enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
-
-    input:
-    tuple val(var_type), path(vcf)
-
-    output:
-    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
-    path ".command.*"
-
-    script:    
-    """
-    set -euo pipefail
-    bcftools view -f PASS --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
-    """
-    }
-
 process split_VCF_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",

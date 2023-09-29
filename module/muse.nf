@@ -1,5 +1,5 @@
-include { call_sSNV_MuSE; run_sump_MuSE; filter_VCF_BCFtools } from './muse-processes'
-include { rename_samples_BCFtools; generate_sha512sum } from './common'
+include { call_sSNV_MuSE; run_sump_MuSE } from './muse-processes'
+include { filter_VCF_BCFtools; rename_samples_BCFtools; generate_sha512sum } from './common'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
