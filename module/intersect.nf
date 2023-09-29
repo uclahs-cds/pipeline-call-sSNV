@@ -50,7 +50,7 @@ workflow intersect {
             tumor_id
             )
         compress_index_VCF_reordered(reorder_samples_BCFtools.out.gzvcf
-            .map{ it -> ['SNV', it]}
+            .map{ it -> ["${file(it).getName().split('-')[0]}-SNV", it]}
             )
         gzvcfs = compress_index_VCF_reordered.out.index_out
             .map{ it -> it[1] }
