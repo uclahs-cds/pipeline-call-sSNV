@@ -37,11 +37,9 @@ workflow intersect {
 
     main:
         tool_gzvcfs_ch = tool_gzvcfs
-            .map { sortVcfs(it)  }
             .flatten()
             .map{ it -> ["${file(it).getName().split('-')[0]}", it]}
         tool_indices_ch = tool_indices
-            .map { sortVcfs(it)  }
             .flatten()
         reorder_samples_BCFtools(
             tool_gzvcfs_ch,
@@ -59,7 +57,6 @@ workflow intersect {
         indices = compress_index_VCF_reordered.out.index_out
             .map{ it -> it[2] }
             .collect()
-            .map { sortVcfs(it)  }
         intersect_VCFs_BCFtools(
             gzvcfs,
             indices,
