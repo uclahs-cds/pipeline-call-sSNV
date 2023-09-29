@@ -19,10 +19,10 @@ process reorder_samples_BCFtools {
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}-${algorithm}/log${file(it).getName()}" }
 
     input:
-    path gzvcf
+    tuple val(algorithm), path(gzvcf)
     path indices
     val tumor_id
     val normal_id

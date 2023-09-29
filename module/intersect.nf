@@ -40,6 +40,7 @@ workflow intersect {
         tool_gzvcfs_ch = tool_gzvcfs
             .map { sortVcfs(it)  }
             .flatten()
+            .map{ it -> ["${file(it).getName().split('-')[0]}", it]}
         tool_indices_ch = tool_indices
             .map { sortVcfs(it)  }
             .flatten()
