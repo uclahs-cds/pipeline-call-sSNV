@@ -88,7 +88,7 @@ process compress_file_blarchive {
     set -euo pipefail
     dereferenced_file=\$(readlink -f ${file_to_compress})
     blarchive compress_files --input \$dereferenced_file \
-        --log ${params.work_dir}
+        --log ./
     ln -s \${dereferenced_file}.bz2 ${file_to_compress}.bz2
     """
     }
