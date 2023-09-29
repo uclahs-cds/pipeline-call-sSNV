@@ -1,10 +1,10 @@
 #!/bin/bash
 function md5_vcf {
-    zcat $1 | grep -v '^##' | md5sum | cut -f 1 -d ' '
+    zcat "$1" | grep -v '^##' | md5sum | cut -f 1 -d ' '
 }
 
-received=$(md5_vcf $1)
-expected=$(md5_vcf $2)
+received=$(md5_vcf "$1")
+expected=$(md5_vcf "$2")
 
 if [ "$received" == "$expected" ]; then
     echo "VCF files are equal"
