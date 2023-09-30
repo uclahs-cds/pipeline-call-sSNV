@@ -84,7 +84,7 @@ process intersect_VCFs_BCFtools {
         ${regions_command} \
         ${vcf_list}
     awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  \
-        | sed 's/.-reorder.vcf.gz\$/-intersect.vcf.gz/' \
+        | sed 's/-reorder.vcf.gz\$/-intersect.vcf.gz/' \
         | while read a b c d; do
             mv \$a \$d
             mv \$a.tbi \$d.tbi
