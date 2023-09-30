@@ -84,8 +84,8 @@ process rename_samples_BCFtools {
     script:
     """
     set -euo pipefail
-    echo -e 'TUMOR\t${tumor_id}' > ${params.output_filename}_samples.txt
-    echo -e 'NORMAL\t${normal_id}' >> ${params.output_filename}_samples.txt
+    echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
+    echo -e 'TUMOR\t${tumor_id}' >> ${params.output_filename}_samples.txt
     bcftools reheader -s ${params.output_filename}_samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
     """
     }
