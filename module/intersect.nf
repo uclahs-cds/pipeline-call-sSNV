@@ -24,8 +24,11 @@ def sortVcfs(List paths) {
         def toolA = file(a).getName()
         def toolB = file(b).getName()
         return toolA.compareTo(toolB)
+        }
     }
-}
+def getToolName(filename) {
+    return file(filename).getName().split('-')[0]
+    }
 
 workflow intersect {
     take:
@@ -38,7 +41,7 @@ workflow intersect {
     main:
         tool_gzvcfs_ch = tool_gzvcfs
             .flatten()
-            .map{ it -> ["${file(it).getName().split('-')[0]}", it]}
+            .map{ it -> [getToolName(it), it]}
         tool_indices_ch = tool_indices
             .flatten()
         reorder_samples_BCFtools(
@@ -48,7 +51,7 @@ workflow intersect {
             tumor_id
             )
         compress_index_VCF_reordered(reorder_samples_BCFtools.out.gzvcf
-            .map{ it -> ["${file(it).getName().split('-')[0]}-SNV", it]}
+            .map{ it -> ["${getToolName(it)}-SNV", it]}
             )
         gzvcfs = compress_index_VCF_reordered.out.index_out
             .map{ it -> it[1] }
@@ -87,10 +90,10 @@ workflow intersect {
             )
         file_for_sha512 = intersect_VCFs_BCFtools.out.gzvcf
             .flatten()
-            .map{ it -> ["${file(it).getName().split('-')[0]}-vcf", it]}
+            .map{ it -> ["${getToolName(it)}-vcf", it]}
             .mix(intersect_VCFs_BCFtools.out.idx
                 .flatten()
-                .map{ it -> ["${file(it).getName().split('-')[0]}-idx", it]}
+                .map{ it -> ["${getToolName(it)}-idx", it]}
                 )
             .mix(compress_index_VCF_concat.out.index_out
                 .map{ it -> ["concat-${it[0]}-vcf", it[1]] }
