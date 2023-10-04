@@ -280,8 +280,8 @@ process call_HighConfidenceSNV_SomaticSniper {
     path fp_pass
 
     output:
-    path "*_hc.vcf", emit: hc
-    path "*_lc.vcf", emit: lc
+    path "*_hc.vcf", emit: hc_vcf
+    path "*_lc.vcf"
     path ".command.*"
 
     """

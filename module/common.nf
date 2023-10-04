@@ -8,6 +8,31 @@ Docker Images:
 - docker_image_blarchive: ${params.docker_image_blarchive}
 """
 
+process filter_VCF_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.vcf.gz",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+
+    input:
+    tuple val(var_type), path(vcf)
+
+    output:
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    bcftools view -f PASS  --output-type z --output ${params.output_filename}_${var_type}-pass.vcf.gz ${vcf}
+    """
+    }
+
 process generate_sha512sum {
     container params.docker_image_validate_params
     publishDir path: "${params.workflow_output_dir}/output",
@@ -52,7 +77,7 @@ process rename_samples_BCFtools {
     tuple val(var_type), path(vcf)
 
     output:
-    tuple val(var_type), path("*.vcf.gz"), emit: fix_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
     path "*_samples.txt"
 
@@ -88,7 +113,7 @@ process compress_file_blarchive {
     set -euo pipefail
     dereferenced_file=\$(readlink -f ${file_to_compress})
     blarchive compress_files --input \$dereferenced_file \
-        --log ${params.work_dir}
+        --log ./
     ln -s \${dereferenced_file}.bz2 ${file_to_compress}.bz2
     """
     }

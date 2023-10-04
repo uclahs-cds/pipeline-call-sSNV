@@ -6,13 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add .github/CODEOWNERS
+- Add check for MuSE or Mutect2 on F2 node
+
 ### Changed
 - Update `MuSE` to `v2.0.3`
+- Reorder all VCFs before intersection
+- Move `filter_VCF_BCFtools` to `common.nf`
+- Fix blarchive compression log output directory
+- Delay readcount compression until original file is no longer needed
 
+## [7.0.0-rc.1] - 2023-08-28
 
-## [7.0.0-rc 1] - 2023-08-28
+### Changed
+- Update plot-venn.R to work with all numbers of algorithms greater than two
 
 ### Added
+- Add assertions to `nftest`
 - Add compression of `SomaticSniper` `bam-readcount` output and move to `intermediate` directory
 - Add `ncbi_build` parameter
 - Add conversion of concatenated VCF to MAF

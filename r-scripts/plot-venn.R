@@ -18,12 +18,20 @@ parser$add_argument('-s', '--isec_sites', help = 'The sites.txt file from BCFtoo
 parser$add_argument('-o', '--outfile', help = 'Output filename', type = 'character');
 args <- parser$parse_args();
 
+## config ##########################################################################################
+color.map <- list(
+    Mutect2 = 'orange',
+    SomaticSniper = 'red',
+    MuSE = 'green',
+    Strelka2 = 'blue'
+    )
+
 ## Function: plot venn diagram #####################################################################
 plot.venn <- function(tool.variants, outfile) {
     VennDiagram::venn.diagram(
-        tool.variants.ordered,
+        tool.variants,
         filename = outfile,
-        fill = c('orange', 'red', 'green', 'blue'),
+        fill = unlist(color.map[algorithms]),
         lty = 'dashed',
         cex = 1,
         cat.cex = 0.8,
@@ -39,18 +47,18 @@ algorithms <- gsub('isec-1-or-more.*\t', '', algorithms);
 algorithms <- gsub('-.*', '', algorithms);
 
 sites <- read.table(args$isec_sites, header = FALSE, colClasses = 'character');
+sites.original.ncol <- ncol(sites);
 split.col <- strsplit(as.character(sites$V5), '');
-sites$col1 <- sapply(split.col, '[', 1);
-sites$col2 <- sapply(split.col, '[', 2);
-sites$col3 <- sapply(split.col, '[', 3);
-sites$col4 <- sapply(split.col, '[', 4);
+if (length(split.col[[1]]) != length(algorithms)) {
+    stop('Number of algorithms does not match number of columns in sites.txt file');
+    }
+for (i in 1:length(split.col[[1]])) {
+    sites[, i + sites.original.ncol ] <- sapply(split.col, '[', i);
+    }
 sites$V5 <- NULL;
-
-header <- c('chrom', 'pos', 'ref', 'alt', algorithms);
-colnames(sites) <- header
+colnames(sites) <- c('chrom', 'pos', 'ref', 'alt', algorithms);
 
 variants <- paste(sites$chrom, sites$pos, sep = '_');
 tool.variants <- lapply(sites[, algorithms], function(x) variants[x == 1]);
-tool.variants.ordered <- tool.variants[order(lengths(tool.variants), decreasing = TRUE)];
 
-plot.venn(tool.variants.ordered, args$outfile);
+plot.venn(tool.variants, args$outfile);
