@@ -132,10 +132,10 @@ Channel
         }
     .set { normal_input }
 
-    script_dir_ch = Channel.fromPath(
-        "$projectDir/r-scripts",
-        checkIfExists: true
-        )
+script_dir_ch = Channel.fromPath(
+    "$projectDir/r-scripts",
+    checkIfExists: true
+    )
 
 workflow {
     reference_ch = Channel.from(
