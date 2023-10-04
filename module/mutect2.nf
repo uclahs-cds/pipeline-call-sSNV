@@ -1,5 +1,5 @@
-include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNV_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; filter_VCF_BCFtools; split_VCF_BCFtools } from './mutect2-processes'
-include { generate_sha512sum } from './common'
+include { run_GetSampleName_Mutect2; run_SplitIntervals_GATK; call_sSNV_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; split_VCF_BCFtools } from './mutect2-processes'
+include { filter_VCF_BCFtools; generate_sha512sum } from './common'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -92,13 +92,13 @@ workflow mutect2 {
             contamination_table.collect()
         )
         filter_VCF_BCFtools(run_FilterMutectCalls_GATK.out.filtered.map{ it -> ['all', it] })
-        split_VCF_BCFtools(filter_VCF_BCFtools.out.pass_vcf.map{ it -> it[1] }, ['snps', 'mnps', 'indels'])
-        compress_index_VCF(split_VCF_BCFtools.out.split_vcf)
+        split_VCF_BCFtools(filter_VCF_BCFtools.out.gzvcf.map{ it -> it[1] }, ['snps', 'mnps', 'indels'])
+        compress_index_VCF(split_VCF_BCFtools.out.gzvcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out.map{ it -> ["mutect2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
-        vcf = compress_index_VCF.out.index_out
+        gzvcf = compress_index_VCF.out.index_out
             .filter { it[0] == 'snps' }
             .map{ it -> ["${it[1]}"] }
         idx = compress_index_VCF.out.index_out
