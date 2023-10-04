@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add check for MuSE or Mutect2 on F2 node
 
 ### Changed
+- Update `MuSE` to `v2.0.3`
 - Reorder all VCFs before intersection
 - Move `filter_VCF_BCFtools` to `common.nf`
 - Fix blarchive compression log output directory

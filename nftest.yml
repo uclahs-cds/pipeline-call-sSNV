@@ -14,8 +14,8 @@ cases:
     skip: false
     verbose: true
     asserts:
-      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/output/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/MuSE-2.0.3/output/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/MuSE-2.0.3/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
         script: test/assert_vcf.sh
 
       - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/output/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_Indel.vcf.gz
@@ -30,8 +30,8 @@ cases:
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Mutect2-4.4.0.0/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
         script: test/assert_vcf.sh
 
-      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/output/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/MuSE-2.0.3/output/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/MuSE-2.0.3/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
         script: test/assert_vcf.sh
 
       - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/SomaticSniper-1.0.5.0/output/SomaticSniper-1.0.5.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
@@ -74,8 +74,8 @@ cases:
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Intersect-BCFtools-1.17/isec-2-or-more/BCFtools-1.17_TWGSAMIN_TWGSAMIN000001-T001-S01-F_sites.txt
         method: md5
 
-      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Intersect-BCFtools-1.17/output/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV-intersect.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Intersect-BCFtools-1.17/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV-intersect.vcf.gz
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Intersect-BCFtools-1.17/output/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/TWGSAMIN000001-T001-S01-F/Intersect-BCFtools-1.17/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
       - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/Intersect-BCFtools-1.17/output/Mutect2-4.4.0.0_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV-intersect.vcf.gz
@@ -242,6 +242,6 @@ cases:
     skip: true
     verbose: true
     asserts:
-      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/output/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-muse/TWGSAMIN000001-T001-S01-F/MuSE-2.0.2/MuSE-2.0.2_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+      - actual: call-sSNV-7.0.0-rc.1/TWGSAMIN000001-T001-S01-F/MuSE-2.0.3/output/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-muse/TWGSAMIN000001-T001-S01-F/MuSE-2.0.3/MuSE-2.0.3_TWGSAMIN_TWGSAMIN000001-T001-S01-F_SNV.vcf.gz
         script: test/assert_vcf.sh
