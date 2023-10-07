@@ -6,11 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.0.0-rc.2] - 2023-10-05
+
 ### Added
 - Add .github/CODEOWNERS
 - Add check for MuSE or Mutect2 on F2 node
 
 ### Changed
+- Resource allocations changed for F32 and F72
 - Update `MuSE` to `v2.0.3`
 - Reorder all VCFs before intersection
 - Move `filter_VCF_BCFtools` to `common.nf`

@@ -132,10 +132,10 @@ Channel
         }
     .set { normal_input }
 
-    script_dir_ch = Channel.fromPath(
-        "$projectDir/r-scripts",
-        checkIfExists: true
-        )
+script_dir_ch = Channel.fromPath(
+    "$projectDir/r-scripts",
+    checkIfExists: true
+    )
 
 workflow {
     reference_ch = Channel.from(
@@ -208,17 +208,6 @@ workflow {
             strelka2.out.gzvcf.set { strelka2_gzvcf_ch }
             strelka2.out.idx.set { strelka2_idx_ch }
         }
-    if ('mutect2' in params.algorithm) {
-        mutect2(
-            tumor_input.tumor_bam.collect(),
-            tumor_input.tumor_index.collect(),
-            normal_input.normal_bam.collect(),
-            normal_input.normal_index.collect(),
-            tumor_input.contamination_est.collect()
-            )
-            mutect2.out.gzvcf.set { mutect2_gzvcf_ch }
-            mutect2.out.idx.set { mutect2_idx_ch }
-        }
     if ('muse' in params.algorithm) {
         muse(
             tumor_input.tumor_bam,
@@ -230,6 +219,17 @@ workflow {
             )
             muse.out.gzvcf.set { muse_gzvcf_ch }
             muse.out.idx.set { muse_idx_ch }
+        }
+    if ('mutect2' in params.algorithm) {
+        mutect2(
+            tumor_input.tumor_bam.collect(),
+            tumor_input.tumor_index.collect(),
+            normal_input.normal_bam.collect(),
+            normal_input.normal_index.collect(),
+            tumor_input.contamination_est.collect()
+            )
+            mutect2.out.gzvcf.set { mutect2_gzvcf_ch }
+            mutect2.out.idx.set { mutect2_idx_ch }
         }
 
     // Intersect all vcf files
