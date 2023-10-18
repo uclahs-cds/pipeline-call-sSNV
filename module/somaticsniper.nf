@@ -15,9 +15,9 @@ include { compress_index_VCF as compress_index_VCF_fix } from '../external/pipel
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args
         ])
-include { compress_file_blarchive} from './common'   addParams(
-    blarchive_publishDir : "${params.workflow_output_dir}/intermediate/generate_ReadCount_bam_readcount",
-    blarchive_enabled : params.save_intermediate_files
+include { compress_file_bzip2} from './common'   addParams(
+    compress_publishdir : "${params.workflow_output_dir}/intermediate/generate_ReadCount_bam_readcount",
+    compress_enabled : params.save_intermediate_files
     ) 
 
 workflow somaticsniper {
@@ -56,7 +56,7 @@ workflow somaticsniper {
         filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
         // combining to delay compression until after filtering step
-        compress_file_blarchive(
+        compress_file_bzip2(
             generate_ReadCount_bam_readcount.out.readcount
                 .combine(filter_FalsePositive_SomaticSniper.out.fp_pass.collect())
                 .map{ it -> ['readcount', it[0]] }
