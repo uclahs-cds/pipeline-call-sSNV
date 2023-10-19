@@ -5,7 +5,7 @@ on:
   release:
     types: [published]
 
-permissions: read-all
+permissions: write-all
 jobs:
   add_release_asset:
     runs-on: ubuntu-latest
@@ -14,4 +14,4 @@ jobs:
       - id: release-asset
         uses: uclahs-cds/tool-Nextflow-action/add-source-with-submodules@latest
         with:
-          my-token: ${{ secrets.UCLAHS_CDS_REPO_READ_TOKEN }}
+          my-token: ${{ secrets.GITHUB_TOKEN }}
