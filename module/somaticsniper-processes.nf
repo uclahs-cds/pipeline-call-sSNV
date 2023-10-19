@@ -205,10 +205,6 @@ process create_ReadCountPosition_SomaticSniper {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
     container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.readcount",
-               enabled: params.save_intermediate_files
     publishDir path: "${params.workflow_log_output_dir}",
                mode: "copy",
                pattern: ".command.*",
@@ -284,8 +280,8 @@ process call_HighConfidenceSNV_SomaticSniper {
     path fp_pass
 
     output:
-    path "*_hc.vcf", emit: hc
-    path "*_lc.vcf", emit: lc
+    path "*_hc.vcf", emit: hc_vcf
+    path "*_lc.vcf"
     path ".command.*"
 
     """

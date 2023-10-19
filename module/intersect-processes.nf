@@ -10,6 +10,36 @@ Intersect Options:
 - vcf2maf_extra_args:  ${params.vcf2maf_extra_args}
 ====================================
 """
+process reorder_samples_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.vcf.gz",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${algorithm}/log${file(it).getName()}" }
+
+    input:
+    tuple val(algorithm), path(gzvcf)
+    path indices
+    val tumor_id
+    val normal_id
+
+    output:
+    path "*-reorder.vcf.gz", emit: gzvcf
+    path ".command.*"
+
+    script:
+    """
+    set -euo pipefail
+    infile=\$(basename ${gzvcf} .vcf.gz)
+    outfile="\${infile}-reorder.vcf.gz"
+    bcftools view -s ${tumor_id},${normal_id} --output \${outfile} ${gzvcf}
+    """
+    }
+
 process intersect_VCFs_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
@@ -29,20 +59,20 @@ process intersect_VCFs_BCFtools {
         saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
-    path vcfs
+    path gzvcf
     path indices
     path intersect_regions
     path intersect_regions_index
 
     output:
-    path "*.vcf.gz", emit: intersect_vcf
-    path "*.vcf.gz.tbi", emit: intersect_idx
+    path "*.vcf.gz", emit: gzvcf
+    path "*.vcf.gz.tbi", emit: idx
     path ".command.*"
     path "isec-2-or-more/*.txt"
     path "isec-1-or-more/*.txt", emit: isec
 
     script:
-    vcf_list = vcfs.join(' ')
+    vcf_list = gzvcf.join(' ')
     regions_command = params.use_intersect_regions ? "--regions-file ${intersect_regions}" : ""
     """
     set -euo pipefail
@@ -54,13 +84,13 @@ process intersect_VCFs_BCFtools {
         ${regions_command} \
         ${vcf_list}
     awk '/Using the following file names:/{x=1;next} x' isec-2-or-more/README.txt  \
-        | sed 's/.vcf.gz\$/-intersect.vcf.gz/' \
+        | sed 's/-reorder.vcf.gz\$/-intersect.vcf.gz/' \
         | while read a b c d; do
             mv \$a \$d
             mv \$a.tbi \$d.tbi
             done
     # intersect, keeping all variants, to create presence/absence list of variants in each VCF
-    bcftools isec \
+    bcftools isec --nfiles +1\
         --output-type z \
         --prefix isec-1-or-more \
         ${regions_command} \
@@ -109,7 +139,7 @@ process concat_VCFs_BCFtools {
     path indices
 
     output:
-    path "*concat.vcf", emit: concat_vcf
+    path "*concat.vcf", emit: vcf
     path ".command.*"
 
     script:
@@ -146,7 +176,7 @@ process convert_VCF_vcf2maf {
     val tumor_id
 
     output:
-    path "*.maf", emit: concat_maf
+    path "*.maf", emit: maf
     path ".command.*"
 
     script:

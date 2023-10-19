@@ -6,9 +6,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.0.0-rc.2] - 2023-10-05
+
+### Added
+- Add .github/CODEOWNERS
+- Add check for MuSE or Mutect2 on F2 node
+
+### Changed
+- Resource allocations changed for F32 and F72
+- Update `MuSE` to `v2.0.3`
+- Reorder all VCFs before intersection
+- Move `filter_VCF_BCFtools` to `common.nf`
+- Fix blarchive compression log output directory
+- Delay readcount compression until original file is no longer needed
+
+## [7.0.0-rc.1] - 2023-08-28
+
+### Changed
+- Update plot-venn.R to work with all numbers of algorithms greater than two
+
 ### Added
 - Custom resource allocation updates through configuration parameters
-- Add compression of `SomaticSniper` `bam-readcount` QC output
+- Add assertions to `nftest`
+- Add compression of `SomaticSniper` `bam-readcount` output and move to `intermediate` directory
 - Add `ncbi_build` parameter
 - Add conversion of concatenated VCF to MAF
 - Add concatenation of consensus variants to one VCF
@@ -20,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `split_VCF_bcftools` to `Mutect2` workflow, separating SNVs, MNVs and Indels
 
 ### Changed
+- Fix CPU allocation behavior with Docker
 - Remove redundant directories in Intersect log output directories
 - Change compression of intersect MAF file to bzip2
 - Update `README.md`
