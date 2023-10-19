@@ -5,7 +5,7 @@ log.info """\
 Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 - docker_image_validate_params: ${params.docker_image_validate_params}
-- docker_image_blarchive: ${params.docker_image_blarchive}
+- docker_image_ubuntu: ${params.docker_image_ubuntu}
 """
 
 process filter_VCF_BCFtools {
@@ -90,12 +90,12 @@ process rename_samples_BCFtools {
     """
     }
 
-process compress_file_blarchive {
-    container params.docker_image_blarchive
-    publishDir path: params.blarchive_publishDir,
+process compress_file_bzip2 {
+    container params.docker_image_ubuntu
+    publishDir path: params.compress_publishdir,
         mode: "copy",
         pattern: "*.bz2",
-        enabled: params.blarchive_enabled
+        enabled: params.compress_enabled
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -112,8 +112,7 @@ process compress_file_blarchive {
     """
     set -euo pipefail
     dereferenced_file=\$(readlink -f ${file_to_compress})
-    blarchive compress_files --input \$dereferenced_file \
-        --log ./
+    bzip2 \$dereferenced_file
     ln -s \${dereferenced_file}.bz2 ${file_to_compress}.bz2
     """
     }
