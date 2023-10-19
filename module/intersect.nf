@@ -1,7 +1,7 @@
 include { generate_sha512sum } from './common'
-include { compress_file_blarchive} from './common'  addParams(
-    blarchive_publishDir : "${params.workflow_output_dir}/output",
-    blarchive_enabled : true
+include { compress_file_bzip2} from './common'  addParams(
+    compress_publishdir : "${params.workflow_output_dir}/output",
+    compress_enabled : true
     )
 include { reorder_samples_BCFtools; intersect_VCFs_BCFtools; plot_VennDiagram_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf } from './intersect-processes.nf'
 include { compress_index_VCF as compress_index_VCF_reordered } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
@@ -85,7 +85,7 @@ workflow intersect {
         compress_index_VCF_concat(concat_VCFs_BCFtools.out.vcf
             .map{ it -> ['SNV', it]}
             )
-        compress_file_blarchive(convert_VCF_vcf2maf.out.maf
+        compress_file_bzip2(convert_VCF_vcf2maf.out.maf
             .map{ it -> ['MAF', it]}
             )
         file_for_sha512 = intersect_VCFs_BCFtools.out.gzvcf
@@ -101,7 +101,7 @@ workflow intersect {
             .mix(compress_index_VCF_concat.out.index_out
                 .map{ it -> ["concat-${it[0]}-index", it[2]] }
                 )
-            .mix(compress_file_blarchive.out.compressed_file
+            .mix(compress_file_bzip2.out.compressed_file
                 .map{ it -> ["concat-${it[0]}", it[1]]}
                 )
         generate_sha512sum(file_for_sha512)
