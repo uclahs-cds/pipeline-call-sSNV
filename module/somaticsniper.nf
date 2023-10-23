@@ -1,14 +1,24 @@
 include { call_sSNV_SomaticSniper; convert_BAM2Pileup_SAMtools; create_IndelCandidate_SAMtools; apply_NormalIndelFilter_SomaticSniper; apply_TumorIndelFilter_SomaticSniper; create_ReadCountPosition_SomaticSniper; generate_ReadCount_bam_readcount; filter_FalsePositive_SomaticSniper; call_HighConfidenceSNV_SomaticSniper } from './somaticsniper-processes'
-
-include { generate_sha512sum } from './common'
-
-include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
+include { rename_samples_BCFtools; generate_sha512sum } from './common'
+include { compress_index_VCF as compress_index_VCF_hc } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
+    options: [
+        output_dir: params.workflow_output_dir,
+        log_output_dir: params.workflow_log_output_dir,
+        bgzip_extra_args: params.bgzip_extra_args,
+        tabix_extra_args: params.tabix_extra_args,
+        is_output_file: false
+        ])
+include { compress_index_VCF as compress_index_VCF_fix } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf'  addParams(
     options: [
         output_dir: params.workflow_output_dir,
         log_output_dir: params.workflow_log_output_dir,
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args
         ])
+include { compress_file_bzip2} from './common'   addParams(
+    compress_publishdir : "${params.workflow_output_dir}/intermediate/generate_ReadCount_bam_readcount",
+    compress_enabled : params.save_intermediate_files
+    ) 
 
 workflow somaticsniper {
     take:
@@ -16,6 +26,8 @@ workflow somaticsniper {
     tumor_index
     normal_bam
     normal_index
+    normal_id
+    tumor_id
 
     main:
         call_sSNV_SomaticSniper(tumor_bam, normal_bam, params.reference)
@@ -43,14 +55,25 @@ workflow somaticsniper {
         generate_ReadCount_bam_readcount(params.reference,create_ReadCountPosition_SomaticSniper.out.snp_positions, tumor_bam, tumor_index)
         filter_FalsePositive_SomaticSniper(apply_TumorIndelFilter_SomaticSniper.out.vcf_tumor, generate_ReadCount_bam_readcount.out.readcount)
         call_HighConfidenceSNV_SomaticSniper(filter_FalsePositive_SomaticSniper.out.fp_pass)
-        index_compress_ch = call_HighConfidenceSNV_SomaticSniper.out.hc
-            .map{
-                it -> [params.sample_id, it]
-            }
-        compress_index_VCF(index_compress_ch)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> [it[0], it[2]] }
-                            .mix( compress_index_VCF.out.index_out.map{ it -> [it[0], it[1]] } )
+        // combining to delay compression until after filtering step
+        compress_file_bzip2(
+            generate_ReadCount_bam_readcount.out.readcount
+                .combine(filter_FalsePositive_SomaticSniper.out.fp_pass.collect())
+                .map{ it -> ['readcount', it[0]] }
+            )
+        // rename_samples_BCFtools needs bgzipped input
+        compress_index_VCF_hc(call_HighConfidenceSNV_SomaticSniper.out.hc_vcf
+            .map{ it -> ['SNV', it] })
+        rename_samples_BCFtools(normal_id, tumor_id, compress_index_VCF_hc.out.index_out
+            .map{ it -> [it[0], it[1]] })
+        compress_index_VCF_fix(rename_samples_BCFtools.out.gzvcf)
+        file_for_sha512 = compress_index_VCF_fix.out.index_out
+            .map{ it -> ["${it[0]}-vcf", it[1]] }
+            .mix(compress_index_VCF_fix.out.index_out
+                .map{ it -> ["${it[0]}-index", it[2]] }
+                )
         generate_sha512sum(file_for_sha512)
     emit:
-        compress_index_VCF.out.index_out
-}
+        gzvcf = compress_index_VCF_fix.out.index_out.map{ it -> ["${it[1]}"] }
+        idx = compress_index_VCF_fix.out.index_out.map{ it -> ["${it[2]}"] }
+    }

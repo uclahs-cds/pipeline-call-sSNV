@@ -43,7 +43,7 @@ process call_sSNV_MuSE {
         $tumor \
         $normal
     """
-}
+    }
 
 process run_sump_MuSE {
     container params.docker_image_MuSE
@@ -73,31 +73,7 @@ process run_sump_MuSE {
         -I $MuSE_txt \
         $arg_seq_type \
         -O ${params.output_filename}-raw.vcf \
+        -n ${task.cpus} \
         -D $dbSNP
     """
-}
-
-process filter_VCF {
-    container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-            mode: "copy",
-            pattern: "*.vcf",
-            enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-            mode: "copy",
-            pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
-
-    input:
-    path vcf
-
-    output:
-    path "*.vcf", emit: vcf
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-    bcftools view -f PASS ${vcf} > ${params.output_filename}_filtered-pass.vcf
-    """
-}
+    }

@@ -4,13 +4,14 @@ log.info """\
 ====================================
 Docker Images:
 - docker_image_GATK:           ${params.docker_image_GATK}
+- docker_image_BCFtools        ${params.docker_image_BCFtools}
 Mutect2 Options:
 - split_intervals_extra_args:     ${params.split_intervals_extra_args}
 - mutect2_extra_args:             ${params.mutect2_extra_args}
 - filter_mutect_calls_extra_args: ${params.filter_mutect_calls_extra_args}
 - gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
 - scatter_count:                  ${params.scatter_count}
-- intervals:                      ${params.intervals}
+- intervals:                      ${params.intersect_regions}
 - tumor_only_mode:                ${params.tumor_only_mode}
 - use_contamination_estimation:   ${params.use_contamination_estimation}
 - contamination_table:            ${params.input.tumor.contamination_table}
@@ -29,7 +30,8 @@ process run_SplitIntervals_GATK {
         saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
 
     input:
-    path intervals
+    path intersect_regions
+    path intersect_regions_index
     path reference
     path reference_index
     path reference_dict
@@ -38,17 +40,19 @@ process run_SplitIntervals_GATK {
     path 'interval-files/*-scattered.interval_list', emit: interval_list
     path ".command.*"
 
+    script:
+    intervals_command = params.use_intersect_regions ? "-L ${intersect_regions}" : ""
     """
     set -euo pipefail
 
     gatk SplitIntervals \
         -R $reference \
-        -L $intervals \
+        ${intervals_command} \
         -scatter ${params.scatter_count} \
         ${params.split_intervals_extra_args} \
         -O interval-files
     """
-}
+    }
 
 
 process run_GetSampleName_Mutect2 {
@@ -62,10 +66,10 @@ process run_GetSampleName_Mutect2 {
         pattern: ".command.*",
         saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
     input:
-    path normal_bam
+    path bam
 
     output:
-    env normal_name, emit: name_ch
+    env sample_name, emit: name_ch
     path "sampleName.txt"
     path ".command.*"
 
@@ -73,13 +77,13 @@ process run_GetSampleName_Mutect2 {
     """
     set -euo pipefail
 
-    gatk GetSampleName -I $normal_bam -O sampleName.txt
-    normal_name=`cat sampleName.txt`
+    gatk GetSampleName -I $bam -O sampleName.txt
+    sample_name=`cat sampleName.txt`
 
     """
-}
+    }
 
-process call_sSNVInAssembledChromosomes_Mutect2 { // Intervals do not have to be in assembled chromosomes
+process call_sSNV_Mutect2 {
     container params.docker_image_GATK
 
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
@@ -131,60 +135,7 @@ process call_sSNVInAssembledChromosomes_Mutect2 { // Intervals do not have to be
         $germline \
         ${params.mutect2_extra_args}
     """
-}
-
-process call_sSNVInNonAssembledChromosomes_Mutect2 {
-    container params.docker_image_GATK
-
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "${params.output_filename}_unfiltered*",
-        enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
-
-    input:
-    path interval // canonical intervals to *exclude*
-    path tumor
-    path tumor_index
-    path normal
-    path normal_index
-    path reference
-    path reference_index
-    path reference_dict
-    val normal_name
-    path germline_resource_gnomad_vcf
-    path germline_resource_gnomad_vcf_index
-
-    output:
-    path "*.vcf.gz", emit: unfiltered
-    path "*.vcf.gz.tbi", emit: unfiltered_index
-    path "*.vcf.gz.stats", emit: unfiltered_stats
-    path "*-f1r2.tar.gz", emit: f1r2
-    path ".command.*"
-
-    script:
-    tumors = tumor.collect { "-I '$it'" }.join(' ')
-    normals = normal.collect { "-I '$it'" }.join(' ')
-    normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam = params.tumor_only_mode ? "$tumors" : "$tumors $normals $normal_names"
-    germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
-    """
-    set -euo pipefail
-
-    gatk --java-options \"-Xmx${(task.memory - params.gatk_command_mem_diff).getMega()}m\" Mutect2 \
-        -R $reference \
-        -XL $interval \
-        $bam \
-        --f1r2-tar-gz ${params.output_filename}_unfiltered-non-canonical-f1r2.tar.gz \
-        -O ${params.output_filename}_unfiltered-non-canonical.vcf.gz \
-        --tmp-dir \$PWD \
-        $germline \
-        ${params.mutect2_extra_args}
-    """
-}
+    }
 
 process run_MergeVcfs_GATK {
     container params.docker_image_GATK
@@ -211,7 +162,7 @@ process run_MergeVcfs_GATK {
     set -euo pipefail
     gatk MergeVcfs $unfiltered_vcfs -O ${params.output_filename}_unfiltered.vcf.gz
     """
-}
+    }
 
 process run_MergeMutectStats_GATK {
     container params.docker_image_GATK
@@ -237,7 +188,7 @@ process run_MergeMutectStats_GATK {
     set -euo pipefail
     gatk MergeMutectStats $unfiltered_stats -O ${params.output_filename}_unfiltered.vcf.gz.stats
     """
-}
+    }
 
 process run_LearnReadOrientationModel_GATK {
     container params.docker_image_GATK
@@ -266,7 +217,7 @@ process run_LearnReadOrientationModel_GATK {
     --tmp-dir ${params.work_dir} \
     -O read-orientation-model.tar.gz
     """
-}
+    }
 
 process run_FilterMutectCalls_GATK {
     container params.docker_image_GATK
@@ -310,29 +261,29 @@ process run_FilterMutectCalls_GATK {
         $contamination \
         ${params.filter_mutect_calls_extra_args}
     """
-}
+    }
 
-process filter_VCF {
-    container "ubuntu:20.04"
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+process split_VCF_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*filtered-pass.vcf",
-        enabled: params.save_intermediate_files
+        pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
 
     input:
-    path filtered
+    path vcf
+    each var_type
 
     output:
-    path "*.vcf", emit: mutect2_vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
 
     script:
     """
     set -euo pipefail
-    zcat $filtered | awk -F '\\t' '{if(\$0 ~ /\\#/) print; else if(\$7 == "PASS") print}' > ${params.output_filename}_filtered-pass.vcf
+    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz ${vcf}
     """
-}
+    }
