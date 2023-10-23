@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update plot-venn.R to work with all numbers of algorithms greater than two
 
 ### Added
+- Custom resource allocation updates through configuration parameters
 - Add assertions to `nftest`
 - Add compression of `SomaticSniper` `bam-readcount` output and move to `intermediate` directory
 - Add `ncbi_build` parameter
