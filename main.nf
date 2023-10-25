@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
+include { generate_standard_filename ; sanitize_string } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf' addParams(
     options: [
         docker_image_version: params.pipeval_version,
@@ -10,6 +10,12 @@ include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modul
     )
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
+
+sanitized_sample_id = sanitize_string(params.sample_id)
+params.output_base = params.output_dir_base.replace(params.sample_id, sanitized_sample_id)
+params.log_output = params.log_output_dir.replace(params.sample_id, sanitized_sample_id)
+params.sample_name = sanitized_sample_id
+params.tumor_name = params.sample_name
 
 log.info """\
     ------------------------------------
@@ -23,7 +29,7 @@ log.info """\
         version: ${workflow.manifest.version}
 
     - input:
-        sample_id: ${params.sample_id}
+        sample_id: ${params.sample_name}
         algorithm: ${params.algorithm}
         tumor: ${params.input['tumor']['BAM']}
         normal: ${params.input['normal']['BAM']}
@@ -33,8 +39,8 @@ log.info """\
         intersect_regions: ${params.intersect_regions}
 
     - output:
-        output_dir: ${params.output_dir_base}
-        log_output_dir: ${params.log_output_dir}
+        output_dir: ${params.output_base}
+        log_output_dir: ${params.log_output}
 
     - option:
         ucla_cds: ${params.ucla_cds}
@@ -58,45 +64,46 @@ if (params.max_cpus < 16 || params.max_memory < 30) {
         }
     }
 
+
 include { 
     run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_normal
     run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_tumor 
     } from './module/mutect2-processes' addParams(
-        workflow_output_dir: "${params.output_dir_base}",
-        workflow_log_output_dir: "${params.log_output_dir}/process-log/"
+        workflow_output_dir: "${params.output_base}",
+        workflow_log_output_dir: "${params.log_output}/process-log/"
         )
 include { somaticsniper } from './module/somaticsniper' addParams(
-    workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
+    workflow_output_dir: "${params.output_base}/SomaticSniper-${params.somaticsniper_version}",
+    workflow_log_output_dir: "${params.log_output}/process-log/SomaticSniper-${params.somaticsniper_version}",
     output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { strelka2 } from './module/strelka2' addParams(
-    workflow_output_dir: "${params.output_dir_base}/Strelka2-${params.strelka2_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
+    workflow_output_dir: "${params.output_base}/Strelka2-${params.strelka2_version}",
+    workflow_log_output_dir: "${params.log_output}/process-log/Strelka2-${params.strelka2_version}",
     output_filename: generate_standard_filename("Strelka2-${params.strelka2_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { mutect2 } from './module/mutect2' addParams(
-    workflow_output_dir: "${params.output_dir_base}/Mutect2-${params.GATK_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
+    workflow_output_dir: "${params.output_base}/Mutect2-${params.GATK_version}",
+    workflow_log_output_dir: "${params.log_output}/process-log/Mutect2-${params.GATK_version}",
     output_filename: generate_standard_filename("Mutect2-${params.GATK_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { muse } from './module/muse' addParams(
-    workflow_output_dir: "${params.output_dir_base}/MuSE-${params.MuSE_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/MuSE-${params.MuSE_version}",
+    workflow_output_dir: "${params.output_base}/MuSE-${params.MuSE_version}",
+    workflow_log_output_dir: "${params.log_output}/process-log/MuSE-${params.MuSE_version}",
     output_filename: generate_standard_filename("MuSE-${params.MuSE_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 
 include { intersect } from './module/intersect' addParams(
-    workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
+    workflow_output_dir: "${params.output_base}/Intersect-BCFtools-${params.BCFtools_version}",
+    workflow_log_output_dir: "${params.log_output}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
     output_filename: generate_standard_filename("BCFtools-${params.BCFtools_version}",
         params.dataset_id,
         params.sample_id,
@@ -164,7 +171,7 @@ workflow {
     run_validate_PipeVal(file_to_validate)
     run_validate_PipeVal.out.validation_result.collectFile(
         name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.output_dir_base}/validation"
+        storeDir: "${params.output_base}/validation"
         )
 
     // Extract sample names from bam files (single tumor/normal input only)
