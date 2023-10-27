@@ -11,11 +11,16 @@ include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modul
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
-sanitized_sample_id = sanitize_string(params.sample_id)
-params.output_base = params.output_dir_base.replace(params.sample_id, sanitized_sample_id)
-params.log_output = params.log_output_dir.replace(params.sample_id, sanitized_sample_id)
-params.sample_name = sanitized_sample_id
-params.tumor_name = params.sample_name
+params.sample_id = sanitize_string(params.sample_name)
+params.output_base = params.output_dir_base.replace(params.sample_name, params.sample_id)
+params.log_output = params.log_output_dir.replace(params.sample_name, params.sample_id)
+
+if (params.single_NT_paired) {
+    def tumorSample = params.samples_to_process.find { it['sample_type'] == 'tumor' }
+    params.tumor_id = sanitize_string(tumorSample['id'])
+    def normalSample = params.samples_to_process.find { it['sample_type'] == 'normal' }
+    params.normal_id = sanitize_string(normalSample['id'])
+}
 
 log.info """\
     ------------------------------------
@@ -29,7 +34,9 @@ log.info """\
         version: ${workflow.manifest.version}
 
     - input:
-        sample_id: ${params.sample_name}
+        dataset_id: ${params.dataset_id}
+        patient_id: ${params.patient_id}
+        sample_id: ${params.sample_id}
         algorithm: ${params.algorithm}
         tumor: ${params.input['tumor']['BAM']}
         normal: ${params.input['normal']['BAM']}
@@ -197,8 +204,6 @@ workflow {
             tumor_input.tumor_index,
             normal_input.normal_bam,
             normal_input.normal_index,
-            run_GetSampleName_Mutect2_normal.out.name_ch,
-            run_GetSampleName_Mutect2_tumor.out.name_ch
             )
             somaticsniper.out.gzvcf.set { somaticsniper_gzvcf_ch }
             somaticsniper.out.idx.set { somaticsniper_idx_ch }
