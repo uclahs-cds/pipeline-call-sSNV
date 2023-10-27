@@ -13,8 +13,6 @@ workflow muse {
     tumor_index
     normal_bam
     normal_index
-    normal_id
-    tumor_id
 
     main:
         call_sSNV_MuSE(
@@ -31,7 +29,7 @@ workflow muse {
             "${params.dbSNP}.tbi"
         )
         filter_VCF_BCFtools(run_sump_MuSE.out.vcf.map { it -> ['SNV', it] } )
-        rename_samples_BCFtools(normal_id, tumor_id, filter_VCF_BCFtools.out.gzvcf)
+        rename_samples_BCFtools(params.normal_id, params.tumor_id, filter_VCF_BCFtools.out.gzvcf)
         compress_index_VCF(rename_samples_BCFtools.out.gzvcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["muse-${it[0]}-vcf", it[1]] }
             .mix(compress_index_VCF.out.index_out.map{ it -> ["muse-${it[0]}-index", it[2]] })

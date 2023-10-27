@@ -72,13 +72,6 @@ if (params.max_cpus < 16 || params.max_memory < 30) {
     }
 
 
-include { 
-    run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_normal
-    run_GetSampleName_Mutect2 as run_GetSampleName_Mutect2_tumor 
-    } from './module/mutect2-processes' addParams(
-        workflow_output_dir: "${params.output_base}",
-        workflow_log_output_dir: "${params.log_output}/process-log/"
-        )
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_base}/SomaticSniper-${params.somaticsniper_version}",
     workflow_log_output_dir: "${params.log_output}/process-log/SomaticSniper-${params.somaticsniper_version}",
@@ -181,12 +174,6 @@ workflow {
         storeDir: "${params.output_base}/validation"
         )
 
-    // Extract sample names from bam files (single tumor/normal input only)
-    if ( ! params.tumor_only_mode && ! params.multi_tumor_sample && ! params.multi_normal_sample ) {
-        run_GetSampleName_Mutect2_normal(normal_input.normal_bam)
-        run_GetSampleName_Mutect2_tumor(tumor_input.tumor_bam)
-        }
-
     // Set empty channels so any unused tools don't cause failure at intersect step
     Channel.empty().set { somaticsniper_gzvcf_ch }
     Channel.empty().set { strelka2_gzvcf_ch }
@@ -214,8 +201,6 @@ workflow {
             tumor_input.tumor_index,
             normal_input.normal_bam,
             normal_input.normal_index,
-            run_GetSampleName_Mutect2_normal.out.name_ch,
-            run_GetSampleName_Mutect2_tumor.out.name_ch
             )
             strelka2.out.gzvcf.set { strelka2_gzvcf_ch }
             strelka2.out.idx.set { strelka2_idx_ch }
@@ -226,8 +211,6 @@ workflow {
             tumor_input.tumor_index,
             normal_input.normal_bam,
             normal_input.normal_index,
-            run_GetSampleName_Mutect2_normal.out.name_ch,
-            run_GetSampleName_Mutect2_tumor.out.name_ch
             )
             muse.out.gzvcf.set { muse_gzvcf_ch }
             muse.out.idx.set { muse_idx_ch }
@@ -260,8 +243,6 @@ workflow {
             tool_gzvcfs,
             tool_indices,
             script_dir_ch,
-            run_GetSampleName_Mutect2_normal.out.name_ch.first(),
-            run_GetSampleName_Mutect2_tumor.out.name_ch.first()
             )
         }
     }

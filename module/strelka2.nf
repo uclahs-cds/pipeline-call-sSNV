@@ -15,8 +15,6 @@ workflow strelka2 {
     tumor_index
     normal_bam
     normal_index
-    normal_id
-    tumor_id
 
     main:
         call_sIndel_Manta(
@@ -42,9 +40,10 @@ workflow strelka2 {
         )
         filter_VCF_BCFtools(call_sSNV_Strelka2.out.snvs_gzvcf
             .mix(call_sSNV_Strelka2.out.indels_gzvcf))
-        normal_id.combine(filter_VCF_BCFtools.out.gzvcf).map{ it[0] }.set{ normal_id_fix }
-        tumor_id.combine(filter_VCF_BCFtools.out.gzvcf).map{ it[0] }.set{ tumor_id_fix }
-        rename_samples_BCFtools(normal_id_fix, tumor_id_fix, filter_VCF_BCFtools.out.gzvcf)
+//  combine ids with each of the filtered strelka outputs (SNV and INDEL)
+        filter_VCF_BCFtools.out.gzvcf.map{ it -> [it, params.normal_id]}.map { it[1] }.set{ normal_id_ch }
+        filter_VCF_BCFtools.out.gzvcf.map{ it -> [it, params.tumor_id]}.map { it[1] }.set{ tumor_id_ch }
+        rename_samples_BCFtools(normal_id_ch, tumor_id_ch, filter_VCF_BCFtools.out.gzvcf)
         compress_index_VCF(rename_samples_BCFtools.out.gzvcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["strelka2-${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out.map{ it -> ["strelka2-${it[0]}-index", it[2]] } )
