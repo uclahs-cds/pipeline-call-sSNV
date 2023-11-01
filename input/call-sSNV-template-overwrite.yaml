@@ -3,9 +3,9 @@ patient_id: 'patient_id'
 # For multi samples, list the BAMs under the corresponding state (normal or tumor).
 input:
     normal:
-      - BAM: /path/to/normal.bam
+        - BAM: /path/to/normal.bam
     tumor:
-      - BAM: /path/to/tumor.bam
+        - BAM: /path/to/tumor.bam
         contamination_table: /path/to/contamination.table
 # Add extra parameters to overwrite parameters in template.config
 gatk_command_mem_diff: 300.MB
