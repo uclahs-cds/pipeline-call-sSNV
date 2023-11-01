@@ -1,8 +1,8 @@
 ---
 patient_id: 'patient_id'
 input:
-  normal:
-    - BAM: /path/to/normal.bam
-  tumor:
-    - BAM: /path/to/tumor.bam
-      contamination_table: /path/to/contamination.table
+    normal:
+      - BAM: /path/to/normal.bam
+    tumor:
+      - BAM: /path/to/tumor.bam
+        contamination_table: /path/to/contamination.table

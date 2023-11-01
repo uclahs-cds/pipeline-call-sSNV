@@ -1,6 +1,6 @@
 ---
 patient_id: 'TWGSAMIN000001'
 input:
-  tumor:
-      BAM: /hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
-      contamination_table: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n1_getpileupsummaries_calculatecontamination.table
+    tumor:
+      - BAM: /hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
+        contamination_table: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n1_getpileupsummaries_calculatecontamination.table
