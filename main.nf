@@ -49,16 +49,16 @@ log.info """\
         tumor_only_mode: ${params.tumor_only_mode}
 """
 
-//if (params.max_cpus < 16 || params.max_memory < 30) {
-//    if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
-//        error """\
-//        ------------------------------------
-//        ERROR: Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory.
-//        ------------------------------------
-//        To run Mutect2 or MuSE. this pipeline requires at least 16 CPUs and 32 GB of memory.
-//        """
-//        }
-//    }
+if (params.max_cpus < 16 || params.max_memory < 30) {
+    if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
+        error """\
+        ------------------------------------
+        ERROR: Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory.
+        ------------------------------------
+        To run Mutect2 or MuSE. this pipeline requires at least 16 CPUs and 32 GB of memory.
+        """
+        }
+    }
 
 include { somaticsniper } from './module/somaticsniper' addParams(
     workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
