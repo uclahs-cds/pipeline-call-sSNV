@@ -41,12 +41,24 @@ workflow strelka2 {
         filter_VCF_BCFtools(call_sSNV_Strelka2.out.snvs_gzvcf
             .mix(call_sSNV_Strelka2.out.indels_gzvcf))
 //  combine ids with each of the filtered strelka outputs (SNV and INDEL)
-        filter_VCF_BCFtools.out.gzvcf.map{ it -> [it, params.normal_id]}.map { it[1] }.set{ normal_id_ch }
-        filter_VCF_BCFtools.out.gzvcf.map{ it -> [it, params.tumor_id]}.map { it[1] }.set{ tumor_id_ch }
-        rename_samples_BCFtools(normal_id_ch, tumor_id_ch, filter_VCF_BCFtools.out.gzvcf)
+        filter_VCF_BCFtools.out.gzvcf
+            .map{ it -> [it, params.normal_id] }
+            .map { it[1] }
+            .set{ normal_id_ch }
+        filter_VCF_BCFtools.out.gzvcf
+            .map{ it -> [it, params.tumor_id] }
+            .map { it[1] }
+            .set{ tumor_id_ch }
+        rename_samples_BCFtools(
+            normal_id_ch,
+            tumor_id_ch,
+            filter_VCF_BCFtools.out.gzvcf
+            )
         compress_index_VCF(rename_samples_BCFtools.out.gzvcf)
-        file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["strelka2-${it[0]}-vcf", it[1]] }
-            .mix( compress_index_VCF.out.index_out.map{ it -> ["strelka2-${it[0]}-index", it[2]] } )
+        file_for_sha512 = compress_index_VCF.out.index_out
+            .map{ it -> ["strelka2-${it[0]}-vcf", it[1]] }
+            .mix( compress_index_VCF.out.index_out
+            .map{ it -> ["strelka2-${it[0]}-index", it[2]] } )
         generate_sha512sum(file_for_sha512)
     emit:
         gzvcf = compress_index_VCF.out.index_out

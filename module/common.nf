@@ -72,8 +72,8 @@ process rename_samples_BCFtools {
         saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    val normal_id 
-    val tumor_id 
+    val normal_id
+    val tumor_id
     tuple val(var_type), path(vcf)
 
     output:
@@ -86,7 +86,9 @@ process rename_samples_BCFtools {
     set -euo pipefail
     echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
     echo -e 'TUMOR\t${tumor_id}' >> ${params.output_filename}_samples.txt
-    bcftools reheader -s ${params.output_filename}_samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
+    bcftools reheader -s ${params.output_filename}_samples.txt \
+        --output ${params.output_filename}_${var_type}.vcf.gz \
+        ${vcf}
     """
     }
 

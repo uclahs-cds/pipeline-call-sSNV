@@ -11,17 +11,6 @@ include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modul
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
-params.sample_id = sanitize_string(params.sample_name)
-params.output_base = params.output_dir_base.replace(params.sample_name, params.sample_id)
-params.log_output = params.log_output_dir.replace(params.sample_name, params.sample_id)
-
-if (params.single_NT_paired) {
-    def tumorSample = params.samples_to_process.find { it['sample_type'] == 'tumor' }
-    params.tumor_id = sanitize_string(tumorSample['id'])
-    def normalSample = params.samples_to_process.find { it['sample_type'] == 'normal' }
-    params.normal_id = sanitize_string(normalSample['id'])
-}
-
 log.info """\
     ------------------------------------
     C A L L - S S N V    P I P E L I N E
@@ -46,8 +35,8 @@ log.info """\
         intersect_regions: ${params.intersect_regions}
 
     - output:
-        output_dir: ${params.output_base}
-        log_output_dir: ${params.log_output}
+        output_dir: ${params.output_dir_base}
+        log_output_dir: ${params.log_output_dir}
 
     - option:
         ucla_cds: ${params.ucla_cds}
@@ -60,50 +49,49 @@ log.info """\
         tumor_only_mode: ${params.tumor_only_mode}
 """
 
-if (params.max_cpus < 16 || params.max_memory < 30) {
-    if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
-        error """\
-        ------------------------------------
-        ERROR: Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory.
-        ------------------------------------
-        To run Mutect2 or MuSE. this pipeline requires at least 16 CPUs and 32 GB of memory.
-        """
-        }
-    }
-
+//if (params.max_cpus < 16 || params.max_memory < 30) {
+//    if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
+//        error """\
+//        ------------------------------------
+//        ERROR: Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory.
+//        ------------------------------------
+//        To run Mutect2 or MuSE. this pipeline requires at least 16 CPUs and 32 GB of memory.
+//        """
+//        }
+//    }
 
 include { somaticsniper } from './module/somaticsniper' addParams(
-    workflow_output_dir: "${params.output_base}/SomaticSniper-${params.somaticsniper_version}",
-    workflow_log_output_dir: "${params.log_output}/process-log/SomaticSniper-${params.somaticsniper_version}",
+    workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
     output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { strelka2 } from './module/strelka2' addParams(
-    workflow_output_dir: "${params.output_base}/Strelka2-${params.strelka2_version}",
-    workflow_log_output_dir: "${params.log_output}/process-log/Strelka2-${params.strelka2_version}",
+    workflow_output_dir: "${params.output_dir_base}/Strelka2-${params.strelka2_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
     output_filename: generate_standard_filename("Strelka2-${params.strelka2_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { mutect2 } from './module/mutect2' addParams(
-    workflow_output_dir: "${params.output_base}/Mutect2-${params.GATK_version}",
-    workflow_log_output_dir: "${params.log_output}/process-log/Mutect2-${params.GATK_version}",
+    workflow_output_dir: "${params.output_dir_base}/Mutect2-${params.GATK_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
     output_filename: generate_standard_filename("Mutect2-${params.GATK_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 include { muse } from './module/muse' addParams(
-    workflow_output_dir: "${params.output_base}/MuSE-${params.MuSE_version}",
-    workflow_log_output_dir: "${params.log_output}/process-log/MuSE-${params.MuSE_version}",
+    workflow_output_dir: "${params.output_dir_base}/MuSE-${params.MuSE_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/MuSE-${params.MuSE_version}",
     output_filename: generate_standard_filename("MuSE-${params.MuSE_version}",
         params.dataset_id,
         params.sample_id,
         [:]))
 
 include { intersect } from './module/intersect' addParams(
-    workflow_output_dir: "${params.output_base}/Intersect-BCFtools-${params.BCFtools_version}",
-    workflow_log_output_dir: "${params.log_output}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
+    workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
     output_filename: generate_standard_filename("BCFtools-${params.BCFtools_version}",
         params.dataset_id,
         params.sample_id,
@@ -171,7 +159,7 @@ workflow {
     run_validate_PipeVal(file_to_validate)
     run_validate_PipeVal.out.validation_result.collectFile(
         name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.output_base}/validation"
+        storeDir: "${params.output_dir_base}/validation"
         )
 
     // Set empty channels so any unused tools don't cause failure at intersect step
@@ -190,7 +178,7 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index,
+            normal_input.normal_index
             )
             somaticsniper.out.gzvcf.set { somaticsniper_gzvcf_ch }
             somaticsniper.out.idx.set { somaticsniper_idx_ch }
@@ -200,7 +188,7 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index,
+            normal_input.normal_index
             )
             strelka2.out.gzvcf.set { strelka2_gzvcf_ch }
             strelka2.out.idx.set { strelka2_idx_ch }
@@ -210,7 +198,7 @@ workflow {
             tumor_input.tumor_bam,
             tumor_input.tumor_index,
             normal_input.normal_bam,
-            normal_input.normal_index,
+            normal_input.normal_index
             )
             muse.out.gzvcf.set { muse_gzvcf_ch }
             muse.out.idx.set { muse_idx_ch }

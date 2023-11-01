@@ -54,35 +54,6 @@ process run_SplitIntervals_GATK {
     """
     }
 
-
-process run_GetSampleName_Mutect2 {
-    container params.docker_image_GATK
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*.txt",
-        enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
-    input:
-    path bam
-
-    output:
-    env sample_name, emit: name_ch
-    path "sampleName.txt"
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-
-    gatk GetSampleName -I $bam -O sampleName.txt
-    sample_name=`cat sampleName.txt`
-
-    """
-    }
-
 process call_sSNV_Mutect2 {
     container params.docker_image_GATK
 
@@ -265,7 +236,7 @@ process run_FilterMutectCalls_GATK {
 
 process split_VCF_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
@@ -284,6 +255,45 @@ process split_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz ${vcf}
+    bcftools view \
+        --types $var_type \
+        --output-type z \
+        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}-split.vcf.gz \
+        ${vcf}
+    """
+    }
+
+    process rename_samples_Mutect2_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/output",
+        mode: "copy",
+        pattern: "*.vcf.gz*"
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*_samples.txt",
+        enabled: params.save_intermediate_files
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+
+    input:
+    tuple val(old_normal_id), val(old_tumor_id)
+    tuple val(new_normal_id), val(new_tumor_id)
+    tuple val(var_type), path(vcf)
+
+    output:
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
+    path ".command.*"
+    path "*_samples.txt"
+
+    script:
+    """
+    set -euo pipefail
+    echo -e '${old_normal_id}\t${new_normal_id}' > ${params.output_filename}_samples.txt
+    echo -e '${old_tumor_id}\t${new_tumor_id}' >> ${params.output_filename}_samples.txt
+    bcftools reheader -s ${params.output_filename}_samples.txt \
+        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz \
+        ${vcf}
     """
     }
