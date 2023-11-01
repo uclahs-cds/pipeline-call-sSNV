@@ -158,9 +158,7 @@ To run the pipeline, one `input.yaml` and one `input.config` are needed, as foll
 |-------------|--------|-------------------------------------------|
 | patient_id | string | The name/ID of the patient
 | tumor_BAM | path | The path to the tumor .bam file (.bai file must exist in same directory) |
-| tumor_id | string | The name/ID of the tumor sample    |
 | normal_BAM | path | The path to the normal .bam file (.bai file must exist in same directory) |
-| normal_id | string | The name/ID of the normal sample      |
 | contamination_table | path | Optional, but only for tumor samples. The path of the `contamination.table`, which is generated from the GATK's `CalculateContamination` in `pipeline-call-gSNP`. The contamination.table path can be found under `pipeline-call-gSNP`'s output `QC` folder
 
 * `input.yaml` should follow the standardized structure:
@@ -168,15 +166,13 @@ To run the pipeline, one `input.yaml` and one `input.config` are needed, as foll
 patient_id: 'patient_id'
 input:
   normal:
-    - id: normal_id
-      BAM: /path/to/normal.bam
+    - BAM: /path/to/normal.bam
   tumor:
-    - id: tumor_id
-      BAM: /path/to/tumor.bam
+    - BAM: /path/to/tumor.bam
       contamination_table: /path/to/contamination.table
 ```
 
-* `Mutect2` can take other inputs: tumor-only sample and one patient's multiple samples. The pipeline will define `params.tumor_only_mode`, `params.multi_tumor_sample`, and `params.multi_normal_sample`. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm.
+* `Mutect2` can take other inputs: tumor-only sample and one patient's multiple samples. For tumor-only samples, remove the normal input in `input.yaml`, e.g. [template_tumor_only.yaml](input/example-test-tumor-only.yaml). For multiple samples, put all the input BAMs in the `input.yaml`, e.g. [template_multi_sample.yaml](input/example-test-multi-sample.yaml). Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm.
 
 
 ### input.config ([see template](config/template.config))
