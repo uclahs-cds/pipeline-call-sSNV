@@ -113,20 +113,17 @@ workflow mutect2 {
             .get(0)['orig-id']
 
         split_VCF_BCFtools.out.gzvcf
-            .map { it -> [it, old_normal_id, old_tumor_id] }
-            .map { it -> [it[1], it[2]] }
+            .map { it -> [old_normal_id, old_tumor_id] }
             .set { old_names_ch}
 
         if (params.single_NT_paired) {
             split_VCF_BCFtools.out.gzvcf
-                .map { it -> [it, params.normal_id, params.tumor_id] }
-                .map { it -> [it[1], it[2]] }
+                .map { it -> [params.normal_id, params.tumor_id] }
                 .set { new_names_ch }
         } else {
             // this does not lead to any id changes and is needed to correctly track filenames
             split_VCF_BCFtools.out.gzvcf
-                .map { it -> [it, old_normal_id, old_tumor_id] }
-                .map { it -> [it[1], it[2]] }
+                .map { it -> [old_normal_id, old_tumor_id] }
                 .set { new_names_ch }
         }
         rename_samples_Mutect2_BCFtools(

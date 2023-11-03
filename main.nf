@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 nextflow.enable.dsl=2
-include { generate_standard_filename ; sanitize_string } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
+include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
 include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf' addParams(
     options: [
         docker_image_version: params.pipeval_version,

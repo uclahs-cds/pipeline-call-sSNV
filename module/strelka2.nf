@@ -42,12 +42,10 @@ workflow strelka2 {
             .mix(call_sSNV_Strelka2.out.indels_gzvcf))
 //  combine ids with each of the filtered strelka outputs (SNV and INDEL)
         filter_VCF_BCFtools.out.gzvcf
-            .map{ it -> [it, params.normal_id] }
-            .map { it[1] }
+            .map{ it -> [params.normal_id] }
             .set{ normal_id_ch }
         filter_VCF_BCFtools.out.gzvcf
-            .map{ it -> [it, params.tumor_id] }
-            .map { it[1] }
+            .map{ it -> [params.tumor_id] }
             .set{ tumor_id_ch }
         rename_samples_BCFtools(
             normal_id_ch,
