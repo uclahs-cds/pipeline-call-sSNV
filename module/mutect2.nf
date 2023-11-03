@@ -27,13 +27,13 @@ workflow mutect2 {
             }
 
         // to avoid input file name collision or null input error in Mutect2
-        if ( params.multi_tumor_sample ) {
+//        if ( params.multi_tumor_sample ) {
             contamination_table
                 .flatten()
                 .unique()
                 .filter{ it !== null }
                 .set { contamination_table }
-            }
+//            }
 
         run_SplitIntervals_GATK(
             params.intersect_regions,
