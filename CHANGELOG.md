@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Update `MuSE` to `v2.0.4`
 - Add BigDecimal to `check_if_number` validation
 
 ## [7.0.0] - 2023-10-18
 
 ### Changed
-- Update `MuSE` to `v2.0.4`
 - Use `bzip2` directly for compression
 
 ## [7.0.0-rc.2] - 2023-10-05
