@@ -45,8 +45,8 @@ workflow intersect {
         reorder_samples_BCFtools(
             tool_gzvcfs_ch,
             tool_indices_ch,
-            params.normal_id,
-            params.tumor_id
+            params.tumor_id,
+            params.normal_id
             )
         compress_index_VCF_reordered(reorder_samples_BCFtools.out.gzvcf
             .map{ it -> ["${getToolName(it)}-SNV", it]}

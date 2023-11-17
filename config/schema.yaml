@@ -43,7 +43,7 @@ exome:
   help: 'The exome option when running manta and strelka2'
 save_intermediate_files:
   type: 'Bool'
-  required: true
+  required: false
   default: false
   help: 'The option to save the intermediate files'
 bgzip_extra_args:

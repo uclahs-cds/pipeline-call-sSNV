@@ -12,8 +12,8 @@ Mutect2 Options:
 - gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
 - scatter_count:                  ${params.scatter_count}
 - intervals:                      ${params.intersect_regions}
-- tumor_only_mode:                ${params.tumor_only_mode}
-- use_contamination_estimation:   ${params.use_contamination_estimation}
+- single tumor normal pair:       ${params.single_NT_paired}
+- germline resource:              ${params.germline_resource_gnomad_vcf}
 - contamination_table:            ${params.input.tumor.contamination_table}
 """
 
@@ -37,7 +37,8 @@ process run_SplitIntervals_GATK {
     path reference_dict
 
     output:
-    path 'interval-files/*-scattered.interval_list', emit: interval_list
+//    path 'interval-files/*-scattered.interval_list', emit: interval_list
+    path 'interval-files/000[01]-scattered.interval_list', emit: interval_list
     path ".command.*"
 
     script:
@@ -90,7 +91,7 @@ process call_sSNV_Mutect2 {
     tumors = tumor.collect { "-I '$it'" }.join(' ')
     normals = normal.collect { "-I '$it'" }.join(' ')
     normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam = params.tumor_only_mode ? "$tumors" : "$tumors $normals $normal_names"
+    bam = normal_names == '-normal none' ? "$tumors" : "$tumors $normals $normal_names"
     germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
     interval_id = interval.baseName.split('-')[0]
     """
@@ -220,7 +221,8 @@ process run_FilterMutectCalls_GATK {
     path "*_filteringStats.tsv"
 
     script:
-    contamination = params.use_contamination_estimation ? contamination_estimation.collect { "--contamination-table '$it'" }.join(' ') : ""
+    tables = contamination_estimation.collect { "--contamination-table '$it'" }.join(' ')
+    contamination = tables == "--contamination-table 'none'" ? "" : tables
     """
     set -euo pipefail
     gatk FilterMutectCalls \
@@ -278,8 +280,7 @@ process split_VCF_BCFtools {
         saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    tuple val(old_normal_id), val(old_tumor_id)
-    tuple val(new_normal_id), val(new_tumor_id)
+    val ids
     tuple val(var_type), path(vcf)
 
     output:
@@ -288,10 +289,13 @@ process split_VCF_BCFtools {
     path "*_samples.txt"
 
     script:
+    rename_lines = ids
+        .collect { "${it['orig_id']}\t${it['id']}" }
+        .unique()
+        .join("\n")
     """
     set -euo pipefail
-    echo -e '${old_normal_id}\t${new_normal_id}' > ${params.output_filename}_samples.txt
-    echo -e '${old_tumor_id}\t${new_tumor_id}' >> ${params.output_filename}_samples.txt
+    echo -e '${rename_lines}' > ${params.output_filename}_samples.txt
     bcftools reheader -s ${params.output_filename}_samples.txt \
         --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz \
         ${vcf}
