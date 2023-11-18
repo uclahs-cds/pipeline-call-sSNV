@@ -37,7 +37,6 @@ process run_SplitIntervals_GATK {
     path reference_dict
 
     output:
-//    path 'interval-files/000[01]-scattered.interval_list', emit: interval_list
     path 'interval-files/*-scattered.interval_list', emit: interval_list
     path ".command.*"
 
