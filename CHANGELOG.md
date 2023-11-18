@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Update `MuSE` to `v2.0.4`
 - resource limit check now from submodule
 - Add BigDecimal to `check_if_number` validation
 
