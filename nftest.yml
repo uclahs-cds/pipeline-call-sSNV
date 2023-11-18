@@ -58,19 +58,11 @@ cases:
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
         method: md5
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more_TWGSAMIN_S2-v1.1.5_README.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/isec-1-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_README.txt
-        method: md5
-
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more_TWGSAMIN_S2-v1.1.5_sites.txt
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/isec-1-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more_TWGSAMIN_S2-v1.1.5_README.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_README.txt
-        method: md5
-
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more_TWGSAMIN_S2-v1.1.5_sites.txt
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
@@ -162,19 +154,11 @@ cases:
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-two-tools/S2-v1.1.5/Intersect-BCFtools-1.17/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
         method: md5
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more_TWGSAMIN_S2-v1.1.5_README.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-two-tools/S2-v1.1.5/Intersect-BCFtools-1.17/isec-1-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_README.txt
-        method: md5
-
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more_TWGSAMIN_S2-v1.1.5_sites.txt
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-two-tools/S2-v1.1.5/Intersect-BCFtools-1.17/isec-1-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more_TWGSAMIN_S2-v1.1.5_README.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-two-tools/S2-v1.1.5/Intersect-BCFtools-1.17/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_README.txt
-        method: md5
-
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more_TWGSAMIN_S2-v1.1.5_sites.txt
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-two-tools/S2-v1.1.5/Intersect-BCFtools-1.17/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 

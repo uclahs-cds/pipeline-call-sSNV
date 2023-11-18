@@ -167,7 +167,6 @@ workflow {
         )
 
 // Set empty channels so any unused tools don't cause failure at intersect step
-// (change this convoluted method)
     Channel.empty().set { somaticsniper_gzvcf_ch }
     Channel.empty().set { strelka2_gzvcf_ch }
     Channel.empty().set { mutect2_gzvcf_ch }
