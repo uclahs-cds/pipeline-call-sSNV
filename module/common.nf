@@ -57,11 +57,11 @@ process generate_sha512sum {
     """
     }
 
-process rename_samples_BCFtools {
+    process rename_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*.vcf.gz*"
+        pattern: "*.vcf"
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*_samples.txt",
@@ -72,24 +72,29 @@ process rename_samples_BCFtools {
         saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    val normal_id
-    val tumor_id
+    val ids
     tuple val(var_type), path(vcf)
 
     output:
-    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
+    tuple val(var_type), path("*.vcf"), emit: vcf
     path ".command.*"
     path "*_samples.txt"
 
     script:
+    rename_lines = ids
+        .collect { "${it['orig_id']}\t${it['id']}" }
+        .join("\n")
+    sed_replacements = ids
+        .collect { "sed 's/ample=${it['orig_id']}/ample=${it['id']}/g'" }
+        .join(" | ")
     """
     set -euo pipefail
-    echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
-    echo -e 'TUMOR\t${tumor_id}' >> ${params.output_filename}_samples.txt
-    bcftools reheader -s ${params.output_filename}_samples.txt \
-        --output ${params.output_filename}_${var_type}.vcf.gz \
-        ${vcf}
-    """
+    echo -e '${rename_lines}' > ${params.output_filename}_samples.txt
+    bcftools reheader -s ${params.output_filename}_samples.txt ${vcf} \
+        | gunzip -c \
+        | ${sed_replacements} \
+        > ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf \
+        """
     }
 
 process compress_file_bzip2 {

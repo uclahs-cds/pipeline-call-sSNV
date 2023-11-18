@@ -37,8 +37,8 @@ process run_SplitIntervals_GATK {
     path reference_dict
 
     output:
-//    path 'interval-files/*-scattered.interval_list', emit: interval_list
-    path 'interval-files/000[01]-scattered.interval_list', emit: interval_list
+//    path 'interval-files/000[01]-scattered.interval_list', emit: interval_list
+    path 'interval-files/*-scattered.interval_list', emit: interval_list
     path ".command.*"
 
     script:
@@ -261,43 +261,6 @@ process split_VCF_BCFtools {
         --types $var_type \
         --output-type z \
         --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}-split.vcf.gz \
-        ${vcf}
-    """
-    }
-
-    process rename_samples_Mutect2_BCFtools {
-    container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/output",
-        mode: "copy",
-        pattern: "*.vcf.gz*"
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*_samples.txt",
-        enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
-
-    input:
-    val ids
-    tuple val(var_type), path(vcf)
-
-    output:
-    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
-    path ".command.*"
-    path "*_samples.txt"
-
-    script:
-    rename_lines = ids
-        .collect { "${it['orig_id']}\t${it['id']}" }
-        .unique()
-        .join("\n")
-    """
-    set -euo pipefail
-    echo -e '${rename_lines}' > ${params.output_filename}_samples.txt
-    bcftools reheader -s ${params.output_filename}_samples.txt \
-        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz \
         ${vcf}
     """
     }

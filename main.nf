@@ -40,6 +40,12 @@ log.info """\
         docker_container_registry: ${params.docker_container_registry}
         bgzip_extra_args = ${params.bgzip_extra_args}
         tabix_extra_args = ${params.tabix_extra_args}
+
+    - sample names extracted from input BAM files and sanitized:
+        tumor_in: ${params.samples_to_process.findAll{ it.sample_type == 'tumor' }['orig_id']}
+        tumor_out: ${params.samples_to_process.findAll{ it.sample_type == 'tumor' }['id']}
+        normal_in: ${params.samples_to_process.findAll{ it.sample_type == 'normal' }['orig_id']}
+        normal_out: ${params.samples_to_process.findAll{ it.sample_type == 'normal' }['id']}
 """
 
 if (params.max_cpus < 8 || params.max_memory < 16) {
@@ -131,7 +137,6 @@ script_dir_ch = Channel.fromPath(
     "$projectDir/r-scripts",
     checkIfExists: true
     )
-
 
 workflow {
 // Input file validation

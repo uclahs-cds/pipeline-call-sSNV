@@ -41,18 +41,17 @@ workflow strelka2 {
         filter_VCF_BCFtools(call_sSNV_Strelka2.out.snvs_gzvcf
             .mix(call_sSNV_Strelka2.out.indels_gzvcf))
 //  combine ids with each of the filtered strelka outputs (SNV and INDEL)
-        filter_VCF_BCFtools.out.gzvcf
-            .map{ it -> params.normal_id }
-            .set{ normal_id_ch }
-        filter_VCF_BCFtools.out.gzvcf
-            .map{ it -> params.tumor_id }
-            .set{ tumor_id_ch }
+        Channel.from([['TUMOR', params.tumor_id], ['NORMAL', params.normal_id]])
+            .map{ it -> ['orig_id': it[0], 'id': it[1]] }
+            .collect()
+            .combine(filter_VCF_BCFtools.out.gzvcf)
+            .map { it.take(it.size() -2) }
+            .set { rename_ids }
         rename_samples_BCFtools(
-            normal_id_ch,
-            tumor_id_ch,
+            rename_ids,
             filter_VCF_BCFtools.out.gzvcf
             )
-        compress_index_VCF(rename_samples_BCFtools.out.gzvcf)
+        compress_index_VCF(rename_samples_BCFtools.out.vcf)
         file_for_sha512 = compress_index_VCF.out.index_out
             .map{ it -> ["strelka2-${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out
