@@ -34,7 +34,7 @@ workflow muse {
             .collect()
             .set { rename_ids }
         rename_samples_BCFtools(rename_ids, filter_VCF_BCFtools.out.gzvcf)
-        compress_index_VCF(rename_samples_BCFtools.out.vcf)
+        compress_index_VCF(rename_samples_BCFtools.out.gzvcf)
         file_for_sha512 = compress_index_VCF.out.index_out.map{ it -> ["muse-${it[0]}-vcf", it[1]] }
             .mix(compress_index_VCF.out.index_out.map{ it -> ["muse-${it[0]}-index", it[2]] })
         generate_sha512sum(file_for_sha512)

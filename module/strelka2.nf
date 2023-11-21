@@ -51,7 +51,7 @@ workflow strelka2 {
             rename_ids,
             filter_VCF_BCFtools.out.gzvcf
             )
-        compress_index_VCF(rename_samples_BCFtools.out.vcf)
+        compress_index_VCF(rename_samples_BCFtools.out.gzvcf)
         file_for_sha512 = compress_index_VCF.out.index_out
             .map{ it -> ["strelka2-${it[0]}-vcf", it[1]] }
             .mix( compress_index_VCF.out.index_out

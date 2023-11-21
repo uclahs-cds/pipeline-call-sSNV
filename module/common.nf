@@ -61,11 +61,7 @@ process rename_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
-        pattern: "*.vcf"
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*_samples.txt",
-        enabled: params.save_intermediate_files
+        pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
@@ -76,25 +72,24 @@ process rename_samples_BCFtools {
     tuple val(var_type), path(vcf)
 
     output:
-    tuple val(var_type), path("*.vcf"), emit: vcf
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
-    path "*_samples.txt"
 
     script:
-    rename_lines = ids
-        .collect { "${it['orig_id']}\t${it['id']}" }
-        .join("\n")
     sed_replacements = ids
-        .collect { "sed 's/ample=${it['orig_id']}/ample=${it['id']}/g'" }
+        .collect { "sed 's/\b${it['orig_id']}\b/${it['id']}/g'" }
         .join(" | ")
     """
     set -euo pipefail
-    echo -e '${rename_lines}' > ${params.output_filename}_samples.txt
-    bcftools reheader -s ${params.output_filename}_samples.txt ${vcf} \
-        | gunzip -c \
-        | ${sed_replacements} \
-        > ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf \
-        """
+
+    bcftools view -h ${vcf} > tmp.header
+    cat tmp.header | ${sed_replacements} > tmp.fixed.header
+
+    bcftools reheader \
+        --header tmp.fixed.header \
+        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz \
+        ${vcf}
+    """
     }
 
 process compress_file_bzip2 {
