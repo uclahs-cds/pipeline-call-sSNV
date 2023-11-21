@@ -57,7 +57,7 @@ process generate_sha512sum {
     """
     }
 
-    process rename_samples_BCFtools {
+process rename_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
