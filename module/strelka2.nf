@@ -23,7 +23,7 @@ workflow strelka2 {
             normal_bam,
             normal_index,
             params.reference,
-            "${params.reference}.fai",
+            params.reference_index,
             params.intersect_regions,
             params.intersect_regions_index
         )
@@ -33,7 +33,7 @@ workflow strelka2 {
             normal_bam,
             normal_index,
             params.reference,
-            "${params.reference}.fai",
+            params.reference_index,
             call_sIndel_Manta.out[0],
             params.intersect_regions,
             params.intersect_regions_index

@@ -21,7 +21,7 @@ workflow muse {
             normal_bam,
             normal_index,
             params.reference,
-            "${params.reference}.fai",
+            params.reference_index
         )
         run_sump_MuSE(
             call_sSNV_MuSE.out.txt,

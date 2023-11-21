@@ -143,7 +143,7 @@ workflow {
     reference_ch = Channel.from(
         params.reference,
         params.reference_index,
-        "${file(params.reference).parent / file(params.reference).baseName}.dict"
+        params.reference_dict,
         )
 
     intersect_regions_ch = Channel.from(
