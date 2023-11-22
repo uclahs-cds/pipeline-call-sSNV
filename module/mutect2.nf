@@ -98,10 +98,11 @@ workflow mutect2 {
             ['snps', 'mnps', 'indels']
         )
         rename_samples_BCFtools(
+            // combine with split_VCF_BCFtools output to duplicate the id input for each file.
             id_ch
                 .collect()
                 .combine(split_VCF_BCFtools.out.gzvcf)
-                .map { it.take(it.size() -2) }
+                .map { it.take(it.size() -2) } //remove the split_VCF_BCFtools files
             ,
             split_VCF_BCFtools.out.gzvcf
             )
