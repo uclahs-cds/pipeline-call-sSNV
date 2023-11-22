@@ -220,7 +220,7 @@ process run_FilterMutectCalls_GATK {
     path "*_filteringStats.tsv"
 
     script:
-    contamination = contamination_estimation.collect()[0] == 'none' ? "" : contamination_estimation.collect{ "--contamination-table '$it'" }.join(' ')
+    contamination = 'none' == contamination_estimation.collect().join(' ') ? "" : contamination_estimation.collect{ "--contamination-table '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk FilterMutectCalls \
