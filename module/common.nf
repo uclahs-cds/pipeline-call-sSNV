@@ -76,14 +76,17 @@ process rename_samples_BCFtools {
     path ".command.*"
 
     script:
-    sed_replacements = ids
-        .collect { "sed 's/\b${it['orig_id']}\b/${it['id']}/g'" }
+    info_replacements = ids
+        .collect { "sed 's/ample=${it['orig_id']}/ample=${it['id']}/g'" }
+        .join(" | ")
+    header_replacements = ids
+        .collect { "sed 's/\t${it['orig_id']}/\t${it['id']}/g'" }
         .join(" | ")
     """
     set -euo pipefail
 
     bcftools view -h ${vcf} > tmp.header
-    cat tmp.header | ${sed_replacements} > tmp.fixed.header
+    cat tmp.header | ${info_replacements} | ${header_replacements} > tmp.fixed.header
 
     bcftools reheader \
         --header tmp.fixed.header \
