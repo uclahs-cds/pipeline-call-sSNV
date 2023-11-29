@@ -90,7 +90,7 @@ process call_sSNV_Mutect2 {
     tumors = tumor.collect { "-I '$it'" }.join(' ')
     normals = normal.collect { "-I '$it'" }.join(' ')
     normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam = normal_names == '-normal none' ? "$tumors" : "$tumors $normals $normal_names"
+    bam = normal_names == '-normal NO_ID' ? "$tumors" : "$tumors $normals $normal_names"
     germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
     interval_id = interval.baseName.split('-')[0]
     """
@@ -220,7 +220,7 @@ process run_FilterMutectCalls_GATK {
     path "*_filteringStats.tsv"
 
     script:
-    contamination = 'none' == contamination_estimation.collect().join(' ') ? "" : contamination_estimation.collect{ "--contamination-table '$it'" }.join(' ')
+    contamination = 'NO_PATH' == contamination_estimation.collect().join(' ') ? "" : contamination_estimation.collect{ "--contamination-table '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk FilterMutectCalls \

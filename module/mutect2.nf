@@ -32,7 +32,7 @@ workflow mutect2 {
 
         normal_orig_ids = id_ch
             .filter{ it['sample_type'] == 'normal' }
-            .ifEmpty(['orig_id': 'none'])
+            .ifEmpty(['orig_id': 'NO_ID'])
             .map{ it['orig_id'] }
             .collect()
 
@@ -41,7 +41,7 @@ workflow mutect2 {
             .flatten()
             .unique()
             .filter{ it !== null }
-            .ifEmpty("${params.work_dir}/none")
+            .ifEmpty("${params.work_dir}/NO_PATH")
             .set { contamination_table }
 
         call_sSNV_Mutect2(
