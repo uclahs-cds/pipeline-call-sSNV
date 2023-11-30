@@ -48,7 +48,7 @@ log.info """\
         normal_out: ${params.samples_to_process.findAll{ it.sample_type == 'normal' }['id']}
 """
 
-if (params.max_cpus < 8 || params.max_memory < 16) {
+if (params.max_cpus < 16 || params.max_memory < 30) {
     if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
         error """\
         ------------------------------------
@@ -139,11 +139,11 @@ script_dir_ch = Channel.fromPath(
     )
 
 workflow {
-// Input file validation
+    // Input file validation
     reference_ch = Channel.from(
         params.reference,
         params.reference_index,
-        params.reference_dict,
+        params.reference_dict
         )
 
     intersect_regions_ch = Channel.from(
@@ -166,7 +166,7 @@ workflow {
         storeDir: "${params.output_dir_base}/validation"
         )
 
-// Set empty channels so any unused tools don't cause failure at intersect step
+    // Set empty channels so any unused tools don't cause failure at intersect step
     Channel.empty().set { somaticsniper_gzvcf_ch }
     Channel.empty().set { strelka2_gzvcf_ch }
     Channel.empty().set { mutect2_gzvcf_ch }
