@@ -297,7 +297,7 @@ General estimates, with wide variation, are that whole exome sequences require 1
 
 
 #### Whole Genomes
-General estimates, with wide variation, are that whole genome sequences require 72 cpus and 144 GB of memory to run all of the pipeline algorithms. Run time could be 12-24 hours or more.   If MuSE is excluded 8 cpus and 16 GB of memory are sufficient, but run time could be very very long. Run time for a test pair of WGS tumor/normal input BAMs of 400 GB/200 GB was 15 hours for 72 cpus/144 GB, and 52 hours for 8 cpus/16 GB excluding MuSE.
+General estimates, with wide variation, are that whole genome sequences require 72 cpus and 144 GB of memory to run all of the pipeline algorithms. If MuSE is excluded 8 cpus and 16 GB of memory are sufficient, but run time could be very long. Run time for a test pair of WGS tumor/normal input BAMs of 400 GB/200 GB was 15 hours for 72 cpus/144 GB, and 52 hours for 8 cpus/16 GB excluding MuSE.
 
 #### Mutect2
 Duration: 3h 25m 24s
