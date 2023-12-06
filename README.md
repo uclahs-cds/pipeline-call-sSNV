@@ -16,9 +16,7 @@
        - [vcf2maf](#vcf2maf)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
-  - [Testing and Validation](#testing-and-validation)
-    - [Test Data Set](#test-data-set)
-    - [Performance Validation](#performance-validation)
+  - [Performance Validation and Resource Requirements](#performance-validation)
   - [References](#references)
   - [Discussions](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions)
   - [Contributors](https://github.com/uclahs-cds/template-NextflowPipeline/graphs/contributors)
@@ -189,7 +187,7 @@ input:
 | `docker_container_registry` | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
 | `base_resource_update` | optional | namespace | Namespace of parameters to update base resource allocations in the pipeline. Usage and structure are detailed in `template.config` and below. |
 
- *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). A GRCh38 `bed.gz` file can be found here: `/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`. For other genome versions, you may be able to use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
+ *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). For `uclahs-cds` users, a GRCh38 `bed.gz` file can be found here: `/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`.
 
  ### Base resource allocation updaters
 To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the [input.config](config/template.config) file. The default allocations can be found in the [node-specific config files](./config/)
@@ -290,18 +288,16 @@ base_resource_update {
 | BCFtools-{version}_{sample_id}_Venn-diagram.tiff | .tiff | Venn Diagram with intersection counts for all variants (`1-or-more`)
 | BCFtools-{version}_{sample_id}_SNV-concat.vcf.gz | .vcf.gz | Single SNV VCF with all `2-or-more` variants and mixed annotation |
 | BCFtools-{version}_{sample_id}_SNV-concat.maf.gz | .maf.gz | Single SNV MAF with all `2-or-more` variants and mixed annotation |
-## Testing and Validation
-
-Testing was performed primarily in the Boutros Lab SLURM Development cluster using F72 node. Metrics below will be updated where relevant with additional testing and tuning outputs.
-
-### Test Data Set
-
-| Data Set | Run Configuration | Output Dir | Control Sample | Tumor Sample |
-| ------ | ------ | ------- | ------ | ------- |
-| A-full-P2 |/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/maotian-update-README/analysis/all/A-full/nextflow.config | /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/unreleased/maotian-update-README/analysis/all/A-full/output | HG002.N | P2 |
 
 ### Performance Validation
 Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline version used here is v4.0.0-rc.1
+
+#### Whole Exomes
+General estimates, with wide variation, are that whole exome sequences require 16 cpus and 32 GB of memory to run all of the pipeline algorithms.  If MuSE is excluded 8 cpus and 16 GB of memory are sufficient.  Run time for a pair of exome tumor/normal samples of 4-5 GB could be 1 to 2 hours.
+
+
+#### Whole Genomes
+General estimates, with wide variation, are that whole genome sequences require 72 cpus and 144 GB of memory to run all of the pipeline algorithms. Run time could be 12-24 hours or more.   If MuSE is excluded 8 cpus and 16 GB of memory are sufficient, but run time could be very very long. 
 
 #### Mutect2
 Duration: 3h 25m 24s
