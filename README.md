@@ -293,11 +293,11 @@ base_resource_update {
 Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline version used here is v4.0.0-rc.1
 
 #### Whole Exomes
-General estimates, with wide variation, are that whole exome sequences require 16 cpus and 32 GB of memory to run all of the pipeline algorithms.  If MuSE is excluded 8 cpus and 16 GB of memory are sufficient.  Run time for a pair of exome tumor/normal samples of 4-5 GB could be 1 to 2 hours.
+General estimates, with wide variation, are that whole exome sequences require 16 cpus and 32 GB of memory to run all of the pipeline algorithms.  If MuSE is excluded 8 cpus and 16 GB of memory are sufficient.  Run time for a test pair of exome tumor/normal input BAMs of 4 GB/5 GB was in both cases 1 to 2 hours.
 
 
 #### Whole Genomes
-General estimates, with wide variation, are that whole genome sequences require 72 cpus and 144 GB of memory to run all of the pipeline algorithms. Run time could be 12-24 hours or more.   If MuSE is excluded 8 cpus and 16 GB of memory are sufficient, but run time could be very very long. 
+General estimates, with wide variation, are that whole genome sequences require 72 cpus and 144 GB of memory to run all of the pipeline algorithms. Run time could be 12-24 hours or more.   If MuSE is excluded 8 cpus and 16 GB of memory are sufficient, but run time could be very very long. Run time for a test pair of WGS tumor/normal input BAMs of 400 GB/200 GB was 15 hours for 72 cpus/144 GB, and 52 hours for 8 cpus/16 GB excluding MuSE.
 
 #### Mutect2
 Duration: 3h 25m 24s
