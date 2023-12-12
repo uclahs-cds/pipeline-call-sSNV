@@ -61,32 +61,37 @@ process rename_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
-        pattern: "*.vcf.gz*"
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*_samples.txt",
-        enabled: params.save_intermediate_files
+        pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
         mode: "copy",
         pattern: ".command.*",
         saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
 
     input:
-    val normal_id 
-    val tumor_id 
+    val ids
     tuple val(var_type), path(vcf)
 
     output:
     tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
     path ".command.*"
-    path "*_samples.txt"
 
     script:
+    info_replacements = ids
+        .collect { "sed 's/ample=${it['orig_id']}/ample=${it['id']}/g'" }
+        .join(" | ")
+    header_replacements = ids
+        .collect { "sed 's/\t${it['orig_id']}/\t${it['id']}/g'" }
+        .join(" | ")
     """
     set -euo pipefail
-    echo -e 'NORMAL\t${normal_id}' > ${params.output_filename}_samples.txt
-    echo -e 'TUMOR\t${tumor_id}' >> ${params.output_filename}_samples.txt
-    bcftools reheader -s ${params.output_filename}_samples.txt --output ${params.output_filename}_${var_type}.vcf.gz ${vcf}
+
+    bcftools view -h ${vcf} > tmp.header
+    cat tmp.header | ${info_replacements} | ${header_replacements} > tmp.fixed.header
+
+    bcftools reheader \
+        --header tmp.fixed.header \
+        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz \
+        ${vcf}
     """
     }
 

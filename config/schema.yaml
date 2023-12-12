@@ -43,7 +43,7 @@ exome:
   help: 'The exome option when running manta and strelka2'
 save_intermediate_files:
   type: 'Bool'
-  required: true
+  required: false
   default: false
   help: 'The option to save the intermediate files'
 bgzip_extra_args:
@@ -119,10 +119,6 @@ input:
       required: true
       help: 'Tumor id/path input'
       elements:
-        id:
-          type: 'String'
-          required: true
-          help: 'Tumor sample id will be used for the standardized output directory'
         BAM:
           type: 'Path'
           mode: 'r'
@@ -138,10 +134,6 @@ input:
       required: false
       help: 'Normal id/path input'
       elements:
-        id:
-          type: 'String'
-          required: true
-          help: 'Normal sample id will be used to identify the normal sample'
         BAM:
           type: 'Path'
           mode: 'r'

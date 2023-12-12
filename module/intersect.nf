@@ -35,8 +35,6 @@ workflow intersect {
     tool_gzvcfs
     tool_indices
     script_dir_ch
-    normal_id
-    tumor_id
 
     main:
         tool_gzvcfs_ch = tool_gzvcfs
@@ -47,8 +45,8 @@ workflow intersect {
         reorder_samples_BCFtools(
             tool_gzvcfs_ch,
             tool_indices_ch,
-            normal_id,
-            tumor_id
+            params.tumor_id,
+            params.normal_id
             )
         compress_index_VCF_reordered(reorder_samples_BCFtools.out.gzvcf
             .map{ it -> ["${getToolName(it)}-SNV", it]}
@@ -79,8 +77,8 @@ workflow intersect {
         convert_VCF_vcf2maf(
             concat_VCFs_BCFtools.out.vcf,
             params.reference,
-            normal_id,
-            tumor_id
+            params.normal_id,
+            params.tumor_id
             )
         compress_index_VCF_concat(concat_VCFs_BCFtools.out.vcf
             .map{ it -> ['SNV', it]}

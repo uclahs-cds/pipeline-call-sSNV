@@ -12,8 +12,8 @@ Mutect2 Options:
 - gatk_command_mem_diff:          ${params.gatk_command_mem_diff}
 - scatter_count:                  ${params.scatter_count}
 - intervals:                      ${params.intersect_regions}
-- tumor_only_mode:                ${params.tumor_only_mode}
-- use_contamination_estimation:   ${params.use_contamination_estimation}
+- single tumor normal pair:       ${params.single_NT_paired}
+- germline resource:              ${params.germline_resource_gnomad_vcf}
 - contamination_table:            ${params.input.tumor.contamination_table}
 """
 
@@ -54,35 +54,6 @@ process run_SplitIntervals_GATK {
     """
     }
 
-
-process run_GetSampleName_Mutect2 {
-    container params.docker_image_GATK
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*.txt",
-        enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
-    input:
-    path bam
-
-    output:
-    env sample_name, emit: name_ch
-    path "sampleName.txt"
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-
-    gatk GetSampleName -I $bam -O sampleName.txt
-    sample_name=`cat sampleName.txt`
-
-    """
-    }
-
 process call_sSNV_Mutect2 {
     container params.docker_image_GATK
 
@@ -119,7 +90,7 @@ process call_sSNV_Mutect2 {
     tumors = tumor.collect { "-I '$it'" }.join(' ')
     normals = normal.collect { "-I '$it'" }.join(' ')
     normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
-    bam = params.tumor_only_mode ? "$tumors" : "$tumors $normals $normal_names"
+    bam = normal_names == '-normal NO_ID' ? "$tumors" : "$tumors $normals $normal_names"
     germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
     interval_id = interval.baseName.split('-')[0]
     """
@@ -249,7 +220,7 @@ process run_FilterMutectCalls_GATK {
     path "*_filteringStats.tsv"
 
     script:
-    contamination = params.use_contamination_estimation ? contamination_estimation.collect { "--contamination-table '$it'" }.join(' ') : ""
+    contamination = 'NO_PATH' == contamination_estimation.collect().join(' ') ? "" : contamination_estimation.collect{ "--contamination-table '$it'" }.join(' ')
     """
     set -euo pipefail
     gatk FilterMutectCalls \
@@ -265,7 +236,7 @@ process run_FilterMutectCalls_GATK {
 
 process split_VCF_BCFtools {
     container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/output",
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*.vcf.gz"
     publishDir path: "${params.workflow_log_output_dir}",
@@ -284,6 +255,10 @@ process split_VCF_BCFtools {
     script:
     """
     set -euo pipefail
-    bcftools view --types $var_type --output-type z --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz ${vcf}
+    bcftools view \
+        --types $var_type \
+        --output-type z \
+        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}-split.vcf.gz \
+        ${vcf}
     """
     }
