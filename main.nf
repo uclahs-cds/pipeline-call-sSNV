@@ -48,7 +48,7 @@ log.info """\
         normal_out: ${params.samples_to_process.findAll{ it.sample_type == 'normal' }['id']}
 """
 
-if (params.max_cpus < 16 || params.max_memory < 30) {
+if (params.max_cpus < 8 || params.max_memory < 16) {
     if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
         error """\
         ------------------------------------
