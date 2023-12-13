@@ -52,8 +52,8 @@ if (params.max_cpus < 8 || params.max_memory < 16) {
     if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
         throw new Exception(
             "Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory." +
-            " To run Mutect2. this pipeline requires at least 8 CPUs and 16 GB of memory." +
-            " To run MuSE. this pipeline requires at least 16 CPUs and 32 GB of memory."
+            " To run Mutect2 this pipeline requires at least 8 CPUs and 16 GB of memory." +
+            " To run MuSE this pipeline requires at least 16 CPUs and 32 GB of memory."
             )
         }
     }
@@ -61,7 +61,7 @@ else if (params.max_cpus < 16 || params.max_memory < 32) {
     if (params.algorithm.contains('muse')) {
         throw new Exception(
             "Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory." +
-            " To run MuSE. this pipeline requires at least 16 CPUs and 32 GB of memory."
+            " To run MuSE this pipeline requires at least 16 CPUs and 32 GB of memory."
             )
         }
     }
