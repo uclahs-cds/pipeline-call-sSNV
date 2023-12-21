@@ -24,6 +24,7 @@ process call_sSNV_SomaticSniper {
     path tumor
     path normal
     path reference
+    path reference_index
 
     output:
     path "*.vcf", emit: bam_somaticsniper
@@ -213,6 +214,7 @@ process generate_ReadCount_bam_readcount {
 
     input:
     path reference
+    path reference_index
     path site_list
     path tumor
     path tumor_index
