@@ -28,13 +28,22 @@ workflow somaticsniper {
     normal_index
 
     main:
-        call_sSNV_SomaticSniper(tumor_bam, normal_bam, params.reference)
+        call_sSNV_SomaticSniper(
+            tumor_bam,
+            normal_bam,
+            params.reference
+            )
         tumor_bam_path = tumor_bam
             .map{it -> ['tumor', it]}
         normal_bam_path = normal_bam
             .map{it -> ['normal', it]}
-        ch_convert_BAM2Pileup_SAMtools_bams = tumor_bam_path.mix(normal_bam_path)
-        convert_BAM2Pileup_SAMtools(ch_convert_BAM2Pileup_SAMtools_bams, params.reference)
+        ch_convert_BAM2Pileup_SAMtools_bams = tumor_bam_path
+            .mix(normal_bam_path)
+        convert_BAM2Pileup_SAMtools(
+            ch_convert_BAM2Pileup_SAMtools_bams,
+            params.reference,
+            params.reference_index
+            )
         create_IndelCandidate_SAMtools(convert_BAM2Pileup_SAMtools.out.raw_pileup)
 
         // tumor and normal need to be processed seperately.

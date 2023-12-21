@@ -66,6 +66,7 @@ process convert_BAM2Pileup_SAMtools {
     input:
     tuple val(type), path(bam)
     path reference
+    path reference_index
 
     output:
     tuple val(type), path("${params.output_filename}_raw-${type}.pileup"), emit: raw_pileup
