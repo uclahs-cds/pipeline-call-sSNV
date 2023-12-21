@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Pass reference index to `SomaticSniper` processes
+
 ## [8.0.0-rc.1] - 2023-12-13
 
 ### Changed
