@@ -112,7 +112,6 @@ def indexFile(bam_or_vcf) {
         }
     }
 
-
 Channel
     .from( params.samples_to_process )
         .filter{ it.sample_type == 'tumor' }
