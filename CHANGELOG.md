@@ -7,14 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Update GATK `v4.4.0.0` to `v4.5.0.0`
+
 ## [8.0.0-rc.1] - 2023-12-13
 
 ### Changed
 - `Strelka2` retry triggered by error code `1`
-- sample names sanitized for all output
-- sample names parsed from input BAMs
+- Sample names sanitized for all output
+- Sample names parsed from input BAMs
 - Update `MuSE` to `v2.0.4`
-- resource limit check now from submodule
+- Resource limit check now from submodule
 - Add BigDecimal to `check_if_number` validation
 
 ## [7.0.0] - 2023-10-18
