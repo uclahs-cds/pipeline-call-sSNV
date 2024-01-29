@@ -8,6 +8,7 @@ include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modul
         main_process: "./" //Save logs in <log_dir>/process-log/run_validate_PipeVal
         ]
     )
+include { indexFile } from './external/pipeline-Nextflow-module/modules/common/indexFile/main.nf'
 
 log.info """\
     ------------------------------------
@@ -105,19 +106,6 @@ include { intersect } from './module/intersect' addParams(
         params.dataset_id,
         params.sample_id,
         [:]))
-
-// Returns the index file for the given bam or vcf
-def indexFile(bam_or_vcf) {
-    if(bam_or_vcf.endsWith('.bam')) {
-        return "${bam_or_vcf}.bai"
-        }
-    else if(bam_or_vcf.endsWith('vcf.gz')) {
-        return "${bam_or_vcf}.tbi"
-        }
-    else {
-        throw new Exception("Index file for ${bam_or_vcf} file type not supported. Use .bam or .vcf.gz files.")
-        }
-    }
 
 Channel
     .from( params.samples_to_process )
