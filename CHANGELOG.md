@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [8.0.0] - 2024-01-29
 
 ### Changed
+- `Strelka2` retry triggered by error code `1`
 - Pass reference index to `SomaticSniper` processes
 - Use external `indexFile` function
 - Update submodules
 - Update GATK `v4.4.0.0` to `v4.5.0.0`
+- add `F8.config`
 
 ## [8.0.0-rc.1] - 2023-12-13
 
