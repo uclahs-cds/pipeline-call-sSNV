@@ -366,7 +366,7 @@ pipeline-call-sSNV is licensed under the GNU General Public License version 2. S
 
 This pipeline performs somatic SNV calling on a pair of normal/tumor BAMs, utilizing SomaticSniper, Strelka2, Mutect2 and MuSE.
 
-Copyright (C) 2020-2023 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2020-2024 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 

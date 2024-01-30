@@ -4,19 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [Unreleased]
 
+## [8.0.0] - 2024-01-29
+
 ### Changed
+- `Strelka2` retry triggered by error code `1`
 - Pass reference index to `SomaticSniper` processes
+- Use external `indexFile` function
+- Update submodules
 - Update GATK `v4.4.0.0` to `v4.5.0.0`
+- add `F8.config`
 
 ## [8.0.0-rc.1] - 2023-12-13
 
 ### Changed
-- `Strelka2` retry triggered by error code `1`
-- Use external `indexFile` function
-- Update submodules
 - Sample names sanitized for all output
 - Sample names parsed from input BAMs
 - Update `MuSE` to `v2.0.4`
