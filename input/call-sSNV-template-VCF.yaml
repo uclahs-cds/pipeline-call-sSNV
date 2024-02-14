@@ -1,0 +1,11 @@
+---
+patient_id: 'patient_id'
+input:
+  muse:
+    - VCF: /path/to/muse.vcf
+  mutect2:
+    - VCF: /path/to/mutect2.vcf
+  somaticsniper:
+    - VCF: /path/to/somaticsniper.vcf
+  strelka2:
+    - VCF: /path/to/strelka2.vcf
