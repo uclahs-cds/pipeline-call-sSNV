@@ -1,0 +1,14 @@
+---
+name: Nextflow Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    uses: uclahs-cds/tool-Nextflow-action/.github/workflows/nextflow-tests.yml@main
