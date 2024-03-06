@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add workflow to build and publish documentation to GitHub Pages
+- Add workflow to run Nextflow configuration regression tests
+- Add one regression test
+
 ## [8.0.0] - 2024-01-29
 
 ### Changed
