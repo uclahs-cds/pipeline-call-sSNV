@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="621px" preserveAspectRatio="none" style="width:470px;height:621px;background:#FFFFFF;" version="1.1" viewBox="0 0 470 621" width="470px" zoomAndPan="magnify"><defs/><g><!--MD5=[7208dd2ab11e4302e615decefbd72785]
+entity normal_bam--><g id="elem_normal_bam"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="169" x="7" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="83" x="17" y="29.9951">Normal BAM</text><line style="stroke:#181818;stroke-width:1.0;" x1="8" x2="175" y1="33.2969" y2="33.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="8" x2="175" y1="35.2969" y2="35.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="149" x="17" y="50.292">Input: normal BAM file</text></g><!--MD5=[f2d67d33cd25f2be41fb883452e52018]
+entity tumor_bam--><g id="elem_tumor_bam"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="163" x="211" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80" x="221" y="29.9951">Tumor BAM</text><line style="stroke:#181818;stroke-width:1.0;" x1="212" x2="373" y1="33.2969" y2="33.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="212" x2="373" y1="35.2969" y2="35.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143" x="221" y="50.292">Input: tumor BAM file</text></g><!--MD5=[e4b95a7332e919e8bf5b3d9f9f3eac4f]
+entity muse_call_run--><g id="elem_muse_call_run"><rect fill="#FFFFFF" height="76.8906" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="193" x="95" y="128"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65" x="105" y="150.9951">MuSE call</text><line style="stroke:#181818;stroke-width:1.0;" x1="96" x2="287" y1="154.2969" y2="154.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="96" x2="287" y1="156.2969" y2="156.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="169" x="105" y="171.292">Output: position-specific</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128" x="105" y="187.5889">summary statistics</text></g><!--MD5=[c6b37515c8d2cb7b67b9ca296cb292d7]
+entity dbsnp_file--><g id="elem_dbsnp_file"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="141" x="323" y="136"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="46" x="333" y="158.9951">dbSNP</text><line style="stroke:#181818;stroke-width:1.0;" x1="324" x2="463" y1="162.2969" y2="162.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="324" x2="463" y1="164.2969" y2="164.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="121" x="333" y="179.292">Input: dbSNP VCF</text></g><!--MD5=[e6fe28e4e1f1dd4df5878c2c799c2252]
+entity muse_sump_run--><g id="elem_muse_sump_run"><rect fill="#FFFFFF" height="76.8906" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="214" x="185.5" y="265"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="82" x="195.5" y="287.9951">MuSE sump</text><line style="stroke:#181818;stroke-width:1.0;" x1="186.5" x2="398.5" y1="291.2969" y2="291.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="186.5" x2="398.5" y1="293.2969" y2="293.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="190" x="195.5" y="308.292">Output: VCF with tier-based</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="195.5" y="324.5889">quality cutoffs</text></g><!--MD5=[33d67f4a9077e9ad241bd3a12f7b8c57]
+entity filter_vcf--><g id="elem_filter_vcf"><rect fill="#90EE90" height="93.1875" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="193" x="196" y="402"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="206" y="424.9951">Filter VCF</text><line style="stroke:#181818;stroke-width:1.0;" x1="197" x2="388" y1="428.2969" y2="428.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="197" x2="388" y1="430.2969" y2="430.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="169" x="206" y="445.292">Output: VCF with top tier</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="116" x="206" y="461.5889">somatic variants:</text><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="74" x="206" y="477.8857">SNV.vcf.gz</text></g><!--MD5=[72d70325b00a3221cb918925ba3ce7ff]
+link tumor_bam to muse_call_run--><g id="link_tumor_bam_muse_call_run"><path codeLine="19" d="M249.5,68.07 C249.5,68.07 249.5,122.82 249.5,122.82 " fill="none" id="tumor_bam-to-muse_call_run" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="249.5,127.82,253.5,118.82,249.5,122.82,245.5,118.82,249.5,127.82" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[40f06e72ea46ff07252df219bfa5029c]
+link normal_bam to muse_call_run--><g id="link_normal_bam_muse_call_run"><path codeLine="20" d="M135.5,68.07 C135.5,68.07 135.5,122.82 135.5,122.82 " fill="none" id="normal_bam-to-muse_call_run" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="135.5,127.82,139.5,118.82,135.5,122.82,131.5,118.82,135.5,127.82" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[4fd85c5b9136191cfed7d4836f8529a3]
+link muse_call_run to muse_sump_run--><g id="link_muse_call_run_muse_sump_run"><path codeLine="21" d="M236.75,205.03 C236.75,205.03 236.75,259.79 236.75,259.79 " fill="none" id="muse_call_run-to-muse_sump_run" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="236.75,264.79,240.75,255.79,236.75,259.79,232.75,255.79,236.75,264.79" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="57" x="174.75" y="228.4769">MuSE.txt</text></g><!--MD5=[cebbe33b2db7894c96f894af8d661b07]
+link dbsnp_file to muse_sump_run--><g id="link_dbsnp_file_muse_sump_run"><path codeLine="22" d="M361.25,197.25 C361.25,197.25 361.25,259.76 361.25,259.76 " fill="none" id="dbsnp_file-to-muse_sump_run" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="361.25,264.76,365.25,255.76,361.25,259.76,357.25,255.76,361.25,264.76" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3028d96072866d9a80d627cd8a4bbcef]
+link muse_sump_run to filter_vcf--><g id="link_muse_sump_run_filter_vcf"><path codeLine="23" d="M292.5,342.36 C292.5,342.36 292.5,396.79 292.5,396.79 " fill="none" id="muse_sump_run-to-filter_vcf" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="292.5,401.79,296.5,392.79,292.5,396.79,288.5,392.79,292.5,401.79" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="47" x="240.5" y="365.6369">raw.vcf</text></g><rect fill="#DDDDDD" height="97.4844" rx="7.5" ry="7.5" style="stroke:#000000;stroke-width:1.0;" width="154" x="8" y="508.1875"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="36" x="18" y="529.1826">Color</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94" x="62" y="529.1826">Process Type</text><rect fill="#ADD8E6" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="532.4844"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="545.4795"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="62" y="545.4795">Input</text><rect fill="#FFFFFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="548.7813"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="561.7764"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87" x="62" y="561.7764">Intermediate</text><rect fill="#90EE90" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="565.0781"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="578.0732"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="48" x="62" y="578.0732">Output</text><rect fill="#FFFF00" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="581.375"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="594.3701"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="21" x="62" y="594.3701">QC</text><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="516.1875" y2="516.1875"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="532.4844" y2="532.4844"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="548.7813" y2="548.7813"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="565.0781" y2="565.0781"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="581.375" y2="581.375"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="597.6719" y2="597.6719"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="14" y1="516.1875" y2="597.6719"/><line style="stroke:#000000;stroke-width:1.0;" x1="58" x2="58" y1="516.1875" y2="597.6719"/><line style="stroke:#000000;stroke-width:1.0;" x1="156" x2="156" y1="516.1875" y2="597.6719"/><!--MD5=[3bc9914709567884efe3df298ca25450]
+@startuml muse_chart
+
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!process_legend
+
+skinparam linetype ortho
+
+$input_process(normal_bam, 'Normal BAM', 'Input: normal BAM file')
+$input_process(tumor_bam, 'Tumor BAM', 'Input: tumor BAM file')
+
+$intermediate_process(muse_call_run, "MuSE call", "Output: position-specific %newline()summary statistics")
+$input_process(dbsnp_file, 'dbSNP', 'Input: dbSNP VCF')
+$intermediate_process(muse_sump_run, "MuSE sump", "Output: VCF with tier-based %newline()quality cutoffs")
+$output_process(filter_vcf, 'Filter VCF', 'Output: VCF with top tier %newline()somatic variants: %newline()//SNV.vcf.gz//')
+
+tumor_bam -d-> muse_call_run
+normal_bam -d-> muse_call_run
+muse_call_run -d-> muse_sump_run: // MuSE.txt //
+dbsnp_file -d-> muse_sump_run
+muse_sump_run -d-> filter_vcf: // raw.vcf //
+
+$add_legend("left")
+
+@enduml
+
+@startuml muse_chart
+
+
+skinparam linetype ortho
+
+rectangle normal_bam #LightBlue as "
+Normal BAM
+====
+Input: normal BAM file"
+rectangle tumor_bam #LightBlue as "
+Tumor BAM
+====
+Input: tumor BAM file"
+
+rectangle muse_call_run #White as "
+MuSE call
+====
+Output: position-specific 
+summary statistics"
+rectangle dbsnp_file #LightBlue as "
+dbSNP
+====
+Input: dbSNP VCF"
+rectangle muse_sump_run #White as "
+MuSE sump
+====
+Output: VCF with tier-based 
+quality cutoffs"
+rectangle filter_vcf #LightGreen as "
+Filter VCF
+====
+Output: VCF with top tier 
+somatic variants: 
+//SNV.vcf.gz//"
+
+tumor_bam -d-> muse_call_run
+normal_bam -d-> muse_call_run
+muse_call_run -d-> muse_sump_run: // MuSE.txt //
+dbsnp_file -d-> muse_sump_run
+muse_sump_run -d-> filter_vcf: // raw.vcf //
+
+legend left
+  | Color | Process Type|
+  |<#LightBlue>| Input |
+  |<#White>| Intermediate |
+  |<#LightGreen>| Output |
+  |<#Yellow>| QC |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 17:34:49 GMT 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

@@ -1,0 +1,34 @@
+@startuml intersect_chart
+
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!test_rect
+!include pipeline_elements.iuml!process_legend
+
+skinparam linetype ortho
+
+$test_process(num_algos, '', 'Results from two or more algorithms?')
+$input_process(input_vcfs, 'filtered VCFs', 'Input: VCFs for all selected algorithms')
+$output_process(done, 'Exit', 'Intersect is only run if two or %newline()more algorithms were selected')
+
+$intermediate_process(intersect_vcfs_2, "BCFtools isec -n +2", "Output: SNVs found by 2 or more algorithms: %newline()* 1 VCF per algorithm %newline() * list of SNVS (README.txt, sites.txt)")
+$intermediate_process(intersect_vcfs_1, "BCFtools isec -n +1", "Output: All SNVs, including private: %newline() * list of SNVS (README.txt, sites.txt)")
+
+$output_process(plot_venn, 'VennDiagram', 'Output: plot in TIFF format showing %newline()intersection counts for all SNVs')
+$output_process(concat_vcfs, 'BCFtools concat', 'Output: Single VCF with all SNVs %newline()found by 2 or more algorithms')
+$output_process(vcf2maf, 'vcf2maf', 'Output: Single MAF with all SNVs %newline()found by 2 or more algorithms: %newline()//SNV-concat.maf.gz//')
+
+num_algos -d-> input_vcfs: true
+num_algos -d-> done: false
+input_vcfs -d-> intersect_vcfs_2
+input_vcfs -d-> intersect_vcfs_1
+intersect_vcfs_1 -d-> plot_venn
+intersect_vcfs_2 -d-> concat_vcfs: // SNV-concensus-variants.vcf.gz //
+concat_vcfs -d-> vcf2maf: // SNV-concat.vcf.gz //
+
+$add_legend("right")
+
+@enduml
