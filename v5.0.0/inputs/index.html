@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Inputs - pipeline-call-sSNV</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Inputs";
+        var mkdocs_page_input_path = "inputs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-call-sSNV
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../somatic-snv-callers/">Somatic SNV callers:</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Inputs</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#input-yaml">Input YAML</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#input-config">Input Config</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#module-specific-configuration">Module Specific Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#strelka2-specific-configuration">Strelka2 Specific Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mutect2-specific-configuration">Mutect2 Specific Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#muse-specific-configuration">MuSE Specific Configuration</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-call-sSNV</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Inputs</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v5.0.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="inputs">Inputs</h2>
+<p>To run the pipeline, one <code>input.yaml</code> and one <code>template.config</code> are needed. When running a batch of samples, <code>template.config</code> can be shared, while <code>input</code> is unique for each sample.</p>
+<h3 id="input-yaml">Input YAML</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Description</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>patient_id</td>
+<td>string</td>
+<td>The name/ID of the patient</td>
+<td>YAML File</td>
+</tr>
+<tr>
+<td>tumor_BAM</td>
+<td>string</td>
+<td>The path to the tumor .bam file (.bai file must exist in same directory)</td>
+<td>YAML File</td>
+</tr>
+<tr>
+<td>tumor_id</td>
+<td>string</td>
+<td>The name/ID of the tumor sample</td>
+<td>YAML File</td>
+</tr>
+<tr>
+<td>normal_BAM</td>
+<td>string</td>
+<td>The path to the normal .bam file (.bai file must exist in same directory)</td>
+<td>YAML File</td>
+</tr>
+<tr>
+<td>normal_id</td>
+<td>string</td>
+<td>The name/ID of the normal sample</td>
+<td>YAML File</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>input.yaml</code> should follow the standardized structure:</li>
+</ul>
+<pre><code>patient_id: 'patient_id'
+input:
+  normal:
+    - id: normal_id
+      BAM: /path/to/normal.bam
+  tumor:
+    - id: tumor_id
+      BAM: /path/to/tumor.bam
+</code></pre>
+<ul>
+<li>A template of <code>input.yaml</code> can be found <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v5.0.0/input/call-sSNV-template.yaml">here</a>.</li>
+</ul>
+<h3 id="input-config">Input Config</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Description</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dataset_id</td>
+<td>string</td>
+<td>The name/ID of the dataset</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>algorithm</td>
+<td>list</td>
+<td>List containing a combination of somaticsniper, strelka2 or mutect2</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>reference</td>
+<td>string</td>
+<td>The reference .fa file (.fai and .dict file must exist in same directory)</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>output_dir</td>
+<td>string</td>
+<td>The location where outputs will be saved</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>log_output_dir</td>
+<td>string</td>
+<td>The location where log files (.command.*) will be saved</td>
+<td></td>
+</tr>
+<tr>
+<td>Config File</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>exome</td>
+<td>boolean</td>
+<td>The option will be used by <code>Strelka2</code> and <code>MuSE</code>. When <code>true</code>, it will add the <code>--exome</code> option  to Manta and Strelka2, and <code>-E</code> option to MuSE.</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>save_intermediate_files</td>
+<td>boolean</td>
+<td>Whether to save intermediate files</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>work_dir</td>
+<td>string</td>
+<td>The path of working directory for Nextflow, storing intermediate files and logs. The default is <code>/scratch</code> with <code>ucla_cds</code> and should only be changed for testing/development. Changing this directory to <code>/hot</code> or <code>/tmp</code> can lead to high server latency and potential disk space limitations, respectively.</td>
+<td>Config File</td>
+</tr>
+</tbody>
+</table>
+<h4 id="module-specific-configuration">Module Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Description</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bgzip_extra_args</td>
+<td>string</td>
+<td>The extra option used for compressing VCFs</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>tabix_extra_args</td>
+<td>string</td>
+<td>The extra option used for indexing VCFs</td>
+<td>Config File</td>
+</tr>
+</tbody>
+</table>
+<h4 id="strelka2-specific-configuration">Strelka2 Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Description</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>call_region</td>
+<td>string</td>
+<td>Adds '--callRegions' option when running manta and strelka2</td>
+<td>Config File</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>Manta and Strelka2 call the entire genome by default, however variant calling may be restricted to an arbitrary subset of the genome by providing a region file in BED format with the <code>--callRegions</code> configuration option. See the <code>--callRegions</code> documentations here: <a href="https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions">Strelka2</a>, <a href="https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md#call-regions">Manta</a>. <code>--callRegions</code> is optional for Strelka2, but can be used to specify canonical regions to save the running time. An example of call region's bed.gz can be found and used here: <code>/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz</code>.</p>
+</li>
+<li>
+<p>The BED file's index file <code>bed.gz.tbi</code> needs to be stored in the same folder.</p>
+</li>
+<li>
+<p>In particular, as noted in Strelka's <a href="https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions">User Guide</a>:</p>
+</li>
+</ul>
+<blockquote>
+<p>Even when <code>--callRegions</code> is specified, the <code>--exome</code> flag is still required for exome or targeted data to get appropriate depth filtration behavior for non-WGS cases.</p>
+</blockquote>
+<h4 id="mutect2-specific-configuration">Mutect2 Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Description</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>split_intervals_extra_args</td>
+<td>string</td>
+<td>Additional arguments for the SplitIntervals command</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>mutect2_extra_args</td>
+<td>string</td>
+<td>Additional arguments for the Mutect2 command</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>filter_mutect_calls_extra_args</td>
+<td>string</td>
+<td>Additional arguments for the FilterMutectCalls command</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>gatk_command_mem_diff</td>
+<td>nextflow.util.MemoryUnit</td>
+<td>How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons)</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>scatter_count</td>
+<td>int</td>
+<td>Number of intervals to split the desired interval into. Mutect2 will call each interval seperately.</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>intervals</td>
+<td>string</td>
+<td>A GATK accepted interval list file containing intervals to search for somatic mutations. <br/> If empty or missing, will optimally partition canonical genome based on scatter_count and process non-canonical regions separately. This is the default use case. <br/> If specified and evaluates to a valid path, will pass that path to GATK to restrict the genomic regions searched.</td>
+<td>Config File</td>
+</tr>
+<tr>
+<td>germline_resource_gnomad_vcf</td>
+<td>path</td>
+<td>A copy of the gnomAD VCF only kept AF but stripped of all unnecessary INFO fields, currently available for GRCh38:<code>/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz</code> and GRCh37: <code>/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf</code>.</td>
+<td>Config File</td>
+</tr>
+</tbody>
+</table>
+<p>For special input, such as tumor-only sample and one patient's multiple samples, the pipeline will define <code>params.tumor_only_mode</code>, <code>params.multi_tumor_sample</code>, and <code>params.multi_normal_sample</code>. For tumor-only samples, leave the normal input in <code>input.yaml</code> empty, as <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v5.0.0/input/example-test-tumor-only.yaml">template_tumor_only.yaml</a>. For multiple samples, put all the input bams in the <code>input.yaml</code>, as <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v5.0.0/input/example-test-multi-sample.yaml">template_multi_sample.yaml</a>.</p>
+<h4 id="muse-specific-configuration">MuSE Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Description</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dbSNP</td>
+<td>path</td>
+<td>The path to dbSNP database's <code>*.vcf.gz</code></td>
+<td>Config File</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../somatic-snv-callers/" class="btn btn-neutral float-left" title="Somatic SNV callers:"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../outputs/" class="btn btn-neutral float-right" title="Outputs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/tree/v5.0.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../somatic-snv-callers/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../outputs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
