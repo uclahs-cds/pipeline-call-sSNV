@@ -9,12 +9,21 @@
     }
   },
   {
-    "version": "v1.5.0",
-    "title": "v1.5.0",
+    "version": "v2.0.0",
+    "title": "v2.0.0",
     "aliases": [
       "latest",
       "release-candidate"
     ],
+    "properties": {
+      "commit": "aaa37d866f403177fd057838a0ad1b8050b20e12",
+      "date": "2021-08-19T16:27:22-07:00"
+    }
+  },
+  {
+    "version": "v1.5.0",
+    "title": "v1.5.0",
+    "aliases": [],
     "properties": {
       "commit": "cb235b7227beef6f49c8c22c7ed0533918b0bc33",
       "date": "2021-06-18T14:07:03-07:00"
