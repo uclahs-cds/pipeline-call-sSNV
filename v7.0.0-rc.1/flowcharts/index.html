@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>pipeline-call-sSNV Flow Diagrams and Tool Links - pipeline-call-sSNV</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "pipeline-call-sSNV Flow Diagrams and Tool Links";
+        var mkdocs_page_input_path = "flowcharts.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-call-sSNV
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-calling/">Flow Diagrams - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-intersection/">Flow Diagrams - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-calling/">Pipeline Steps - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-intersection/">Pipeline Steps - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-call-sSNV</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">pipeline-call-sSNV Flow Diagrams and Tool Links</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v7.0.0-rc.1/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="pipeline-call-ssnv-flow-diagrams-and-tool-links">pipeline-call-sSNV Flow Diagrams and Tool Links</h1>
+<ul>
+<li><a href="#variant-calling">Variant Calling</a></li>
+<li><a href="#somaticsniper">SomaticSniper</a></li>
+<li><a href="#strelka2">Strelka2</a></li>
+<li><a href="#mutect2">Mutect2</a></li>
+<li><a href="#muse">MuSE</a></li>
+<li><a href="#variant-intersection">Variant Intersection</a></li>
+<li><a href="#variant-intersection">BCFtools, VennDiagram and vcf2maf</a></li>
+</ul>
+<hr />
+<h2 id="variant-calling">Variant Calling</h2>
+<h3 id="somaticsniper">SomaticSniper</h3>
+<p><img alt="Diagram" src="../somatic-sniper.svg" /></p>
+<h4 id="tools">Tools</h4>
+<h5 id="somaticsniper_1">SomaticSniper</h5>
+<p>SomaticSniper source: https://github.com/genome/somatic-sniper
+Version: SomaticSniper v1.0.5.0 (Released on Jul 16, 2015)
+GitHub Package: ghcr.io/uclahs-cds/somaticsniper:1.0.5.0</p>
+<h5 id="bam-readcount">bam-readcount</h5>
+<p>bam-readcount source: https://github.com/genome/bam-readcount
+Version: v0.8.0 Release (Released on Oct 21, 2016)
+GitHub Package: ghcr.io/uclahs-cds/bam-readcount:0.8.0</p>
+<h3 id="strelka2">Strelka2</h3>
+<p><img alt="Diagram" src="../strelka2.svg" /></p>
+<h4 id="tools_1">Tools</h4>
+<h5 id="manta">Manta</h5>
+<p>Manta source: https://github.com/Illumina/manta
+Version: v1.6.0 (Released on Jul 9, 2019)
+GitHub Package: ghcr.io/uclahs-cds/manta:1.6.0</p>
+<h5 id="strelka2_1">Strelka2</h5>
+<p>Strelka2 source: https://github.com/Illumina/strelka
+Version: v2.9.10 (Released on Nov 7, 2018)
+GitHub Package: ghcr.io/uclahs-cds/strelka2:2.9.10</p>
+<h3 id="mutect2">Mutect2</h3>
+<p><img alt="alt text" src="../mutect2_chart.svg" /></p>
+<h4 id="tools_2">Tools</h4>
+<h5 id="gatk">GATK</h5>
+<p>GATK source: https://github.com/broadinstitute/gatk
+Version: 4.2.4.1 (Released on Jan 4, 2022)
+Docker Image: broadinstitute/gatk:4.2.4.1</p>
+<h3 id="muse">MuSE</h3>
+<p><img alt="alt text" src="../muse_chart.svg?raw=true" /></p>
+<h4 id="tools_3">Tools</h4>
+<h5 id="muse_1">MuSE</h5>
+<p>MuSE source: https://github.com/wwylab/MuSE
+Version: 2.0 (Released on Aug 25, 2021)
+GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse</p>
+<h2 id="variant-intersection">Variant Intersection</h2>
+<p><img alt="alt text" src="../intersect_chart.svg?raw=true" /></p>
+<h4 id="tools_4">Tools</h4>
+<h5 id="bcftools">BCFtools</h5>
+<p>BCFtools source: https://samtools.github.io/bcftools
+Version: 1.17 (Released on Feb 21, 2023)
+GitHub Package: https://github.com/uclahs-cds/bcftools:1.17</p>
+<h5 id="venndiagram">VennDiagram</h5>
+<p>VennDiagram source: https://github.com/uclahs-cds/public-R-VennDiagram
+Version: 1.7.3 (Released on Apr 12, 2022)</p>
+<h5 id="vcf2maf">vcf2maf</h5>
+<p>vcf2maf source: ghcr.io/mskcc/vcf2maf/vcf2maf
+Version: v1.6.18
+GitHub Package: https://github.com/mskcc/vcf2maf</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/tree/v7.0.0-rc.1" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

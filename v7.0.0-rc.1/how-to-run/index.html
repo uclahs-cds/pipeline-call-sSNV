@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>How To Run - pipeline-call-sSNV</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "How To Run";
+        var mkdocs_page_input_path = "how-to-run.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-call-sSNV
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">How To Run</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-calling/">Flow Diagrams - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-intersection/">Flow Diagrams - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-calling/">Pipeline Steps - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-intersection/">Pipeline Steps - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-call-sSNV</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">How To Run</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v7.0.0-rc.1/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="how-to-run">How To Run</h2>
+<p>Below is a summary of how to run the pipeline.  See <a href="https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&amp;title=How+to+run+a+nextflow+pipeline">here</a> for more information on running Nextflow pipelines.</p>
+<blockquote>
+<p><strong>Note</strong>: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the <a href="https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+Introduction#DockerIntroduction-GitHubContainerRegistryGitHubContainerRegistry%7CSetup">Docker Introduction</a> on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.</p>
+</blockquote>
+<ol>
+<li>
+<p>The recommended way of running the pipeline is to directly use the source code located here: <code>/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/</code>, rather than cloning a copy of the pipeline.</p>
+</li>
+<li>
+<p>The source code should never be modified when running our pipelines</p>
+</li>
+<li>
+<p>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v7.0.0-rc.1/config/template.config">input config file</a></p>
+</li>
+</ol>
+<blockquote>
+<p>Make sure the reference .fa file in config file matches the reference genome in the input BAM files.</p>
+</blockquote>
+<ol>
+<li>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v7.0.0-rc.1/input/call-sSNV-template.yaml">input YAML</a></li>
+<li>The pipeline can be executed locally using the command below:</li>
+</ol>
+<pre><code class="language-bash">nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
+</code></pre>
+<p>For example,</p>
+<ul>
+<li><code>path/to/main.nf</code> could be: <code>/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf</code></li>
+<li><code>path/to/input.config</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v7.0.0-rc.1/config/template.config">template.config</a></li>
+<li><code>path/to/input.yaml</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v7.0.0-rc.1/input/call-sSNV-template.yaml">template.yaml</a></li>
+</ul>
+<p>To submit to UCLAHS-CDS's Azure cloud, use the submission script <a href="https://github.com/uclahs-cds/tool-submit-nf">here</a> with the command below:</p>
+<pre><code class="language-bash">python path/to/submit_nextflow_pipeline.py \
+    --nextflow_script path/to/main.nf \
+    --nextflow_config path/to/input.config\
+    --nextflow_yaml path/to/input.yaml \
+    --pipeline_run_name &lt;run_name&gt; \
+    --partition_type F72 \
+    --email jdoe@ucla.edu
+</code></pre>
+<blockquote>
+<p><strong>Note</strong>: Although --partition_type F2 is an available option for small data sets, Mutect2 and Muse will fail due to lack of memory.</p>
+</blockquote>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../flow-diagrams---variant-calling/" class="btn btn-neutral float-right" title="Flow Diagrams - Variant Calling">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/tree/v7.0.0-rc.1" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../flow-diagrams---variant-calling/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

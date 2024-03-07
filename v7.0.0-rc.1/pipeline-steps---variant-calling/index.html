@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Pipeline Steps - Variant Calling - pipeline-call-sSNV</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Pipeline Steps - Variant Calling";
+        var mkdocs_page_input_path = "pipeline-steps---variant-calling.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-call-sSNV
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-calling/">Flow Diagrams - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-intersection/">Flow Diagrams - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Pipeline Steps - Variant Calling</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#somaticsniper">SomaticSniper</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-somaticsniper-v1050">1. SomaticSniper v1.0.5.0</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-filter-out-ambiguous-positions">2. Filter out ambiguous positions.</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#a-get-indel-pileup-summaries">a. Get indel pileup summaries</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#b-filter-indel-pileup-outputs">b. Filter indel pileup outputs</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#c-filter-somaticsniper-vcf">c. Filter SomaticSniper VCF</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#d-summarize-alignment-information-for-retained-snv-positions">d. Summarize alignment information for retained SNV positions</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#e-final-filtering-of-snvs-using-metrics-summarized-above">e. Final filtering of SNVs using metrics summarized above</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#strelka2">Strelka2</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-manta-v160">1. Manta v1.6.0</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-strelka2-v2910">2. Strelka2 v2.9.10</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#gatk-mutect2">GATK Mutect2</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-define-intervals-for-scattering">1. Define intervals for scattering</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-call-small-somatic-variants">2. Call small somatic variants</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-merge">3. Merge</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-learn-read-orientations">4. Learn read orientations</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#5-filter">5. Filter</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-split-vcf">6. Split VCF</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#muse">MuSE</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#1-muse-call">1. MuSE call</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#2-muse-sump">2. MuSE sump</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3filter-vcf">3.Filter VCF</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-intersection/">Pipeline Steps - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-call-sSNV</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Pipeline Steps - Variant Calling</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v7.0.0-rc.1/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="pipeline-steps-variant-calling">Pipeline Steps - Variant Calling</h2>
+<h3 id="somaticsniper">SomaticSniper</h3>
+<h4 id="1-somaticsniper-v1050">1. <code>SomaticSniper</code> v1.0.5.0</h4>
+<p>Compare a pair of tumor and normal BAM files and output an unfiltered list of single nucleotide positions that are different between tumor and normal, in VCF format.</p>
+<h4 id="2-filter-out-ambiguous-positions">2. Filter out ambiguous positions.</h4>
+<p>This takes several steps, listed below, and starts with the same input files given to <code>SomaticSniper</code>. These are used to generate a list of high confidence indels to assist SNV filtering.</p>
+<h5 id="a-get-indel-pileup-summaries">a. Get indel pileup summaries</h5>
+<p>Summarize counts of reads that support reference, alternate and other alleles for given sites.  This is done for both of the input BAM files and the results are used in the next step.</p>
+<h5 id="b-filter-indel-pileup-outputs">b. Filter indel pileup outputs</h5>
+<p>Use <code>samtools.pl varFilter</code> to filter each pileup output (tumor and normal), then further filter each to keep only indels with QUAL &gt; 20. <code>samtools.pl</code> is packaged with <code>SomaticSniper</code>.</p>
+<h5 id="c-filter-somaticsniper-vcf">c. Filter SomaticSniper VCF</h5>
+<p>Use <code>snpfilter.pl</code> (packaged with <code>SomaticSniper</code>):
+i. filter VCF using normal indel pileup (from step <code>b</code>).
+ii. filter VCF output from step <code>i</code> using tumor indel pileup (from step <code>b</code>).</p>
+<h5 id="d-summarize-alignment-information-for-retained-snv-positions">d. Summarize alignment information for retained SNV positions</h5>
+<p>Extract positions from filtered VCF file and use with <code>bam-readcount</code> to generate a summary of read alignment metrics for each position.</p>
+<h5 id="e-final-filtering-of-snvs-using-metrics-summarized-above">e. Final filtering of SNVs using metrics summarized above</h5>
+<p>Use <code>fpfilter.pl</code> and <code>highconfidence.pl</code> (packaged with SomaticSniper), resulting in a final high confidence VCF file.</p>
+<h3 id="strelka2">Strelka2</h3>
+<h4 id="1-manta-v160">1. <code>Manta</code> v1.6.0</h4>
+<p>The input pair of tumor/normal BAM files are used by Manta to produce candidate small indels via the <code>Manta</code> somatic configuration protocol. <em>Note, larger (structural) variants are also produced and can be retrieved from the intermediate files directory if save intermediate files is enabled.</em></p>
+<h4 id="2-strelka2-v2910">2. <code>Strelka2</code> v2.9.10</h4>
+<p>The input pair of tumor/normal BAM files, along with the candidate small indel file produced by <code>Manta</code> are used by <code>Strelka2</code> to create lists of somatic single nucleotide and small indel variants, both in VCF format.  Lower quality variants that did not pass filtering are subsequently removed, yielding <code>.SNV-pass.vcf.gz</code> and <code>.Indel-pass.vcf.gz</code> files.</p>
+<h3 id="gatk-mutect2">GATK Mutect2</h3>
+<h4 id="1-define-intervals-for-scattering">1. Define intervals for scattering</h4>
+<p>The <code>params.intersect_regions</code> of the reference genome are split into x intervals for parallelization, where x is defined by <code>params.scatter_count</code>.</p>
+<h4 id="2-call-small-somatic-variants">2. Call small somatic variants</h4>
+<p>Call somatic variants with <code>Mutect2</code>.</p>
+<h4 id="3-merge">3. Merge</h4>
+<p>Merge scattered outputs (VCFs, statistics).</p>
+<h4 id="4-learn-read-orientations">4. Learn read orientations</h4>
+<p>Create artifact prior table based on read orientations with GATK's <code>LearnReadOrientationModel</code>.</p>
+<h4 id="5-filter">5. Filter</h4>
+<p>Filter variants with GATK's <code>FilterMutectCalls</code>, using read orientation prior table and contamination table as well as standard filters.</p>
+<h4 id="6-split-vcf">6. Split VCF</h4>
+<p>Split filtered VCF into separate files for each variant type: SNVs, MNVs and INDELs.</p>
+<h3 id="muse">MuSE</h3>
+<h4 id="1-muse-call">1. <code>MuSE call</code></h4>
+<p>Pre-filtering and calculating position-specific summary statistics using the Markov substitution model.</p>
+<h4 id="2-muse-sump">2. <code>MuSE sump</code></h4>
+<p>Computes tier-based cutoffs from a sample-specific error model.</p>
+<h4 id="3filter-vcf">3.Filter VCF</h4>
+<p><code>MuSE</code> output has SNVs labeled as <code>PASS</code> or one of <code>Tier 1-5</code> for the lower confidence calls (<code>Tier 5</code> is lowest). This step keeps only SNVs labeled <code>PASS</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../flow-diagrams---variant-intersection/" class="btn btn-neutral float-left" title="Flow Diagrams - Variant Intersection"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pipeline-steps---variant-intersection/" class="btn btn-neutral float-right" title="Pipeline Steps - Variant Intersection">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/tree/v7.0.0-rc.1" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../flow-diagrams---variant-intersection/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../pipeline-steps---variant-intersection/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
