@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Outputs - pipeline-call-sSNV</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Outputs";
+        var mkdocs_page_input_path = "outputs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-call-sSNV
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-calling/">Flow Diagrams - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-intersection/">Flow Diagrams - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-calling/">Pipeline Steps - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-intersection/">Pipeline Steps - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../inputs/">Inputs</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Outputs</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#performance-validation">Performance Validation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#whole-exomes">Whole Exomes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#whole-genomes">Whole Genomes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mutect2">Mutect2</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#somaticsniper">SomaticSniper</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#strelka2">Strelka2</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#without-callregions">without --callRegions:</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#with-callregions">with --callRegions:</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#muse-v20">MuSE v2.0</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-call-sSNV</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Outputs</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/fedaab54ed2476334b2cf5d615c3304d4c389bc3/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="outputs">Outputs</h2>
+<table>
+<thead>
+<tr>
+<th>Tool Outputs</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SomaticSniper-{version}_{sample_id}_SNV.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Filtered SNV VCF (somaticsniper)</td>
+</tr>
+<tr>
+<td>Strelka2-{version}_{sample_id}_SNV.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Filtered SNV VCF(strelka2)</td>
+</tr>
+<tr>
+<td>Strelka2-{version}_{sample_id}_Indel.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Filtered Indel VCF (strelka2)</td>
+</tr>
+<tr>
+<td>Mutect2-{version}_{sample_id}_SNV.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Filtered SNV VCF (mutect2)</td>
+</tr>
+<tr>
+<td>Mutect2-{version}_{sample_id}_Indel.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Filtered Indel VCF (mutect2)</td>
+</tr>
+<tr>
+<td>Mutect2-{version}_{sample_id}_MNV.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Filtered MNV VCF (mutect2)</td>
+</tr>
+<tr>
+<td>Mutect2-{version}_{sample_id}_filteringStats.tsv</td>
+<td>.tsv</td>
+<td>FilterMutectCalls output (mutect2 QC)</td>
+</tr>
+<tr>
+<td>MuSE-{version}_{sample_id}_SNV.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Filtered SNV VCF (MuSE)</td>
+</tr>
+<tr>
+<td>report.html, timeline.html, trace.txt</td>
+<td>.html, .txt</td>
+<td>Nextflow logs</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Intersect Outputs</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>isec-1-or-more</td>
+<td>directory</td>
+<td>BCFtools isec README.txt and sites.txt, all variants</td>
+</tr>
+<tr>
+<td>isec-2-or-more</td>
+<td>directory</td>
+<td>BCFtools isec README.txt and sites.txt, variants shared by 2 or more tools</td>
+</tr>
+<tr>
+<td>SomaticSniper-{version}_{sample_id}_consensus-variants.vcf.gz</td>
+<td>.vcf.gz</td>
+<td><code>2-or-more</code> SNV VCF</td>
+</tr>
+<tr>
+<td>Strelka2-{version}_{sample_id}_consensus-variants.vcf.gz</td>
+<td>.vcf.gz</td>
+<td><code>2-or-more</code> SNV VCF</td>
+</tr>
+<tr>
+<td>Mutect2-{version}_{sample_id}_consensus-variants.vcf.gz</td>
+<td>.vcf.gz</td>
+<td><code>2-or-more</code> SNV VCF</td>
+</tr>
+<tr>
+<td>MuSE-{version}_{sample_id}_consensus-variants.vcf.gz</td>
+<td>.vcf.gz</td>
+<td><code>2-or-more</code> SNV VCF</td>
+</tr>
+<tr>
+<td>BCFtools-{version}_{sample_id}_Venn-diagram.tiff</td>
+<td>.tiff</td>
+<td>Venn Diagram with intersection counts for all variants (<code>1-or-more</code>)</td>
+</tr>
+<tr>
+<td>BCFtools-{version}_{sample_id}_SNV-concat.vcf.gz</td>
+<td>.vcf.gz</td>
+<td>Single SNV VCF with all <code>2-or-more</code> variants and mixed annotation</td>
+</tr>
+<tr>
+<td>BCFtools-{version}_{sample_id}_SNV-concat.maf.gz</td>
+<td>.maf.gz</td>
+<td>Single SNV MAF with all <code>2-or-more</code> variants and mixed annotation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="performance-validation">Performance Validation</h3>
+<p>Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline version used here is v4.0.0-rc.1</p>
+<h4 id="whole-exomes">Whole Exomes</h4>
+<p>General estimates, with wide variation, are that whole exome sequences require 16 cpus and 32 GB of memory to run all of the pipeline algorithms.  If MuSE is excluded 8 cpus and 16 GB of memory are sufficient.  Run time for a test pair of exome tumor/normal input BAMs of 4 GB/5 GB was in both cases 1 to 2 hours.</p>
+<h4 id="whole-genomes">Whole Genomes</h4>
+<p>General estimates, with wide variation, are that whole genome sequences require 72 cpus and 144 GB of memory to run all of the pipeline algorithms. If MuSE is excluded 8 cpus and 16 GB of memory are sufficient, but run time could be very long. Run time for a test pair of WGS tumor/normal input BAMs of 400 GB/200 GB was 15 hours for 72 cpus/144 GB, and 52 hours for 8 cpus/16 GB excluding MuSE.</p>
+<h4 id="mutect2">Mutect2</h4>
+<p>Duration: 3h 25m 24s</p>
+<ul>
+<li>Process <code>call_sSNVInAssembledChromosomes_Mutect2</code> has been split into 50 intervals, so the following table shows one of those processes:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">process_name</th>
+<th style="text-align: left;">max_duration</th>
+<th style="text-align: left;">max_cpu</th>
+<th style="text-align: left;">max_peak_vmem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">call_sSNVInNonAssembledChromosomes_Mutect2</td>
+<td style="text-align: left;">32m 44s</td>
+<td style="text-align: left;">142.0%</td>
+<td style="text-align: left;">33.1 GB</td>
+</tr>
+<tr>
+<td style="text-align: left;">call_sSNVInAssembledChromosomes_Mutect2</td>
+<td style="text-align: left;">1h 20m 12s</td>
+<td style="text-align: left;">123.8%</td>
+<td style="text-align: left;">7.8 GB</td>
+</tr>
+<tr>
+<td style="text-align: left;">run_LearnReadOrientationModel_GATK</td>
+<td style="text-align: left;">31m 5s</td>
+<td style="text-align: left;">106.8%</td>
+<td style="text-align: left;">10.2 GB</td>
+</tr>
+</tbody>
+</table>
+<h4 id="somaticsniper">SomaticSniper</h4>
+<p>Duration: 9h 21m 23s</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">process_name</th>
+<th style="text-align: left;">max_duration</th>
+<th style="text-align: left;">max_cpu</th>
+<th style="text-align: left;">max_peak_vmem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">convert_BAM2Pileup_SAMtools</td>
+<td style="text-align: left;">4h 18m 29s</td>
+<td style="text-align: left;">98.2%</td>
+<td style="text-align: left;">1.9 GB</td>
+</tr>
+<tr>
+<td style="text-align: left;">call_sSNV_SomaticSniper</td>
+<td style="text-align: left;">8h 48m 45s</td>
+<td style="text-align: left;">98.7%</td>
+<td style="text-align: left;">511.6 MB</td>
+</tr>
+<tr>
+<td style="text-align: left;">generate_ReadCount_bam_readcount</td>
+<td style="text-align: left;">29m 33s</td>
+<td style="text-align: left;">75.9%</td>
+<td style="text-align: left;">261.5 MB</td>
+</tr>
+</tbody>
+</table>
+<h4 id="strelka2">Strelka2</h4>
+<p>Strelka2's runtime will be significantly improved when using <code>--callRegions</code> option to exclude the non-canoincal regions of the genome, here is the results of CPCG0196:
+Sample: CPCG0196
+Normal BAM: <code>/hot/software/pipeline/pipeline-align-DNA/Nextflow/development/outputs/bwa-mem2_and_hisat2-2.2.1/bwa-mem2/bams/a-full-CPCG0196-B1/align-DNA-20210424-024139/pipeline-alignDNA.inputs.CPCG0196-B1.bam</code>
+Tumor BAM: <code>/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-T001-P01-F.bam</code></p>
+<h5 id="without-callregions">without <code>--callRegions</code>:</h5>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">process_name</th>
+<th style="text-align: left;">max_duration</th>
+<th style="text-align: left;">max_cpu</th>
+<th style="text-align: left;">max_peak_vmem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">call_sIndel_Manta</td>
+<td style="text-align: left;">1h 24m 26s</td>
+<td style="text-align: left;">2724.2%</td>
+<td style="text-align: left;">23.2 GB</td>
+</tr>
+<tr>
+<td style="text-align: left;">call_sSNV_Strelka2</td>
+<td style="text-align: left;">22h 32m 24s</td>
+<td style="text-align: left;">511.3%</td>
+<td style="text-align: left;">17.4 GB</td>
+</tr>
+</tbody>
+</table>
+<h5 id="with-callregions">with <code>--callRegions</code>:</h5>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">process_name</th>
+<th style="text-align: left;">max_duration</th>
+<th style="text-align: left;">max_cpu</th>
+<th style="text-align: left;">max_peak_vmem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">call_sIndel_Manta</td>
+<td style="text-align: left;">1h 35m 25s</td>
+<td style="text-align: left;">1848.6%</td>
+<td style="text-align: left;">11.7 GB</td>
+</tr>
+<tr>
+<td style="text-align: left;">call_sSNV_Strelka2</td>
+<td style="text-align: left;">59m 19s</td>
+<td style="text-align: left;">3234.0%</td>
+<td style="text-align: left;">8.2 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, we strongly suggest to use the <code>--callRegions</code> if the non-canonical region is unnecessary. <code>-callRegions</code>'s input <code>bed.gz</code> file can be found here: <code>/hot/ref/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz</code>. For other genome version, you can use <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">UCSC Liftover</a> to convert.</p>
+<h4 id="muse-v20">MuSE v2.0</h4>
+<p>MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
+Duration: 1d 11h 6m 54s</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">process_name</th>
+<th style="text-align: left;">max_duration</th>
+<th style="text-align: left;">max_cpu</th>
+<th style="text-align: left;">max_peak_vmem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">call_sSNV_MuSE</td>
+<td style="text-align: left;">3h 44m 15s</td>
+<td style="text-align: left;">3181.7%</td>
+<td style="text-align: left;">60.4 GB</td>
+</tr>
+<tr>
+<td style="text-align: left;">run_sump_MuSE</td>
+<td style="text-align: left;">1d 7h 22m 2s</td>
+<td style="text-align: left;">100.0%</td>
+<td style="text-align: left;">41.6 GB</td>
+</tr>
+</tbody>
+</table>
+<hr />
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../inputs/" class="btn btn-neutral float-left" title="Inputs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../references/" class="btn btn-neutral float-right" title="References">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../inputs/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../references/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
