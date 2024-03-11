@@ -1,0 +1,821 @@
+{
+  "nextflow_version": "23.10.0",
+  "config": [
+    "test/global.config",
+    "test/config/a_mini-all-tools.config"
+  ],
+  "params_file": "test/yaml/a_mini_n2-std-input.yaml",
+  "cpus": 32,
+  "memory_gb": 64,
+  "nf_params": {
+    "output_dir": "/tmp/outputs"
+  },
+  "envvars": {
+    "SLURM_JOB_ID": "8543"
+  },
+  "mocks": {
+    "check_path": "",
+    "parse_bam_header": {
+      "read_group": [
+        {
+          "SM": "0192847"
+        }
+      ]
+    }
+  },
+  "dated_fields": [
+    "params.log_output_dir",
+    "report.file",
+    "timeline.file",
+    "trace.file",
+    "params.date"
+  ],
+  "expected_result": {
+    "docker": {
+      "all_group_ids": "$(for i in `id --real --groups`; do echo -n \"--group-add=$i \"; done)",
+      "enabled": true,
+      "runOptions": "-u $(id -u):$(id -g) $(for i in `id --real --groups`; do echo -n \"--group-add=$i \"; done)",
+      "uid_and_gid": "-u $(id -u):$(id -g)"
+    },
+    "manifest": {
+      "author": "Yuan Zhe (Caden) Bugh, Mao Tian, Sorel Fitz-Gibbon",
+      "homePage": "https://github.com/uclahs-cds/pipeline-call-sSNV",
+      "mainScript": "main.nf",
+      "name": "call-sSNV",
+      "nextflowVersion": ">=20.07.1",
+      "version": "8.0.0"
+    },
+    "params": {
+      "BCFtools_version": "1.17",
+      "GATK_version": "4.5.0.0",
+      "MuSE_version": "2.0.4",
+      "algorithm": [
+        "somaticsniper",
+        "strelka2",
+        "mutect2",
+        "muse"
+      ],
+      "bam_readcount_version": "0.8.0",
+      "bgzip_extra_args": "",
+      "cache_intermediate_pipeline_steps": false,
+      "call_ssnv_r_version": "dev",
+      "dataset_id": "TWGSAMIN",
+      "dbSNP": "/hot/ref/database/dbSNP-155/original/GRCh38/GCF_000001405.39.gz",
+      "docker_container_registry": "ghcr.io/uclahs-cds",
+      "docker_image_BCFtools": "ghcr.io/uclahs-cds/bcftools:1.17",
+      "docker_image_GATK": "broadinstitute/gatk:4.5.0.0",
+      "docker_image_MuSE": "ghcr.io/uclahs-cds/muse:2.0.4",
+      "docker_image_bam_readcount": "ghcr.io/uclahs-cds/bam-readcount:0.8.0",
+      "docker_image_manta": "ghcr.io/uclahs-cds/manta:1.6.0",
+      "docker_image_r_VennDiagram": "ghcr.io/uclahs-cds/call-ssnv-r:dev",
+      "docker_image_somaticsniper": "ghcr.io/uclahs-cds/somaticsniper:1.0.5.0",
+      "docker_image_strelka2": "ghcr.io/uclahs-cds/strelka2:2.9.10",
+      "docker_image_ubuntu": "ubuntu:20.04",
+      "docker_image_validate_params": "ghcr.io/uclahs-cds/pipeval:4.0.0-rc.2",
+      "docker_image_vcf2maf": "ghcr.io/mskcc/vcf2maf/vcf2maf:v1.6.18",
+      "exome": false,
+      "filter_mutect_calls_extra_args": "",
+      "gatk_command_mem_diff": "500 MB",
+      "germline": true,
+      "germline_resource_gnomad_vcf": "/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz",
+      "germline_resource_gnomad_vcf_index": "/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz.tbi",
+      "input": {
+        "normal": [
+          {
+            "BAM": "/hot/resource/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam"
+          }
+        ],
+        "tumor": [
+          {
+            "BAM": "/hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam",
+            "contamination_table": "/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table"
+          }
+        ]
+      },
+      "intersect_regions": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz",
+      "intersect_regions_index": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz.tbi",
+      "log_output_dir": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z",
+      "manta_version": "1.6.0",
+      "max_cpus": "16",
+      "max_memory": "31 GB",
+      "min_cpus": "1",
+      "min_memory": "1 MB",
+      "mutect2_extra_args": "",
+      "ncbi_build": "GRCh38",
+      "normal_id": "0192847",
+      "output_dir": "/tmp/outputs",
+      "output_dir_base": "/tmp/outputs/call-sSNV-8.0.0/0192847",
+      "patient_id": "TWGSAMIN000001",
+      "pipeval_version": "4.0.0-rc.2",
+      "proc_resource_params": {
+        "call_sIndel_Manta": {
+          "cpus": "6",
+          "memory": "6 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "3 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "call_sSNV_MuSE": {
+          "cpus": "6",
+          "memory": "24 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "8 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "call_sSNV_Mutect2": {
+          "cpus": "1",
+          "memory": "3 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "2 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "call_sSNV_SomaticSniper": {
+          "cpus": "1",
+          "memory": "1 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "3 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "call_sSNV_Strelka2": {
+          "cpus": "6",
+          "ext": {
+            "retry_codes": []
+          },
+          "memory": "2 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "12 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "concat_VCFs_BCFtools": {
+          "cpus": "2",
+          "memory": "5 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "10 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+          "cpus": "1",
+          "memory": "1 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "3 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "create_IndelCandidate_SAMtools": {
+          "cpus": "1",
+          "memory": "1 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "3 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "plot_VennDiagram_R": {
+          "cpus": "2",
+          "memory": "5 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "10 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "run_LearnReadOrientationModel_GATK": {
+          "cpus": "1",
+          "memory": "8 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "2",
+              "strategy": "exponential"
+            }
+          }
+        },
+        "run_sump_MuSE": {
+          "cpus": "8",
+          "memory": "24 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "8 GB",
+              "strategy": "add"
+            }
+          }
+        },
+        "run_validate_PipeVal": {
+          "cpus": "1",
+          "memory": "1 GB"
+        }
+      },
+      "reference": "/hot/ref/reference/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta",
+      "sample_id": "0192847",
+      "samples_to_process": [
+        {
+          "contamination_table": "null",
+          "id": "0192847",
+          "orig_id": "0192847",
+          "path": "/hot/resource/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam",
+          "sample_type": "normal"
+        },
+        "{orig_id=0192847, id=0192847, path=/hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam, contamination_table=/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table, sample_type=tumor}"
+      ],
+      "save_intermediate_files": true,
+      "scatter_count": "50",
+      "single_NT_paired": true,
+      "somaticsniper_version": "1.0.5.0",
+      "split_intervals_extra_args": "",
+      "strelka2_version": "2.9.10",
+      "tabix_extra_args": "",
+      "tumor_id": "0192847",
+      "ubuntu_version": "20.04",
+      "ucla_cds": true,
+      "use_intersect_regions": true,
+      "vcf2maf_extra_args": "",
+      "vcf2maf_version": "v1.6.18",
+      "work_dir": "/scratch/8543"
+    },
+    "params_schema": {
+      "algorithm": {
+        "choices": [
+          "mutect2",
+          "somaticsniper",
+          "strelka2",
+          "muse"
+        ],
+        "default": [
+          "mutect2",
+          "somaticsniper",
+          "strelka2",
+          "muse"
+        ],
+        "help": "List of sSNV algorithms",
+        "required": true,
+        "type": "List"
+      },
+      "base_resource_update": {
+        "elements": {
+          "cpus": {
+            "help": "List of CPU updates",
+            "required": false,
+            "type": "ResourceUpdateList"
+          },
+          "memory": {
+            "help": "List of memory updates",
+            "required": false,
+            "type": "ResourceUpdateList"
+          }
+        },
+        "help": "User-defined modifications for adjusting base resource allocations for processes",
+        "required": false,
+        "type": "ResourceUpdateNamespace"
+      },
+      "bgzip_extra_args": {
+        "allow_empty": true,
+        "default": "",
+        "help": "Additional arguments for bgzip command",
+        "required": false,
+        "type": "String"
+      },
+      "dataset_id": {
+        "help": "Dataset identifier",
+        "required": true,
+        "type": "String"
+      },
+      "dbSNP": {
+        "help": "",
+        "mode": "r",
+        "required": true,
+        "type": "Path"
+      },
+      "exome": {
+        "default": false,
+        "help": "The exome option when running manta and strelka2",
+        "required": false,
+        "type": "Bool"
+      },
+      "filter_mutect_calls_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the FilterMutectCalls command",
+        "required": false,
+        "type": "String"
+      },
+      "germline_resource_gnomad_vcf": {
+        "allow_empty": true,
+        "help": "",
+        "mode": "r",
+        "required": false,
+        "type": "Path"
+      },
+      "input": {
+        "elements": {
+          "normal": {
+            "elements": {
+              "BAM": {
+                "help": "Absolute path to normal sample BAM files",
+                "mode": "r",
+                "required": true,
+                "type": "Path"
+              }
+            },
+            "help": "Normal id/path input",
+            "required": false,
+            "type": "BAMEntryList"
+          },
+          "tumor": {
+            "elements": {
+              "BAM": {
+                "help": "Absolute path to tumor sample BAM files",
+                "mode": "r",
+                "required": true,
+                "type": "Path"
+              },
+              "contamination_table": {
+                "help": "Absolute path to contamination.tables",
+                "mode": "r",
+                "required": false,
+                "type": "Path"
+              }
+            },
+            "help": "Tumor id/path input",
+            "required": true,
+            "type": "BAMEntryList"
+          }
+        },
+        "help": "Input samples",
+        "required": true,
+        "type": "InputNamespace"
+      },
+      "intersect_regions": {
+        "help": "call regions bed file used by mutect2, strelka2 and intersect",
+        "mode": "r",
+        "required": true,
+        "type": "Path"
+      },
+      "mutect2_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the Mutect2 command",
+        "required": false,
+        "type": "String"
+      },
+      "ncbi_build": {
+        "help": "NCBI build version, e.g. GRCh38",
+        "required": true,
+        "type": "String"
+      },
+      "output_dir": {
+        "help": "Absolute path to output directory",
+        "mode": "w",
+        "required": true,
+        "type": "Path"
+      },
+      "patient_id": {
+        "help": "Patient identifier",
+        "required": true,
+        "type": "String"
+      },
+      "reference": {
+        "help": "Absolute path to reference directory",
+        "mode": "r",
+        "required": true,
+        "type": "Path"
+      },
+      "save_intermediate_files": {
+        "default": false,
+        "help": "The option to save the intermediate files",
+        "required": false,
+        "type": "Bool"
+      },
+      "scatter_count": {
+        "help": "",
+        "required": true,
+        "type": "Integer"
+      },
+      "split_intervals_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the SplitIntervals command",
+        "required": false,
+        "type": "String"
+      },
+      "tabix_extra_args": {
+        "allow_empty": true,
+        "default": "",
+        "help": "Additional arguments for tabix command",
+        "required": false,
+        "type": "String"
+      },
+      "vcf2maf_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the vcf2maf command",
+        "required": false,
+        "type": "String"
+      },
+      "work_dir": {
+        "help": "Absolute path to output directory",
+        "mode": "w",
+        "required": false,
+        "type": "Path"
+      }
+    },
+    "proc_names": "[Ljava.lang.String;@dec0ded",
+    "process": {
+      "cache": false,
+      "commonRetryCodes": [
+        "104",
+        "134",
+        "137",
+        "139",
+        "143",
+        "247"
+      ],
+      "containerOptions": {
+        "1": "--cpu-shares 1024 --cpus $task.cpus",
+        "2": "--cpu-shares 1024 --cpus $task.cpus",
+        "3": "--cpu-shares 1024 --cpus $task.cpus",
+        "closure": "--cpu-shares 1024 --cpus $task.cpus"
+      },
+      "cpus": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "closure": "closure()"
+      },
+      "errorStrategy": {
+        "1": "terminate",
+        "2": "terminate",
+        "3": "terminate",
+        "closure": "terminate"
+      },
+      "executor": "local",
+      "maxRetries": "1",
+      "withLabel:process_high": {
+        "cpus": {
+          "1": "12",
+          "2": "16",
+          "3": "16",
+          "closure": "closure()"
+        },
+        "memory": {
+          "1": "31 GB",
+          "2": "31 GB",
+          "3": "31 GB",
+          "closure": "closure()"
+        }
+      },
+      "withLabel:process_low": {
+        "cpus": {
+          "1": "2",
+          "2": "4",
+          "3": "6",
+          "closure": "closure()"
+        },
+        "memory": {
+          "1": "3 GB",
+          "2": "6 GB",
+          "3": "9 GB",
+          "closure": "closure()"
+        }
+      },
+      "withLabel:process_medium": {
+        "cpus": {
+          "1": "6",
+          "2": "12",
+          "3": "16",
+          "closure": "closure()"
+        },
+        "memory": {
+          "1": "31 GB",
+          "2": "31 GB",
+          "3": "31 GB",
+          "closure": "closure()"
+        }
+      },
+      "withName:call_sIndel_Manta": {
+        "cpus": "6",
+        "memory": {
+          "1": "6 GB",
+          "2": "9 GB",
+          "3": "12 GB",
+          "closure": "retry_updater(6 GB, add, 3 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:call_sSNV_MuSE": {
+        "cpus": "6",
+        "memory": {
+          "1": "24 GB",
+          "2": "31 GB",
+          "3": "31 GB",
+          "closure": "retry_updater(24 GB, add, 8 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:call_sSNV_Mutect2": {
+        "cpus": "1",
+        "memory": {
+          "1": "3 GB",
+          "2": "5 GB",
+          "3": "7 GB",
+          "closure": "retry_updater(3 GB, add, 2 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:call_sSNV_SomaticSniper": {
+        "cpus": "1",
+        "memory": {
+          "1": "1 GB",
+          "2": "4 GB",
+          "3": "7 GB",
+          "closure": "retry_updater(1 GB, add, 3 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:call_sSNV_Strelka2": {
+        "cpus": "6",
+        "ext": {
+          "retry_codes": []
+        },
+        "memory": {
+          "1": "2 GB",
+          "2": "14 GB",
+          "3": "26 GB",
+          "closure": "retry_updater(2 GB, add, 12 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:concat_VCFs_BCFtools": {
+        "cpus": "2",
+        "memory": {
+          "1": "5 GB",
+          "2": "15 GB",
+          "3": "25 GB",
+          "closure": "retry_updater(5 GB, add, 10 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:convert_BAM2Pileup_SAMtools": {
+        "cpus": "1",
+        "memory": {
+          "1": "1 GB",
+          "2": "4 GB",
+          "3": "7 GB",
+          "closure": "retry_updater(1 GB, add, 3 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:create_IndelCandidate_SAMtools": {
+        "cpus": "1",
+        "memory": {
+          "1": "1 GB",
+          "2": "4 GB",
+          "3": "7 GB",
+          "closure": "retry_updater(1 GB, add, 3 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:plot_VennDiagram_R": {
+        "cpus": "2",
+        "memory": {
+          "1": "5 GB",
+          "2": "15 GB",
+          "3": "25 GB",
+          "closure": "retry_updater(5 GB, add, 10 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:run_LearnReadOrientationModel_GATK": {
+        "cpus": "1",
+        "memory": {
+          "1": "8 GB",
+          "2": "16 GB",
+          "3": "31 GB",
+          "closure": "retry_updater(8 GB, exponential, 2, $task.attempt, memory)"
+        }
+      },
+      "withName:run_sump_MuSE": {
+        "cpus": "8",
+        "memory": {
+          "1": "24 GB",
+          "2": "31 GB",
+          "3": "31 GB",
+          "closure": "retry_updater(24 GB, add, 8 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:run_validate_PipeVal": {
+        "cpus": "1",
+        "memory": "1 GB"
+      }
+    },
+    "report": {
+      "enabled": true,
+      "file": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z/nextflow-log/report.html"
+    },
+    "sm_tag": "0192847",
+    "timeline": {
+      "enabled": true,
+      "file": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z/nextflow-log/timeline.html"
+    },
+    "trace": {
+      "enabled": true,
+      "file": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z/nextflow-log/trace.txt"
+    },
+    "valid_algorithms": [
+      "somaticsniper",
+      "strelka2",
+      "mutect2",
+      "muse"
+    ],
+    "workDir": "/scratch/8543",
+    "yaml": {
+      "algorithm": {
+        "choices": [
+          "mutect2",
+          "somaticsniper",
+          "strelka2",
+          "muse"
+        ],
+        "default": [
+          "mutect2",
+          "somaticsniper",
+          "strelka2",
+          "muse"
+        ],
+        "help": "List of sSNV algorithms",
+        "required": true,
+        "type": "List"
+      },
+      "base_resource_update": {
+        "elements": {
+          "cpus": {
+            "help": "List of CPU updates",
+            "required": false,
+            "type": "ResourceUpdateList"
+          },
+          "memory": {
+            "help": "List of memory updates",
+            "required": false,
+            "type": "ResourceUpdateList"
+          }
+        },
+        "help": "User-defined modifications for adjusting base resource allocations for processes",
+        "required": false,
+        "type": "ResourceUpdateNamespace"
+      },
+      "bgzip_extra_args": {
+        "allow_empty": true,
+        "default": "",
+        "help": "Additional arguments for bgzip command",
+        "required": false,
+        "type": "String"
+      },
+      "dataset_id": {
+        "help": "Dataset identifier",
+        "required": true,
+        "type": "String"
+      },
+      "dbSNP": {
+        "help": "",
+        "mode": "r",
+        "required": true,
+        "type": "Path"
+      },
+      "exome": {
+        "default": false,
+        "help": "The exome option when running manta and strelka2",
+        "required": false,
+        "type": "Bool"
+      },
+      "filter_mutect_calls_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the FilterMutectCalls command",
+        "required": false,
+        "type": "String"
+      },
+      "germline_resource_gnomad_vcf": {
+        "allow_empty": true,
+        "help": "",
+        "mode": "r",
+        "required": false,
+        "type": "Path"
+      },
+      "input": {
+        "elements": {
+          "normal": {
+            "elements": {
+              "BAM": {
+                "help": "Absolute path to normal sample BAM files",
+                "mode": "r",
+                "required": true,
+                "type": "Path"
+              }
+            },
+            "help": "Normal id/path input",
+            "required": false,
+            "type": "BAMEntryList"
+          },
+          "tumor": {
+            "elements": {
+              "BAM": {
+                "help": "Absolute path to tumor sample BAM files",
+                "mode": "r",
+                "required": true,
+                "type": "Path"
+              },
+              "contamination_table": {
+                "help": "Absolute path to contamination.tables",
+                "mode": "r",
+                "required": false,
+                "type": "Path"
+              }
+            },
+            "help": "Tumor id/path input",
+            "required": true,
+            "type": "BAMEntryList"
+          }
+        },
+        "help": "Input samples",
+        "required": true,
+        "type": "InputNamespace"
+      },
+      "intersect_regions": {
+        "help": "call regions bed file used by mutect2, strelka2 and intersect",
+        "mode": "r",
+        "required": true,
+        "type": "Path"
+      },
+      "mutect2_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the Mutect2 command",
+        "required": false,
+        "type": "String"
+      },
+      "ncbi_build": {
+        "help": "NCBI build version, e.g. GRCh38",
+        "required": true,
+        "type": "String"
+      },
+      "output_dir": {
+        "help": "Absolute path to output directory",
+        "mode": "w",
+        "required": true,
+        "type": "Path"
+      },
+      "patient_id": {
+        "help": "Patient identifier",
+        "required": true,
+        "type": "String"
+      },
+      "reference": {
+        "help": "Absolute path to reference directory",
+        "mode": "r",
+        "required": true,
+        "type": "Path"
+      },
+      "save_intermediate_files": {
+        "default": false,
+        "help": "The option to save the intermediate files",
+        "required": false,
+        "type": "Bool"
+      },
+      "scatter_count": {
+        "help": "",
+        "required": true,
+        "type": "Integer"
+      },
+      "split_intervals_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the SplitIntervals command",
+        "required": false,
+        "type": "String"
+      },
+      "tabix_extra_args": {
+        "allow_empty": true,
+        "default": "",
+        "help": "Additional arguments for tabix command",
+        "required": false,
+        "type": "String"
+      },
+      "vcf2maf_extra_args": {
+        "allow_empty": true,
+        "help": "Additional arguments for the vcf2maf command",
+        "required": false,
+        "type": "String"
+      },
+      "work_dir": {
+        "help": "Absolute path to output directory",
+        "mode": "w",
+        "required": false,
+        "type": "Path"
+      }
+    }
+  }
+}
