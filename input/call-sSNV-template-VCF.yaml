@@ -3,11 +3,7 @@ patient_id: 'patient_id'
 tumor_id: 'tumor_id' # must match the tumor_id in the VCF files
 normal_id: 'normal_id' # must match the normal_id in the VCF files
 input:
-  muse:
-    - VCF: /path/to/muse.vcf.gz
-  mutect2:
-    - VCF: /path/to/mutect2.vcf.gz
-  somaticsniper:
-    - VCF: /path/to/somaticsniper.vcf.gz
-  strelka2:
-    - VCF: /path/to/strelka2.vcf.gz
+  muse: /path/to/muse.vcf.gz
+  mutect2: /path/to/mutect2.vcf.gz
+  somaticsniper: /path/to/somaticsniper.vcf.gz
+  strelka2: /path/to/strelka2.vcf.gz
