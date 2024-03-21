@@ -49,55 +49,105 @@ log.info """\
         normal_out: ${params.samples_to_process.findAll{ it.sample_type == 'normal' }['id']}
 """
 
-if (params.max_cpus < 8 || params.max_memory < 16) {
-    if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
-        throw new Exception(
-            "Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory." +
-            " To run Mutect2 this pipeline requires at least 8 CPUs and 16 GB of memory." +
-            " To run MuSE this pipeline requires at least 16 CPUs and 32 GB of memory."
-            )
-        }
-    }
-else if (params.max_cpus < 16 || params.max_memory < 32) {
-    if (params.algorithm.contains('muse')) {
-        throw new Exception(
-            "Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory." +
-            " To run MuSE this pipeline requires at least 16 CPUs and 32 GB of memory."
-            )
-        }
-    }
-
 params.reference_index = "${params.reference}.fai"
 params.reference_dict = "${file(params.reference).parent / file(params.reference).baseName}.dict"
 
-include { somaticsniper } from './module/somaticsniper' addParams(
-    workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
-    output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
+if (params.input_type == 'bam') {
+    if (params.max_cpus < 8 || params.max_memory < 16) {
+        if (params.algorithm.contains('muse') || params.algorithm.contains('mutect2')) {
+            throw new Exception(
+                "Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory." +
+                " To run Mutect2 this pipeline requires at least 8 CPUs and 16 GB of memory." +
+                " To run MuSE this pipeline requires at least 16 CPUs and 32 GB of memory."
+                )
+            }
+        }
+    else if (params.max_cpus < 16 || params.max_memory < 32) {
+        if (params.algorithm.contains('muse')) {
+            throw new Exception(
+                "Insufficient resources: ${params.max_cpus} CPUs and ${params.max_memory} of memory." +
+                " To run MuSE this pipeline requires at least 16 CPUs and 32 GB of memory."
+                )
+            }
+        }
+
+    include { somaticsniper } from './module/somaticsniper' addParams(
+        workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
+        workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
+        output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
+            params.dataset_id,
+            params.sample_id,
+            [:]))
+    include { strelka2 } from './module/strelka2' addParams(
+        workflow_output_dir: "${params.output_dir_base}/Strelka2-${params.strelka2_version}",
+        workflow_log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
+        output_filename: generate_standard_filename("Strelka2-${params.strelka2_version}",
+            params.dataset_id,
+            params.sample_id,
+            [:]))
+    include { mutect2 } from './module/mutect2' addParams(
+        workflow_output_dir: "${params.output_dir_base}/Mutect2-${params.GATK_version}",
+        workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
+        output_filename: generate_standard_filename("Mutect2-${params.GATK_version}",
+            params.dataset_id,
+            params.sample_id,
+            [:]))
+    include { muse } from './module/muse' addParams(
+        workflow_output_dir: "${params.output_dir_base}/MuSE-${params.MuSE_version}",
+        workflow_log_output_dir: "${params.log_output_dir}/process-log/MuSE-${params.MuSE_version}",
+        output_filename: generate_standard_filename("MuSE-${params.MuSE_version}",
+            params.dataset_id,
+            params.sample_id,
+            [:]))
+
+    Channel
+        .from( params.samples_to_process )
+            .filter{ it.sample_type == 'tumor' }
+            .multiMap{ it ->
+                tumor_bam: it['path']
+                tumor_index: indexFile(it['path'])
+                contamination_est: it['contamination_table']
+                }
+            .set { tumor_input_chs }
+
+    Channel
+        .from( params.samples_to_process )
+            .filter{ it.sample_type == 'normal' }
+            .ifEmpty(['path': "${params.work_dir}/NO_FILE.bam"])
+            .multiMap{ it ->
+                normal_bam: it['path']
+                normal_index: indexFile(it['path'])
+                }
+            .set { normal_input_chs }
+
+    // Set empty channels so any unused tools don't cause failure at intersect step
+    Channel.empty().set { somaticsniper_gzvcf_ch }
+    Channel.empty().set { strelka2_gzvcf_ch }
+    Channel.empty().set { muse_gzvcf_ch }
+    Channel.empty().set { mutect2_gzvcf_ch }
+
+    Channel.empty().set { somaticsniper_idx_ch }
+    Channel.empty().set { strelka2_idx_ch }
+    Channel.empty().set { muse_idx_ch }
+    Channel.empty().set { mutect2_idx_ch }
+
+} else if (params.input_type == 'vcf') {
+    include { vcf_input } from './module/vcf-input' addParams(
+        workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
+        workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
+        output_filename: generate_standard_filename("BCFtools-${params.BCFtools_version}",
         params.dataset_id,
         params.sample_id,
-        [:]))
-include { strelka2 } from './module/strelka2' addParams(
-    workflow_output_dir: "${params.output_dir_base}/Strelka2-${params.strelka2_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
-    output_filename: generate_standard_filename("Strelka2-${params.strelka2_version}",
-        params.dataset_id,
-        params.sample_id,
-        [:]))
-include { mutect2 } from './module/mutect2' addParams(
-    workflow_output_dir: "${params.output_dir_base}/Mutect2-${params.GATK_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
-    output_filename: generate_standard_filename("Mutect2-${params.GATK_version}",
-        params.dataset_id,
-        params.sample_id,
-        [:]))
-include { muse } from './module/muse' addParams(
-    workflow_output_dir: "${params.output_dir_base}/MuSE-${params.MuSE_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/MuSE-${params.MuSE_version}",
-    output_filename: generate_standard_filename("MuSE-${params.MuSE_version}",
-        params.dataset_id,
-        params.sample_id,
-        [:]))
+        [:]),
+        )
+
+    Channel
+        .fromList(params.samples_to_process)
+        .map { vcf ->
+            return tuple(vcf.path, indexFile(vcf.path), vcf.algorithm)
+        }
+        .set { samplesToProcess_ch }
+    }
 
 include { intersect } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
@@ -107,33 +157,12 @@ include { intersect } from './module/intersect' addParams(
         params.sample_id,
         [:]))
 
-Channel
-    .from( params.samples_to_process )
-        .filter{ it.sample_type == 'tumor' }
-        .multiMap{ it ->
-            tumor_bam: it['path']
-            tumor_index: indexFile(it['path'])
-            contamination_est: it['contamination_table']
-            }
-        .set { tumor_input_chs }
-
-Channel
-    .from( params.samples_to_process )
-        .filter{ it.sample_type == 'normal' }
-        .ifEmpty(['path': "${params.work_dir}/NO_FILE.bam"])
-        .multiMap{ it ->
-            normal_bam: it['path']
-            normal_index: indexFile(it['path'])
-            }
-        .set { normal_input_chs }
-
 script_dir_ch = Channel.fromPath(
     "$projectDir/r-scripts",
     checkIfExists: true
     )
 
 workflow {
-    // Input file validation
     reference_ch = Channel.from(
         params.reference,
         params.reference_index,
@@ -145,90 +174,85 @@ workflow {
         params.intersect_regions_index
         )
 
-    files_to_validate_ch = reference_ch
-        .mix(intersect_regions_ch)
-        .mix(tumor_input_chs.tumor_bam, tumor_input_chs.tumor_index)
+    if (params.input_type == 'bam') {
+        files_to_validate_ch = reference_ch
+            .mix(intersect_regions_ch)
+            .mix(tumor_input_chs.tumor_bam, tumor_input_chs.tumor_index)
 
-    if (params.samples_to_process.findAll{ it.sample_type == 'normal' }.size() > 0) {
-        files_to_validate_ch = files_to_validate_ch
-            .mix(normal_input_chs.normal_bam, normal_input_chs.normal_index)
-        }
+        if (params.samples_to_process.findAll{ it.sample_type == 'normal' }.size() > 0) {
+            files_to_validate_ch = files_to_validate_ch
+                .mix(normal_input_chs.normal_bam, normal_input_chs.normal_index)
+            }
 
-    run_validate_PipeVal(files_to_validate_ch)
-    run_validate_PipeVal.out.validation_result.collectFile(
-        name: 'input_validation.txt', newLine: true,
-        storeDir: "${params.output_dir_base}/validation"
-        )
+        run_validate_PipeVal(files_to_validate_ch)
+        run_validate_PipeVal.out.validation_result.collectFile(
+            name: 'input_validation.txt', newLine: true,
+            storeDir: "${params.output_dir_base}/validation"
+            )
 
-    // Set empty channels so any unused tools don't cause failure at intersect step
-    Channel.empty().set { somaticsniper_gzvcf_ch }
-    Channel.empty().set { strelka2_gzvcf_ch }
-    Channel.empty().set { mutect2_gzvcf_ch }
-    Channel.empty().set { muse_gzvcf_ch }
-
-    Channel.empty().set { somaticsniper_idx_ch }
-    Channel.empty().set { strelka2_idx_ch }
-    Channel.empty().set { mutect2_idx_ch }
-    Channel.empty().set { muse_idx_ch }
-
-    if ('somaticsniper' in params.algorithm) {
-        somaticsniper(
-            tumor_input_chs.tumor_bam,
-            tumor_input_chs.tumor_index,
-            normal_input_chs.normal_bam,
-            normal_input_chs.normal_index
+        if ('somaticsniper' in params.algorithm) {
+            somaticsniper(
+                tumor_input_chs.tumor_bam,
+                tumor_input_chs.tumor_index,
+                normal_input_chs.normal_bam,
+                normal_input_chs.normal_index
             )
             somaticsniper.out.gzvcf.set { somaticsniper_gzvcf_ch }
             somaticsniper.out.idx.set { somaticsniper_idx_ch }
-        }
-    if ('strelka2' in params.algorithm) {
-        strelka2(
-            tumor_input_chs.tumor_bam,
-            tumor_input_chs.tumor_index,
-            normal_input_chs.normal_bam,
-            normal_input_chs.normal_index
+            }
+        if ('strelka2' in params.algorithm) {
+            strelka2(
+                tumor_input_chs.tumor_bam,
+                tumor_input_chs.tumor_index,
+                normal_input_chs.normal_bam,
+                normal_input_chs.normal_index
             )
             strelka2.out.gzvcf.set { strelka2_gzvcf_ch }
             strelka2.out.idx.set { strelka2_idx_ch }
-        }
-    if ('muse' in params.algorithm) {
-        muse(
-            tumor_input_chs.tumor_bam,
-            tumor_input_chs.tumor_index,
-            normal_input_chs.normal_bam,
-            normal_input_chs.normal_index
+            }
+        if ('muse' in params.algorithm) {
+            muse(
+                tumor_input_chs.tumor_bam,
+                tumor_input_chs.tumor_index,
+                normal_input_chs.normal_bam,
+                normal_input_chs.normal_index
             )
             muse.out.gzvcf.set { muse_gzvcf_ch }
             muse.out.idx.set { muse_idx_ch }
-        }
-    if ('mutect2' in params.algorithm) {
-        mutect2(
-            tumor_input_chs.tumor_bam.collect(),
-            tumor_input_chs.tumor_index.collect(),
-            normal_input_chs.normal_bam.collect(),
-            normal_input_chs.normal_index.collect(),
-            tumor_input_chs.contamination_est.collect()
+            }
+        if ('mutect2' in params.algorithm) {
+            mutect2(
+                tumor_input_chs.tumor_bam.collect(),
+                tumor_input_chs.tumor_index.collect(),
+                normal_input_chs.normal_bam.collect(),
+                normal_input_chs.normal_index.collect(),
+                tumor_input_chs.contamination_est.collect()
             )
             mutect2.out.gzvcf.set { mutect2_gzvcf_ch }
             mutect2.out.idx.set { mutect2_idx_ch }
+            }
+        // Intersect all vcf files
+        if (params.algorithm.size() > 1) {
+            tool_gzvcfs = (somaticsniper_gzvcf_ch
+                .mix(strelka2_gzvcf_ch)
+                .mix(mutect2_gzvcf_ch)
+                .mix(muse_gzvcf_ch))
+                .collect()
+            tool_indices = (somaticsniper_idx_ch
+                .mix(strelka2_idx_ch)
+                .mix(mutect2_idx_ch)
+                .mix(muse_idx_ch))
+                .collect()
+            }
+    } else if (params.input_type == 'vcf') {
+        vcf_input(samplesToProcess_ch)
+        vcf_input.out.gzvcf.set { tool_gzvcfs }
+        vcf_input.out.idx.set { tool_indices }
         }
-
-    // Intersect all vcf files
-    if (params.algorithm.size() > 1) {
-        tool_gzvcfs = (somaticsniper_gzvcf_ch
-            .mix(strelka2_gzvcf_ch)
-            .mix(mutect2_gzvcf_ch)
-            .mix(muse_gzvcf_ch))
-            .collect()
-        tool_indices = (somaticsniper_idx_ch
-            .mix(strelka2_idx_ch)
-            .mix(mutect2_idx_ch)
-            .mix(muse_idx_ch))
-            .collect()
-        intersect(
-            tool_gzvcfs,
-            tool_indices,
-            script_dir_ch,
-            )
-        }
+    intersect(
+        tool_gzvcfs,
+        tool_indices,
+        script_dir_ch,
+        )
     }
+

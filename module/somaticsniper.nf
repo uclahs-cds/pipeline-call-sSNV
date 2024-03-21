@@ -18,7 +18,7 @@ include { compress_index_VCF as compress_index_VCF_fix } from '../external/pipel
 include { compress_file_bzip2} from './common'   addParams(
     compress_publishdir : "${params.workflow_output_dir}/intermediate/generate_ReadCount_bam_readcount",
     compress_enabled : params.save_intermediate_files
-    ) 
+    )
 
 workflow somaticsniper {
     take:

@@ -14,7 +14,6 @@ Mutect2 Options:
 - intervals:                      ${params.intersect_regions}
 - single tumor normal pair:       ${params.single_NT_paired}
 - germline resource:              ${params.germline_resource_gnomad_vcf}
-- contamination_table:            ${params.input.tumor.contamination_table}
 """
 
 process run_SplitIntervals_GATK {
@@ -231,34 +230,5 @@ process run_FilterMutectCalls_GATK {
         --filtering-stats ${params.output_filename}_filteringStats.tsv \
         $contamination \
         ${params.filter_mutect_calls_extra_args}
-    """
-    }
-
-process split_VCF_BCFtools {
-    container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*.vcf.gz"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
-
-    input:
-    path vcf
-    each var_type
-
-    output:
-    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-    bcftools view \
-        --types $var_type \
-        --output-type z \
-        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}-split.vcf.gz \
-        ${vcf}
     """
     }

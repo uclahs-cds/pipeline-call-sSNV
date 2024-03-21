@@ -1,5 +1,5 @@
-include { run_SplitIntervals_GATK; call_sSNV_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK; split_VCF_BCFtools } from './mutect2-processes'
-include { filter_VCF_BCFtools; rename_samples_BCFtools; generate_sha512sum } from './common'
+include { run_SplitIntervals_GATK; call_sSNV_Mutect2; run_MergeVcfs_GATK; run_MergeMutectStats_GATK; run_LearnReadOrientationModel_GATK; run_FilterMutectCalls_GATK } from './mutect2-processes'
+include { filter_VCF_BCFtools; split_VCF_BCFtools; rename_samples_BCFtools; generate_sha512sum } from './common'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
