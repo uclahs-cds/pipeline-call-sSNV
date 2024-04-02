@@ -1,5 +1,5 @@
 ---
-name: Nextflow Tests
+name: Nextflow
 
 on:
   push:
@@ -8,6 +8,14 @@ on:
   pull_request:
     branches:
       - main
+
+permissions:
+  # Required so dependabot can post review comments
+  pull-requests: write
+  # Required so dependabot can autofix changes
+  contents: write
+  # Required until the docker image is made public
+  packages: read
 
 jobs:
   tests:
