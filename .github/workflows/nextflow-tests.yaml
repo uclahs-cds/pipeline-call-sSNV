@@ -9,6 +9,12 @@ on:
     branches:
       - main
 
+permissions:
+  # Required so dependabot can post review comments
+  pull-requests: write
+  # Required so dependabot can autofix changes
+  contents: write
+
 jobs:
   tests:
     uses: uclahs-cds/tool-Nextflow-action/.github/workflows/nextflow-tests.yml@main
