@@ -450,7 +450,6 @@
       "strelka2",
       "mutect2",
       "muse"
-    ],
-    "workDir": "/scratch/8543"
+    ], "workDir": "/scratch/8543"
   }
 }
