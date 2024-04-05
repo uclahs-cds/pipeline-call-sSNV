@@ -98,7 +98,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/9e13954bc7276cff6eac189129d0787eb19ebc10/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/cb17bb50562d58e5f3723c845619f75314a5466e/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -119,14 +119,14 @@
 <p>The source code should never be modified when running our pipelines</p>
 </li>
 <li>
-<p>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/9e13954bc7276cff6eac189129d0787eb19ebc10/config/template.config">input config file</a></p>
+<p>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/cb17bb50562d58e5f3723c845619f75314a5466e/config/template.config">input config file</a></p>
 </li>
 </ol>
 <blockquote>
 <p>Make sure the reference .fa file in config file matches the reference genome in the input BAM files.</p>
 </blockquote>
 <ol>
-<li>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/9e13954bc7276cff6eac189129d0787eb19ebc10/input/call-sSNV-template.yaml">input YAML</a></li>
+<li>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/cb17bb50562d58e5f3723c845619f75314a5466e/input/call-sSNV-template.yaml">input YAML</a></li>
 <li>The pipeline can be executed locally using the command below:</li>
 </ol>
 <pre><code class="language-bash">nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
@@ -134,8 +134,8 @@
 <p>For example,</p>
 <ul>
 <li><code>path/to/main.nf</code> could be: <code>/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf</code></li>
-<li><code>path/to/input.config</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/9e13954bc7276cff6eac189129d0787eb19ebc10/config/template.config">template.config</a></li>
-<li><code>path/to/input.yaml</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/9e13954bc7276cff6eac189129d0787eb19ebc10/input/call-sSNV-template.yaml">template.yaml</a></li>
+<li><code>path/to/input.config</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/cb17bb50562d58e5f3723c845619f75314a5466e/config/template.config">template.config</a></li>
+<li><code>path/to/input.yaml</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/cb17bb50562d58e5f3723c845619f75314a5466e/input/call-sSNV-template.yaml">template.yaml</a></li>
 </ul>
 <p>To submit to UCLAHS-CDS's Azure cloud, use the submission script <a href="https://github.com/uclahs-cds/tool-submit-nf">here</a> with the command below:</p>
 <pre><code class="language-bash">python path/to/submit_nextflow_pipeline.py \
