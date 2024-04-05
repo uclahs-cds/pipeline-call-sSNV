@@ -2,21 +2,20 @@
 name: Nextflow
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: [Trigger Tests]
+    types:
+      - completed
 
 permissions:
-  # Required so dependabot can post review comments
-  pull-requests: write
-  # Required so dependabot can autofix changes
+  actions: read
   contents: write
-  # Required until the docker image is made public
   packages: read
+  pull-requests: write
+  statuses: write
 
 jobs:
   tests:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: uclahs-cds/tool-Nextflow-action/.github/workflows/nextflow-tests.yml@main
+    secrets: inherit
