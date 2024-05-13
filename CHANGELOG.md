@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add workflow to build and publish documentation to GitHub Pages
 - Add workflow to run Nextflow configuration regression tests
 - Add one regression test
+- Add workflow to respond to "/fix-tests" comments
+
+### Fixed
+- Grant explicit permissions for Nextflow configuration test workflow
+- Update Nextflow configuration test workflows
 
 ## [8.0.0] - 2024-01-29
 

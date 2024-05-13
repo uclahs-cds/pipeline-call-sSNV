@@ -1,14 +1,21 @@
 ---
-name: Nextflow Tests
+name: Nextflow
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: [Trigger Tests]
+    types:
+      - completed
+
+permissions:
+  actions: read
+  contents: write
+  packages: read
+  pull-requests: write
+  statuses: write
 
 jobs:
   tests:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     uses: uclahs-cds/tool-Nextflow-action/.github/workflows/nextflow-tests.yml@main
+    secrets: inherit
