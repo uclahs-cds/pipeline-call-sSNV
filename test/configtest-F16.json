@@ -92,8 +92,10 @@
           }
         ]
       },
+      "input_type": "bam",
       "intersect_regions": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz",
       "intersect_regions_index": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz.tbi",
+      "keep_input_prefix": false,
       "log_output_dir": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z",
       "manta_version": "1.6.0",
       "max_cpus": "16",
