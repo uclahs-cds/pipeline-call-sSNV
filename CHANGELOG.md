@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Nextflow configuration test workflows
 
 ### Changed
-- update resource allocations
+- Update resource allocations
 
 ## [8.0.0] - 2024-01-29
 
