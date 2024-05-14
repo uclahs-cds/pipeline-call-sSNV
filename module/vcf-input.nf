@@ -19,7 +19,6 @@ rename_id_ch = Channel.value(['orig_id': params.input_tumor_id,'id': params.tumo
     .mix(Channel.value(['orig_id': 'TUMOR', 'id': params.tumor_id, 'sample_type': 'tumor' ]))
     .mix(Channel.value(['orig_id': 'NORMAL', 'id': params.normal_id, 'sample_type': 'normal' ]))
     .collect()
-    .view{ "Item: $it" }
 
 workflow vcf_input {
     take:
