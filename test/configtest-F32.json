@@ -132,10 +132,10 @@
         },
         "call_sSNV_Mutect2": {
           "cpus": "1",
-          "memory": "3 GB",
+          "memory": "2 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "3 GB",
+              "operand": "2 GB",
               "strategy": "add"
             }
           }
@@ -205,17 +205,17 @@
         },
         "run_LearnReadOrientationModel_GATK": {
           "cpus": "1",
-          "memory": "16 GB",
+          "memory": "12 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "2",
-              "strategy": "exponential"
+              "operand": "20 GB",
+              "strategy": "add"
             }
           }
         },
         "run_sump_MuSE": {
           "cpus": "12",
-          "memory": "48 GB",
+          "memory": "18 GB",
           "retry_strategy": {
             "memory": {
               "operand": "16 GB",
@@ -348,10 +348,10 @@
       "withName:call_sSNV_Mutect2": {
         "cpus": "1",
         "memory": {
-          "1": "3 GB",
-          "2": "6 GB",
-          "3": "9 GB",
-          "closure": "retry_updater(3 GB, add, 3 GB, $task.attempt, memory)"
+          "1": "2 GB",
+          "2": "4 GB",
+          "3": "6 GB",
+          "closure": "retry_updater(2 GB, add, 2 GB, $task.attempt, memory)"
         }
       },
       "withName:call_sSNV_SomaticSniper": {
@@ -414,19 +414,19 @@
       "withName:run_LearnReadOrientationModel_GATK": {
         "cpus": "1",
         "memory": {
-          "1": "16 GB",
+          "1": "12 GB",
           "2": "32 GB",
-          "3": "64 GB",
-          "closure": "retry_updater(16 GB, exponential, 2, $task.attempt, memory)"
+          "3": "52 GB",
+          "closure": "retry_updater(12 GB, add, 20 GB, $task.attempt, memory)"
         }
       },
       "withName:run_sump_MuSE": {
         "cpus": "12",
         "memory": {
-          "1": "48 GB",
-          "2": "64 GB",
-          "3": "64 GB",
-          "closure": "retry_updater(48 GB, add, 16 GB, $task.attempt, memory)"
+          "1": "18 GB",
+          "2": "34 GB",
+          "3": "50 GB",
+          "closure": "retry_updater(18 GB, add, 16 GB, $task.attempt, memory)"
         }
       },
       "withName:run_validate_PipeVal": {

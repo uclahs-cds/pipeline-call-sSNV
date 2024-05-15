@@ -115,7 +115,7 @@
           "memory": "6 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "3 GB",
+              "operand": "5 GB",
               "strategy": "add"
             }
           }
@@ -132,7 +132,7 @@
         },
         "call_sSNV_Mutect2": {
           "cpus": "1",
-          "memory": "3 GB",
+          "memory": "2 GB",
           "retry_strategy": {
             "memory": {
               "operand": "2 GB",
@@ -178,7 +178,7 @@
           "memory": "1 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "3 GB",
+              "operand": "5 GB",
               "strategy": "add"
             }
           }
@@ -188,7 +188,7 @@
           "memory": "1 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "3 GB",
+              "operand": "5 GB",
               "strategy": "add"
             }
           }
@@ -208,17 +208,17 @@
           "memory": "8 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "2",
-              "strategy": "exponential"
+              "operand": "20 GB",
+              "strategy": "add"
             }
           }
         },
         "run_sump_MuSE": {
           "cpus": "8",
-          "memory": "24 GB",
+          "memory": "16 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "8 GB",
+              "operand": "16 GB",
               "strategy": "add"
             }
           }
@@ -331,9 +331,9 @@
         "cpus": "6",
         "memory": {
           "1": "6 GB",
-          "2": "9 GB",
-          "3": "12 GB",
-          "closure": "retry_updater(6 GB, add, 3 GB, $task.attempt, memory)"
+          "2": "11 GB",
+          "3": "16 GB",
+          "closure": "retry_updater(6 GB, add, 5 GB, $task.attempt, memory)"
         }
       },
       "withName:call_sSNV_MuSE": {
@@ -348,10 +348,10 @@
       "withName:call_sSNV_Mutect2": {
         "cpus": "1",
         "memory": {
-          "1": "3 GB",
-          "2": "5 GB",
-          "3": "7 GB",
-          "closure": "retry_updater(3 GB, add, 2 GB, $task.attempt, memory)"
+          "1": "2 GB",
+          "2": "4 GB",
+          "3": "6 GB",
+          "closure": "retry_updater(2 GB, add, 2 GB, $task.attempt, memory)"
         }
       },
       "withName:call_sSNV_SomaticSniper": {
@@ -388,18 +388,18 @@
         "cpus": "1",
         "memory": {
           "1": "1 GB",
-          "2": "4 GB",
-          "3": "7 GB",
-          "closure": "retry_updater(1 GB, add, 3 GB, $task.attempt, memory)"
+          "2": "6 GB",
+          "3": "11 GB",
+          "closure": "retry_updater(1 GB, add, 5 GB, $task.attempt, memory)"
         }
       },
       "withName:create_IndelCandidate_SAMtools": {
         "cpus": "1",
         "memory": {
           "1": "1 GB",
-          "2": "4 GB",
-          "3": "7 GB",
-          "closure": "retry_updater(1 GB, add, 3 GB, $task.attempt, memory)"
+          "2": "6 GB",
+          "3": "11 GB",
+          "closure": "retry_updater(1 GB, add, 5 GB, $task.attempt, memory)"
         }
       },
       "withName:plot_VennDiagram_R": {
@@ -415,18 +415,18 @@
         "cpus": "1",
         "memory": {
           "1": "8 GB",
-          "2": "16 GB",
+          "2": "28 GB",
           "3": "31 GB",
-          "closure": "retry_updater(8 GB, exponential, 2, $task.attempt, memory)"
+          "closure": "retry_updater(8 GB, add, 20 GB, $task.attempt, memory)"
         }
       },
       "withName:run_sump_MuSE": {
         "cpus": "8",
         "memory": {
-          "1": "24 GB",
+          "1": "16 GB",
           "2": "31 GB",
           "3": "31 GB",
-          "closure": "retry_updater(24 GB, add, 8 GB, $task.attempt, memory)"
+          "closure": "retry_updater(16 GB, add, 16 GB, $task.attempt, memory)"
         }
       },
       "withName:run_validate_PipeVal": {
