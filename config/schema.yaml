@@ -80,6 +80,11 @@ germline_resource_gnomad_vcf:
   type: 'Path'
   required: false
   allow_empty: true
+panel_of_normals_vcf:
+  type: 'Path'
+  required: false
+  allow_empty: true
+  help: 'VCF file of sites observed in normal.'
 dbSNP:
   type: 'Path'
   required: true
