@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Inputs - pipeline-call-sSNV</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/version-select.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Inputs";
+        var mkdocs_page_input_path = "inputs.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> pipeline-call-sSNV
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../how-to-run/">How To Run</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-calling/">Flow Diagrams - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../flow-diagrams---variant-intersection/">Flow Diagrams - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-calling/">Pipeline Steps - Variant Calling</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps---variant-intersection/">Pipeline Steps - Variant Intersection</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Inputs</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#inputyaml-see-template">input.yaml. (see template)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#inputconfig-see-template">input.config (see template)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#base-resource-allocation-updaters">Base resource allocation updaters</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#module-specific-configuration">Module Specific Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mutect2-specific-configuration">Mutect2 Specific Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#muse-specific-configuration">MuSE Specific Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#variant-intersection-specific-configuration">Variant Intersection Specific Configuration</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../outputs/">Outputs</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../license/">License</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">pipeline-call-sSNV</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Inputs</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/v8.1.0/README.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="inputs">Inputs</h2>
+<p>To run the pipeline, one <code>input.yaml</code> and one <code>input.config</code> are needed, as follows.</p>
+<h3 id="inputyaml-see-template">input.yaml. (<a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/c0f1e708edbadb7384a18412ebc80b4a87004ff6/input/call-sSNV-template.yaml">see template</a>)</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>patient_id</td>
+<td>string</td>
+<td>The name/ID of the patient</td>
+</tr>
+<tr>
+<td>tumor_BAM</td>
+<td>path</td>
+<td>The path to the tumor .bam file (.bai file must exist in same directory)</td>
+</tr>
+<tr>
+<td>normal_BAM</td>
+<td>path</td>
+<td>The path to the normal .bam file (.bai file must exist in same directory)</td>
+</tr>
+<tr>
+<td>contamination_table</td>
+<td>path</td>
+<td>Optional, but only for tumor samples. The path of the <code>contamination.table</code>, which is generated from the GATK's <code>CalculateContamination</code> in <code>pipeline-call-gSNP</code>. The contamination.table path can be found under <code>pipeline-call-gSNP</code>'s output <code>QC</code> folder</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>input.yaml</code> should follow the standardized structure:</li>
+</ul>
+<pre><code>patient_id: 'patient_id'
+input:
+  normal:
+    - BAM: /path/to/normal.bam
+  tumor:
+    - BAM: /path/to/tumor.bam
+      contamination_table: /path/to/contamination.table
+</code></pre>
+<ul>
+<li><code>Mutect2</code> can take other inputs: tumor-only sample and one patient's multiple samples. For tumor-only samples, remove the normal input in <code>input.yaml</code>, e.g. <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/c0f1e708edbadb7384a18412ebc80b4a87004ff6/input/example-test-tumor-only.yaml">template_tumor_only.yaml</a>. For multiple samples, put all the input BAMs in the <code>input.yaml</code>, e.g. <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/c0f1e708edbadb7384a18412ebc80b4a87004ff6/input/example-test-multi-sample.yaml">template_multi_sample.yaml</a>. Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm.</li>
+</ul>
+<h3 id="inputconfig-see-template">input.config (<a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/c0f1e708edbadb7384a18412ebc80b4a87004ff6/config/template.config">see template</a>)</h3>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>algorithm</code></td>
+<td>yes</td>
+<td>list</td>
+<td>List containing a combination of somaticsniper, strelka2, mutect2 and muse</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>yes</td>
+<td>string</td>
+<td>The reference .fa file (.fai and .dict file must exist in same directory)</td>
+</tr>
+<tr>
+<td><code>intersect_regions</code>*</td>
+<td>yes</td>
+<td>string</td>
+<td>A bed file listing the genomic regions for variant calling. Excluding <code>decoy</code> regions is HIGHLY recommended *</td>
+</tr>
+<tr>
+<td><code>output_dir</code></td>
+<td>yes</td>
+<td>string</td>
+<td>The location where outputs will be saved</td>
+</tr>
+<tr>
+<td><code>dataset_id</code></td>
+<td>yes</td>
+<td>string</td>
+<td>The name/ID of the dataset</td>
+</tr>
+<tr>
+<td><code>exome</code></td>
+<td>yes</td>
+<td>boolean</td>
+<td>The option will be used by <code>Strelka2</code> and <code>MuSE</code>. When <code>true</code>, it will add the <code>--exome</code> option  to Manta and Strelka2, and <code>-E</code> option to MuSE</td>
+</tr>
+<tr>
+<td><code>save_intermediate_files</code></td>
+<td>yes</td>
+<td>boolean</td>
+<td>Whether to save intermediate files</td>
+</tr>
+<tr>
+<td><code>work_dir</code></td>
+<td>no</td>
+<td>string</td>
+<td>The path of working directory for Nextflow, storing intermediate files and logs. The default is <code>/scratch</code> with <code>ucla_cds</code> and should only be changed for testing/development. Changing this directory to <code>/hot</code> or <code>/tmp</code> can lead to high server latency and potential disk space limitations, respectively</td>
+</tr>
+<tr>
+<td><code>docker_container_registry</code></td>
+<td>no</td>
+<td>string</td>
+<td>Registry containing tool Docker images, optional. Default: <code>ghcr.io/uclahs-cds</code></td>
+</tr>
+<tr>
+<td><code>base_resource_update</code></td>
+<td>optional</td>
+<td>namespace</td>
+<td>Namespace of parameters to update base resource allocations in the pipeline. Usage and structure are detailed in <code>template.config</code> and below.</td>
+</tr>
+</tbody>
+</table>
+<p>*Providing <code>intersect_regions</code> is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a <code>bed</code> file with all contigs, however it is HIGHLY recommended to remove <code>decoy</code> contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for <code>Mutect2</code> and will cause a very long runtime for <code>Strelka2</code>. See <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216">Discussion here</a>. For <code>uclahs-cds</code> users, a GRCh38 <code>bed.gz</code> file can be found here: <code>/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz</code>.</p>
+<h3 id="base-resource-allocation-updaters">Base resource allocation updaters</h3>
+<p>To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/c0f1e708edbadb7384a18412ebc80b4a87004ff6/config/template.config">input.config</a> file. The default allocations can be found in the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/c0f1e708edbadb7384a18412ebc80b4a87004ff6/config">node-specific config files</a></p>
+<pre><code class="language-Nextflow">base_resource_update {
+    memory = [
+        [['process_name', 'process_name2'], &lt;multiplier for resource&gt;],
+        [['process_name3', 'process_name4'], &lt;different multiplier for resource&gt;]
+    ]
+    cpus = [
+        [['process_name', 'process_name2'], &lt;multiplier for resource&gt;],
+        [['process_name3', 'process_name4'], &lt;different multiplier for resource&gt;]
+    ]
+}
+</code></pre>
+<blockquote>
+<p><strong>Note</strong> Resource updates will be applied in the order they're provided so if a process is included twice in the memory list, it will be updated twice in the order it's given.</p>
+</blockquote>
+<p>Examples:</p>
+<ul>
+<li>To double memory of all processes:</li>
+</ul>
+<pre><code class="language-Nextflow">base_resource_update {
+    memory = [
+        [[], 2]
+    ]
+}
+</code></pre>
+<ul>
+<li>To double memory for <code>call_sSNV_Mutect2</code> and triple memory for <code>run_validate_PipeVal</code> and <code>run_sump_MuSE</code>:</li>
+</ul>
+<pre><code class="language-Nextflow">base_resource_update {
+    memory = [
+        ['call_sSNV_Mutect2', 2],
+        [['run_validate_PipeVal', 'run_sump_MuSE'], 3]
+    ]
+}
+</code></pre>
+<ul>
+<li>To double CPUs and memory for <code>run_sump_MuSE</code> and double memory for <code>run_validate_PipeVal</code>:</li>
+</ul>
+<pre><code class="language-Nextflow">base_resource_update {
+    cpus = [
+        ['run_sump_MuSE', 2]
+    ]
+    memory = [
+        [['run_sump_MuSE', 'run_validate_PipeVal'], 2]
+    ]
+}
+</code></pre>
+<h4 id="module-specific-configuration">Module Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bgzip_extra_args</td>
+<td>no</td>
+<td>string</td>
+<td>The extra option used for compressing VCFs</td>
+</tr>
+<tr>
+<td>tabix_extra_args</td>
+<td>no</td>
+<td>string</td>
+<td>The extra option used for indexing VCFs</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mutect2-specific-configuration">Mutect2 Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>split_intervals_extra_args</td>
+<td>no</td>
+<td>string</td>
+<td>Additional arguments for the SplitIntervals command</td>
+</tr>
+<tr>
+<td>mutect2_extra_args</td>
+<td>no</td>
+<td>string</td>
+<td>Additional arguments for the Mutect2 command</td>
+</tr>
+<tr>
+<td>filter_mutect_calls_extra_args</td>
+<td>no</td>
+<td>string</td>
+<td>Additional arguments for the FilterMutectCalls command</td>
+</tr>
+<tr>
+<td>gatk_command_mem_diff</td>
+<td>yes</td>
+<td>nextflow.util.MemoryUnit</td>
+<td>How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons)</td>
+</tr>
+<tr>
+<td>scatter_count</td>
+<td>yes</td>
+<td>int</td>
+<td>Number of intervals to split the desired interval into. Mutect2 will call each interval seperately.</td>
+</tr>
+<tr>
+<td>germline_resource_gnomad_vcf</td>
+<td>no</td>
+<td>path</td>
+<td>A stripped down version of the <a href="https://gnomad.broadinstitute.org/">gnomAD VCF</a> stripped of all unneeded INFO fields, keeping only AF, currently available for GRCh38:<code>/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz</code> and GRCh37: <code>/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf</code>.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="muse-specific-configuration">MuSE Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dbSNP</td>
+<td>yes</td>
+<td>path</td>
+<td>The path to <a href="https://www.ncbi.nlm.nih.gov/snp/">NCBI's dbSNP database</a> of known SNPs in VCF format, e.g. <code>GCF_000001405.40.gz</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="variant-intersection-specific-configuration">Variant Intersection Specific Configuration</h4>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Required</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ncbi_build</td>
+<td>yes</td>
+<td>string</td>
+<td>vcf2maf requires the reference genome build ID, e.g. GRCh38</td>
+</tr>
+<tr>
+<td>vcf2maf_extra_args</td>
+<td>no</td>
+<td>string</td>
+<td>additional arguments for the vcf2maf command</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../pipeline-steps---variant-intersection/" class="btn btn-neutral float-left" title="Pipeline Steps - Variant Intersection"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../outputs/" class="btn btn-neutral float-right" title="Outputs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/tree/v8.1.0" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../pipeline-steps---variant-intersection/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../outputs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../js/version-select.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
