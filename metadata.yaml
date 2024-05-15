@@ -1,6 +1,6 @@
 ---
 Category: 'pipeline'
-Description: 'A Nextflow pipeline to identify the somatic single nucleotide variants (sSNVs) by comparing a pair of tumor/normal samples.'
+Description: 'Nextflow pipeline to identify the somatic single nucleotide variants (sSNVs) by comparing a pair of tumor/normal samples.'
 Maintainers: [sfitzgibbon@mednet.ucla.edu]
 Contributors: ['Mao Tian', 'Bugh Caden', 'Helena Winata', 'Yash Patel', 'Sorel Fitz-Gibbon']
 Languages: ['Docker', 'Nextflow']
