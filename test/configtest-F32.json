@@ -173,26 +173,6 @@
             }
           }
         },
-        "convert_BAM2Pileup_SAMtools": {
-          "cpus": "1",
-          "memory": "1 GB",
-          "retry_strategy": {
-            "memory": {
-              "operand": "5 GB",
-              "strategy": "add"
-            }
-          }
-        },
-        "create_IndelCandidate_SAMtools": {
-          "cpus": "1",
-          "memory": "1 GB",
-          "retry_strategy": {
-            "memory": {
-              "operand": "5 GB",
-              "strategy": "add"
-            }
-          }
-        },
         "plot_VennDiagram_R": {
           "cpus": "2",
           "memory": "5 GB",
@@ -382,24 +362,6 @@
           "2": "15 GB",
           "3": "25 GB",
           "closure": "retry_updater(5 GB, add, 10 GB, $task.attempt, memory)"
-        }
-      },
-      "withName:convert_BAM2Pileup_SAMtools": {
-        "cpus": "1",
-        "memory": {
-          "1": "1 GB",
-          "2": "6 GB",
-          "3": "11 GB",
-          "closure": "retry_updater(1 GB, add, 5 GB, $task.attempt, memory)"
-        }
-      },
-      "withName:create_IndelCandidate_SAMtools": {
-        "cpus": "1",
-        "memory": {
-          "1": "1 GB",
-          "2": "6 GB",
-          "3": "11 GB",
-          "closure": "retry_updater(1 GB, add, 5 GB, $task.attempt, memory)"
         }
       },
       "withName:plot_VennDiagram_R": {
