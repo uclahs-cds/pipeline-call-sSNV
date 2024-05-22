@@ -43,7 +43,7 @@
       "mainScript": "main.nf",
       "name": "call-sSNV",
       "nextflowVersion": ">=20.07.1",
-      "version": "8.0.0"
+      "version": "8.1.0"
     },
     "params": {
       "BCFtools_version": "1.17",
@@ -94,7 +94,7 @@
       },
       "intersect_regions": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz",
       "intersect_regions_index": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz.tbi",
-      "log_output_dir": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z",
+      "log_output_dir": "/tmp/outputs/call-sSNV-8.1.0/0192847/log-call-sSNV-8.1.0-19970704T165655Z",
       "manta_version": "1.6.0",
       "max_cpus": "32",
       "max_memory": "64 GB",
@@ -104,7 +104,7 @@
       "ncbi_build": "GRCh38",
       "normal_id": "0192847",
       "output_dir": "/tmp/outputs",
-      "output_dir_base": "/tmp/outputs/call-sSNV-8.0.0/0192847",
+      "output_dir_base": "/tmp/outputs/call-sSNV-8.1.0/0192847",
       "patient_id": "TWGSAMIN000001",
       "pipeval_version": "4.0.0-rc.2",
       "proc_resource_params": {
@@ -130,10 +130,10 @@
         },
         "call_sSNV_Mutect2": {
           "cpus": "1",
-          "memory": "3 GB",
+          "memory": "2 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "3 GB",
+              "operand": "2 GB",
               "strategy": "add"
             }
           }
@@ -203,17 +203,17 @@
         },
         "run_LearnReadOrientationModel_GATK": {
           "cpus": "1",
-          "memory": "16 GB",
+          "memory": "12 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "2",
-              "strategy": "exponential"
+              "operand": "20 GB",
+              "strategy": "add"
             }
           }
         },
         "run_sump_MuSE": {
           "cpus": "12",
-          "memory": "48 GB",
+          "memory": "18 GB",
           "retry_strategy": {
             "memory": {
               "operand": "16 GB",
@@ -346,10 +346,10 @@
       "withName:call_sSNV_Mutect2": {
         "cpus": "1",
         "memory": {
-          "1": "3 GB",
-          "2": "6 GB",
-          "3": "9 GB",
-          "closure": "retry_updater(3 GB, add, 3 GB, $task.attempt, memory)"
+          "1": "2 GB",
+          "2": "4 GB",
+          "3": "6 GB",
+          "closure": "retry_updater(2 GB, add, 2 GB, $task.attempt, memory)"
         }
       },
       "withName:call_sSNV_SomaticSniper": {
@@ -412,19 +412,19 @@
       "withName:run_LearnReadOrientationModel_GATK": {
         "cpus": "1",
         "memory": {
-          "1": "16 GB",
+          "1": "12 GB",
           "2": "32 GB",
-          "3": "64 GB",
-          "closure": "retry_updater(16 GB, exponential, 2, $task.attempt, memory)"
+          "3": "52 GB",
+          "closure": "retry_updater(12 GB, add, 20 GB, $task.attempt, memory)"
         }
       },
       "withName:run_sump_MuSE": {
         "cpus": "12",
         "memory": {
-          "1": "48 GB",
-          "2": "64 GB",
-          "3": "64 GB",
-          "closure": "retry_updater(48 GB, add, 16 GB, $task.attempt, memory)"
+          "1": "18 GB",
+          "2": "34 GB",
+          "3": "50 GB",
+          "closure": "retry_updater(18 GB, add, 16 GB, $task.attempt, memory)"
         }
       },
       "withName:run_validate_PipeVal": {
@@ -434,16 +434,16 @@
     },
     "report": {
       "enabled": true,
-      "file": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z/nextflow-log/report.html"
+      "file": "/tmp/outputs/call-sSNV-8.1.0/0192847/log-call-sSNV-8.1.0-19970704T165655Z/nextflow-log/report.html"
     },
     "sm_tag": "0192847",
     "timeline": {
       "enabled": true,
-      "file": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z/nextflow-log/timeline.html"
+      "file": "/tmp/outputs/call-sSNV-8.1.0/0192847/log-call-sSNV-8.1.0-19970704T165655Z/nextflow-log/timeline.html"
     },
     "trace": {
       "enabled": true,
-      "file": "/tmp/outputs/call-sSNV-8.0.0/0192847/log-call-sSNV-8.0.0-19970704T165655Z/nextflow-log/trace.txt"
+      "file": "/tmp/outputs/call-sSNV-8.1.0/0192847/log-call-sSNV-8.1.0-19970704T165655Z/nextflow-log/trace.txt"
     },
     "valid_algorithms": [
       "somaticsniper",
