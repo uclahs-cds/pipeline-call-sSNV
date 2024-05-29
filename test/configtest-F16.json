@@ -250,7 +250,7 @@
         },
         "{orig_id=0192847, id=0192847, path=/hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam, contamination_table=/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table, sample_type=tumor}"
       ],
-      "save_intermediate_files": true,
+      "save_intermediate_files": false,
       "scatter_count": "50",
       "single_NT_paired": true,
       "somaticsniper_version": "1.0.5.0",
