@@ -1,7 +1,7 @@
 ---
 patient_id: 'patient_id'
-tumor_id: 'tumor_id' # must match the tumor_id in the VCF files
-normal_id: 'normal_id' # must match the normal_id in the VCF files
+input_tumor_id: 'tumor_id' # tumor ID in the VCF files must match this or 'TUMOR'
+input_normal_id: 'normal_id' # normal ID in the VCF files must match this or 'NORMAL'
 input:
   muse: /path/to/muse.vcf.gz
   mutect2: /path/to/mutect2.vcf.gz
