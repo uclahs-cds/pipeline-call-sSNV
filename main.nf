@@ -132,7 +132,7 @@ if (params.input_type == 'bam') {
     Channel.empty().set { mutect2_idx_ch }
 
 } else if (params.input_type == 'vcf') {
-    include { vcf_input } from './module/vcf-input' addParams(
+    include { process_vcfs } from './module/process-vcfs' addParams(
         workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
         workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
         output_filename: generate_standard_filename("BCFtools-${params.BCFtools_version}",
@@ -245,9 +245,9 @@ workflow {
                 .collect()
             }
     } else if (params.input_type == 'vcf') {
-        vcf_input(samplesToProcess_ch)
-        vcf_input.out.gzvcf.set { tool_gzvcfs }
-        vcf_input.out.idx.set { tool_indices }
+        process_vcfs(samplesToProcess_ch)
+        process_vcfs.out.gzvcf.set { tool_gzvcfs }
+        process_vcfs.out.idx.set { tool_indices }
         }
     intersect(
         tool_gzvcfs,

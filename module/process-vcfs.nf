@@ -1,11 +1,7 @@
 include { generate_standard_filename } from '../external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-include { split_VCF_BCFtools } from './common' addParams(
+include { split_VCF_BCFtools; rename_samples_BCFtools; generate_sha512sum} from './common' addParams(
     keep_input_prefix: true
     )
-include { rename_samples_BCFtools } from './common' addParams(
-    keep_input_prefix: true
-    )
-include { generate_sha512sum } from './common'
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
@@ -20,7 +16,7 @@ rename_id_ch = Channel.value(['orig_id': params.input_tumor_id,'id': params.tumo
     .mix(Channel.value(['orig_id': 'NORMAL', 'id': params.normal_id, 'sample_type': 'normal' ]))
     .collect()
 
-workflow vcf_input {
+workflow process_vcfs {
     take:
         samplesToProcess_ch
     main:
