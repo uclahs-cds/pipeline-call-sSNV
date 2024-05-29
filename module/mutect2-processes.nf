@@ -14,6 +14,7 @@ Mutect2 Options:
 - intervals:                      ${params.intersect_regions}
 - single tumor normal pair:       ${params.single_NT_paired}
 - germline resource:              ${params.germline_resource_gnomad_vcf}
+- contamination_table:            ${params.input.tumor.contamination_table}
 """
 
 process run_SplitIntervals_GATK {
