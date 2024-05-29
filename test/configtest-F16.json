@@ -115,18 +115,18 @@
           "memory": "6 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "5 GB",
+              "operand": "12 GB",
               "strategy": "add"
             }
-          }
-        },
-        "call_sSNV_MuSE": {
-          "cpus": "6",
-          "memory": "24 GB",
-          "retry_strategy": {
-            "memory": {
-              "operand": "8 GB",
-              "strategy": "add"
+          },
+          "withName:call_sSNV_Strelka2": {
+            "cpus": "6",
+            "memory": "2 GB",
+            "retry_strategy": {
+              "memory": {
+                "operand": "12 GB",
+                "strategy": "add"
+              }
             }
           }
         },
@@ -151,21 +151,13 @@
           }
         },
         "call_sSNV_Strelka2": {
-          "cpus": "6",
           "ext": {
             "retry_codes": []
-          },
-          "memory": "2 GB",
-          "retry_strategy": {
-            "memory": {
-              "operand": "12 GB",
-              "strategy": "add"
-            }
           }
         },
         "concat_VCFs_BCFtools": {
-          "cpus": "2",
-          "memory": "5 GB",
+          "cpus": "1",
+          "memory": "1 GB",
           "retry_strategy": {
             "memory": {
               "operand": "10 GB",
@@ -194,8 +186,8 @@
           }
         },
         "plot_VennDiagram_R": {
-          "cpus": "2",
-          "memory": "5 GB",
+          "cpus": "1",
+          "memory": "1 GB",
           "retry_strategy": {
             "memory": {
               "operand": "10 GB",
@@ -208,8 +200,18 @@
           "memory": "8 GB",
           "retry_strategy": {
             "memory": {
-              "operand": "20 GB",
+              "operand": "8 GB",
               "strategy": "add"
+            }
+          },
+          "withName:call_sSNV_MuSE": {
+            "cpus": "6",
+            "memory": "24 GB",
+            "retry_strategy": {
+              "memory": {
+                "operand": "8 GB",
+                "strategy": "add"
+              }
             }
           }
         },
@@ -331,18 +333,19 @@
         "cpus": "6",
         "memory": {
           "1": "6 GB",
-          "2": "11 GB",
-          "3": "16 GB",
-          "closure": "retry_updater(6 GB, add, 5 GB, $task.attempt, memory)"
-        }
-      },
-      "withName:call_sSNV_MuSE": {
-        "cpus": "6",
-        "memory": {
-          "1": "24 GB",
-          "2": "31 GB",
-          "3": "31 GB",
-          "closure": "retry_updater(24 GB, add, 8 GB, $task.attempt, memory)"
+          "2": "18 GB",
+          "3": "30 GB",
+          "closure": "retry_updater(6 GB, add, 12 GB, $task.attempt, memory)"
+        },
+        "withName:call_sSNV_Strelka2": {
+          "cpus": "6",
+          "memory": "2 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "12 GB",
+              "strategy": "add"
+            }
+          }
         }
       },
       "withName:call_sSNV_Mutect2": {
@@ -364,24 +367,17 @@
         }
       },
       "withName:call_sSNV_Strelka2": {
-        "cpus": "6",
         "ext": {
           "retry_codes": []
-        },
-        "memory": {
-          "1": "2 GB",
-          "2": "14 GB",
-          "3": "26 GB",
-          "closure": "retry_updater(2 GB, add, 12 GB, $task.attempt, memory)"
         }
       },
       "withName:concat_VCFs_BCFtools": {
-        "cpus": "2",
+        "cpus": "1",
         "memory": {
-          "1": "5 GB",
-          "2": "15 GB",
-          "3": "25 GB",
-          "closure": "retry_updater(5 GB, add, 10 GB, $task.attempt, memory)"
+          "1": "1 GB",
+          "2": "11 GB",
+          "3": "21 GB",
+          "closure": "retry_updater(1 GB, add, 10 GB, $task.attempt, memory)"
         }
       },
       "withName:convert_BAM2Pileup_SAMtools": {
@@ -403,21 +399,31 @@
         }
       },
       "withName:plot_VennDiagram_R": {
-        "cpus": "2",
+        "cpus": "1",
         "memory": {
-          "1": "5 GB",
-          "2": "15 GB",
-          "3": "25 GB",
-          "closure": "retry_updater(5 GB, add, 10 GB, $task.attempt, memory)"
+          "1": "1 GB",
+          "2": "11 GB",
+          "3": "21 GB",
+          "closure": "retry_updater(1 GB, add, 10 GB, $task.attempt, memory)"
         }
       },
       "withName:run_LearnReadOrientationModel_GATK": {
         "cpus": "1",
         "memory": {
           "1": "8 GB",
-          "2": "28 GB",
-          "3": "31 GB",
-          "closure": "retry_updater(8 GB, add, 20 GB, $task.attempt, memory)"
+          "2": "16 GB",
+          "3": "24 GB",
+          "closure": "retry_updater(8 GB, add, 8 GB, $task.attempt, memory)"
+        },
+        "withName:call_sSNV_MuSE": {
+          "cpus": "6",
+          "memory": "24 GB",
+          "retry_strategy": {
+            "memory": {
+              "operand": "8 GB",
+              "strategy": "add"
+            }
+          }
         }
       },
       "withName:run_sump_MuSE": {
