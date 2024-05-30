@@ -84,7 +84,7 @@ panel_of_normals_vcf:
   type: 'Path'
   required: false
   allow_empty: true
-  help: 'VCF file of sites observed in normal.'
+  help: 'VCF file of sites observed in a set of normal samples'
 dbSNP:
   type: 'Path'
   required: true
