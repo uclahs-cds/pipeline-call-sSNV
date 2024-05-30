@@ -1,5 +1,4 @@
-include { generate_sha512sum } from './common'
-include { compress_file_bzip2} from './common'  addParams(
+include { compress_file_bzip2; generate_sha512sum} from './common'  addParams(
     compress_publishdir : "${params.workflow_output_dir}/output",
     compress_enabled : true
     )

@@ -1,0 +1,9 @@
+---
+patient_id: 'patient_id'
+input_tumor_id: 'tumor_id' # tumor ID in the VCF files must match this or 'TUMOR'
+input_normal_id: 'normal_id' # normal ID in the VCF files must match this or 'NORMAL'
+input:
+  muse: /path/to/muse.vcf.gz
+  mutect2: /path/to/mutect2.vcf.gz
+  somaticsniper: /path/to/somaticsniper.vcf.gz
+  strelka2: /path/to/strelka2.vcf.gz

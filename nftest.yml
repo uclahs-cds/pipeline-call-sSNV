@@ -66,19 +66,19 @@ cases:
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-1.17/output/MuSE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/MuSE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/MuSE-2.0.3_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-1.17/output/Mutect2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/Mutect2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/Mutect2-4.4.0.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-1.17/output/SomaticSniper-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/SomaticSniper-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/SomaticSniper-1.0.5.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
-      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-1.17/output/Strelka2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/Strelka2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-std-input/S2-v1.1.5/Intersect-BCFtools-1.17/Strelka2-2.9.10_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
@@ -228,4 +228,48 @@ cases:
     asserts:
       - actual: call-sSNV-*/S2-v1.1.5/MuSE-*/output/MuSE-*_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-muse/S2-v1.1.5/MuSE-2.0.3/MuSE-2.0.3_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
+        script: test/assert_vcf.sh
+
+  - name: a_mini-all-tools-vcf-input
+    message: test development branch a-mini four VCFs input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-all-tools.config
+    params_file: ./test/yaml/a_mini-vcf.yaml
+    skip: true
+    verbose: true
+    asserts:
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
+        method: md5
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
+        method: md5
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/isec-1-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
+        method: md5
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
+        method: md5
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/MuSE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/MuSE-2.0.4_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/Mutect2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/Mutect2-4.5.0.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/SomaticSniper-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/SomaticSniper-1.0.5.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/Strelka2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/a_mini-all-tools-vcf-input/S2-v1.1.5/Intersect-BCFtools-1.17/Strelka2-2.9.10_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh

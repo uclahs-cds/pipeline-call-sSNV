@@ -57,6 +57,44 @@ process generate_sha512sum {
     """
     }
 
+process split_VCF_BCFtools {
+    container params.docker_image_BCFtools
+    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
+        mode: "copy",
+        pattern: "*.vcf.gz"
+    publishDir path: "${params.workflow_log_output_dir}",
+        mode: "copy",
+        pattern: ".command.*",
+        saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
+
+    input:
+    path vcf
+    each var_type
+
+    output:
+    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
+    path ".command.*"
+
+    script:
+    if (params.keep_input_prefix) {
+        output_filename = vcf.getName()
+            .replace("_all-pass.vcf.gz", "")
+            .replace("_SNV-pass.vcf.gz", "")
+            .replace("_hc.vcf.gz", "")
+            .replace(".vcf.gz", "")
+    } else {
+        output_filename = "${params.output_filename}"
+    }
+    """
+    set -euo pipefail
+    bcftools view \
+        --types $var_type \
+        --output-type z \
+        --output ${output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}-split.vcf.gz \
+        ${vcf}
+    """
+    }
+
 process rename_samples_BCFtools {
     container params.docker_image_BCFtools
     publishDir path: "${params.workflow_output_dir}/output",
@@ -82,6 +120,17 @@ process rename_samples_BCFtools {
     header_replacements = ids
         .collect { "sed 's/\t${it['orig_id']}/\t${it['id']}/g'" }
         .join(" | ")
+    if (params.keep_input_prefix) {
+        output_filename = vcf.getName()
+            .replace("_SNV-pass.vcf.gz", "")
+            .replace("_hc.vcf.gz", "")
+            .replace("_SNV-split.vcf.gz", "")
+            .replace("_Indel-split.vcf.gz", "")
+            .replace("_MNV-split.vcf.gz", "")
+            .replace(".vcf.gz", "")
+    } else {
+        output_filename = "${params.output_filename}"
+    }
     """
     set -euo pipefail
 
@@ -90,7 +139,7 @@ process rename_samples_BCFtools {
 
     bcftools reheader \
         --header tmp.fixed.header \
-        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz \
+        --output ${output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}.vcf.gz \
         ${vcf}
     """
     }

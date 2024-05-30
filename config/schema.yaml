@@ -117,11 +117,11 @@ base_resource_update:
 input:
   type: 'InputNamespace'
   required: true
-  help: 'Input samples'
+  help: 'Input to process'
   elements:
     tumor:
       type: 'BAMEntryList'
-      required: true
+      required: false
       help: 'Tumor id/path input'
       elements:
         BAM:
@@ -144,3 +144,23 @@ input:
           mode: 'r'
           required: true
           help: 'Absolute path to normal sample BAM files'
+    muse:
+      type: 'Path'
+      mode: 'r'
+      required: false
+      help: 'Absolute path to muse VCF file'
+    mutect2:
+      type: 'Path'
+      mode: 'r'
+      required: false
+      help: 'Absolute path to mutect2 VCF file'
+    somaticsniper:
+      type: 'Path'
+      mode: 'r'
+      required: false
+      help: 'Absolute path to somaticsniper VCF file'
+    strelka2:
+      type: 'Path'
+      mode: 'r'
+      required: false
+      help: 'Absolute path to strelka2 VCF file'
