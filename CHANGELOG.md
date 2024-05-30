@@ -5,12 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Add `a_mini-all-tools-vcf-input` to `nftest`
+- Add option to input VCFs for intersection
 
 ## [8.1.0] - 2024-05-15
 
 ### Added
-- Add `a_mini-all-tools-vcf-input` to `nftest`
-- Add option to input VCFs for intersection
 - Add workflow to build and publish documentation to GitHub Pages
 - Add workflow to run Nextflow configuration regression tests
 - Add one regression test
