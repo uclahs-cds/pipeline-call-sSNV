@@ -10,12 +10,6 @@ include { compress_index_VCF } from '../external/pipeline-Nextflow-module/module
         tabix_extra_args: params.tabix_extra_args
         ])
 
-rename_id_ch = Channel.value(['orig_id': params.input_tumor_id,'id': params.tumor_id, 'sample_type': 'tumor' ])
-    .mix(Channel.value(['orig_id': params.input_normal_id, 'id': params.normal_id, 'sample_type': 'normal' ]))
-    .mix(Channel.value(['orig_id': 'TUMOR', 'id': params.tumor_id, 'sample_type': 'tumor' ]))
-    .mix(Channel.value(['orig_id': 'NORMAL', 'id': params.normal_id, 'sample_type': 'normal' ]))
-    .collect()
-
 workflow process_vcfs {
     take:
         samplesToProcess_ch
@@ -29,6 +23,11 @@ workflow process_vcfs {
             .filter { it[2] != 'mutect2' }
             .map{ it -> ['SNV', it[0]] }
             .mix(split_VCF_BCFtools.out.gzvcf)
+        rename_id_ch = Channel.value(['orig_id': params.input_tumor_id,'id': params.tumor_id, 'sample_type': 'tumor' ])
+            .mix(Channel.value(['orig_id': params.input_normal_id, 'id': params.normal_id, 'sample_type': 'normal' ]))
+            .mix(Channel.value(['orig_id': 'TUMOR', 'id': params.tumor_id, 'sample_type': 'tumor' ]))
+            .mix(Channel.value(['orig_id': 'NORMAL', 'id': params.normal_id, 'sample_type': 'normal' ]))
+            .collect()
         rename_samples_BCFtools(
             rename_id_ch
                 .combine(rename_files_ch) // combine with files channel to get the count right
