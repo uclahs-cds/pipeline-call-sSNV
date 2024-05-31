@@ -91,7 +91,8 @@ process call_sSNV_Mutect2 {
     normals = normal.collect { "-I '$it'" }.join(' ')
     normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = normal_names == '-normal NO_ID' ? "$tumors" : "$tumors $normals $normal_names"
-    germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
+    germline = params.germline ? "--germline-resource $germline_resource_gnomad_vcf" : ""
+    panel_of_normals = params.panel_of_normals_vcf ? "--panel-of-normals ${params.panel_of_normals_vcf}" : ""
     interval_id = interval.baseName.split('-')[0]
     """
     set -euo pipefail
@@ -104,6 +105,7 @@ process call_sSNV_Mutect2 {
         -O ${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
+        $panel_of_normals \
         ${params.mutect2_extra_args}
     """
     }
