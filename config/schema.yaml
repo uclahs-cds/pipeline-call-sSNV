@@ -79,11 +79,9 @@ scatter_count:
 germline_resource_gnomad_vcf:
   type: 'Path'
   required: false
-  allow_empty: true
 panel_of_normals_vcf:
   type: 'Path'
   required: false
-  allow_empty: true
   help: 'VCF file of sites observed in a set of normal samples'
 dbSNP:
   type: 'Path'
