@@ -91,7 +91,8 @@ process call_sSNV_Mutect2 {
     normals = normal.collect { "-I '$it'" }.join(' ')
     normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = normal_names == '-normal NO_ID' ? "$tumors" : "$tumors $normals $normal_names"
-    germline = params.germline ? "-germline-resource $germline_resource_gnomad_vcf" : ""
+    germline = params.germline ? "--germline-resource $germline_resource_gnomad_vcf" : ""
+    panel_of_normals = params.panel_of_normals_vcf ? "--panel-of-normals ${params.panel_of_normals_vcf}" : ""
     interval_id = interval.baseName.split('-')[0]
     """
     set -euo pipefail
@@ -104,6 +105,7 @@ process call_sSNV_Mutect2 {
         -O ${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
+        $panel_of_normals \
         ${params.mutect2_extra_args}
     """
     }
@@ -231,34 +233,5 @@ process run_FilterMutectCalls_GATK {
         --filtering-stats ${params.output_filename}_filteringStats.tsv \
         $contamination \
         ${params.filter_mutect_calls_extra_args}
-    """
-    }
-
-process split_VCF_BCFtools {
-    container params.docker_image_BCFtools
-    publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-        mode: "copy",
-        pattern: "*.vcf.gz"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
-
-    input:
-    path vcf
-    each var_type
-
-    output:
-    tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
-    path ".command.*"
-
-    script:
-    """
-    set -euo pipefail
-    bcftools view \
-        --types $var_type \
-        --output-type z \
-        --output ${params.output_filename}_${var_type.replace('snps', 'SNV').replace('indels', 'Indel').replace('mnps', 'MNV')}-split.vcf.gz \
-        ${vcf}
     """
     }

@@ -252,6 +252,7 @@ base_resource_update {
 | gatk_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
 | scatter_count | yes | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
 | germline_resource_gnomad_vcf | no | path | A stripped down version of the [gnomAD VCF](https://gnomad.broadinstitute.org/) stripped of all unneeded INFO fields, keeping only AF, currently available for GRCh38:`/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/ref/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
+| panel_of_normals_vcf | no | path | VCF file of sites observed in normal. Currently available for GRCh38: `/hot/ref/tool-specific-input/GATK/GRCh38/1000g_pon.hg38.vcf.gz`. This could be useful for tumor only mode. |
 
 #### MuSE Specific Configuration
 | Input       | Required | Type   | Description                               |

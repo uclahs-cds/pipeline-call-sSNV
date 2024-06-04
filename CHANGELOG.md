@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Add `a_mini-all-tools-vcf-input` to `nftest`
+- Add option to input VCFs for intersection
+
+### Added
+- Add `panel_of_normals_vcf` for MuTect2.
 
 ## [8.1.0] - 2024-05-15
 
@@ -87,7 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use `set_env` from `pipeline-Nextflow-config`
 - Update resource allocation to include new processes
 - Reconfigure `intersect_regions` to use all contigs except `decoy`
-- Reconfigure `call_regions` to `intersect_regions` 
+- Reconfigure `call_regions` to `intersect_regions`
 - Update to BCFtools v1.17
 - Keep `bam-readcount` output in `SomaticSniper` QC folder
 - Update `MuSE` to `v2.0.2`
