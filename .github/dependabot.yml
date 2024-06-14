@@ -1,6 +1,14 @@
+---
 version: 2
 updates:
-  - package-ecosystem: "gitsubmodule" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      # Group these two modules together for pull requests
+      # "pipeline-submodules" is an arbitrary name
+      pipeline-submodules:
+        patterns:
+          - "*/pipeline-Nextflow-config"
+          - "*/pipeline-Nextflow-module"
