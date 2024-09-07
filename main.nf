@@ -158,7 +158,7 @@ include { intersect } from './module/intersect' addParams(
         [:]))
 
 script_dir_ch = Channel.fromPath(
-    "$projectDir/r-scripts",
+    "$projectDir/script",
     checkIfExists: true
     )
 
