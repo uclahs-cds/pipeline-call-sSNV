@@ -2,6 +2,9 @@
 import os
 import argparse
 from typing import Tuple
+from collections import defaultdict
+from itertools import combinations
+from statistics import mean
 import vcf
 
 ALLOWED_TOOLS = [
@@ -83,6 +86,10 @@ def validate_args(opts: argparse.Namespace) -> None:
         validate_purity(purity)
         validate_vcf(vcf_path)
 
+    # If a tool is repeated, the latest value will be used
+    # Not erroring out in this case in case we want to support
+    # multiple tools/samples in the future
+
     validate_output_dir(opts.output_dir)
 
 def get_vaf_strelka2(variant: dict, sample: str) -> Tuple[int, int]:
@@ -161,18 +168,62 @@ def parse_variants(sample: str, vcf_path: str, purity: float) -> dict:
 
     return variants
 
+def calculate_variant_vafs(raw_data: list, sample: str) -> dict:
+    """ Take raw data and calculate the variant VAF per caller """
+    variant_vafs = defaultdict(lambda: {})
+    tool_vafs = {}
+
+    for (tool, vcf_path, purity) in raw_data:
+        tool_vafs = parse_variants(sample, vcf_path, float(purity))
+
+        for variant_key, variant_vaf in tool_vafs.items():
+            variant_vafs[variant_key][tool] = variant_vaf
+
+    return variant_vafs
+
+def get_combination_key(tools: list) -> str:
+    """ Generate a key for the combination of tools """
+    tool_id = '.'.join(sorted(tools))
+    return f"{len(tools)}algorithm-{tool_id}"
+
+def generate_averaged_vafs(variant_vafs: dict, all_tools: list) -> dict:
+    """ Average VAFs for all combinations of tools """
+    averaged_vafs = {}
+    for num_tools in range(1, len(all_tools) + 1):
+        all_tool_combinations = list(combinations(all_tools, num_tools))
+
+        for tool_combination in all_tool_combinations:
+            combination_id = get_combination_key(list(tool_combination))
+            averaged_vafs[combination_id] = []
+
+    for variant, variant_data in variant_vafs.items():
+        combination_key = get_combination_key(list(variant_data.keys()))
+        averaged_vafs[combination_key].append(mean(variant_data.values()))
+
+    for combination_key, vafs in averaged_vafs.items():
+        averaged_vafs[combination_key] = mean(vafs) if vafs else 0
+
+    return averaged_vafs
+
+def write_vafs(data: dict, sample: str, outfile: str) -> None:
+    """ Write data to output file """
+    with open(outfile, 'wt', encoding='utf-8') as wr:
+        wr.write("sample\tcombination\tadjVAF\n")
+        for combination, adjvaf in data.items():
+            wr.write(f"{sample}\t{combination}\t{adjvaf}\n")
+
 def main() -> None:
     opts = parse_args()
-    print(opts)
     validate_args(opts)
 
-    variant_vafs = {}
+    variant_vafs = calculate_variant_vafs(opts.vcf_data, opts.sample)
 
-    for (tool, vcf_path, purity) in opts.vcf_data:
-        variant_vafs[tool] = parse_variants(opts.sample, vcf_path, float(purity))
+    all_tools = list(set([x[0] for x in opts.vcf_data]))
+    all_tools.sort()
 
-    print(variant_vafs)
+    melted_data = generate_averaged_vafs(variant_vafs, all_tools)
 
+    write_vafs(melted_data, opts.sample, os.path.join(opts.output_dir, 'adjusted_vafs.tsv'))
 
 if __name__=='__main__':
     main()
