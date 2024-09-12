@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 """ Calculate and format VAFs for stripplot """
 import os
 import argparse
@@ -132,7 +133,7 @@ def calculate_adjusted_vaf(sample_id: str, variant: dict, purity: float) -> floa
     """ Determine function to calculate VAF and return adjusted VAF """
     sample = None
     for a_sample in variant.samples:
-        if (a_sample.sample == sample_id):
+        if a_sample.sample == sample_id:
             sample = a_sample
             break
 
@@ -151,7 +152,9 @@ def calculate_adjusted_vaf(sample_id: str, variant: dict, purity: float) -> floa
     elif all(base+'U' in variant_data_keys for base in ['A', 'C', 'G', 'T']):
         raw_vaf = get_vaf_strelka2(variant, sample)
     else:
-        raise ValueError(f'Unable to identify variant source for: {variant} with {variant_data_keys}')
+        raise ValueError(
+            f'Unable to identify variant source for: {variant} with {variant_data_keys}'
+        )
 
     return raw_vaf * purity
 
@@ -196,7 +199,7 @@ def generate_averaged_vafs(variant_vafs: dict, all_tools: list) -> dict:
             combination_id = get_combination_key(list(tool_combination))
             averaged_vafs[combination_id] = []
 
-    for variant, variant_data in variant_vafs.items():
+    for _, variant_data in variant_vafs.items():
         combination_key = get_combination_key(list(variant_data.keys()))
         averaged_vafs[combination_key].append(mean(variant_data.values()))
 
@@ -213,12 +216,13 @@ def write_vafs(data: dict, sample: str, outfile: str) -> None:
             wr.write(f"{sample}\t{combination}\t{adjvaf}\n")
 
 def main() -> None:
+    """ Main entrypoint function """
     opts = parse_args()
     validate_args(opts)
 
     variant_vafs = calculate_variant_vafs(opts.vcf_data, opts.sample)
 
-    all_tools = list(set([x[0] for x in opts.vcf_data]))
+    all_tools = list({x[0] for x in opts.vcf_data})
     all_tools.sort()
 
     melted_data = generate_averaged_vafs(variant_vafs, all_tools)
