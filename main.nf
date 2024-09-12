@@ -272,8 +272,6 @@ workflow {
         .map{ [algorithm: getToolName(it), path: it] }
         .collect()
 
-    identified_gzvcfs.view{ "INPUTHERE: $it" }
-
     plot_vaf(
         identified_gzvcfs,
         all_files
