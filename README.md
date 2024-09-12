@@ -14,6 +14,7 @@
     - [Variant Intersection](#pipeline-steps---variant-intersection)
        - [BCFtools and VennDiagram](#pipeline-steps---variant-intersection)
        - [vcf2maf](#vcf2maf)
+       - [VAF Plotting](#pipeline-steps---vaf-plotting)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Performance Validation and Resource Requirements](#performance-validation)
@@ -146,6 +147,9 @@ Determines presence/absence of SNVs found in two or more of each algorithm's set
 Concatenates the 2+ algorithm `consensus` SNVs into one VCF (SNV-concat.vcf.gz).  The output header is a uniquified concatenation of all input VCF headers.  The output fields `INFO`, `FORMAT`, `NORMAL` and `TUMOR` are from the first listed VCF that has the SNV. Input VCFs are sorted alphanumerically by the algorithm name.
 ### vcf2maf
 Converts SNV-concat.vcf.gz from step 3 into [MAF format](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/).  Output includes allele counts and flanking basepairs, but most fields are blank.  Details can be found [here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/222#discussion-5512332).
+
+## Pipeline Steps - VAF Plotting
+A stripplot is generated using the variant callsets to display the distribution of VAFs of variants categorized by the number of callers that include the variant.
 
 ## Inputs
 To run the pipeline, one `input.yaml` and one `input.config` are needed, as follows.
@@ -286,9 +290,10 @@ base_resource_update {
 | Strelka2-{version}_{sample_id}_consensus-variants.vcf.gz   | .vcf.gz         | `2-or-more` SNV VCF     |
 | Mutect2-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | `2-or-more` SNV VCF      |
 | MuSE-{version}_{sample_id}_consensus-variants.vcf.gz        | .vcf.gz         | `2-or-more` SNV VCF   |
-| BCFtools-{version}_{sample_id}_Venn-diagram.tiff | .tiff | Venn Diagram with intersection counts for all variants (`1-or-more`)
+| BCFtools-{version}_{sample_id}_Venn-diagram.tiff | .tiff | Venn Diagram with intersection counts for all variants (`1-or-more`) |
 | BCFtools-{version}_{sample_id}_SNV-concat.vcf.gz | .vcf.gz | Single SNV VCF with all `2-or-more` variants and mixed annotation |
 | BCFtools-{version}_{sample_id}_SNV-concat.maf.gz | .maf.gz | Single SNV MAF with all `2-or-more` variants and mixed annotation |
+| BPG-{version}_{dataset_id}_{sample_id}_adjVAF.png | .png | Stripplot of adjusted VAFs with combinations of callers |
 
 ### Performance Validation
 Testing was performed in the Boutros Lab SLURM Development cluster. Metrics below will be updated where relevant with additional testing and tuning outputs. Pipeline version used here is v4.0.0-rc.1
