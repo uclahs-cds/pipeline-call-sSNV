@@ -14,7 +14,7 @@
     - [Variant Intersection](#pipeline-steps---variant-intersection)
        - [BCFtools and VennDiagram](#pipeline-steps---variant-intersection)
        - [vcf2maf](#vcf2maf)
-       - [VAF Plotting](#pipeline-steps---vaf-plotting)
+       - [VAF Plotting](#vaf-plotting)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Performance Validation and Resource Requirements](#performance-validation)
@@ -148,7 +148,7 @@ Concatenates the 2+ algorithm `consensus` SNVs into one VCF (SNV-concat.vcf.gz).
 ### vcf2maf
 Converts SNV-concat.vcf.gz from step 3 into [MAF format](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/).  Output includes allele counts and flanking basepairs, but most fields are blank.  Details can be found [here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/222#discussion-5512332).
 
-## Pipeline Steps - VAF Plotting
+### VAF Plotting
 A stripplot is generated using the variant callsets to display the distribution of VAFs of variants categorized by the number of callers that include the variant.
 
 ## Inputs
