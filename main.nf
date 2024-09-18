@@ -149,7 +149,7 @@ if (params.input_type == 'bam') {
         .set { samplesToProcess_ch }
     }
 
-include { intersect } from './module/intersect' addParams(
+include { intersect; getToolName } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
     workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
     output_filename: generate_standard_filename("BCFtools-${params.BCFtools_version}",
@@ -157,8 +157,16 @@ include { intersect } from './module/intersect' addParams(
         params.sample_id,
         [:]))
 
+include { plot_vaf } from './module/plot-vaf' addParams(
+    workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
+    workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
+    output_filename: generate_standard_filename("BPG-${params.bpg_version}",
+        params.dataset_id,
+        params.sample_id,
+        [:]))
+
 script_dir_ch = Channel.fromPath(
-    "$projectDir/r-scripts",
+    "$projectDir/script",
     checkIfExists: true
     )
 
@@ -249,10 +257,24 @@ workflow {
         process_vcfs.out.gzvcf.set { tool_gzvcfs }
         process_vcfs.out.idx.set { tool_indices }
         }
+
     intersect(
         tool_gzvcfs,
         tool_indices,
         script_dir_ch,
         )
-    }
 
+    all_files = tool_gzvcfs.mix(tool_indices)
+        .flatten()
+        .collect()
+
+    identified_gzvcfs = tool_gzvcfs.flatten()
+        .map{ [algorithm: getToolName(it), path: it] }
+        .collect()
+
+    plot_vaf(
+        identified_gzvcfs,
+        all_files
+        )
+
+    }
