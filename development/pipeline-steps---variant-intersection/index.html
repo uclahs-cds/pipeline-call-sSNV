@@ -71,6 +71,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#vcf2maf">vcf2maf</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vaf-plotting">VAF Plotting</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -106,7 +108,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Pipeline Steps - Variant Intersection</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/4d5dd5a460073dcb5d9336c154263ec95c4b3c21/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5a7e2666878ac536f600e02dc6d030e33c54db0e/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -124,6 +126,8 @@
 <p>Concatenates the 2+ algorithm <code>consensus</code> SNVs into one VCF (SNV-concat.vcf.gz).  The output header is a uniquified concatenation of all input VCF headers.  The output fields <code>INFO</code>, <code>FORMAT</code>, <code>NORMAL</code> and <code>TUMOR</code> are from the first listed VCF that has the SNV. Input VCFs are sorted alphanumerically by the algorithm name.</p>
 <h3 id="vcf2maf">vcf2maf</h3>
 <p>Converts SNV-concat.vcf.gz from step 3 into <a href="https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/">MAF format</a>.  Output includes allele counts and flanking basepairs, but most fields are blank.  Details can be found <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/222#discussion-5512332">here</a>.</p>
+<h3 id="vaf-plotting">VAF Plotting</h3>
+<p>A stripplot is generated to display the distribution of allele frequencies for sets of SNVs categorized by the number of callers that include the variant.</p>
               
             </div>
           </div><footer>
