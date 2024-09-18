@@ -149,7 +149,7 @@ Concatenates the 2+ algorithm `consensus` SNVs into one VCF (SNV-concat.vcf.gz).
 Converts SNV-concat.vcf.gz from step 3 into [MAF format](https://docs.gdc.cancer.gov/Data/File_Formats/MAF_Format/).  Output includes allele counts and flanking basepairs, but most fields are blank.  Details can be found [here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/222#discussion-5512332).
 
 ### VAF Plotting
-A stripplot is generated using the variant callsets to display the distribution of VAFs of variants categorized by the number of callers that include the variant.
+A stripplot is generated to display the distribution of allele frequencies for sets of SNVs categorized by the number of callers that include the variant.
 
 ## Inputs
 To run the pipeline, one `input.yaml` and one `input.config` are needed, as follows.
