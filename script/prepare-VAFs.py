@@ -99,7 +99,7 @@ def get_vaf_strelka2(variant: dict, sample: str) -> Tuple[int, int]:
     ref_base = variant.REF.strip(' ') + 'U'
     ref_reads = int(variant.samples[sample_index][ref_base][0])
     # pylint: disable=R1728
-    # Take allele with most number of reads as the ALT
+    # Take alternate allele with most number of reads as the ALT
     alt_reads = max([int(variant.samples[sample_index][allele.sequence + 'U'][0]) \
         for allele in variant.ALT])
     total_reads = ref_reads + alt_reads
