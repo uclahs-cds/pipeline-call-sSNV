@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Output pipeline parameters to log directory using `store_object_as_json`
 - Add `panel_of_normals_vcf` for MuTect2.
 - Add `a_mini-all-tools-vcf-input` to `nftest`
 - Add option to input VCFs for intersection
