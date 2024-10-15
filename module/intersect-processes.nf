@@ -16,10 +16,7 @@ process reorder_samples_BCFtools {
         mode: "copy",
         pattern: "*.vcf.gz",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${algorithm}/log${file(it).getName()}" }
+    ext log_dir: { "Intersect-BCFtools-${params.BCFtools_version}/${task.process.split(':')[-1]}-${algorithm}" }
 
     input:
     tuple val(algorithm), path(gzvcf)
@@ -29,7 +26,6 @@ process reorder_samples_BCFtools {
 
     output:
     path "*-reorder.vcf.gz", emit: gzvcf
-    path ".command.*"
 
     script:
     """
@@ -53,10 +49,7 @@ process intersect_VCFs_BCFtools {
         mode: "copy",
         pattern: "isec-1-or-more/*.txt",
         saveAs: { "${file(it).getParent().getName()}/${params.output_filename}_${file(it).getName()}" }
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Intersect-BCFtools-${params.BCFtools_version}/${task.process.split(':')[-1]}" }
 
     input:
     path gzvcf
@@ -67,7 +60,6 @@ process intersect_VCFs_BCFtools {
     output:
     path "*.vcf.gz", emit: gzvcf
     path "*.vcf.gz.tbi", emit: idx
-    path ".command.*"
     path "isec-2-or-more/*.txt"
     path "isec-1-or-more/*.txt", emit: isec
 
@@ -103,17 +95,13 @@ process plot_VennDiagram_R {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.tiff"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Intersect-BCFtools-${params.BCFtools_version}/${task.process.split(':')[-1]}" }
 
     input:
     path script_dir
     path isec
 
     output:
-    path ".command.*"
     path "*.tiff"
 
     script:
@@ -129,10 +117,7 @@ process concat_VCFs_BCFtools {
         mode: "copy",
         pattern: "*concat.vcf",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Intersect-BCFtools-${params.BCFtools_version}/${task.process.split(':')[-1]}" }
 
     input:
     path vcfs
@@ -140,7 +125,6 @@ process concat_VCFs_BCFtools {
 
     output:
     path "*concat.vcf", emit: vcf
-    path ".command.*"
 
     script:
     vcf_list = vcfs.join(' ')
@@ -164,10 +148,7 @@ process convert_VCF_vcf2maf {
         mode: "copy",
         pattern: "*.maf",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Intersect-BCFtools-${params.BCFtools_version}/${task.process.split(':')[-1]}" }
 
     input:
     path vcf
@@ -177,7 +158,6 @@ process convert_VCF_vcf2maf {
 
     output:
     path "*.maf", emit: maf
-    path ".command.*"
 
     script:
     """

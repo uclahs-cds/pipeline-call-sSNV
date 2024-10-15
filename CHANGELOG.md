@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Use `methods.setup_process_afterscript()` for process logs
 - Add `panel_of_normals_vcf` for MuTect2.
 - Add `a_mini-all-tools-vcf-input` to `nftest`
 - Add option to input VCFs for intersection

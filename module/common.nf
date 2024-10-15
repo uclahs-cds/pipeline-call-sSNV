@@ -14,17 +14,13 @@ process filter_VCF_BCFtools {
         mode: "copy",
         pattern: "*.vcf.gz",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+    ext log_dir: { "${params.log_dir_prefix}/${task.process.split(':')[-1]}-${var_type}" }
 
     input:
     tuple val(var_type), path(vcf)
 
     output:
     tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
-    path ".command.*"
 
     script:
     """
@@ -38,17 +34,13 @@ process generate_sha512sum {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "${file_for_sha512}.sha512"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${id}/log${file(it).getName()}" }
+    ext log_dir: { "${params.log_dir_prefix}/${task.process.split(':')[-1]}-${id}" }
 
     input:
     tuple val(id), path (file_for_sha512)
 
     output:
     tuple val(id), path("${file_for_sha512}.sha512"), emit: sha512sum
-    path ".command.*"
 
     script:
     """
@@ -62,10 +54,7 @@ process split_VCF_BCFtools {
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*.vcf.gz"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}_${var_type}/log${file(it).getName()}" }
+    ext log_dir: { "${params.log_dir_prefix}/${task.process.split(':')[-1]}_${var_type}" }
 
     input:
     path vcf
@@ -73,7 +62,6 @@ process split_VCF_BCFtools {
 
     output:
     tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
-    path ".command.*"
 
     script:
     if (params.keep_input_prefix) {
@@ -100,10 +88,7 @@ process rename_samples_BCFtools {
     publishDir path: "${params.workflow_output_dir}/output",
         mode: "copy",
         pattern: "*.vcf.gz"
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${var_type}/log${file(it).getName()}" }
+    ext log_dir: { "${params.log_dir_prefix}/${task.process.split(':')[-1]}-${var_type}" }
 
     input:
     val ids
@@ -111,7 +96,6 @@ process rename_samples_BCFtools {
 
     output:
     tuple val(var_type), path("*.vcf.gz"), emit: gzvcf
-    path ".command.*"
 
     script:
     info_replacements = ids
@@ -150,17 +134,13 @@ process compress_file_bzip2 {
         mode: "copy",
         pattern: "*.bz2",
         enabled: params.compress_enabled
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${file_type}/log${file(it).getName()}" }
+    ext log_dir: { "${params.log_dir_prefix}/${task.process.split(':')[-1]}-${file_type}" }
 
     input:
     tuple val(file_type), path(file_to_compress)
 
     output:
     tuple val(file_type), path("*.bz2"), emit: compressed_file
-    path ".command.*"
 
     script:
     """
