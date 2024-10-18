@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Generate PUML diagrams
-        uses: uclahs-cds/tool-PlantUML-action@v1.0.0
+        uses: uclahs-cds/tool-PlantUML-action@v1.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           ghcr-username: ${{ github.actor }}
