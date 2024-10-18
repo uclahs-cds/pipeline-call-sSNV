@@ -16,17 +16,13 @@ process calculate_adjVAF_Python {
         mode: "copy",
         pattern: "adjusted_vafs.tsv",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Intersect-BCFtools-${params.BCFtools_version}/${task.process.split(':')[-1]}" }
 
     input:
     val input_data
     path input_files
 
     output:
-    path ".command.*"
     path "adjusted_vafs.tsv", emit: adjusted_vafs
 
     script:
@@ -48,16 +44,12 @@ process plot_adjVAF_R {
         mode: "copy",
         pattern: "stripplot.png",
         saveAs: { "${params.output_filename}_adjVAF.png" }
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Intersect-BCFtools-${params.BCFtools_version}/${task.process.split(':')[-1]}" }
 
     input:
     path adjvaf_table
 
     output:
-    path ".command.*"
     path "stripplot.png"
 
     script:

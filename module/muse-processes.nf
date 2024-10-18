@@ -14,13 +14,10 @@ MuSE Options:
 process call_sSNV_MuSE {
     container params.docker_image_MuSE
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-            mode: "copy",
-            pattern: "*.txt",
-            enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-            mode: "copy",
-            pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.txt",
+        enabled: params.save_intermediate_files
+        ext log_dir: { "MuSE-${params.MuSE_version}/${task.process.split(':')[-1]}" }
 
     input:
     path tumor
@@ -32,7 +29,6 @@ process call_sSNV_MuSE {
 
     output:
     path("*.txt"), emit: txt
-    path ".command.*"
 
     script:
     """
@@ -48,13 +44,10 @@ process call_sSNV_MuSE {
 process run_sump_MuSE {
     container params.docker_image_MuSE
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-            mode: "copy",
-            pattern: "*.vcf",
-            enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-            mode: "copy",
-            pattern: ".command.*",
-            saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.vcf",
+        enabled: params.save_intermediate_files
+        ext log_dir: { "MuSE-${params.MuSE_version}/${task.process.split(':')[-1]}" }
 
     input:
     path MuSE_txt
@@ -63,7 +56,6 @@ process run_sump_MuSE {
 
     output:
     path("*.vcf"), emit: vcf
-    path ".command.*"
 
     script:
     arg_seq_type = params.exome ? "-E" : "-G"

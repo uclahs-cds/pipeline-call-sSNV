@@ -1,10 +1,12 @@
 include { call_sSNV_Strelka2; call_sIndel_Manta } from './strelka2-processes'
-include { filter_VCF_BCFtools; rename_samples_BCFtools; generate_sha512sum } from './common'
+include { filter_VCF_BCFtools; rename_samples_BCFtools; generate_sha512sum } from './common' addParams(
+    log_dir_prefix: "Strelka2-${params.strelka2_version}"
+    )
 
 include { compress_index_VCF } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir,
+        log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args
         ])

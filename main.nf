@@ -73,28 +73,24 @@ if (params.input_type == 'bam') {
 
     include { somaticsniper } from './module/somaticsniper' addParams(
         workflow_output_dir: "${params.output_dir_base}/SomaticSniper-${params.somaticsniper_version}",
-        workflow_log_output_dir: "${params.log_output_dir}/process-log/SomaticSniper-${params.somaticsniper_version}",
         output_filename: generate_standard_filename("SomaticSniper-${params.somaticsniper_version}",
             params.dataset_id,
             params.sample_id,
             [:]))
     include { strelka2 } from './module/strelka2' addParams(
         workflow_output_dir: "${params.output_dir_base}/Strelka2-${params.strelka2_version}",
-        workflow_log_output_dir: "${params.log_output_dir}/process-log/Strelka2-${params.strelka2_version}",
         output_filename: generate_standard_filename("Strelka2-${params.strelka2_version}",
             params.dataset_id,
             params.sample_id,
             [:]))
     include { mutect2 } from './module/mutect2' addParams(
         workflow_output_dir: "${params.output_dir_base}/Mutect2-${params.GATK_version}",
-        workflow_log_output_dir: "${params.log_output_dir}/process-log/Mutect2-${params.GATK_version}",
         output_filename: generate_standard_filename("Mutect2-${params.GATK_version}",
             params.dataset_id,
             params.sample_id,
             [:]))
     include { muse } from './module/muse' addParams(
         workflow_output_dir: "${params.output_dir_base}/MuSE-${params.MuSE_version}",
-        workflow_log_output_dir: "${params.log_output_dir}/process-log/MuSE-${params.MuSE_version}",
         output_filename: generate_standard_filename("MuSE-${params.MuSE_version}",
             params.dataset_id,
             params.sample_id,
@@ -134,7 +130,6 @@ if (params.input_type == 'bam') {
 } else if (params.input_type == 'vcf') {
     include { process_vcfs } from './module/process-vcfs' addParams(
         workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
-        workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
         output_filename: generate_standard_filename("BCFtools-${params.BCFtools_version}",
         params.dataset_id,
         params.sample_id,
@@ -151,7 +146,6 @@ if (params.input_type == 'bam') {
 
 include { intersect; getToolName } from './module/intersect' addParams(
     workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
     output_filename: generate_standard_filename("BCFtools-${params.BCFtools_version}",
         params.dataset_id,
         params.sample_id,
@@ -159,7 +153,6 @@ include { intersect; getToolName } from './module/intersect' addParams(
 
 include { plot_vaf } from './module/plot-vaf' addParams(
     workflow_output_dir: "${params.output_dir_base}/Intersect-BCFtools-${params.BCFtools_version}",
-    workflow_log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
     output_filename: generate_standard_filename("BPG-${params.bpg_version}",
         params.dataset_id,
         params.sample_id,

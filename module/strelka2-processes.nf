@@ -13,13 +13,10 @@ Strelka2 Options:
 process call_sIndel_Manta {
     container params.docker_image_manta
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "MantaWorkflow",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "MantaWorkflow",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "Strelka2-${params.strelka2_version}/${task.process.split(':')[-1]}" }
 
     input:
     path tumor
@@ -35,7 +32,6 @@ process call_sIndel_Manta {
     tuple path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz"),
           path("MantaWorkflow/results/variants/candidateSmallIndels.vcf.gz.tbi")
     path "MantaWorkflow"
-    path ".command.*"
 
     script:
     exome = params.exome ? "--exome" : ""
@@ -56,13 +52,10 @@ process call_sIndel_Manta {
 process call_sSNV_Strelka2 {
     container params.docker_image_strelka2
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "StrelkaSomaticWorkflow",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "StrelkaSomaticWorkflow",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "Strelka2-${params.strelka2_version}/${task.process.split(':')[-1]}" }
 
     input:
     path tumor
@@ -79,7 +72,6 @@ process call_sSNV_Strelka2 {
     tuple val("SNV"), path("StrelkaSomaticWorkflow/results/variants/somatic.snvs.vcf.gz"), emit: snvs_gzvcf
     tuple val("Indel"), path("StrelkaSomaticWorkflow/results/variants/somatic.indels.vcf.gz"), emit: indels_gzvcf
     path "StrelkaSomaticWorkflow"
-    path ".command.*"
 
     script:
     exome = params.exome ? "--exome" : ""
