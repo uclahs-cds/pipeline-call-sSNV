@@ -1,4 +1,7 @@
 # pipeline-call-sSNV
+
+[![GitHub release](https://img.shields.io/github/v/release/uclahs-cds/pipeline-call-sSNV)](https://github.com/uclahs-cds/pipeline-call-sSNV/actions/workflows/prepare-release.yaml)
+
 - [call-sSNV](#pipeline-call-ssnv)
   - [Overview](#overview)
   - [How To Run](#how-to-run)
