@@ -15,6 +15,7 @@ Mutect2 Options:
 - single tumor normal pair:       ${params.single_NT_paired}
 - germline resource:              ${params.germline_resource_gnomad_vcf}
 - contamination_table:            ${params.input.tumor.contamination_table}
+- panel of normals:               ${params.panel_of_normals_vcf}
 """
 
 process run_SplitIntervals_GATK {
@@ -92,7 +93,7 @@ process call_sSNV_Mutect2 {
     normal_names = normal_name.collect { "-normal ${it}" }.join(' ')
     bam = normal_names == '-normal NO_ID' ? "$tumors" : "$tumors $normals $normal_names"
     germline = params.germline ? "--germline-resource $germline_resource_gnomad_vcf" : ""
-    panel_of_normals = params.panel_of_normals_vcf ? "--panel-of-normals ${params.panel_of_normals_vcf}" : ""
+    panel_of_normals_cmd = params.panel_of_normals_vcf ? "--panel-of-normals ${params.panel_of_normals_vcf}" : ""
     interval_id = interval.baseName.split('-')[0]
     """
     set -euo pipefail
@@ -105,7 +106,7 @@ process call_sSNV_Mutect2 {
         -O ${params.output_filename}_unfiltered-${interval.baseName}.vcf.gz \
         --tmp-dir \$PWD \
         $germline \
-        $panel_of_normals \
+        $panel_of_normals_cmd \
         ${params.mutect2_extra_args}
     """
     }
