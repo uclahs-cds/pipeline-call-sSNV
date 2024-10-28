@@ -69,7 +69,7 @@
       "cache_intermediate_pipeline_steps": false,
       "call_ssnv_r_version": "dev",
       "dataset_id": "TWGSAMIN",
-      "dbSNP": "/hot/ref/database/dbSNP-155/original/GRCh38/GCF_000001405.39.gz",
+      "dbSNP": "/hot/resource/database/dbSNP-155/original/GRCh38/GCF_000001405.39.gz",
       "docker_container_registry": "ghcr.io/uclahs-cds",
       "docker_image_BCFtools": "ghcr.io/uclahs-cds/bcftools:1.17",
       "docker_image_GATK": "broadinstitute/gatk:4.5.0.0",
@@ -88,24 +88,24 @@
       "filter_mutect_calls_extra_args": "",
       "gatk_command_mem_diff": "500 MB",
       "germline": true,
-      "germline_resource_gnomad_vcf": "/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz",
-      "germline_resource_gnomad_vcf_index": "/hot/ref/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz.tbi",
+      "germline_resource_gnomad_vcf": "/hot/resource/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz",
+      "germline_resource_gnomad_vcf_index": "/hot/resource/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz.tbi",
       "input": {
         "normal": [
           {
-            "BAM": "/hot/resource/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam"
+            "BAM": "/hot/data/unregistered/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam"
           }
         ],
         "tumor": [
           {
-            "BAM": "/hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam",
+            "BAM": "/hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam",
             "contamination_table": "/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table"
           }
         ]
       },
       "input_type": "bam",
-      "intersect_regions": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz",
-      "intersect_regions_index": "/hot/ref/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz.tbi",
+      "intersect_regions": "/hot/resource/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz",
+      "intersect_regions_index": "/hot/resource/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz.tbi",
       "keep_input_prefix": false,
       "log_output_dir": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847/log-call-sSNV-VER.SI.ON-19970704T165655Z",
       "manta_version": "1.6.0",
@@ -242,17 +242,17 @@
           "memory": "1 GB"
         }
       },
-      "reference": "/hot/ref/reference/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta",
+      "reference": "/hot/resource/reference-genome/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta",
       "sample_id": "0192847",
       "samples_to_process": [
         {
           "contamination_table": "null",
           "id": "0192847",
           "orig_id": "0192847",
-          "path": "/hot/resource/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam",
+          "path": "/hot/data/unregistered/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam",
           "sample_type": "normal"
         },
-        "{orig_id=0192847, id=0192847, path=/hot/resource/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam, contamination_table=/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table, sample_type=tumor}"
+        "{orig_id=0192847, id=0192847, path=/hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam, contamination_table=/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table, sample_type=tumor}"
       ],
       "save_intermediate_files": false,
       "scatter_count": "50",
