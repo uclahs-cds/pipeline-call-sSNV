@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add option to input VCFs for intersection
 - Add VAF stripplot for variant overlaps across tools
 
+### Fixed
+ - Avoid warning when run without panel of normals
+
 ## [8.1.0] - 2024-05-15
 
 ### Added
