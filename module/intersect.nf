@@ -1,12 +1,13 @@
 include { compress_file_bzip2; generate_sha512sum} from './common'  addParams(
     compress_publishdir : "${params.workflow_output_dir}/output",
-    compress_enabled : true
+    compress_enabled : true,
+    log_dir_prefix: "Intersect-BCFtools-${params.BCFtools_version}"
     )
 include { reorder_samples_BCFtools; intersect_VCFs_BCFtools; plot_VennDiagram_R; concat_VCFs_BCFtools ; convert_VCF_vcf2maf } from './intersect-processes.nf'
 include { compress_index_VCF as compress_index_VCF_reordered } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir,
+        log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args,
         is_output_file: false
@@ -14,7 +15,7 @@ include { compress_index_VCF as compress_index_VCF_reordered } from '../external
 include { compress_index_VCF as compress_index_VCF_concat } from '../external/pipeline-Nextflow-module/modules/common/index_VCF_tabix/main.nf' addParams(
     options: [
         output_dir: params.workflow_output_dir,
-        log_output_dir: params.workflow_log_output_dir,
+        log_output_dir: "${params.log_output_dir}/process-log/Intersect-BCFtools-${params.BCFtools_version}",
         bgzip_extra_args: params.bgzip_extra_args,
         tabix_extra_args: params.tabix_extra_args
         ])

@@ -25,10 +25,7 @@ process run_SplitIntervals_GATK {
         mode: "copy",
         pattern: "interval-files/*-scattered.interval_list",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Mutect2-${params.GATK_version}/${task.process.split(':')[-1]}" }
 
     input:
     path intersect_regions
@@ -39,7 +36,6 @@ process run_SplitIntervals_GATK {
 
     output:
     path 'interval-files/*-scattered.interval_list', emit: interval_list
-    path ".command.*"
 
     script:
     intervals_command = params.use_intersect_regions ? "-L ${intersect_regions}" : ""
@@ -62,10 +58,7 @@ process call_sSNV_Mutect2 {
         mode: "copy",
         pattern: "${params.output_filename}_unfiltered*",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}-${interval_id}/log${file(it).getName()}" }
+    ext log_dir: { "Mutect2-${params.GATK_version}/${task.process.split(':')[-1]}-${interval_id}" }
 
     input:
     path interval
@@ -85,7 +78,6 @@ process call_sSNV_Mutect2 {
     path "*.vcf.gz.tbi", emit: unfiltered_index
     path "*.vcf.gz.stats", emit: unfiltered_stats
     path "*-f1r2.tar.gz", emit: f1r2
-    path ".command.*"
 
     script:
     tumors = tumor.collect { "-I '$it'" }.join(' ')
@@ -117,10 +109,7 @@ process run_MergeVcfs_GATK {
         mode: "copy",
         pattern: "*_unfiltered.vcf.gz*",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Mutect2-${params.GATK_version}/${task.process.split(':')[-1]}" }
 
     input:
     path unfiltered_vcf
@@ -128,7 +117,6 @@ process run_MergeVcfs_GATK {
     output:
     path "*_unfiltered.vcf.gz", emit: unfiltered
     path "*_unfiltered.vcf.gz.tbi", emit: unfiltered_index
-    path ".command.*"
 
     script:
     unfiltered_vcfs = unfiltered_vcf.collect { "-I '$it'" }.join(' ')
@@ -144,17 +132,13 @@ process run_MergeMutectStats_GATK {
         mode: "copy",
         pattern: "*_unfiltered.vcf.gz.stats",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Mutect2-${params.GATK_version}/${task.process.split(':')[-1]}" }
 
     input:
     path unfiltered_stat
 
     output:
     path "*_unfiltered.vcf.gz.stats", emit: merged_stats
-    path ".command.*"
 
     script:
     unfiltered_stats = unfiltered_stat.collect { "-stats '$it'" }.join(' ')
@@ -170,17 +154,13 @@ process run_LearnReadOrientationModel_GATK {
         mode: "copy",
         pattern: "read-orientation-model.tar.gz",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "Mutect2-${params.GATK_version}/${task.process.split(':')[-1]}" }
 
     input:
     path f1r2
 
     output:
     path "read-orientation-model.tar.gz", emit: read_orientation_model
-    path ".command.*"
 
     script:
     f1r2 = f1r2.collect { "-I '$it'" }.join(' ')
@@ -199,13 +179,10 @@ process run_FilterMutectCalls_GATK {
         mode: "copy",
         pattern: "*_filtered.vcf.gz",
         enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-        mode: "copy",
-        pattern: ".command.*",
-        saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
     publishDir path: "${params.workflow_output_dir}/QC/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: "*.tsv"
+    ext log_dir: { "Mutect2-${params.GATK_version}/${task.process.split(':')[-1]}" }
 
     input:
     path reference
@@ -219,7 +196,6 @@ process run_FilterMutectCalls_GATK {
 
     output:
     path "*_filtered.vcf.gz", emit: filtered
-    path ".command.*"
     path "*_filteringStats.tsv"
 
     script:

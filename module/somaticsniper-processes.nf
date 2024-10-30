@@ -12,13 +12,10 @@ Docker Images:
 process call_sSNV_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.vcf",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.vcf",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}" }
 
     input:
     path tumor
@@ -28,7 +25,6 @@ process call_sSNV_SomaticSniper {
 
     output:
     path "*.vcf", emit: bam_somaticsniper
-    path ".command.*"
 
     """
     set -euo pipefail
@@ -56,13 +52,10 @@ process call_sSNV_SomaticSniper {
 process convert_BAM2Pileup_SAMtools {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.pileup",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}-${type}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.pileup",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}-${type}" }
 
     input:
     tuple val(type), path(bam)
@@ -71,7 +64,6 @@ process convert_BAM2Pileup_SAMtools {
 
     output:
     tuple val(type), path("${params.output_filename}_raw-${type}.pileup"), emit: raw_pileup
-    path ".command.*"
 
     """
     set -euo pipefail
@@ -89,20 +81,16 @@ process convert_BAM2Pileup_SAMtools {
 process create_IndelCandidate_SAMtools {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.pileup",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}-${type}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.pileup",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}-${type}" }
 
     input:
     tuple val(type), path(raw_pileup)
 
     output:
     tuple val(type), path("*_filtered-${type}.pileup"), emit: filtered_pileup
-    path ".command.*"
 
     """
     set -euo pipefail
@@ -119,13 +107,10 @@ process create_IndelCandidate_SAMtools {
 process apply_NormalIndelFilter_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*_normal.vcf",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*_normal.vcf",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}" }
 
     input:
     path snp_file
@@ -133,7 +118,6 @@ process apply_NormalIndelFilter_SomaticSniper {
 
     output:
     path "*_normal.vcf", emit: vcf_normal
-    path ".command.*"
 
     """
     set -euo pipefail
@@ -149,13 +133,10 @@ process apply_NormalIndelFilter_SomaticSniper {
 process apply_TumorIndelFilter_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.SNPfilter",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.SNPfilter",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}" }
 
     input:
     path snp_file
@@ -163,7 +144,6 @@ process apply_TumorIndelFilter_SomaticSniper {
 
     output:
     path "*.SNPfilter", emit: vcf_tumor
-    path ".command.*"
 
     """
     set -euo pipefail
@@ -179,20 +159,16 @@ process apply_TumorIndelFilter_SomaticSniper {
 process create_ReadCountPosition_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.SNPfilter.pos",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.SNPfilter.pos",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}" }
 
     input:
     path snp_file
 
     output:
     path "*.SNPfilter.pos", emit: snp_positions
-    path ".command.*"
 
     script:
     """
@@ -207,10 +183,7 @@ process create_ReadCountPosition_SomaticSniper {
 // Recommend to use the same mapping quality -q setting as SomaticSniper
 process generate_ReadCount_bam_readcount {
     container params.docker_image_bam_readcount
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}" }
 
     input:
     path reference
@@ -221,7 +194,6 @@ process generate_ReadCount_bam_readcount {
 
     output:
     path "*.readcount", emit: readcount
-    path ".command.*"
 
     // tumor index file not explicitly passed to bam-readcount,
     // but it needs to be in the working directory otherwise bam-readcount will fail
@@ -242,13 +214,10 @@ process generate_ReadCount_bam_readcount {
 process filter_FalsePositive_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               mode: "copy",
-               pattern: "*.SNPfilter.*",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        mode: "copy",
+        pattern: "*.SNPfilter.*",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}" }
 
     input:
     path snp_file
@@ -271,13 +240,10 @@ process filter_FalsePositive_SomaticSniper {
 process call_HighConfidenceSNV_SomaticSniper {
     container params.docker_image_somaticsniper
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
-               pattern: "*.vcf",
-               mode: "copy",
-               enabled: params.save_intermediate_files
-    publishDir path: "${params.workflow_log_output_dir}",
-               mode: "copy",
-               pattern: ".command.*",
-               saveAs: { "${task.process.split(':')[-1]}/log${file(it).getName()}" }
+        pattern: "*.vcf",
+        mode: "copy",
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SomaticSniper-${params.somaticsniper_version}/${task.process.split(':')[-1]}" }
 
     input:
     path fp_pass
