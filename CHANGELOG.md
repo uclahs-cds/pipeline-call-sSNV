@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Update pipeval 4.0.0-rc.2 -> 5.1.0
+- Update GATK 4.5.0.0 -> 4.6.1.0
+- Update bam_readcount 0.8.0 -> 1.0.1
+- Update MuSE 2.0.4 -> MuSE 2.1.2
+- Update BCFtools 1.17 -> 1.21
+- Update NFtest for new tool versions
+
 ### Added
 - Use `methods.setup_process_afterscript()` for process logs
 - Output pipeline parameters to log directory using `store_object_as_json`
