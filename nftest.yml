@@ -259,11 +259,11 @@ cases:
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/MuSE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/MuSE-2.0.4_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/MuSE-2.0.3_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/Mutect2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/Mutect2-4.5.0.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/Mutect2-4.4.0.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/SomaticSniper-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
