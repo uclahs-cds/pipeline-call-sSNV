@@ -1,10 +1,3 @@
-> This is a template for UCLA-CDS pipeline developers to create a github pull request template. Things should be adjusted for individual pipeline including:
-> 1. additional checklist items sepecific to the pipeline
-> 2. a description of how testing is expected to be done
-> 3. a template list or table for testing results
-> 4. additional notes wrapped in \<!--- ---> (or \<!-- --\> for inline comments) that help PR submitters to fill in.
-> 5. delete this block of instructional text.
-
 # Description
 <!--- Briefly describe the changes included in this pull request and the paths to the test cases below
  !--- starting with 'Closes #...' if appropriate --->
@@ -12,7 +5,7 @@
 ### Closes #...
 
 ## Testing Results
-
+<!-- Delete unused cases below. Usually NFTest is desired and sufficient -->
 - Case 1
     - sample:    <!-- e.g. A-mini S2.T-1, A-mini S2.T-n1 -->
     - input csv: <!-- path/to/input.csv -->
