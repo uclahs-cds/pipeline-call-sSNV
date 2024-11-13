@@ -1,4 +1,3 @@
-
 # Description
 <!--- Briefly describe the changes included in this pull request and the paths to the test cases below
  !--- starting with 'Closes #...' if appropriate --->
@@ -6,22 +5,21 @@
 ### Closes #...
 
 ## Testing Results
-
-- Tumor/Normal Paired Sample:
+<!-- Delete unused cases below. Usually NFTest is desired and sufficient -->
+- Case 1
     - sample:    <!-- e.g. A-mini S2.T-1, A-mini S2.T-n1 -->
-    - input YAML: <!-- path/to/input.csv -->
+    - input csv: <!-- path/to/input.csv -->
     - config:    <!-- path/to/xxx.config -->
     - output:    <!-- path/to/output -->
-- Tumor-only Sample:
+- Case 2
     - sample:    <!-- e.g. A-mini S2.T-1, A-mini S2.T-n1 -->
-    - input YAML: <!-- path/to/input.csv -->
+    - input csv: <!-- path/to/input.csv -->
     - config:    <!-- path/to/xxx.config -->
     - output:    <!-- path/to/output -->
-- Multi-tumor Sample:
-    - sample:    <!-- e.g. A-mini S2.T-1, A-mini S2.T-n1 -->
-    - input YAML: <!-- path/to/input.csv -->
-    - config:    <!-- path/to/xxx.config -->
+- NFTest
     - output:    <!-- path/to/output -->
+    - log:       <!-- path/to/log -->
+    - cases:     <!-- list of test cases run -->
 
 # Checklist
 <!--- Please read each of the following items and confirm by replacing the [ ] with a [X] --->
@@ -34,7 +32,7 @@
 
 - [ ] I have set up or verified the branch protection rule following the [github standards](https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3190380/GitHub+Standards#GitHubStandards-Branchprotectionrule) before opening this pull request.
 
-- [ ] I have added my name to the contributors listings in the ``manifest`` block in the `nextflow.config` as part of this pull request; I am listed already, or do not wish to be listed. (*This acknowledgement is optional.*)
+- [ ] I have added my name to the contributors listings in the ``manifest`` block in the `nextflow.config` as part of this pull request, am listed already, or do not wish to be listed. (*This acknowledgement is optional.*)
 
 - [ ] I have added the changes included in this pull request to the `CHANGELOG.md` under the next release version or unreleased, and updated the date.
 

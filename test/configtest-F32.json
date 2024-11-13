@@ -54,16 +54,16 @@
       "version": "VER.SI.ON"
     },
     "params": {
-      "BCFtools_version": "1.17",
-      "GATK_version": "4.5.0.0",
-      "MuSE_version": "2.0.4",
+      "BCFtools_version": "1.21",
+      "GATK_version": "4.6.1.0",
+      "MuSE_version": "2.1.2",
       "algorithm": [
         "somaticsniper",
         "strelka2",
         "mutect2",
         "muse"
       ],
-      "bam_readcount_version": "0.8.0",
+      "bam_readcount_version": "1.0.1",
       "bgzip_extra_args": "",
       "bpg_version": "7.1.0",
       "cache_intermediate_pipeline_steps": false,
@@ -71,10 +71,10 @@
       "dataset_id": "TWGSAMIN",
       "dbSNP": "/hot/resource/database/dbSNP-155/original/GRCh38/GCF_000001405.39.gz",
       "docker_container_registry": "ghcr.io/uclahs-cds",
-      "docker_image_BCFtools": "ghcr.io/uclahs-cds/bcftools:1.17",
-      "docker_image_GATK": "broadinstitute/gatk:4.5.0.0",
-      "docker_image_MuSE": "ghcr.io/uclahs-cds/muse:2.0.4",
-      "docker_image_bam_readcount": "ghcr.io/uclahs-cds/bam-readcount:0.8.0",
+      "docker_image_BCFtools": "ghcr.io/uclahs-cds/bcftools:1.21",
+      "docker_image_GATK": "broadinstitute/gatk:4.6.1.0",
+      "docker_image_MuSE": "ghcr.io/uclahs-cds/muse:2.1.2",
+      "docker_image_bam_readcount": "ghcr.io/uclahs-cds/bam_readcount:1.0.1",
       "docker_image_bpg": "ghcr.io/uclahs-cds/boutroslabplottinggeneral:7.1.0",
       "docker_image_manta": "ghcr.io/uclahs-cds/manta:1.6.0",
       "docker_image_r_VennDiagram": "ghcr.io/uclahs-cds/call-ssnv-r:dev",
@@ -82,7 +82,7 @@
       "docker_image_src_util": "ghcr.io/uclahs-cds/src-util:1.2.0",
       "docker_image_strelka2": "ghcr.io/uclahs-cds/strelka2:2.9.10",
       "docker_image_ubuntu": "ubuntu:20.04",
-      "docker_image_validate_params": "ghcr.io/uclahs-cds/pipeval:4.0.0-rc.2",
+      "docker_image_validate_params": "ghcr.io/uclahs-cds/pipeval:5.1.0",
       "docker_image_vcf2maf": "ghcr.io/mskcc/vcf2maf/vcf2maf:v1.6.18",
       "exome": false,
       "filter_mutect_calls_extra_args": "",
@@ -120,7 +120,7 @@
       "output_dir_base": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847",
       "panel_of_normals_vcf": "",
       "patient_id": "TWGSAMIN000001",
-      "pipeval_version": "4.0.0-rc.2",
+      "pipeval_version": "5.1.0",
       "proc_resource_params": {
         "call_sIndel_Manta": {
           "cpus": "8",
