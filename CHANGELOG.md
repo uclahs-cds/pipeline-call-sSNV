@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Update pipeval 4.0.0-rc.2 -> 5.1.0
+- Update PipeVal 4.0.0-rc.2 -> 5.1.0
 - Update GATK 4.5.0.0 -> 4.6.1.0
 - Update bam_readcount 0.8.0 -> 1.0.1
 - Update MuSE 2.0.4 -> MuSE 2.1.2
