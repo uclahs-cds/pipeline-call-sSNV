@@ -114,7 +114,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/7e1f87f57563cf4785ddb2859e1ca275952aa4a2/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/248c58a15695e5196c95d44d32610d07949bdf09/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -124,7 +124,7 @@
               
                 <h2 id="inputs">Inputs</h2>
 <p>To run the pipeline, one <code>input.yaml</code> and one <code>input.config</code> are needed, as follows.</p>
-<h3 id="inputyaml-see-template">input.yaml. (<a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/7e1f87f57563cf4785ddb2859e1ca275952aa4a2/input/call-sSNV-template.yaml">see template</a>)</h3>
+<h3 id="inputyaml-see-template">input.yaml. (<a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/248c58a15695e5196c95d44d32610d07949bdf09/input/call-sSNV-template.yaml">see template</a>)</h3>
 <table>
 <thead>
 <tr>
@@ -168,9 +168,9 @@ input:
       contamination_table: /path/to/contamination.table
 </code></pre>
 <ul>
-<li><code>Mutect2</code> can take other inputs: tumor-only sample and one patient's multiple samples. For tumor-only samples, remove the normal input in <code>input.yaml</code>, e.g. <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/7e1f87f57563cf4785ddb2859e1ca275952aa4a2/input/example-test-tumor-only.yaml">template_tumor_only.yaml</a>. For multiple samples, put all the input BAMs in the <code>input.yaml</code>, e.g. <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/7e1f87f57563cf4785ddb2859e1ca275952aa4a2/input/example-test-multi-sample.yaml">template_multi_sample.yaml</a>. Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm.</li>
+<li><code>Mutect2</code> can take other inputs: tumor-only sample and one patient's multiple samples. For tumor-only samples, remove the normal input in <code>input.yaml</code>, e.g. <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/248c58a15695e5196c95d44d32610d07949bdf09/input/example-test-tumor-only.yaml">template_tumor_only.yaml</a>. For multiple samples, put all the input BAMs in the <code>input.yaml</code>, e.g. <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/248c58a15695e5196c95d44d32610d07949bdf09/input/example-test-multi-sample.yaml">template_multi_sample.yaml</a>. Note, for these non-standard inputs, the configuration file must have 'mutect2' listed as the only algorithm.</li>
 </ul>
-<h3 id="inputconfig-see-template">input.config (<a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/7e1f87f57563cf4785ddb2859e1ca275952aa4a2/config/template.config">see template</a>)</h3>
+<h3 id="inputconfig-see-template">input.config (<a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/248c58a15695e5196c95d44d32610d07949bdf09/config/template.config">see template</a>)</h3>
 <table>
 <thead>
 <tr>
@@ -245,7 +245,7 @@ input:
 </table>
 <p>*Providing <code>intersect_regions</code> is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a <code>bed</code> file with all contigs, however it is HIGHLY recommended to remove <code>decoy</code> contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for <code>Mutect2</code> and will cause a very long runtime for <code>Strelka2</code>. See <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216">Discussion here</a>. For <code>uclahs-cds</code> users, a GRCh38 <code>bed.gz</code> file can be found here: <code>/hot/resource/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz</code>.</p>
 <h3 id="base-resource-allocation-updaters">Base resource allocation updaters</h3>
-<p>To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/7e1f87f57563cf4785ddb2859e1ca275952aa4a2/config/template.config">input.config</a> file. The default allocations can be found in the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/7e1f87f57563cf4785ddb2859e1ca275952aa4a2/config">node-specific config files</a></p>
+<p>To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/248c58a15695e5196c95d44d32610d07949bdf09/config/template.config">input.config</a> file. The default allocations can be found in the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/248c58a15695e5196c95d44d32610d07949bdf09/config">node-specific config files</a></p>
 <pre><code class="language-Nextflow">base_resource_update {
     memory = [
         [['process_name', 'process_name2'], &lt;multiplier for resource&gt;],
