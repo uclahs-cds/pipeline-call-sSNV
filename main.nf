@@ -251,23 +251,25 @@ workflow {
         process_vcfs.out.idx.set { tool_indices }
         }
 
-    intersect(
-        tool_gzvcfs,
-        tool_indices,
-        script_dir_ch,
-        )
+    if (params.algorithm.size() > 1 || params.input_type == 'vcf') {
+        intersect(
+            tool_gzvcfs,
+            tool_indices,
+            script_dir_ch,
+            )
 
-    all_files = tool_gzvcfs.mix(tool_indices)
-        .flatten()
-        .collect()
+        all_files = tool_gzvcfs.mix(tool_indices)
+            .flatten()
+            .collect()
 
-    identified_gzvcfs = tool_gzvcfs.flatten()
-        .map{ [algorithm: getToolName(it), path: it] }
-        .collect()
+        identified_gzvcfs = tool_gzvcfs.flatten()
+            .map{ [algorithm: getToolName(it), path: it] }
+            .collect()
 
-    plot_vaf(
-        identified_gzvcfs,
-        all_files
-        )
+        plot_vaf(
+            identified_gzvcfs,
+            all_files
+            )
 
+        }
     }
