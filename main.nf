@@ -232,19 +232,18 @@ workflow {
             mutect2.out.gzvcf.set { mutect2_gzvcf_ch }
             mutect2.out.idx.set { mutect2_idx_ch }
             }
-        // Intersect all vcf files
-        if (params.algorithm.size() > 1) {
-            tool_gzvcfs = (somaticsniper_gzvcf_ch
-                .mix(strelka2_gzvcf_ch)
-                .mix(mutect2_gzvcf_ch)
-                .mix(muse_gzvcf_ch))
-                .collect()
-            tool_indices = (somaticsniper_idx_ch
-                .mix(strelka2_idx_ch)
-                .mix(mutect2_idx_ch)
-                .mix(muse_idx_ch))
-                .collect()
-            }
+
+        tool_gzvcfs = (somaticsniper_gzvcf_ch
+            .mix(strelka2_gzvcf_ch)
+            .mix(mutect2_gzvcf_ch)
+            .mix(muse_gzvcf_ch))
+            .collect()
+        tool_indices = (somaticsniper_idx_ch
+            .mix(strelka2_idx_ch)
+            .mix(mutect2_idx_ch)
+            .mix(muse_idx_ch))
+            .collect()
+
     } else if (params.input_type == 'vcf') {
         process_vcfs(samplesToProcess_ch)
         process_vcfs.out.gzvcf.set { tool_gzvcfs }
@@ -257,19 +256,19 @@ workflow {
             tool_indices,
             script_dir_ch,
             )
-
-        all_files = tool_gzvcfs.mix(tool_indices)
-            .flatten()
-            .collect()
-
-        identified_gzvcfs = tool_gzvcfs.flatten()
-            .map{ [algorithm: getToolName(it), path: it] }
-            .collect()
-
-        plot_vaf(
-            identified_gzvcfs,
-            all_files
-            )
-
         }
+
+    all_files = tool_gzvcfs.mix(tool_indices)
+        .flatten()
+        .collect()
+
+    identified_gzvcfs = tool_gzvcfs.flatten()
+        .map{ [algorithm: getToolName(it), path: it] }
+        .collect()
+
+    plot_vaf(
+        identified_gzvcfs,
+        all_files
+        )
+
     }
