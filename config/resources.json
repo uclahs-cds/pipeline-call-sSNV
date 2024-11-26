@@ -1,0 +1,1654 @@
+{
+    "f2": {
+        "run_validate_PipeVal": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.25,
+                "max": "1 GB"
+            }
+        },
+        "call_sSNV_SomaticSniper": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            },
+            "memory": {
+                "min": "1.5 GB",
+                "fraction": 0.39,
+                "max": "1.5 GB"
+            }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            },
+            "memory": {
+                "min": "1.5 GB",
+                "fraction": 0.39,
+                "max": "1.5 GB"
+            }
+        },
+        "create_IndelCandidate_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            },
+            "memory": {
+                "min": "1.5 GB",
+                "fraction": 0.39,
+                "max": "1.5 GB"
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 2,
+                "fraction": 1.0,
+                "max": 2
+            }
+        },
+        "call_sSNV_Strelka2": {
+            "cpus": {
+                "min": 2,
+                "fraction": 1.0,
+                "max": 2
+            }
+        },
+        "plot_VennDiagram_R": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            }
+        },
+        "concat_VCFs_BCFtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            }
+        }
+    },
+    "f8": {
+        "run_validate_PipeVal": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.07,
+                "max": "1 GB"
+            }
+        },
+        "call_sSNV_SomaticSniper": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.07,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 2048,
+                        "kilo": 2097152,
+                        "giga": 2,
+                        "bytes": 2147483648
+                    }
+                }
+            }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.07,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 2048,
+                        "kilo": 2097152,
+                        "giga": 2,
+                        "bytes": 2147483648
+                    }
+                }
+            }
+        },
+        "create_IndelCandidate_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.07,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 2048,
+                        "kilo": 2097152,
+                        "giga": 2,
+                        "bytes": 2147483648
+                    }
+                }
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.5,
+                "max": 4
+            },
+            "memory": {
+                "min": "3 GB",
+                "fraction": 0.20,
+                "max": "3 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 3072,
+                        "kilo": 3145728,
+                        "giga": 3,
+                        "bytes": 3221225472
+                    }
+                }
+            }
+        },
+        "call_sSNV_Strelka2": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.5,
+                "max": 4
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.13,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 2048,
+                        "kilo": 2097152,
+                        "giga": 2,
+                        "bytes": 2147483648
+                    }
+                }
+            }
+        },
+        "call_sSNV_Mutect2": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "3 GB",
+                "fraction": 0.20,
+                "max": "3 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 2048,
+                        "kilo": 2097152,
+                        "giga": 2,
+                        "bytes": 2147483648
+                    }
+                }
+            }
+        },
+        "run_LearnReadOrientationModel_GATK": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "8 GB",
+                "fraction": 0.53,
+                "max": "8 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "exponential",
+                    "operand": 2
+                }
+            }
+        },
+        "call_sSNV_MuSE": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.5,
+                "max": 4
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.66,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 6144,
+                        "kilo": 6291456,
+                        "giga": 6,
+                        "bytes": 6442450944
+                    }
+                }
+            }
+        },
+        "run_sump_MuSE": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.5,
+                "max": 4
+            },
+            "memory": {
+                "min": "12 GB",
+                "fraction": 0.79,
+                "max": "12 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 4096,
+                        "kilo": 4194304,
+                        "giga": 4,
+                        "bytes": 4294967296
+                    }
+                }
+            }
+        },
+        "plot_VennDiagram_R": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.07,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "concat_VCFs_BCFtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.07,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        }
+    },
+    "f16": {
+        "run_validate_PipeVal": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.03,
+                "max": "1 GB"
+            }
+        },
+        "call_sSNV_SomaticSniper": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.03,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 3072,
+                        "kilo": 3145728,
+                        "giga": 3,
+                        "bytes": 3221225472
+                    }
+                }
+            }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.03,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "create_IndelCandidate_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.03,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.38,
+                "max": 6
+            },
+            "memory": {
+                "min": "6 GB",
+                "fraction": 0.20,
+                "max": "6 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 12288,
+                        "kilo": 12582912,
+                        "giga": 12,
+                        "bytes": 12884901888
+                    }
+                }
+            }
+        },
+        "call_sSNV_Mutect2": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.07,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 2048,
+                        "kilo": 2097152,
+                        "giga": 2,
+                        "bytes": 2147483648
+                    }
+                }
+            }
+        },
+        "run_LearnReadOrientationModel_GATK": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "8 GB",
+                "fraction": 0.26,
+                "max": "8 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 8192,
+                        "kilo": 8388608,
+                        "giga": 8,
+                        "bytes": 8589934592
+                    }
+                }
+            }
+        },
+        "run_sump_MuSE": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.5,
+                "max": 8
+            },
+            "memory": {
+                "min": "16 GB",
+                "fraction": 0.53,
+                "max": "16 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 16384,
+                        "kilo": 16777216,
+                        "giga": 16,
+                        "bytes": 17179869184
+                    }
+                }
+            }
+        },
+        "plot_VennDiagram_R": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.03,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "concat_VCFs_BCFtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.03,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        }
+    },
+    "f32": {
+        "run_validate_PipeVal": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.02,
+                "max": "1 GB"
+            }
+        },
+        "call_sSNV_SomaticSniper": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.02,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.02,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "create_IndelCandidate_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.02,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.25,
+                "max": 8
+            },
+            "memory": {
+                "min": "6 GB",
+                "fraction": 0.10,
+                "max": "6 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "call_sSNV_Strelka2": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.25,
+                "max": 8
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.03,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 12288,
+                        "kilo": 12582912,
+                        "giga": 12,
+                        "bytes": 12884901888
+                    }
+                }
+            }
+        },
+        "call_sSNV_Mutect2": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.03,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 2048,
+                        "kilo": 2097152,
+                        "giga": 2,
+                        "bytes": 2147483648
+                    }
+                }
+            }
+        },
+        "run_LearnReadOrientationModel_GATK": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "12 GB",
+                "fraction": 0.20,
+                "max": "12 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "call_sSNV_MuSE": {
+            "cpus": {
+                "min": 12,
+                "fraction": 0.38,
+                "max": 12
+            },
+            "memory": {
+                "min": "48 GB",
+                "fraction": 0.79,
+                "max": "48 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 16384,
+                        "kilo": 16777216,
+                        "giga": 16,
+                        "bytes": 17179869184
+                    }
+                }
+            }
+        },
+        "run_sump_MuSE": {
+            "cpus": {
+                "min": 12,
+                "fraction": 0.38,
+                "max": 12
+            },
+            "memory": {
+                "min": "18 GB",
+                "fraction": 0.30,
+                "max": "18 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 16384,
+                        "kilo": 16777216,
+                        "giga": 16,
+                        "bytes": 17179869184
+                    }
+                }
+            }
+        },
+        "plot_VennDiagram_R": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.02,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "concat_VCFs_BCFtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.02,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        }
+    },
+    "f72": {
+        "run_validate_PipeVal": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            }
+        },
+        "call_sSNV_SomaticSniper": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.01,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.01,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 16384,
+                        "kilo": 16777216,
+                        "giga": 16,
+                        "bytes": 17179869184
+                    }
+                }
+            }
+        },
+        "create_IndelCandidate_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.11,
+                "max": 8
+            },
+            "memory": {
+                "min": "6 GB",
+                "fraction": 0.04,
+                "max": "6 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "call_sSNV_Strelka2": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.11,
+                "max": 8
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.01,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 12288,
+                        "kilo": 12582912,
+                        "giga": 12,
+                        "bytes": 12884901888
+                    }
+                }
+            }
+        },
+        "call_sSNV_Mutect2": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "3 GB",
+                "fraction": 0.02,
+                "max": "3 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 3072,
+                        "kilo": 3145728,
+                        "giga": 3,
+                        "bytes": 3221225472
+                    }
+                }
+            }
+        },
+        "run_LearnReadOrientationModel_GATK": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "12 GB",
+                "fraction": 0.09,
+                "max": "12 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "call_sSNV_MuSE": {
+            "cpus": {
+                "min": 12,
+                "fraction": 0.17,
+                "max": 12
+            },
+            "memory": {
+                "min": "60 GB",
+                "fraction": 0.44,
+                "max": "60 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "run_sump_MuSE": {
+            "cpus": {
+                "min": 12,
+                "fraction": 0.17,
+                "max": 12
+            },
+            "memory": {
+                "min": "18 GB",
+                "fraction": 0.13,
+                "max": "18 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 24576,
+                        "kilo": 25165824,
+                        "giga": 24,
+                        "bytes": 25769803776
+                    }
+                }
+            }
+        },
+        "plot_VennDiagram_R": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "concat_VCFs_BCFtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        }
+    },
+    "m64": {
+        "run_validate_PipeVal": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.001,
+                "max": "1 GB"
+            }
+        },
+        "call_sSNV_SomaticSniper": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "20 GB",
+                "fraction": 0.02,
+                "max": "20 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "100 GB",
+                "fraction": 0.10,
+                "max": "100 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 102400,
+                        "kilo": 104857600,
+                        "giga": 100,
+                        "bytes": 107374182400
+                    }
+                }
+            }
+        },
+        "create_IndelCandidate_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.01,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "generate_ReadCount_bam_readcount": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "20 GB",
+                "fraction": 0.02,
+                "max": "20 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.13,
+                "max": 8
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.01,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "call_sSNV_Strelka2": {
+            "cpus": {
+                "min": 28,
+                "fraction": 0.44,
+                "max": 28
+            },
+            "memory": {
+                "min": "30 GB",
+                "fraction": 0.03,
+                "max": "30 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 30720,
+                        "kilo": 31457280,
+                        "giga": 30,
+                        "bytes": 32212254720
+                    }
+                }
+            }
+        },
+        "call_sSNV_Mutect2": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "30 GB",
+                "fraction": 0.03,
+                "max": "30 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 30720,
+                        "kilo": 31457280,
+                        "giga": 30,
+                        "bytes": 32212254720
+                    }
+                }
+            }
+        },
+        "run_LearnReadOrientationModel_GATK": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "30 GB",
+                "fraction": 0.03,
+                "max": "30 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 30720,
+                        "kilo": 31457280,
+                        "giga": 30,
+                        "bytes": 32212254720
+                    }
+                }
+            }
+        },
+        "call_sSNV_MuSE": {
+            "cpus": {
+                "min": 16,
+                "fraction": 0.25,
+                "max": 16
+            },
+            "memory": {
+                "min": "120 GB",
+                "fraction": 0.12,
+                "max": "120 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 61440,
+                        "kilo": 62914560,
+                        "giga": 60,
+                        "bytes": 64424509440
+                    }
+                }
+            }
+        },
+        "run_sump_MuSE": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.09,
+                "max": 6
+            },
+            "memory": {
+                "min": "40 GB",
+                "fraction": 0.04,
+                "max": "40 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "plot_VennDiagram_R": {
+            "cpus": {
+                "min": 2,
+                "fraction": 0.03,
+                "max": 2
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.01,
+                "max": "5 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "concat_VCFs_BCFtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.02,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.00,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        }
+    },
+    "default": {
+        "run_validate_PipeVal": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            }
+        },
+        "call_sSNV_SomaticSniper": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.01,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "convert_BAM2Pileup_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.01,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 16384,
+                        "kilo": 16777216,
+                        "giga": 16,
+                        "bytes": 17179869184
+                    }
+                }
+            }
+        },
+        "create_IndelCandidate_SAMtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.11,
+                "max": 8
+            },
+            "memory": {
+                "min": "6 GB",
+                "fraction": 0.04,
+                "max": "6 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 5120,
+                        "kilo": 5242880,
+                        "giga": 5,
+                        "bytes": 5368709120
+                    }
+                }
+            }
+        },
+        "call_sSNV_Strelka2": {
+            "cpus": {
+                "min": 8,
+                "fraction": 0.11,
+                "max": 8
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.01,
+                "max": "2 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 12288,
+                        "kilo": 12582912,
+                        "giga": 12,
+                        "bytes": 12884901888
+                    }
+                }
+            }
+        },
+        "call_sSNV_Mutect2": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "3 GB",
+                "fraction": 0.02,
+                "max": "3 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 3072,
+                        "kilo": 3145728,
+                        "giga": 3,
+                        "bytes": 3221225472
+                    }
+                }
+            }
+        },
+        "run_LearnReadOrientationModel_GATK": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "12 GB",
+                "fraction": 0.09,
+                "max": "12 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "call_sSNV_MuSE": {
+            "cpus": {
+                "min": 12,
+                "fraction": 0.17,
+                "max": 12
+            },
+            "memory": {
+                "min": "60 GB",
+                "fraction": 0.44,
+                "max": "60 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 20480,
+                        "kilo": 20971520,
+                        "giga": 20,
+                        "bytes": 21474836480
+                    }
+                }
+            }
+        },
+        "run_sump_MuSE": {
+            "cpus": {
+                "min": 12,
+                "fraction": 0.17,
+                "max": 12
+            },
+            "memory": {
+                "min": "18 GB",
+                "fraction": 0.13,
+                "max": "18 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 24576,
+                        "kilo": 25165824,
+                        "giga": 24,
+                        "bytes": 25769803776
+                    }
+                }
+            }
+        },
+        "plot_VennDiagram_R": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        },
+        "concat_VCFs_BCFtools": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": {
+                        "mega": 10240,
+                        "kilo": 10485760,
+                        "giga": 10,
+                        "bytes": 10737418240
+                    }
+                }
+            }
+        }
+    }
+}
