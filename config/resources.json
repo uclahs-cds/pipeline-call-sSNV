@@ -410,6 +410,24 @@
                 }
             }
         },
+        "call_sSNV_MuSE": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.38,
+                "max": 6
+            },
+            "memory": {
+                "min": "24 GB",
+                "fraction": 0.79,
+                "max": "24 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "8 GB"
+                }
+            }
+        },
         "run_sump_MuSE": {
             "cpus": {
                 "min": 8,
