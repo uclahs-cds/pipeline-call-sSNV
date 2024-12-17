@@ -19,9 +19,9 @@
                 "max": 1
             },
             "memory": {
-                "min": "1.5 GB",
+                "min": "1 GB",
                 "fraction": 0.39,
-                "max": "1.5 GB"
+                "max": "1 GB"
             }
         },
         "convert_BAM2Pileup_SAMtools": {
@@ -31,9 +31,9 @@
                 "max": 1
             },
             "memory": {
-                "min": "1.5 GB",
+                "min": "1 GB",
                 "fraction": 0.39,
-                "max": "1.5 GB"
+                "max": "1 GB"
             }
         },
         "create_IndelCandidate_SAMtools": {
@@ -43,22 +43,34 @@
                 "max": 1
             },
             "memory": {
-                "min": "1.5 GB",
+                "min": "1 GB",
                 "fraction": 0.39,
-                "max": "1.5 GB"
+                "max": "1 GB"
+            }
+        },
+        "generate_ReadCount_bam_readcount": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.25,
+                "max": "1 GB"
             }
         },
         "call_sIndel_Manta": {
             "cpus": {
                 "min": 2,
-                "fraction": 1.0,
+                "fraction": 1,
                 "max": 2
             }
         },
         "call_sSNV_Strelka2": {
             "cpus": {
                 "min": 2,
-                "fraction": 1.0,
+                "fraction": 1,
                 "max": 2
             }
         },
@@ -144,6 +156,24 @@
                 }
             }
         },
+        "generate_ReadCount_bam_readcount": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.07,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "6 GB"
+                }
+            }
+        },
         "call_sIndel_Manta": {
             "cpus": {
                 "min": 4,
@@ -152,7 +182,7 @@
             },
             "memory": {
                 "min": "3 GB",
-                "fraction": 0.20,
+                "fraction": 0.2,
                 "max": "3 GB"
             },
             "retry_strategy": {
@@ -187,8 +217,8 @@
                 "max": 1
             },
             "memory": {
-                "min": "3 GB",
-                "fraction": 0.20,
+                "min": "2 GB",
+                "fraction": 0.2,
                 "max": "3 GB"
             },
             "retry_strategy": {
@@ -211,8 +241,8 @@
             },
             "retry_strategy": {
                 "memory": {
-                    "strategy": "exponential",
-                    "operand": 2
+                    "strategy": "add",
+                    "operand": "8 GB"
                 }
             }
         },
@@ -356,6 +386,24 @@
                 }
             }
         },
+        "generate_ReadCount_bam_readcount": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.03,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "6 GB"
+                }
+            }
+        },
         "call_sIndel_Manta": {
             "cpus": {
                 "min": 6,
@@ -364,8 +412,26 @@
             },
             "memory": {
                 "min": "6 GB",
-                "fraction": 0.20,
+                "fraction": 0.2,
                 "max": "6 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "0 GB"
+                }
+            }
+        },
+        "call_sSNV_Strelka2": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.38,
+                "max": 6
+            },
+            "memory": {
+                "min": "2 GB",
+                "fraction": 0.07,
+                "max": "2 GB"
             },
             "retry_strategy": {
                 "memory": {
@@ -430,9 +496,9 @@
         },
         "run_sump_MuSE": {
             "cpus": {
-                "min": 8,
+                "min": 4,
                 "fraction": 0.5,
-                "max": 8
+                "max": 4
             },
             "memory": {
                 "min": "16 GB",
@@ -550,6 +616,24 @@
                 }
             }
         },
+        "generate_ReadCount_bam_readcount": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.02,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "6 GB"
+                }
+            }
+        },
         "call_sIndel_Manta": {
             "cpus": {
                 "min": 8,
@@ -558,13 +642,13 @@
             },
             "memory": {
                 "min": "6 GB",
-                "fraction": 0.10,
+                "fraction": 0.1,
                 "max": "6 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "5 GB"
+                    "operand": "0 GB"
                 }
             }
         },
@@ -612,7 +696,7 @@
             },
             "memory": {
                 "min": "12 GB",
-                "fraction": 0.20,
+                "fraction": 0.2,
                 "max": "12 GB"
             },
             "retry_strategy": {
@@ -642,13 +726,13 @@
         },
         "run_sump_MuSE": {
             "cpus": {
-                "min": 12,
+                "min": 6,
                 "fraction": 0.38,
-                "max": 12
+                "max": 6
             },
             "memory": {
                 "min": "18 GB",
-                "fraction": 0.30,
+                "fraction": 0.3,
                 "max": "18 GB"
             },
             "retry_strategy": {
@@ -762,6 +846,24 @@
                 }
             }
         },
+        "generate_ReadCount_bam_readcount": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "6 GB"
+                }
+            }
+        },
         "call_sIndel_Manta": {
             "cpus": {
                 "min": 8,
@@ -776,7 +878,7 @@
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "5 GB"
+                    "operand": "0 GB"
                 }
             }
         },
@@ -854,9 +956,9 @@
         },
         "run_sump_MuSE": {
             "cpus": {
-                "min": 12,
+                "min": 6,
                 "fraction": 0.17,
-                "max": 12
+                "max": 6
             },
             "memory": {
                 "min": "18 GB",
@@ -929,12 +1031,12 @@
             "memory": {
                 "min": "20 GB",
                 "fraction": 0.02,
-                "max": "20 GB"
+                "max": "25 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "20 GB"
+                    "operand": "0 GB"
                 }
             }
         },
@@ -946,13 +1048,13 @@
             },
             "memory": {
                 "min": "100 GB",
-                "fraction": 0.10,
+                "fraction": 0.1,
                 "max": "100 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "100 GB"
+                    "operand": "0 GB"
                 }
             }
         },
@@ -963,14 +1065,14 @@
                 "max": 1
             },
             "memory": {
-                "min": "10 GB",
+                "min": "1 GB",
                 "fraction": 0.01,
-                "max": "10 GB"
+                "max": "1 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "10 GB"
+                    "operand": "19 GB"
                 }
             }
         },
@@ -981,14 +1083,14 @@
                 "max": 1
             },
             "memory": {
-                "min": "20 GB",
+                "min": "1 GB",
                 "fraction": 0.02,
-                "max": "20 GB"
+                "max": "1 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "20 GB"
+                    "operand": "39 GB"
                 }
             }
         },
@@ -1035,14 +1137,14 @@
                 "max": 1
             },
             "memory": {
-                "min": "30 GB",
+                "min": "6 GB",
                 "fraction": 0.03,
-                "max": "30 GB"
+                "max": "6 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "30 GB"
+                    "operand": "18 GB"
                 }
             }
         },
@@ -1102,19 +1204,19 @@
         },
         "plot_VennDiagram_R": {
             "cpus": {
-                "min": 2,
+                "min": 1,
                 "fraction": 0.03,
-                "max": 2
+                "max": 1
             },
             "memory": {
-                "min": "5 GB",
+                "min": "1 GB",
                 "fraction": 0.01,
-                "max": "5 GB"
+                "max": "1 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "10 GB"
+                    "operand": "14 GB"
                 }
             }
         },
@@ -1126,7 +1228,7 @@
             },
             "memory": {
                 "min": "1 GB",
-                "fraction": 0.00,
+                "fraction": 0,
                 "max": "1 GB"
             },
             "retry_strategy": {
@@ -1157,14 +1259,14 @@
                 "max": 1
             },
             "memory": {
-                "min": "2 GB",
+                "min": "1 GB",
                 "fraction": 0.01,
                 "max": "2 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "5 GB"
+                    "operand": "16 GB"
                 }
             }
         },
@@ -1175,7 +1277,7 @@
                 "max": 1
             },
             "memory": {
-                "min": "2 GB",
+                "min": "1 GB",
                 "fraction": 0.01,
                 "max": "2 GB"
             },
@@ -1204,28 +1306,46 @@
                 }
             }
         },
-        "call_sIndel_Manta": {
+        "generate_ReadCount_bam_readcount": {
             "cpus": {
-                "min": 8,
-                "fraction": 0.11,
-                "max": 8
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
             },
             "memory": {
-                "min": "6 GB",
-                "fraction": 0.04,
-                "max": "6 GB"
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "1 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "5 GB"
+                    "operand": "6 GB"
+                }
+            }
+        },
+        "call_sIndel_Manta": {
+            "cpus": {
+                "min": 2,
+                "fraction": 0.2,
+                "max": 8
+            },
+            "memory": {
+                "min": "3 GB",
+                "fraction": 0.04,
+                "max": "8 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "4 GB"
                 }
             }
         },
         "call_sSNV_Strelka2": {
             "cpus": {
-                "min": 8,
-                "fraction": 0.11,
+                "min": 2,
+                "fraction": 0.25,
                 "max": 8
             },
             "memory": {
@@ -1236,7 +1356,7 @@
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "12 GB"
+                    "operand": "10 GB"
                 }
             }
         },
@@ -1247,14 +1367,14 @@
                 "max": 1
             },
             "memory": {
-                "min": "3 GB",
+                "min": "2 GB",
                 "fraction": 0.02,
                 "max": "3 GB"
             },
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "3 GB"
+                    "operand": "9 GB"
                 }
             }
         },
@@ -1265,8 +1385,8 @@
                 "max": 1
             },
             "memory": {
-                "min": "12 GB",
-                "fraction": 0.09,
+                "min": "8 GB",
+                "fraction": 0.2,
                 "max": "12 GB"
             },
             "retry_strategy": {
@@ -1278,13 +1398,13 @@
         },
         "call_sSNV_MuSE": {
             "cpus": {
-                "min": 12,
+                "min": 4,
                 "fraction": 0.17,
-                "max": 12
+                "max": 40
             },
             "memory": {
-                "min": "60 GB",
-                "fraction": 0.44,
+                "min": "10 GB",
+                "fraction": 0.7,
                 "max": "60 GB"
             },
             "retry_strategy": {
@@ -1296,12 +1416,12 @@
         },
         "run_sump_MuSE": {
             "cpus": {
-                "min": 12,
+                "min": 4,
                 "fraction": 0.17,
-                "max": 12
+                "max": 6
             },
             "memory": {
-                "min": "18 GB",
+                "min": "12 GB",
                 "fraction": 0.13,
                 "max": "18 GB"
             },
