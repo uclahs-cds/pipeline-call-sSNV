@@ -197,7 +197,8 @@ input:
  *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). For `uclahs-cds` users, a GRCh38 `bed.gz` file can be found here: `/hot/resource/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`.
 
  ### Base resource allocation updaters
-To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the [input.config](config/template.config) file. The default allocations can be found in the [node-specific config files](./config/)
+To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the [input.config](config/template.config) file. The default allocations can be found in `config/resources.json`. If available resources have matched cpus and memory within `90% - 1GB` of one of the pre-specified configurations, that configuration will be used.  Otherwise the default configuration will be used. A spreadsheet view of the resource configuration as of Dec 2024 is [here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/328).  For very large or challanging input samples, we suggest using the `m64` configuration or similar.
+
 
 ```Nextflow
 base_resource_update {
