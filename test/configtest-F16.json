@@ -67,7 +67,7 @@
       "base_allocations": {
         "call_sIndel_Manta": {
           "cpus": "6",
-          "memory": "6 GB"
+          "memory": "9 GB"
         },
         "call_sSNV_MuSE": {
           "cpus": "6",
