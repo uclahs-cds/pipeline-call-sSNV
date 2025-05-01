@@ -47,10 +47,8 @@
     },
     "manifest": {
       "author": "Yuan Zhe (Caden) Bugh, Mao Tian, Sorel Fitz-Gibbon",
-      "homePage": "https://github.com/uclahs-cds/pipeline-call-sSNV",
-      "mainScript": "main.nf",
+      "description": "Nextflow pipeline to identify the somatic single nucleotide variants (sSNVs) by comparing a pair of tumor/normal samples",
       "name": "call-sSNV",
-      "nextflowVersion": ">=20.07.1",
       "version": "VER.SI.ON"
     },
     "params": {
