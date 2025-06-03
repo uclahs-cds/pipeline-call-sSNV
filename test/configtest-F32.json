@@ -176,6 +176,8 @@
       "patient_id": "TWGSAMIN000001",
       "pipeval_version": "5.1.0",
       "reference": "/hot/resource/reference-genome/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta",
+      "redux_jitter_msi_only": false,
+      "redux_additional_args": "",
       "retry_information": {
         "call_sIndel_Manta": {
           "memory": {
@@ -262,6 +264,8 @@
         "{orig_id=0192847, id=0192847, path=/hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam, contamination_table=/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table, sample_type=tumor}"
       ],
       "save_intermediate_files": false,
+      "sage_additional_args": "",
+      "sage_skip_msi_jitter": false,
       "scatter_count": "50",
       "single_NT_paired": true,
       "somaticsniper_version": "1.0.5.0",
