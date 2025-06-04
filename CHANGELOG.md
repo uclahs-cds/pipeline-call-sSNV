@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Key changes to Strelka2 and SomaticSniper VAF calculations
 - Switch to generalized resource handling
 - Update NFTest paths
 - Fix single tool run logic

@@ -93,36 +93,69 @@ def validate_args(opts: argparse.Namespace) -> None:
 
     validate_output_dir(opts.output_dir)
 
-def get_vaf_strelka2(variant: dict, sample: str) -> Tuple[int, int]:
+def get_vaf_strelka2(variant: dict, sample: str) -> float:
     """ Calculate read count for Strelka2 format """
     sample_index = variant.samples.index(sample)
+    
+    # Use tier 1 counts (index [0]) as recommended by Strelka developers
     ref_base = variant.REF.strip(' ') + 'U'
+    alt_base = str(variant.ALT[0]).strip(' ') + 'U'
+    
     ref_reads = int(variant.samples[sample_index][ref_base][0])
-    # pylint: disable=R1728
-    # Take alternate allele with most number of reads as the ALT
-    alt_reads = max([int(variant.samples[sample_index][allele.sequence + 'U'][0]) \
-        for allele in variant.ALT])
+    alt_reads = int(variant.samples[sample_index][alt_base][0])
     total_reads = ref_reads + alt_reads
+    
+    if total_reads == 0:
+        return 0.0
     return alt_reads/total_reads
 
-def get_vaf_somaticsniper(variant: dict, sample: str) -> Tuple[int, int]:
+def get_vaf_somaticsniper(variant: dict, sample: str) -> float:
     """ Calculate read count for SomaticSniper format """
-    # using DP4
     sample_index = variant.samples.index(sample)
+    
+    # Prefer BCOUNT over DP4 for better accuracy if available
+    try:
+        bcount = variant.samples[sample_index]["BCOUNT"]
+        if len(bcount) >= 4:
+            ref_base = variant.REF.upper()
+            alt_base = str(variant.ALT[0]).upper()
+            base_map = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
+            
+            ref_reads = int(bcount[base_map.get(ref_base, 0)])
+            alt_reads = int(bcount[base_map.get(alt_base, 0)])
+            total_reads = sum(int(x) for x in bcount)
+            
+            if total_reads == 0:
+                return 0.0
+            return alt_reads / total_reads
+    except (KeyError, AttributeError):
+        pass
+    
+    # Fallback to DP4
     ref_reads = int(variant.samples[sample_index]["DP4"][0]) \
         + int(variant.samples[sample_index]["DP4"][1])
     alt_reads = int(variant.samples[sample_index]["DP4"][2]) \
         + int(variant.samples[sample_index]["DP4"][3])
     total_reads = ref_reads + alt_reads
+    
+    if total_reads == 0:
+        return 0.0
     return alt_reads/total_reads
 
-def get_vaf_mutect2(variant: dict, sample: str) -> Tuple[int, int]:
+def get_vaf_mutect2(variant: dict, sample: str) -> float:
     """ Calculate read count for Mutect2 format """
     sample_index = variant.samples.index(sample)
-    ref_reads = int(variant.samples[sample_index]["AD"][0])
-    alt_reads = int(variant.samples[sample_index]["AD"][1])
+    ad = variant.samples[sample_index]["AD"]
+    
+    if len(ad) < 2:
+        return 0.0
+        
+    ref_reads = int(ad[0])
+    alt_reads = int(ad[1])
     total_reads = ref_reads + alt_reads
 
+    if total_reads == 0:
+        return 0.0
     return alt_reads/total_reads
 
 def does_variant_pass(variant: dict) -> bool:
@@ -147,7 +180,7 @@ def calculate_adjusted_vaf(sample_id: str, variant: dict, purity: float) -> floa
 
     if 'AD' in variant_data_keys:
         raw_vaf = get_vaf_mutect2(variant, sample)
-    elif 'DP4' in variant_data_keys:
+    elif 'DP4' in variant_data_keys or 'BCOUNT' in variant_data_keys:
         raw_vaf = get_vaf_somaticsniper(variant, sample)
     elif all(base+'U' in variant_data_keys for base in ['A', 'C', 'G', 'T']):
         raw_vaf = get_vaf_strelka2(variant, sample)
