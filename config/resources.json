@@ -373,7 +373,7 @@
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "4 GB"
+                    "operand": "8 GB"
                 }
             }
         },
@@ -391,7 +391,7 @@
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "4 GB"
+                    "operand": "8 GB"
                 }
             }
         },
@@ -409,7 +409,7 @@
             "retry_strategy": {
                 "memory": {
                     "strategy": "add",
-                    "operand": "6 GB"
+                    "operand": "10 GB"
                 }
             }
         }
@@ -929,8 +929,8 @@
         },
         "run_REDUX_SAGE_tumor": {
             "cpus": {
-                "min": 8,
-                "fraction": 0.25,
+                "min": 16,
+                "fraction": 0.5,
                 "max": 16
             },
             "memory": {
@@ -947,8 +947,8 @@
         },
         "run_REDUX_SAGE_normal": {
             "cpus": {
-                "min": 8,
-                "fraction": 0.25,
+                "min": 16,
+                "fraction": 0.5,
                 "max": 16
             },
             "memory": {
@@ -965,14 +965,14 @@
         },
         "call_sSNV_SAGE": {
             "cpus": {
-                "min": 2,
-                "fraction": 0.06,
-                "max": 6
+                "min": 32,
+                "fraction": 1,
+                "max": 32
             },
             "memory": {
-                "min": "24 GB",
-                "fraction": 0.2,
-                "max": "32 GB"
+                "min": "64 GB",
+                "fraction": 1,
+                "max": "64 GB"
             },
             "retry_strategy": {
                 "memory": {
@@ -1233,7 +1233,7 @@
             "cpus": {
                 "min": 16,
                 "fraction": 0.22,
-                "max": 16 
+                "max": 16
             },
             "memory": {
                 "min": "48 GB",
@@ -1792,7 +1792,7 @@
             },
             "retry_strategy": {
                 "memory": {
-                    "strategy": "multiply", 
+                    "strategy": "multiply",
                     "operand": 2
                 }
             }
@@ -1810,7 +1810,7 @@
             },
             "retry_strategy": {
                 "memory": {
-                    "strategy": "multiply", 
+                    "strategy": "multiply",
                     "operand": 2
                 }
             }
@@ -1819,7 +1819,7 @@
             "cpus": {
                 "min": 1,
                 "fraction": 0.25,
-                "max":32 
+                "max":32
             },
             "memory": {
                 "min": "2 GB",

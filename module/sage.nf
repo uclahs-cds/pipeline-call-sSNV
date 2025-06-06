@@ -18,51 +18,72 @@ workflow sage {
     normal_index
 
     main:
-        // Run REDUX on tumor and normal BAMs separately
-        run_REDUX_SAGE_tumor(
-            tumor_bam.map { [params.tumor_id, 'tumor', it] }
-                .combine(tumor_index),
-            params.reference,
-            params.reference_index,
-            params.reference_dict,
-            params.redux_unmap_regions ?: "${params.work_dir}/NO_FILE.tsv",
-            params.redux_ref_genome_msi_file
-        )
-        
-        run_REDUX_SAGE_normal(
-            normal_bam.map { [params.normal_id, 'normal', it] }
-                .combine(normal_index),
-            params.reference,
-            params.reference_index,
-            params.reference_dict,
-            params.redux_unmap_regions ?: "${params.work_dir}/NO_FILE.tsv",
-            params.redux_ref_genome_msi_file
-        )
-        
-        // Get REDUX results for tumor and normal
-        tumor_redux_results = run_REDUX_SAGE_tumor.out.redux_results
-            .filter { it[1] == 'tumor' }
-        normal_redux_results = run_REDUX_SAGE_normal.out.redux_results  
-            .filter { it[1] == 'normal' }
-        
-        // Determine which BAMs to use for SAGE
-        if (params.redux_jitter_msi_only) {
-            // Use original BAMs but REDUX-generated jitter params and ms tables
+        // Check if pre-computed REDUX files are provided
+        if (params.using_provided_redux_files) {
+            log.info "Pre-computed REDUX files detected. Skipping REDUX and using provided files directly with SAGE."
+
+            // Use provided REDUX files and original BAMs (skip running REDUX)
             sage_tumor_bam = tumor_bam
             sage_normal_bam = normal_bam
+
+            // Create channels directly from the provided files
+            tumor_jitter_params_ch = Channel.fromPath(params.redux_provided_jitter_params_tumor)
+            tumor_ms_table_ch = Channel.fromPath(params.redux_provided_ms_table_tumor)
+            normal_jitter_params_ch = Channel.fromPath(params.redux_provided_jitter_params_normal)
+            normal_ms_table_ch = Channel.fromPath(params.redux_provided_ms_table_normal)
         } else {
-            // Use REDUX-processed BAMs
-            sage_tumor_bam = tumor_redux_results.map { it[2] }
-            sage_normal_bam = normal_redux_results.map { it[2] }
+            // Run REDUX on tumor and normal BAMs separately
+            run_REDUX_SAGE_tumor(
+                tumor_bam.map { [params.tumor_id, 'tumor', it] }
+                    .combine(tumor_index),
+                params.reference,
+                params.reference_index,
+                params.reference_dict,
+                params.redux_unmap_regions ?: "${params.work_dir}/NO_FILE.tsv",
+                params.redux_ref_genome_msi_file
+            )
+
+            run_REDUX_SAGE_normal(
+                normal_bam.map { [params.normal_id, 'normal', it] }
+                    .combine(normal_index),
+                params.reference,
+                params.reference_index,
+                params.reference_dict,
+                params.redux_unmap_regions ?: "${params.work_dir}/NO_FILE.tsv",
+                params.redux_ref_genome_msi_file
+            )
+
+            // Get REDUX results for tumor and normal
+            tumor_redux_results = run_REDUX_SAGE_tumor.out.redux_results
+                .filter { it[1] == 'tumor' }
+            normal_redux_results = run_REDUX_SAGE_normal.out.redux_results
+                .filter { it[1] == 'normal' }
+
+            // Determine which BAMs to use for SAGE
+            if (params.redux_jitter_msi_only) {
+                // Use original BAMs but REDUX-generated jitter params and ms tables
+                sage_tumor_bam = tumor_bam
+                sage_normal_bam = normal_bam
+            } else {
+                // Use REDUX-processed BAMs and redux-generated jitter params and ms tables
+                sage_tumor_bam = tumor_redux_results.map { it[2] }
+                sage_normal_bam = normal_redux_results.map { it[2] }
+            }
+
+            // Extract jitter params and ms tables from REDUX results
+            tumor_jitter_params_ch = tumor_redux_results.map { it[3] } // jitter_params
+            tumor_ms_table_ch = tumor_redux_results.map { it[4] } // ms_table
+            normal_jitter_params_ch = normal_redux_results.map { it[3] } // jitter_params
+            normal_ms_table_ch = normal_redux_results.map { it[4] } // ms_table
         }
-        
+
         call_sSNV_SAGE(
             sage_tumor_bam,
-            tumor_redux_results.map { it[3] }, // jitter_params
-            tumor_redux_results.map { it[4] }, // ms_table
+            tumor_jitter_params_ch,
+            tumor_ms_table_ch,
             sage_normal_bam,
-            normal_redux_results.map { it[3] }, // jitter_params
-            normal_redux_results.map { it[4] }, // ms_table
+            normal_jitter_params_ch,
+            normal_ms_table_ch,
             params.reference,
             params.reference_index,
             params.reference_dict,
@@ -71,18 +92,18 @@ workflow sage {
             params.sage_ensembl_data_dir,
             params.sage_high_confidence_bed
         )
-        
+
         // Filter VCF to keep only PASS variants and compress
         filter_VCF_BCFtools(call_sSNV_SAGE.out.sage_vcf
             .map{ it -> ['all', it] }
         )
-        
+
         // Split VCF by variant type
         split_VCF_BCFtools(filter_VCF_BCFtools.out.gzvcf
             .map{ it -> it[1] },
             ['snps', 'mnps', 'indels']
         )
-        
+
         // Rename samples in VCF to match expected format
         // Create ID mapping channel for renaming samples
         Channel
@@ -91,7 +112,7 @@ workflow sage {
                 [orig_id: 'normal', id: params.normal_id]
             ])
             .set { id_ch }
-        
+
         rename_samples_BCFtools(
             // combine with split_VCF_BCFtools output to duplicate the id input for each file.
             id_ch
@@ -101,12 +122,12 @@ workflow sage {
             ,
             split_VCF_BCFtools.out.gzvcf
         )
-        
+
         // Compress and index the final VCF
         compress_index_VCF(
             rename_samples_BCFtools.out.gzvcf
         )
-        
+
         // Generate checksums
         generate_sha512sum(
             compress_index_VCF.out.index_out
@@ -122,4 +143,4 @@ workflow sage {
         idx = compress_index_VCF.out.index_out
             .filter { it[0] == 'snps' }
             .map{ it -> ["${it[2]}"] }
-} 
+}

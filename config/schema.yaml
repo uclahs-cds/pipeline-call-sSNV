@@ -140,6 +140,26 @@ redux_jitter_msi_only:
   required: false
   default: false
   help: 'Whether to use jitter MSI only mode in REDUX preprocessing'
+redux_provided_ms_table_tumor:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to pre-computed tumor ms_table.tsv.gz file from REDUX, if provided will skip running REDUX'
+redux_provided_ms_table_normal:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to pre-computed normal ms_table.tsv.gz file from REDUX, if provided will skip running REDUX'
+redux_provided_jitter_params_tumor:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to pre-computed tumor jitter_params.tsv file from REDUX, if provided will skip running REDUX'
+redux_provided_jitter_params_normal:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to pre-computed normal jitter_params.tsv file from REDUX, if provided will skip running REDUX'
 redux_additional_args:
   type: 'String'
   required: false

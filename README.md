@@ -275,6 +275,10 @@ base_resource_update {
 | redux_unmap_regions | no | path | Absolute path to unmappable regions file for REDUX preprocessing |
 | redux_form_consensus | no | boolean | Whether to form consensus reads in REDUX preprocessing |
 | redux_additional_args | no | string | Additional arguments for the REDUX command |
+| redux_provided_ms_table_tumor | no | path | Absolute path to pre-computed tumor ms_table.tsv.gz file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
+| redux_provided_ms_table_normal | no | path | Absolute path to pre-computed normal ms_table.tsv.gz file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
+| redux_provided_jitter_params_tumor | no | path | Absolute path to pre-computed tumor jitter_params.tsv file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
+| redux_provided_jitter_params_normal | no | path | Absolute path to pre-computed normal jitter_params.tsv file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
 | sage_hotspots | no | path | Absolute path to hotspots VCF file for SAGE variant calling |
 | sage_panel_bed | no | path | Absolute path to panel bed file for SAGE variant calling |
 | sage_ensembl_data_dir | no | path | Absolute path to ensembl data directory for SAGE variant calling |

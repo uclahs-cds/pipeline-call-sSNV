@@ -16,7 +16,10 @@ REDUX Options:
 - redux_form_consensus:     ${params.redux_form_consensus}
 - redux_jitter_msi_only:    ${params.redux_jitter_msi_only}
 - redux_additional_args:    ${params.redux_additional_args}
-- sage_command_mem_diff:    ${params.sage_command_mem_diff}
+- redux_provided_ms_table_tumor:     ${params.redux_provided_ms_table_tumor ?: 'Not provided'}
+- redux_provided_ms_table_normal:    ${params.redux_provided_ms_table_normal ?: 'Not provided'}
+- redux_provided_jitter_params_tumor:  ${params.redux_provided_jitter_params_tumor ?: 'Not provided'}
+- redux_provided_jitter_params_normal: ${params.redux_provided_jitter_params_normal ?: 'Not provided'}
 
 SAGE Options:
 - reference_version:        ${params.reference_version}
@@ -35,20 +38,11 @@ process run_REDUX_SAGE {
     publishDir path: "${params.workflow_output_dir}/intermediate/${task.process.split(':')[-1]}",
         mode: "copy",
         pattern: params.redux_jitter_msi_only ? "*.{tsv,tsv.gz}" : "*.{tsv,tsv.gz,bam}",
-        enabled: params.save_intermediate_files,
-        saveAs: { filename ->
-            if (filename.endsWith('jitter_params.tsv')) {
-                return "${params.output_filename}.jitter_params.tsv"
-            } else if (filename.endsWith('ms_table.tsv.gz')) {
-                return "${params.output_filename}.ms_table.tsv.gz"
-            } else {
-                return filename
-            }
-        }
-    ext log_dir: { "SAGE-${params.sage_version}/${task.process.split(':')[-1]}-${sample_id}" }
+        enabled: params.save_intermediate_files
+    ext log_dir: { "SAGE-${params.sage_version}/${task.process.split(':')[-1]}-${tn_sample_id}" }
 
     input:
-    tuple val(sample_id), val(sample_type), path(bam), path(bam_index)
+    tuple val(tn_sample_id), val(sample_type), path(bam), path(bam_index)
     path reference
     path reference_index
     path reference_dict
@@ -56,10 +50,10 @@ process run_REDUX_SAGE {
     path ref_genome_msi_file
 
     output:
-    tuple val(sample_id), val(sample_type), 
-        path("${params.output_filename}.bam"), 
-        path("${sample_id}.jitter_params.tsv"), 
-        path("${sample_id}.ms_table.tsv.gz"), 
+    tuple val(tn_sample_id), val(sample_type),
+        path("*.bam"),
+        path("*.jitter_params.tsv"),
+        path("*.ms_table.tsv.gz"),
         emit: redux_results
 
     script:
@@ -68,26 +62,29 @@ process run_REDUX_SAGE {
     unmap_regions_cmd = (params.redux_unmap_regions && !params.redux_jitter_msi_only) ? "-unmap_regions ${unmap_regions}" : ""
     bamtool_cmd = params.redux_jitter_msi_only ? "" : "-bamtool /opt/redux/bin/samtools"
     write_stats_cmd = params.redux_jitter_msi_only ? "" : "-write_stats"
-    
-   //  // Adjust memory allocation for jitter_msi_only mode - it needs significantly less memory
-   //  memory_allocation = params.redux_jitter_msi_only ? 
-   //      "${((task.memory - params.sage_command_mem_diff) * 0.3).getMega()}m" : 
-   //      "${(task.memory - params.sage_command_mem_diff).getMega()}m"
+
+    // Use the correct sample ID based on sample type
+    sample_filename = generate_standard_filename(
+        "SAGE-${params.sage_version}",
+        params.dataset_id,
+        tn_sample_id,
+        [:])
 
     // Always provide output BAM path for REDUX internal processing and directory determination
     // When jitter_msi_only is true, the BAM file won't be created but REDUX needs the path for other outputs
+    // The output files must be named ${tn_sample_id}.file_extension to be found by SAGE
     """
     set -euo pipefail
-    
+
     echo "===== REDUX PROCESS DEBUG START ====="
     echo "Process started at: \$(date)"
     echo "Working directory: \$(pwd)"
     echo "Available files: \$(ls -la)"
     echo "DEBUG: About to run REDUX with the following parameters:"
-    echo "  Sample ID: ${sample_id}"
+    echo "  Sample ID: ${tn_sample_id}"
     echo "  Sample Type: ${sample_type}"
     echo "  Input BAM: ${bam}"
-    echo "  Output BAM filename: ${params.output_filename}.bam"
+    echo "  Output BAM filename: ${tn_sample_id}.bam"
     echo "  Reference: ${reference}"
     echo "  Unmap regions command: ${unmap_regions_cmd}"
     echo "  Form consensus flag: ${form_consensus_flag}"
@@ -98,12 +95,12 @@ process run_REDUX_SAGE {
     echo "  mem diff: ${params.sage_command_mem_diff}"
     echo "  Threads: ${task.cpus}"
     echo "===== REDUX COMMAND START ====="
-    
+
     redux \
         \"-Xmx${(task.memory - params.sage_command_mem_diff).getMega()}m\" \
-        -sample ${sample_id} \
+        -sample ${tn_sample_id} \
         -input_bam ${bam} \
-        -output_bam ${params.output_filename}.bam \
+        -output_bam ${tn_sample_id}.bam \
         -ref_genome ${reference} \
         -ref_genome_version V${params.reference_version} \
         ${unmap_regions_cmd} \
@@ -115,16 +112,16 @@ process run_REDUX_SAGE {
         ${form_consensus_flag} \
         ${jitter_msi_only_flag} \
         ${params.redux_additional_args}
-    
+
     echo "===== REDUX COMMAND COMPLETED ====="
     echo "Final files in directory: \$(ls -la)"
     echo "Process completed at: \$(date)"
     echo "===== REDUX PROCESS DEBUG END ====="
-    
+
     # Create dummy BAM file if jitter_msi_only mode (where no BAM is created)
-    if [ "${params.redux_jitter_msi_only}" = "true" ] && [ ! -f "${params.output_filename}.bam" ]; then
+    if [ "${params.redux_jitter_msi_only}" = "true" ] && [ ! -f "${tn_sample_id}.bam" ]; then
         echo "Creating dummy BAM file for jitter_msi_only mode"
-        touch "${params.output_filename}.bam"
+        touch "${tn_sample_id}.bam"
     fi
     """
 }
@@ -160,7 +157,7 @@ process call_sSNV_SAGE {
     skip_msi_jitter_flag = params.sage_skip_msi_jitter ? "-skip_msi_jitter" : ""
     """
     set -euo pipefail
-    
+
     echo "===== SAGE PROCESS DEBUG START ====="
     echo "Process started at: \$(date)"
     echo "Working directory: \$(pwd)"
@@ -168,10 +165,14 @@ process call_sSNV_SAGE {
     echo "DEBUG: About to run SAGE with the following parameters:"
     echo "  Tumor BAM: ${tumor_bam}"
     echo "  Normal BAM: ${normal_bam}"
+    echo "  Tumor Jitter Params: ${tumor_jitter_params}"
+    echo "  Tumor MS Table: ${tumor_ms_table}"
+    echo "  Normal Jitter Params: ${normal_jitter_params}"
+    echo "  Normal MS Table: ${normal_ms_table}"
     echo "  Reference: ${reference}"
     echo "  Additional args: ${params.sage_additional_args}"
     echo "===== SAGE COMMAND START ====="
-    
+
     sage \
         -Xmx${(task.memory - params.sage_command_mem_diff).getMega()}m \
         -tumor ${params.tumor_id} \
@@ -185,15 +186,14 @@ process call_sSNV_SAGE {
         -ensembl_data_dir ${ensembl_data_dir} \
         -high_confidence_bed ${high_confidence_bed} \
         -output_vcf ${params.output_filename}.vcf \
-        -jitter_param_dir . \
         -log_level DEBUG \
         -threads ${task.cpus} \
         ${skip_msi_jitter_flag} \
         ${params.sage_additional_args}
-    
+
     echo "===== SAGE COMMAND COMPLETED ====="
     echo "Final files in directory: \$(ls -la)"
     echo "Process completed at: \$(date)"
     echo "===== SAGE PROCESS DEBUG END ====="
     """
-} 
+}
