@@ -12,7 +12,8 @@ ALLOWED_TOOLS = [
     'Mutect2',
     'Strelka2',
     'SomaticSniper',
-    'MuSE'
+    'MuSE',
+    'SAGE'
 ]
 
 def parse_args() -> argparse.Namespace:
