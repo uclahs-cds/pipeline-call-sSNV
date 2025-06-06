@@ -103,6 +103,8 @@ def get_vaf_strelka2(variant: dict, sample: str) -> Tuple[int, int]:
     alt_reads = max([int(variant.samples[sample_index][allele.sequence + 'U'][0]) \
         for allele in variant.ALT])
     total_reads = ref_reads + alt_reads
+    if total_reads == 0:
+        return 0
     return alt_reads/total_reads
 
 def get_vaf_somaticsniper(variant: dict, sample: str) -> Tuple[int, int]:
@@ -114,6 +116,8 @@ def get_vaf_somaticsniper(variant: dict, sample: str) -> Tuple[int, int]:
     alt_reads = int(variant.samples[sample_index]["DP4"][2]) \
         + int(variant.samples[sample_index]["DP4"][3])
     total_reads = ref_reads + alt_reads
+    if total_reads == 0:
+        return 0
     return alt_reads/total_reads
 
 def get_vaf_mutect2(variant: dict, sample: str) -> Tuple[int, int]:
@@ -122,7 +126,8 @@ def get_vaf_mutect2(variant: dict, sample: str) -> Tuple[int, int]:
     ref_reads = int(variant.samples[sample_index]["AD"][0])
     alt_reads = int(variant.samples[sample_index]["AD"][1])
     total_reads = ref_reads + alt_reads
-
+    if total_reads == 0:
+        return 0
     return alt_reads/total_reads
 
 def does_variant_pass(variant: dict) -> bool:
