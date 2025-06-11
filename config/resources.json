@@ -645,9 +645,9 @@
         },
         "run_REDUX_SAGE_tumor": {
             "cpus": {
-                "min": 4,
-                "fraction": 0.25,
-                "max": 4
+                "min": 8,
+                "fraction": 0.5,
+                "max": 8
             },
             "memory": {
                 "min": "16 GB",
@@ -663,9 +663,9 @@
         },
         "run_REDUX_SAGE_normal": {
             "cpus": {
-                "min": 4,
-                "fraction": 0.25,
-                "max": 4
+                "min": 8,
+                "fraction": 0.5,
+                "max": 8
             },
             "memory": {
                 "min": "16 GB",
@@ -681,14 +681,14 @@
         },
         "call_sSNV_SAGE": {
             "cpus": {
-                "min": 8,
-                "fraction": 0.25,
-                "max": 8
+                "min": 16,
+                "fraction": 1,
+                "max": 16
             },
             "memory": {
-                "min": "16 GB",
-                "fraction": 0.5,
-                "max": "16 GB"
+                "min": "32 GB",
+                "fraction": 1,
+                "max": "32 GB"
             },
             "retry_strategy": {
                 "memory": {
@@ -1213,14 +1213,14 @@
         },
         "run_REDUX_SAGE_tumor": {
             "cpus": {
-                "min": 16,
-                "fraction": 0.22,
-                "max": 16
+                "min": 36,
+                "fraction": 0.5,
+                "max": 36
             },
             "memory": {
-                "min": "48 GB",
-                "fraction": 0.33,
-                "max": "48 GB"
+                "min": "72 GB",
+                "fraction": 0.5,
+                "max": "72 GB"
             },
             "retry_strategy": {
                 "memory": {
@@ -1231,14 +1231,14 @@
         },
         "run_REDUX_SAGE_normal": {
             "cpus": {
-                "min": 16,
-                "fraction": 0.22,
-                "max": 16
+                "min": 36,
+                "fraction": 0.5,
+                "max": 36
             },
             "memory": {
-                "min": "48 GB",
-                "fraction": 0.33,
-                "max": "48 GB"
+                "min": "72 GB",
+                "fraction": 0.5,
+                "max": "72 GB"
             },
             "retry_strategy": {
                 "memory": {
@@ -1249,14 +1249,14 @@
         },
         "call_sSNV_SAGE": {
             "cpus": {
-                "min": 24,
-                "fraction": 0.33,
-                "max": 24
+                "min": 72,
+                "fraction": 1,
+                "max": 72
             },
             "memory": {
-                "min": "36 GB",
-                "fraction": 0.25,
-                "max": "36 GB"
+                "min": "144 GB",
+                "fraction": 1,
+                "max": "144 GB"
             },
             "retry_strategy": {
                 "memory": {
