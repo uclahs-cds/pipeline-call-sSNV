@@ -16,12 +16,12 @@ workflow process_vcfs {
         samplesToProcess_ch
     main:
         split_VCF_BCFtools(samplesToProcess_ch
-            .filter { it[2] == 'mutect2' }
+            .filter { it[2] == 'mutect2' || it[2] == 'sage' }
             .map{ it -> it[0] },
             ['snps', 'mnps', 'indels']
             )
         rename_files_ch = samplesToProcess_ch
-            .filter { it[2] != 'mutect2' }
+            .filter { it[2] != 'mutect2' && it[2] != 'sage' }
             .map{ it -> ['SNV', it[0]] }
             .mix(split_VCF_BCFtools.out.gzvcf)
         rename_id_ch = Channel.value(['orig_id': params.input_tumor_id,'id': params.tumor_id, 'sample_type': 'tumor' ])

@@ -1,0 +1,7 @@
+---
+patient_id: 'TWGSAMIN000001'
+input:
+  normal:
+    - BAM: /hot/resource/pipeline_testing_set/WGS/GRCh38/A/partial/CPCG0000000196-N001-B01-F.bam
+  tumor:
+    - BAM: /hot/resource/pipeline_testing_set/WGS/GRCh38/A/partial/CPCG0000000196-T001-P01-F.bam

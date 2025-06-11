@@ -59,7 +59,8 @@
         "somaticsniper",
         "strelka2",
         "mutect2",
-        "muse"
+        "muse",
+        "sage"
       ],
       "bam_readcount_version": "1.0.1",
       "base_allocations": {
@@ -74,6 +75,10 @@
         "call_sSNV_Mutect2": {
           "cpus": "1",
           "memory": "2 GB"
+        },
+        "call_sSNV_SAGE": {
+          "cpus": "16",
+          "memory": "31 GB"
         },
         "call_sSNV_SomaticSniper": {
           "cpus": "1",
@@ -107,6 +112,14 @@
           "cpus": "1",
           "memory": "8 GB"
         },
+        "run_REDUX_SAGE_normal": {
+          "cpus": "8",
+          "memory": "16 GB"
+        },
+        "run_REDUX_SAGE_tumor": {
+          "cpus": "8",
+          "memory": "16 GB"
+        },
         "run_sump_MuSE": {
           "cpus": "4",
           "memory": "16 GB"
@@ -130,6 +143,8 @@
       "docker_image_bpg": "ghcr.io/uclahs-cds/boutroslabplottinggeneral:7.1.0",
       "docker_image_manta": "ghcr.io/uclahs-cds/manta:1.6.0",
       "docker_image_r_VennDiagram": "ghcr.io/uclahs-cds/call-ssnv-r:dev",
+      "docker_image_redux": "ghcr.io/uclahs-cds/redux:1.1.2",
+      "docker_image_sage": "ghcr.io/uclahs-cds/sage:4.0",
       "docker_image_somaticsniper": "ghcr.io/uclahs-cds/somaticsniper:1.0.5.0",
       "docker_image_src_util": "ghcr.io/uclahs-cds/src-util:1.2.0",
       "docker_image_strelka2": "ghcr.io/uclahs-cds/strelka2:2.9.10",
@@ -168,14 +183,20 @@
       "min_memory": "1 MB",
       "min_time": "1s",
       "mutect2_extra_args": "",
-      "ncbi_build": "GRCh38",
       "normal_id": "0192847",
       "output_dir": "/tmp/outputs",
       "output_dir_base": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847",
       "panel_of_normals_vcf": "",
       "patient_id": "TWGSAMIN000001",
       "pipeval_version": "5.1.0",
+      "redux_additional_args": "",
+      "redux_form_consensus": false,
+      "redux_jitter_msi_only": true,
+      "redux_ref_genome_msi_file": "/hot/user/sfitzgibbon/hmf_pipeline_resources.38_v2.0--3/dna/variants/msi_jitter_sites.38.tsv.gz",
+      "redux_unmap_regions": "",
+      "redux_version": "1.1.2",
       "reference": "/hot/resource/reference-genome/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta",
+      "reference_version": "38",
       "retry_information": {
         "call_sIndel_Manta": {
           "memory": {
@@ -192,6 +213,12 @@
         "call_sSNV_Mutect2": {
           "memory": {
             "operand": "2 GB",
+            "strategy": "add"
+          }
+        },
+        "call_sSNV_SAGE": {
+          "memory": {
+            "operand": "8 GB",
             "strategy": "add"
           }
         },
@@ -243,6 +270,18 @@
             "strategy": "add"
           }
         },
+        "run_REDUX_SAGE_normal": {
+          "memory": {
+            "operand": "8 GB",
+            "strategy": "add"
+          }
+        },
+        "run_REDUX_SAGE_tumor": {
+          "memory": {
+            "operand": "8 GB",
+            "strategy": "add"
+          }
+        },
         "run_sump_MuSE": {
           "memory": {
             "operand": "16 GB",
@@ -250,6 +289,14 @@
           }
         }
       },
+      "sage_additional_args": "",
+      "sage_command_mem_diff": "3 GB",
+      "sage_ensembl_data_dir": "/hot/user/sfitzgibbon/hmf_pipeline_resources.38_v2.0--3/common/ensembl_data",
+      "sage_high_confidence_bed": "/hot/user/sfitzgibbon/hmf_pipeline_resources.38_v2.0--3/dna/variants/HG001_GRCh38_GIAB_highconf_CG-IllFB-IllGATKHC-Ion-10X-SOLID_CHROM1-X_v.3.3.2_highconf_nosomaticdel_noCENorHET7.bed.gz",
+      "sage_hotspots": "/hot/user/sfitzgibbon/hmf_pipeline_resources.38_v2.0--3/dna/variants/KnownHotspots.somatic.38.vcf.gz",
+      "sage_panel_bed": "/hot/user/sfitzgibbon/hmf_pipeline_resources.38_v2.0--3/dna/variants/ActionableCodingPanel.38.bed.gz",
+      "sage_skip_msi_jitter": false,
+      "sage_version": "4.0",
       "sample_id": "0192847",
       "samples_to_process": [
         {
@@ -261,7 +308,7 @@
         },
         "{orig_id=0192847, id=0192847, path=/hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam, contamination_table=/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table, sample_type=tumor}"
       ],
-      "save_intermediate_files": false,
+      "save_intermediate_files": true,
       "scatter_count": "50",
       "single_NT_paired": true,
       "somaticsniper_version": "1.0.5.0",
@@ -273,6 +320,7 @@
       "ubuntu_version": "20.04",
       "ucla_cds": true,
       "use_intersect_regions": true,
+      "using_provided_redux_files": false,
       "vcf2maf_extra_args": "",
       "vcf2maf_version": "v1.6.18",
       "work_dir": "/scratch/8543"
@@ -392,6 +440,15 @@
           "closure": "retry_updater(2 GB, add, 2 GB, $task.attempt, memory)"
         }
       },
+      "withName:call_sSNV_SAGE": {
+        "cpus": "16",
+        "memory": {
+          "1": "31 GB",
+          "2": "31 GB",
+          "3": "31 GB",
+          "closure": "retry_updater(31 GB, add, 8 GB, $task.attempt, memory)"
+        }
+      },
       "withName:call_sSNV_SomaticSniper": {
         "cpus": "1",
         "memory": {
@@ -467,6 +524,24 @@
           "closure": "retry_updater(8 GB, add, 8 GB, $task.attempt, memory)"
         }
       },
+      "withName:run_REDUX_SAGE_normal": {
+        "cpus": "8",
+        "memory": {
+          "1": "16 GB",
+          "2": "24 GB",
+          "3": "31 GB",
+          "closure": "retry_updater(16 GB, add, 8 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:run_REDUX_SAGE_tumor": {
+        "cpus": "8",
+        "memory": {
+          "1": "16 GB",
+          "2": "24 GB",
+          "3": "31 GB",
+          "closure": "retry_updater(16 GB, add, 8 GB, $task.attempt, memory)"
+        }
+      },
       "withName:run_sump_MuSE": {
         "cpus": "4",
         "memory": {
@@ -504,7 +579,8 @@
       "somaticsniper",
       "strelka2",
       "mutect2",
-      "muse"
+      "muse",
+      "sage"
     ],
     "workDir": "/scratch/8543"
   }

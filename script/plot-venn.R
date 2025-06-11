@@ -23,7 +23,8 @@ color.map <- list(
     Mutect2 = 'orange',
     SomaticSniper = 'red',
     MuSE = 'green',
-    Strelka2 = 'blue'
+    Strelka2 = 'blue',
+    SAGE = 'purple'
     )
 
 ## Function: plot venn diagram #####################################################################

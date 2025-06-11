@@ -46,24 +46,36 @@ cases:
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/Strelka2-2.9.10_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
         script: test/assert_vcf.sh
 
+      - actual: call-sSNV-*/S2-v1.1.5/SAGE-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/SAGE-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_MNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_MNV.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/SAGE-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_Indel.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_Indel.vcf.gz
+        script: test/assert_vcf.sh
+
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
         script: test/assert_vcf.sh
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-1-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-1-or-more/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-2-or-more/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/MuSE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
@@ -80,6 +92,10 @@ cases:
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/Strelka2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/Strelka2-2.9.10_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
 
   - name: a_mini-mutect2-tumor-only
@@ -230,6 +246,26 @@ cases:
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/MuSE-2.0.3_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
         script: test/assert_vcf.sh
 
+  - name: a_mini-sage
+    message: test development branch using sage and standard paired tumor and normal a-mini-n2 input
+    nf_script: ./main.nf
+    nf_config: ./test/config/a_mini-sage.config
+    params_file: ./test/yaml/a_mini_n2-std-input.yaml
+    skip: true
+    verbose: true
+    asserts:
+      - actual: call-sSNV-*/S2-v1.1.5/SAGE-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_SNV.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/SAGE-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_MNV.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_MNV.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/SAGE-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_Indel.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_Indel.vcf.gz
+        script: test/assert_vcf.sh
+
   - name: a_mini-all-tools-vcf-input
     message: test development branch a-mini four VCFs input
     nf_script: ./main.nf
@@ -239,23 +275,23 @@ cases:
     verbose: true
     asserts:
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_SNV-concat.vcf.gz
         script: test/assert_vcf.sh
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_SNV-concat.maf.bz2
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/BCFtools-*_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_Venn-diagram.tiff
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-1-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-1-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-1-or-more/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/isec-2-or-more/BCFtools-*_TWGSAMIN_S2-v1.1.5_sites.txt
-        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-2-or-more/BCFtools-1.17_TWGSAMIN_S2-v1.1.5_sites.txt
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/isec-2-or-more/BCFtools-1.21_TWGSAMIN_S2-v1.1.5_sites.txt
         method: md5
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/MuSE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
@@ -272,4 +308,8 @@ cases:
 
       - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/Strelka2-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/Strelka2-2.9.10_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        script: test/assert_vcf.sh
+
+      - actual: call-sSNV-*/S2-v1.1.5/Intersect-BCFtools-*/output/SAGE-*_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
+        expect: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-output/SAGE-4.0_TWGSAMIN_S2-v1.1.5_SNV-intersect.vcf.gz
         script: test/assert_vcf.sh
