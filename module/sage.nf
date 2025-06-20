@@ -18,8 +18,23 @@ workflow sage {
     normal_index
 
     main:
+        // Check if REDUX should be skipped entirely
+        if (params.redux_skip) {
+            log.info "REDUX processing is disabled (redux_skip=true). Running SAGE directly on original BAM files."
+
+            // Use original BAMs and create dummy placeholder files for REDUX outputs
+            sage_tumor_bam = tumor_bam
+            sage_normal_bam = normal_bam
+
+            // Create dummy placeholder files with unique names since SAGE process expects file inputs
+            // These won't be used since -skip_msi_jitter flag will be set
+            tumor_jitter_params_ch = Channel.fromPath("${params.work_dir}/NO_FILE.tumor.jitter_params.tsv")
+            tumor_ms_table_ch = Channel.fromPath("${params.work_dir}/NO_FILE.tumor.ms_table.tsv.gz") 
+            normal_jitter_params_ch = Channel.fromPath("${params.work_dir}/NO_FILE.normal.jitter_params.tsv")
+            normal_ms_table_ch = Channel.fromPath("${params.work_dir}/NO_FILE.normal.ms_table.tsv.gz")
+        }
         // Check if pre-computed REDUX files are provided
-        if (params.using_provided_redux_files) {
+        else if (params.using_provided_redux_files) {
             log.info "Pre-computed REDUX files detected. Skipping REDUX and using provided files directly with SAGE."
 
             // Use provided REDUX files and original BAMs (skip running REDUX)

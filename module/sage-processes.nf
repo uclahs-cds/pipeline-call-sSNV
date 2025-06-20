@@ -11,6 +11,7 @@ Docker Images:
 
 REDUX Options:
 - reference_version:        ${params.reference_version}
+- redux_skip:               ${params.redux_skip}
 - redux_unmap_regions:      ${params.redux_unmap_regions}
 - redux_ref_genome_msi_file: ${params.redux_ref_genome_msi_file}
 - redux_form_consensus:     ${params.redux_form_consensus}
@@ -27,7 +28,6 @@ SAGE Options:
 - sage_panel_bed:           ${params.sage_panel_bed}
 - sage_ensembl_data_dir:    ${params.sage_ensembl_data_dir}
 - sage_high_confidence_bed: ${params.sage_high_confidence_bed}
-- sage_skip_msi_jitter:     ${params.sage_skip_msi_jitter}
 - sage_additional_args:     ${params.sage_additional_args}
 - sage_command_mem_diff:    ${params.sage_command_mem_diff}
 """
@@ -154,7 +154,10 @@ process call_sSNV_SAGE {
     path "*.vcf", emit: sage_vcf
 
     script:
-    skip_msi_jitter_flag = params.sage_skip_msi_jitter ? "-skip_msi_jitter" : ""
+    // MSI jitter is skipped when REDUX is skipped (no jitter parameters available)
+    // or used when REDUX is enabled (jitter parameters are available)
+    def skip_msi_jitter_flag = params.redux_skip ? "-skip_msi_jitter" : ""
+
     """
     set -euo pipefail
 
@@ -170,6 +173,8 @@ process call_sSNV_SAGE {
     echo "  Normal Jitter Params: ${normal_jitter_params}"
     echo "  Normal MS Table: ${normal_ms_table}"
     echo "  Reference: ${reference}"
+    echo "  REDUX skipped: ${params.redux_skip}"
+    echo "  MSI jitter flag: ${skip_msi_jitter_flag}"
     echo "  Additional args: ${params.sage_additional_args}"
     echo "===== SAGE COMMAND START ====="
 

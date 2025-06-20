@@ -140,25 +140,30 @@ redux_jitter_msi_only:
   required: false
   default: false
   help: 'Whether to use jitter MSI only mode in REDUX preprocessing'
+redux_skip:
+  type: 'Bool'
+  required: false
+  default: false
+  help: 'Whether to skip REDUX preprocessing entirely (runs SAGE directly on original BAM files without MSI jitter correction)'
 redux_provided_ms_table_tumor:
   type: 'Path'
-  mode: 'r'
   required: false
+  allow_empty: true
   help: 'Absolute path to pre-computed tumor ms_table.tsv.gz file from REDUX, if provided will skip running REDUX'
 redux_provided_ms_table_normal:
   type: 'Path'
-  mode: 'r'
   required: false
+  allow_empty: true
   help: 'Absolute path to pre-computed normal ms_table.tsv.gz file from REDUX, if provided will skip running REDUX'
 redux_provided_jitter_params_tumor:
   type: 'Path'
-  mode: 'r'
   required: false
+  allow_empty: true
   help: 'Absolute path to pre-computed tumor jitter_params.tsv file from REDUX, if provided will skip running REDUX'
 redux_provided_jitter_params_normal:
   type: 'Path'
-  mode: 'r'
   required: false
+  allow_empty: true
   help: 'Absolute path to pre-computed normal jitter_params.tsv file from REDUX, if provided will skip running REDUX'
 redux_additional_args:
   type: 'String'
@@ -172,11 +177,6 @@ sage_additional_args:
   allow_empty: true
   default: ''
   help: 'Additional arguments for the SAGE command'
-sage_skip_msi_jitter:
-  type: 'Bool'
-  required: false
-  default: false
-  help: 'Whether to skip MSI jitter in SAGE variant calling'
 #sage_command_mem_diff:
 #  type: 'MemoryUnit'
 #  required: false
