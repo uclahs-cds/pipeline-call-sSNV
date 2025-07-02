@@ -1,0 +1,15 @@
+---
+patient_id: 'TWGSAMIN000001'
+input:
+  normal:
+    - BAM: /hot/data/unregistered/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
+  tumor:
+    - BAM: /hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
+      contamination_table: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table
+
+# Pre-computed REDUX jitter parameters and MS tables
+# These files will be used instead of running REDUX preprocessing
+redux_provided_ms_table_tumor: '/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-input/S2-v1.1.5.ms_table.tsv.gz'
+redux_provided_ms_table_normal: '/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-input/HG002.N.ms_table.tsv.gz'
+redux_provided_jitter_params_tumor: '/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-input/S2-v1.1.5.jitter_params.tsv'
+redux_provided_jitter_params_normal: '/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/test-input/HG002.N.jitter_params.tsv'
