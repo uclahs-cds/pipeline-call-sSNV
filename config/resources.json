@@ -1213,14 +1213,14 @@
         },
         "run_REDUX_SAGE_tumor": {
             "cpus": {
-                "min": 36,
-                "fraction": 0.5,
-                "max": 36
+                "min": 6,
+                "fraction": 0.083,
+                "max": 6
             },
             "memory": {
-                "min": "72 GB",
-                "fraction": 0.5,
-                "max": "72 GB"
+                "min": "16 GB",
+                "fraction": 0.1111,
+                "max": "16 GB"
             },
             "retry_strategy": {
                 "memory": {
@@ -1231,14 +1231,14 @@
         },
         "run_REDUX_SAGE_normal": {
             "cpus": {
-                "min": 36,
-                "fraction": 0.5,
-                "max": 36
+                "min": 6,
+                "fraction": 0.083,
+                "max": 6
             },
             "memory": {
-                "min": "72 GB",
-                "fraction": 0.5,
-                "max": "72 GB"
+                "min": "16 GB",
+                "fraction": 0.1111,
+                "max": "16 GB"
             },
             "retry_strategy": {
                 "memory": {
@@ -1249,20 +1249,14 @@
         },
         "call_sSNV_SAGE": {
             "cpus": {
-                "min": 72,
-                "fraction": 1,
-                "max": 72
+                "min": 12,
+                "fraction": 0.1666,
+                "max": 12
             },
             "memory": {
-                "min": "144 GB",
-                "fraction": 1,
-                "max": "144 GB"
-            },
-            "retry_strategy": {
-                "memory": {
-                    "strategy": "add",
-                    "operand": "24 GB"
-                }
+                "min": "32 GB",
+                "fraction": 0.2222,
+                "max": "32 GB"
             }
         }
     },
