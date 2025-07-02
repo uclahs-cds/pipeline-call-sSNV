@@ -44,8 +44,6 @@ SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of inpu
 
 ## How To Run
 Below is a summary of how to run the pipeline.  See [here](https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3197004/How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
-
-> **Note**: Because this pipeline uses an images stored in the GitHub Container Registry, you must set up a PAT for your GitHub account and log into the registry before running this pipeline.
 >
 1. Copy and edit the [input config file](config/template.config)
 > Make sure the reference .fa file in config file matches the reference genome in the input BAM files.
