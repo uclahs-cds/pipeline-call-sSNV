@@ -47,8 +47,8 @@ Below is a summary of how to run the pipeline.  See [here](https://uclahs-cds.at
 >
 1. Copy and edit the [input config file](config/template.config)
 > Make sure the reference .fa file in config file matches the reference genome in the input BAM files.
-2. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
-3. The pipeline can be executed locally using the command below:
+1. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
+1. The pipeline can be executed locally using the command below:
 
 ```bash
 nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
@@ -165,7 +165,7 @@ input:
 | `dataset_id` | yes | string | The name/ID of the dataset    |
 | `exome`       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE |
 | `save_intermediate_files` | yes | boolean | Whether to save intermediate files |
-| `work_dir` | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` |
+| `work_dir` | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The path to a temporary working directory for Nextflow, storing intermediate files and logs. It is recommended to use fast, local storage with high I/O performance. |
 | `docker_container_registry` | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
 | `base_resource_update` | optional | namespace | Namespace of parameters to update base resource allocations in the pipeline. Usage and structure are detailed in `template.config` and below. |
 
@@ -305,7 +305,7 @@ Duration: 9h 21m 23s
 
 
 #### Strelka2
-Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canoincal regions of the genome, here are results from a typical BAM pair
+Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canonincal regions of the genome. Here are results from a typical BAM pair
 
 ##### without `--callRegions`:
 
