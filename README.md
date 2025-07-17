@@ -44,40 +44,15 @@ SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of inpu
 
 ## How To Run
 Below is a summary of how to run the pipeline.  See [here](https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3197004/How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
-
-> **Note**: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the [Docker Introduction](https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3190419/Docker+Introduction#DockerIntroduction-HowtosetupPATandlogintotheregistryHowtosetupPATandlogintotheregistry) on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.
 >
-1. The recommended way of running the pipeline is to directly use the source code located here: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/`, rather than cloning a copy of the pipeline.
-
-    * The source code should never be modified when running our pipelines
-
-2. Copy and edit the [input config file](config/template.config)
+1. Copy and edit the [input config file](config/template.config)
 > Make sure the reference .fa file in config file matches the reference genome in the input BAM files.
-3. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
-4. The pipeline can be executed locally using the command below:
+1. Copy and edit the [input YAML](input/call-sSNV-template.yaml)
+1. The pipeline can be executed locally using the command below:
 
 ```bash
-nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
+nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml
 ```
-
-For example,
-* `path/to/main.nf` could be: `/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf`
-* `path/to/input.config` is the path to where you saved your project-specific copy of [template.config](config/template.config)
-* `path/to/input.yaml` is the path to where you saved your project-specific copy of [template.yaml](input/call-sSNV-template.yaml)
-
-To submit to UCLAHS-CDS's Azure cloud, use the submission script [here](https://github.com/uclahs-cds/tool-submit-nf) with the command below:
-
-```bash
-python path/to/submit_nextflow_pipeline.py \
-    --nextflow_script path/to/main.nf \
-    --nextflow_config path/to/input.config\
-    --nextflow_yaml path/to/input.yaml \
-    --pipeline_run_name <run_name> \
-    --partition_type F72 \
-    --email jdoe@ucla.edu
-```
-> **Note**: Although --partition_type F2 is an available option for small data sets, Mutect2 and Muse will fail due to lack of memory.
-
 
 ---
 
@@ -190,11 +165,11 @@ input:
 | `dataset_id` | yes | string | The name/ID of the dataset    |
 | `exome`       | yes | boolean | The option will be used by `Strelka2` and `MuSE`. When `true`, it will add the `--exome` option  to Manta and Strelka2, and `-E` option to MuSE |
 | `save_intermediate_files` | yes | boolean | Whether to save intermediate files |
-| `work_dir` | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The default is `/scratch` with `ucla_cds` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively |
+| `work_dir` | no | string | The path of working directory for Nextflow, storing intermediate files and logs. The path to a temporary working directory for Nextflow, storing intermediate files and logs. It is recommended to use fast, local storage with high I/O performance. |
 | `docker_container_registry` | no | string | Registry containing tool Docker images, optional. Default: `ghcr.io/uclahs-cds` |
 | `base_resource_update` | optional | namespace | Namespace of parameters to update base resource allocations in the pipeline. Usage and structure are detailed in `template.config` and below. |
 
- *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216). For `uclahs-cds` users, a GRCh38 `bed.gz` file can be found here: `/hot/resource/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz`.
+ *Providing `intersect_regions` is required and will limit the final output to just those regions.  All regions of the reference genome could be provided as a `bed` file with all contigs, however it is HIGHLY recommended to remove `decoy` contigs from the human reference genome. Including these thousands of small contigs will require the user to increase available memory for `Mutect2` and will cause a very long runtime for `Strelka2`. See [Discussion here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/216).
 
  ### Base resource allocation updaters
 To optionally update the base resource (cpus or memory) allocations for processes, use the following structure and add the necessary parts to the [input.config](config/template.config) file. The default allocations can be found in `config/resources.json`. If available resources have matched cpus and memory within `90% - 1GB` of one of the pre-specified configurations, that configuration will be used.  Otherwise the default configuration will be used. A spreadsheet view of the resource configuration as of Dec 2024 is [here](https://github.com/uclahs-cds/pipeline-call-sSNV/discussions/328).  For very large or challanging input samples, we suggest using the `m64` configuration or similar.
@@ -259,8 +234,8 @@ base_resource_update {
 | filter_mutect_calls_extra_args | no | string | Additional arguments for the FilterMutectCalls command |
 | gatk_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max. (should not be changed unless task fails for memory related reasons) |
 | scatter_count | yes | int | Number of intervals to split the desired interval into. Mutect2 will call each interval seperately. |
-| germline_resource_gnomad_vcf | no | path | A stripped down version of the [gnomAD VCF](https://gnomad.broadinstitute.org/) stripped of all unneeded INFO fields, keeping only AF, currently available for GRCh38:`/hot/resource/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz` and GRCh37: `/hot/resource/tool-specific-input/GATK/GRCh37/af-only-gnomad.raw.sites.vcf`. |
-| panel_of_normals_vcf | no | path | VCF file of sites observed in normal. Currently available for GRCh38: `/hot/resource/tool-specific-input/GATK/GRCh38/1000g_pon.hg38.vcf.gz`. This could be useful for tumor only mode. |
+| germline_resource_gnomad_vcf | no | path | A stripped down version of the [gnomAD VCF](https://gnomad.broadinstitute.org/) stripped of all unneeded INFO fields, keeping only AF. |
+| panel_of_normals_vcf | no | path | VCF file of sites observed in normal. This could be useful for tumor only mode. |
 
 #### MuSE Specific Configuration
 | Input       | Required | Type   | Description                               |
@@ -330,10 +305,7 @@ Duration: 9h 21m 23s
 
 
 #### Strelka2
-Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canoincal regions of the genome, here is the results of CPCG0196:
-Sample: CPCG0196
-Normal BAM: `/hot/software/pipeline/pipeline-align-DNA/Nextflow/development/outputs/bwa-mem2_and_hisat2-2.2.1/bwa-mem2/bams/a-full-CPCG0196-B1/align-DNA-20210424-024139/pipeline-alignDNA.inputs.CPCG0196-B1.bam`
-Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-T001-P01-F.bam`
+Strelka2's runtime will be significantly improved when using `--callRegions` option to exclude the non-canonincal regions of the genome. Here are results from a typical BAM pair
 
 ##### without `--callRegions`:
 
@@ -349,10 +321,10 @@ Tumor BAM: `/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-
 |call_sIndel_Manta        |1h 35m 25s         |1848.6% |11.7 GB        |
 |call_sSNV_Strelka2       |59m 19s        |3234.0%  |8.2 GB       |
 
-Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary. `-callRegions`'s input `bed.gz` file can be found here: `/hot/resource/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz`. For other genome version, you can use [UCSC Liftover](https://genome.ucsc.edu/cgi-bin/hgLiftOver) to convert.
+Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary.
 
 #### MuSE v2.0
-MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
+MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on an exclusive node with 32 cpus and 64 GB memory.
 Duration: 1d 11h 6m 54s
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |

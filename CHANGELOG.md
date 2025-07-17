@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Remove cluster paths from README
 - Avoid VAF divide by zero error
 - Switch to generalized resource handling
 - Update NFTest paths
