@@ -98,7 +98,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5e121aa6399fb2275c90373225951d28f6759910/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5f66161f607b8ae8fc61cce69cb24789da23df3d/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -108,47 +108,19 @@
               
                 <h2 id="how-to-run">How To Run</h2>
 <p>Below is a summary of how to run the pipeline.  See <a href="https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3197004/How+to+run+a+nextflow+pipeline">here</a> for more information on running Nextflow pipelines.</p>
-<blockquote>
-<p><strong>Note</strong>: Because this pipeline uses an image stored in the GitHub Container Registry, you must follow the steps listed in the <a href="https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3190419/Docker+Introduction#DockerIntroduction-HowtosetupPATandlogintotheregistryHowtosetupPATandlogintotheregistry">Docker Introduction</a> on Confluence to set up a PAT for your GitHub account and log into the registry on the cluster before running this pipeline.</p>
-</blockquote>
+<blockquote></blockquote>
 <ol>
-<li>
-<p>The recommended way of running the pipeline is to directly use the source code located here: <code>/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/</code>, rather than cloning a copy of the pipeline.</p>
-</li>
-<li>
-<p>The source code should never be modified when running our pipelines</p>
-</li>
-<li>
-<p>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5e121aa6399fb2275c90373225951d28f6759910/config/template.config">input config file</a></p>
-</li>
+<li>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5f66161f607b8ae8fc61cce69cb24789da23df3d/config/template.config">input config file</a></li>
 </ol>
 <blockquote>
 <p>Make sure the reference .fa file in config file matches the reference genome in the input BAM files.</p>
 </blockquote>
 <ol>
-<li>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5e121aa6399fb2275c90373225951d28f6759910/input/call-sSNV-template.yaml">input YAML</a></li>
+<li>Copy and edit the <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5f66161f607b8ae8fc61cce69cb24789da23df3d/input/call-sSNV-template.yaml">input YAML</a></li>
 <li>The pipeline can be executed locally using the command below:</li>
 </ol>
-<pre><code class="language-bash">nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
+<pre><code class="language-bash">nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml
 </code></pre>
-<p>For example,</p>
-<ul>
-<li><code>path/to/main.nf</code> could be: <code>/hot/software/pipeline/pipeline-call-sSNV/Nextflow/release/5.0.0/main.nf</code></li>
-<li><code>path/to/input.config</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5e121aa6399fb2275c90373225951d28f6759910/config/template.config">template.config</a></li>
-<li><code>path/to/input.yaml</code> is the path to where you saved your project-specific copy of <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5e121aa6399fb2275c90373225951d28f6759910/input/call-sSNV-template.yaml">template.yaml</a></li>
-</ul>
-<p>To submit to UCLAHS-CDS's Azure cloud, use the submission script <a href="https://github.com/uclahs-cds/tool-submit-nf">here</a> with the command below:</p>
-<pre><code class="language-bash">python path/to/submit_nextflow_pipeline.py \
-    --nextflow_script path/to/main.nf \
-    --nextflow_config path/to/input.config\
-    --nextflow_yaml path/to/input.yaml \
-    --pipeline_run_name &lt;run_name&gt; \
-    --partition_type F72 \
-    --email jdoe@ucla.edu
-</code></pre>
-<blockquote>
-<p><strong>Note</strong>: Although --partition_type F2 is an available option for small data sets, Mutect2 and Muse will fail due to lack of memory.</p>
-</blockquote>
 <hr />
               
             </div>

@@ -120,7 +120,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Outputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5e121aa6399fb2275c90373225951d28f6759910/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/uclahs-cds/pipeline-call-sSNV/blob/5f66161f607b8ae8fc61cce69cb24789da23df3d/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -320,10 +320,7 @@
 </tbody>
 </table>
 <h4 id="strelka2">Strelka2</h4>
-<p>Strelka2's runtime will be significantly improved when using <code>--callRegions</code> option to exclude the non-canoincal regions of the genome, here is the results of CPCG0196:
-Sample: CPCG0196
-Normal BAM: <code>/hot/software/pipeline/pipeline-align-DNA/Nextflow/development/outputs/bwa-mem2_and_hisat2-2.2.1/bwa-mem2/bams/a-full-CPCG0196-B1/align-DNA-20210424-024139/pipeline-alignDNA.inputs.CPCG0196-B1.bam</code>
-Tumor BAM: <code>/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG0000000196-T001-P01-F.bam</code></p>
+<p>Strelka2's runtime will be significantly improved when using <code>--callRegions</code> option to exclude the non-canonincal regions of the genome. Here are results from a typical BAM pair</p>
 <h5 id="without-callregions">without <code>--callRegions</code>:</h5>
 <table>
 <thead>
@@ -374,9 +371,9 @@ Tumor BAM: <code>/hot/resource/pipeline_testing_set/WGS/GRCh38/A/full/CPCG000000
 </tr>
 </tbody>
 </table>
-<p>Therefore, we strongly suggest to use the <code>--callRegions</code> if the non-canonical region is unnecessary. <code>-callRegions</code>'s input <code>bed.gz</code> file can be found here: <code>/hot/resource/tool-specific-input/Strelka2/GRCh38/strelka2_call_region.bed.gz</code>. For other genome version, you can use <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">UCSC Liftover</a> to convert.</p>
+<p>Therefore, we strongly suggest to use the <code>--callRegions</code> if the non-canonical region is unnecessary.</p>
 <h4 id="muse-v20">MuSE v2.0</h4>
-<p>MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
+<p>MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on an exclusive node with 32 cpus and 64 GB memory.
 Duration: 1d 11h 6m 54s</p>
 <table>
 <thead>
