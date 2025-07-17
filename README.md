@@ -51,7 +51,7 @@ Below is a summary of how to run the pipeline.  See [here](https://uclahs-cds.at
 1. The pipeline can be executed locally using the command below:
 
 ```bash
-nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml`
+nextflow run path/to/main.nf -config path/to/input.config -params-file input.yaml
 ```
 
 ---
@@ -324,7 +324,7 @@ Strelka2's runtime will be significantly improved when using `--callRegions` opt
 Therefore, we strongly suggest to use the `--callRegions` if the non-canonical region is unnecessary.
 
 #### MuSE v2.0
-MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on a F32 slurm-dev node.
+MuSE v2.0 was tested with a normal/tumor paired CPCG0196 WGS sample on an exclusive node with 32 cpus and 64 GB memory.
 Duration: 1d 11h 6m 54s
 
 |process_name             |max_duration        |max_cpu |max_peak_vmem |
