@@ -6,7 +6,7 @@ Docker Images:
 - docker_image_BCFtools: ${params.docker_image_BCFtools}
 - docker_image_r_VennDiagram: ${params.docker_image_r_VennDiagram}
 Intersect Options:
-- ncbi_build:             ${params.ncbi_build}
+- ncbi_build:             GRCh${params.reference_version}
 - vcf2maf_extra_args:  ${params.vcf2maf_extra_args}
 ====================================
 """
@@ -164,7 +164,7 @@ process convert_VCF_vcf2maf {
     set -euo pipefail
     perl /opt/vcf2maf.pl --inhibit-vep \
         --filter-vcf 0 \
-        --ncbi-build ${params.ncbi_build} \
+        --ncbi-build GRCh${params.reference_version} \
         --input-vcf ${vcf} \
         --normal-id ${normal_id} \
         --tumor-id ${tumor_id} \
