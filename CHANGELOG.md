@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update MuSE 2.0.4 -> MuSE 2.1.2
 - Update BCFtools 1.17 -> 1.21
 - Update NFtest for new tool versions
+- Set VAF plot y-limit based on max adjusted VAF
 
 ### Added
 - Use `methods.setup_process_afterscript()` for process logs
