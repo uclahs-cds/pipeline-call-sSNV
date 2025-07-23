@@ -162,3 +162,11 @@ input:
       mode: 'r'
       required: false
       help: 'Absolute path to strelka2 VCF file'
+    input_normal_id:
+      type: 'String'
+      required: false
+      help: 'Normal id in the VCF files'
+    input_tumor_id:
+      type: 'String'
+      required: false
+      help: 'Tumor id in the VCF files'
