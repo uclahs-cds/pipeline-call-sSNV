@@ -87,8 +87,6 @@ stripplot.data$color <- sapply(
 
 stripplot.data;
 
-stripplot.ymax <- max(stripplot.data$adjVAF) + 0.1;
-
 create.stripplot(
     formula = adjVAF ~ num_of_callers,
     data = stripplot.data,
@@ -97,9 +95,6 @@ create.stripplot(
     jitter.factor = 0.6,
     xlab.label = 'Number of sSNV Callers',
     ylab.label = 'Adjusted VAF',
-    ylim = c(0, stripplot.ymax),
-    yat = seq(0, stripplot.ymax, 0.1),
-    yaxis.lab = seq(0, stripplot.ymax, 0.1),
     yaxis.rot = 0,
     xaxis.tck = 0,
     yaxis.tck = 0.5,
