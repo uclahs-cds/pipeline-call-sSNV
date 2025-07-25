@@ -13,6 +13,7 @@ algorithm:
     - somaticsniper
     - strelka2
     - muse
+    - neusomatic
 reference:
   type: 'Path'
   mode: 'r'
