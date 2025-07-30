@@ -29,7 +29,7 @@ process preprocess_samples_NeuSomatic {
     path(regions)
 
     output:
-    path("work_call/dataset"), emit: candidates
+    tuple path("work_call/dataset"), path("work_call/work_tumor/filtered_candidates.vcf"), emit: candidates
 
     script:
     """
@@ -45,7 +45,7 @@ process preprocess_samples_NeuSomatic {
         --normal_bam ${normal_bam} \
         --work work_call \
         --min_mapq ${params.neusomatic_min_mapq} \
-        --number_threads ${task.cpus} \
+        --num_threads ${task.cpus} \
         --scan_alignments_binary /opt/neusomatic/neusomatic/bin/scan_alignments
     """
 }
@@ -61,12 +61,12 @@ process call_sSNV_NeuSomatic {
     ext log_dir: { "NeuSomatic-${params.neusomatic_version}/${task.process.split(':')[-1]}" }
 
     input:
-    path(candidates)
+    tuple path(candidates), path(filtered_candidates)
     path(reference)
     path(model)
 
     output:
-    tuple path("work_call/pred.vcf"), path("work_call/work_tumor/filtered_candidates.vcf"), emit: raw_vcf
+    tuple path("work_call/pred.vcf"), path(filtered_candidates), emit: raw_vcf
 
     script:
     """
