@@ -74,6 +74,27 @@
                 "max": 2
             }
         },
+        "preprocess_samples_NeuSomatic": {
+            "cpus": {
+                "min": 2,
+                "fraction": 1,
+                "max": 2
+            }
+        },
+        "call_sSNV_NeuSomatic": {
+            "cpus": {
+                "min": 2,
+                "fraction": 1,
+                "max": 2
+            }
+        },
+        "postprocess_calls_NeuSomatic": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.5,
+                "max": 1
+            }
+        },
         "plot_VennDiagram_R": {
             "cpus": {
                 "min": 1,
@@ -300,6 +321,60 @@
                 }
             }
         },
+        "preprocess_samples_NeuSomatic": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.5,
+                "max": 4
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.33,
+                "max": "5 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "call_sSNV_NeuSomatic": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.4,
+                "max": 4
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.33,
+                "max": "5 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "postprocess_calls_NeuSomatic": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.13,
+                "max": 1
+            },
+            "memory": {
+                "min": "3 GB",
+                "fraction": 0.33,
+                "max": "3 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
         "concat_VCFs_BCFtools": {
             "cpus": {
                 "min": 1,
@@ -509,6 +584,60 @@
                 "memory": {
                     "strategy": "add",
                     "operand": "16 GB"
+                }
+            }
+        },
+        "preprocess_samples_NeuSomatic": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.25,
+                "max": 4
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.16,
+                "max": "5 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "call_sSNV_NeuSomatic": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.25,
+                "max": 4
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.16,
+                "max": "5 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "postprocess_calls_NeuSomatic": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.06,
+                "max": 1
+            },
+            "memory": {
+                "min": "3 GB",
+                "fraction": 0.10,
+                "max": "3 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
                 }
             }
         },
@@ -742,6 +871,60 @@
                 }
             }
         },
+        "preprocess_samples_NeuSomatic": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.19,
+                "max": 6
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.16,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "call_sSNV_NeuSomatic": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.4,
+                "max": 6
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.16,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "postprocess_calls_NeuSomatic": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.08,
+                "max": "5 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
         "plot_VennDiagram_R": {
             "cpus": {
                 "min": 1,
@@ -969,6 +1152,60 @@
                 "memory": {
                     "strategy": "add",
                     "operand": "24 GB"
+                }
+            }
+        },
+        "preprocess_samples_NeuSomatic": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.17,
+                "max": 6
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.01,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "call_sSNV_NeuSomatic": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.17,
+                "max": 6
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.01,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "postprocess_calls_NeuSomatic": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.01,
+                "max": 1
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.01,
+                "max": "5 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
                 }
             }
         },
@@ -1202,6 +1439,60 @@
                 }
             }
         },
+        "preprocess_samples_NeuSomatic": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.09,
+                "max": 6
+            },
+            "memory": {
+                "min": "40 GB",
+                "fraction": 0.04,
+                "max": "40 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "20 GB"
+                }
+            }
+        },
+        "call_sSNV_NeuSomatic": {
+            "cpus": {
+                "min": 6,
+                "fraction": 0.09,
+                "max": 6
+            },
+            "memory": {
+                "min": "40 GB",
+                "fraction": 0.04,
+                "max": "40 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "20 GB"
+                }
+            }
+        },
+        "postprocess_calls_NeuSomatic": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.03,
+                "max": 1
+            },
+            "memory": {
+                "min": "10 GB",
+                "fraction": 0.01,
+                "max": "10 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
         "plot_VennDiagram_R": {
             "cpus": {
                 "min": 1,
@@ -1429,6 +1720,60 @@
                 "memory": {
                     "strategy": "add",
                     "operand": "24 GB"
+                }
+            }
+        },
+        "preprocess_samples_NeuSomatic": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.17,
+                "max": 6
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.07,
+                "max": "15 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "call_sSNV_NeuSomatic": {
+            "cpus": {
+                "min": 4,
+                "fraction": 0.17,
+                "max": 6
+            },
+            "memory": {
+                "min": "5 GB",
+                "fraction": 0.07,
+                "max": "15 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
+                }
+            }
+        },
+        "postprocess_calls_NeuSomatic": {
+            "cpus": {
+                "min": 1,
+                "fraction": 0.04,
+                "max": 1
+            },
+            "memory": {
+                "min": "1 GB",
+                "fraction": 0.01,
+                "max": "3 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "add",
+                    "operand": "10 GB"
                 }
             }
         },
