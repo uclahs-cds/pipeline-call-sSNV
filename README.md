@@ -14,6 +14,7 @@
        - [Strelka2](#strelka2-1)
        - [Mutect2](#gatk-mutect2)
        - [MuSE](#muse-1)
+       - [NeuSomatic](#neusomatic-1)
     - [Variant Intersection](#pipeline-steps---variant-intersection)
        - [BCFtools and VennDiagram](#pipeline-steps---variant-intersection)
        - [vcf2maf](#vcf2maf)
@@ -27,11 +28,11 @@
   - [License](#license)
 
 ## Overview
-The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Four somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2 and MuSE. The user may request one or more callers, and each caller produces an independently generated filtered VCF file.
+The call-sSNV nextflow pipeline performs somatic SNV calling given a pair of tumor/normal BAM files. Five somatic SNV callers are available: SomaticSniper, Strelka2, Mutect2, MuSE, and NeuSomatic. The user may request one or more callers, and each caller produces an independently generated filtered VCF file.
 
 If two or more callers are requested, additional output includes both a VCF and an MAF file with the set of SNVs shared by two or more callers, and a Venn Diagram showing counts of shared and private SNVs.
 
-SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs for multiple samples from the same individual.
+SomaticSniper, Strelka2, MuSE, and NeuSomatic require there to be **exactly one pair of input tumor/normal** BAM files, but Mutect2 will take tumor-only input (no paired normal), as well as tumor/normal BAM pairs for multiple samples from the same individual.
 
 ### Somatic SNV callers:
 * [SomaticSniper](https://github.com/genome/somatic-sniper) is an older tool yielding high specificity single nucleotide somatic variants.
@@ -41,6 +42,8 @@ SomaticSniper, Strelka2, and MuSE require there to be **exactly one pair of inpu
 * [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2) calls somatic short mutations via local assembly of haplotypes.
 
 * [MuSE](https://github.com/wwylab/MuSE) accounts for tumor heterogeneity and calls single nucleotide somatic variants.
+
+* [NeuSomatic](https://github.com/bioinform/neusomatic) detects somatic mutationsusing a deep convolutional neural network.
 
 ## How To Run
 Below is a summary of how to run the pipeline.  See [here](https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3197004/How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
@@ -61,6 +64,7 @@ nextflow run path/to/main.nf -config path/to/input.config -params-file input.yam
 ### [Strelka2](docs/flowcharts.md#strelka2)
 ### [Mutect2](docs/flowcharts.md#mutect2)
 ### [MuSE](docs/flowcharts.md#muse)
+### [NeuSomatic](docs/flowcharts.md#neusomatic)
 ## Flow Diagrams - Variant Intersection
 ### [BCFtools intersection and VennDiagram visualization using R](docs/flowcharts.md#intersect)
 
@@ -114,6 +118,16 @@ Pre-filtering and calculating position-specific summary statistics using the Mar
 Computes tier-based cutoffs from a sample-specific error model.
 #### 3.Filter VCF
 `MuSE` output has SNVs labeled as `PASS` or one of `Tier 1-5` for the lower confidence calls (`Tier 5` is lowest). This step keeps only SNVs labeled `PASS`.
+
+### NeuSomatic
+#### 1. Preprocess NeuSomatic
+Scan and identify candidate variants.
+#### 2. Call NeuSomatic
+Call somatic variants.
+#### 3. Postprocess NeuSomatic
+Resolve long INDELs and generate output VCF
+#### 4. Filter VCF
+Filter for `PASS` variants.
 
 ## Pipeline Steps - Variant Intersection
 If two or more algorithms were selected the Intersect workflow will run. Currently the resulting VCF and MAF files include any SNVs found by two or more algorithms.
@@ -242,6 +256,13 @@ base_resource_update {
 |-------------|----|--------|-------------------------------------------|
 | dbSNP | yes | path | The path to [NCBI's dbSNP database](https://www.ncbi.nlm.nih.gov/snp/) of known SNPs in VCF format, e.g. `GCF_000001405.40.gz` |
 
+#### NeuSomatic Specific Configuration
+| Input       | Required | Type   | Description                               |
+|-------------|----|--------|-------------------------------------------|
+| neusomatic_model | yes | path | The path to trained NeuSomatic model checkpoint to be used for inference. |
+
+
+
 #### Variant Intersection Specific Configuration
 | Input       | Required | Type   | Description                               |
 |-------------|----|--------|-------------------------------------------|
@@ -259,6 +280,7 @@ base_resource_update {
 | Mutect2-{version}_{sample_id}_MNV.vcf.gz        | .vcf.gz         | Filtered MNV VCF (mutect2)      |
 | Mutect2-{version}_{sample_id}_filteringStats.tsv        | .tsv         | FilterMutectCalls output (mutect2 QC)      |
 | MuSE-{version}_{sample_id}_SNV.vcf.gz        | .vcf.gz         | Filtered SNV VCF (MuSE)   |
+| NeuSomatic-{version}_{sample_id}_SNV.vcf.gz        | .vcf.gz         | Filtered SNV VCF (NeuSomatic)   |
 | report.html, timeline.html, trace.txt          | .html, .txt | Nextflow logs                 |
 
 | Intersect Outputs                                         | Type         | Description                   |
@@ -348,7 +370,7 @@ pipeline-call-sSNV is licensed under the GNU General Public License version 2. S
 
 This pipeline performs somatic SNV calling on a pair of normal/tumor BAMs, utilizing SomaticSniper, Strelka2, Mutect2 and MuSE.
 
-Copyright (C) 2020-2024 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2020-2025 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
