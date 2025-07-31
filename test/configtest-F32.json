@@ -122,6 +122,7 @@
       "call_ssnv_r_version": "dev",
       "dataset_id": "TWGSAMIN",
       "dbSNP": "/hot/resource/database/dbSNP-155/original/GRCh38/GCF_000001405.39.gz",
+      "neusomatic_model": "",
       "docker_container_registry": "ghcr.io/uclahs-cds",
       "docker_image_BCFtools": "ghcr.io/uclahs-cds/bcftools:1.21",
       "docker_image_GATK": "broadinstitute/gatk:4.6.1.0",
