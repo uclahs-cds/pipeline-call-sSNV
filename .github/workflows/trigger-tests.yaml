@@ -17,4 +17,4 @@ permissions:
 
 jobs:
   check-user:
-    uses: uclahs-cds/tool-Nextflow-action/.github/workflows/test-setup.yml@main
+    uses: uclahs-cds/tool-Nextflow-action/.github/workflows/test-setup.yml@v1

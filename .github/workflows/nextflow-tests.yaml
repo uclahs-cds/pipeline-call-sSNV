@@ -17,5 +17,5 @@ permissions:
 jobs:
   tests:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: uclahs-cds/tool-Nextflow-action/.github/workflows/nextflow-tests.yml@main
+    uses: uclahs-cds/tool-Nextflow-action/.github/workflows/nextflow-tests.yml@v1
     secrets: inherit
