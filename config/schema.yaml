@@ -87,6 +87,11 @@ panel_of_normals_vcf:
 dbSNP:
   type: 'Path'
   required: true
+neusomatic_model:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'NeuSomatic model to be used for inference'
 ncbi_build:
   type: 'String'
   required: true
