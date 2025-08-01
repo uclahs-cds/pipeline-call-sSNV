@@ -43,7 +43,7 @@ SomaticSniper, Strelka2, MuSE, and NeuSomatic require there to be **exactly one 
 
 * [MuSE](https://github.com/wwylab/MuSE) accounts for tumor heterogeneity and calls single nucleotide somatic variants.
 
-* [NeuSomatic](https://github.com/bioinform/neusomatic) detects somatic mutationsusing a deep convolutional neural network.
+* [NeuSomatic](https://github.com/bioinform/neusomatic) detects somatic mutations using a deep convolutional neural network.
 
 ## How To Run
 Below is a summary of how to run the pipeline.  See [here](https://uclahs-cds.atlassian.net/wiki/spaces/BOUTROSLAB/pages/3197004/How+to+run+a+nextflow+pipeline) for more information on running Nextflow pipelines.
