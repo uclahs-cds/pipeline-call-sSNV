@@ -95,6 +95,12 @@ if (params.input_type == 'bam') {
             params.dataset_id,
             params.sample_id,
             [:]))
+    include { neusomatic } from './module/neusomatic' addParams(
+        workflow_output_dir: "${params.output_dir_base}/NeuSomatic-${params.neusomatic_version}",
+        output_filename: generate_standard_filename("NeuSomatic-${params.neusomatic_version}",
+            params.dataset_id,
+            params.sample_id,
+            [:]))
 
     Channel
         .from( params.samples_to_process )
@@ -232,6 +238,14 @@ workflow {
             mutect2.out.gzvcf.set { mutect2_gzvcf_ch }
             mutect2.out.idx.set { mutect2_idx_ch }
             }
+        if ('neusomatic' in params.algorithm) {
+            neusomatic(
+                tumor_input_chs.tumor_bam,
+                tumor_input_chs.tumor_index,
+                normal_input_chs.normal_bam,
+                normal_input_chs.normal_index
+            )
+        }
 
         tool_gzvcfs = (somaticsniper_gzvcf_ch
             .mix(strelka2_gzvcf_ch)

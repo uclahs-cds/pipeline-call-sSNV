@@ -1,0 +1,31 @@
+@startuml neusomatic_chart
+
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!process_legend
+
+skinparam linetype ortho
+
+$input_process(normal_bam, 'Normal BAM', 'Input: normal BAM file')
+$input_process(tumor_bam, 'Tumor BAM', 'Input: tumor BAM file')
+
+$intermediate_process(preprocess_neusomatic, "Preprocess NeuSomatic", "Output: candidate variant calls")
+$input_process(neusomatic_model, "NeuSomatic Model", "Input: NeuSomatic Model")
+$intermediate_process(call_neusomatic, "Call NeuSomatic", "Output: called variants")
+$intermediate_process(postprocess_neusomatic, "Postprocess NeuSomatic", "Output: processed VCF")
+$output_process(filter_vcf, "Filter VCF", "Output: Filtered VCF")
+
+tumor_bam -d-> preprocess_neusomatic
+normal_bam -d-> preprocess_neusomatic
+preprocess_neusomatic -d-> call_neusomatic
+neusomatic_model -d-> call_neusomatic
+call_neusomatic -d-> postprocess_neusomatic
+tumor_bam -d-> postprocess_neusomatic
+postprocess_neusomatic -d-> filter_vcf: // raw.vcf //
+
+$add_legend("left")
+
+@enduml

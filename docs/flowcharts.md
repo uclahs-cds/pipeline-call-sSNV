@@ -5,6 +5,7 @@
   - [Strelka2](#strelka2)
   - [Mutect2](#mutect2)
   - [MuSE](#muse)
+  - [NeuSomatic](#neusomatic)
 - [Variant Intersection](#variant-intersection)
   - [BCFtools, VennDiagram and vcf2maf](#variant-intersection)
 
@@ -50,6 +51,14 @@ Docker Image: broadinstitute/gatk:4.2.4.1
 MuSE source: https://github.com/wwylab/MuSE
 Version: 2.0 (Released on Aug 25, 2021)
 GitHub Package: https://github.com/uclahs-cds/docker-MuSE/pkgs/container/muse
+
+### NeuSomatic
+![alt text](neusomatic_chart.svg?raw=true)
+#### Tools
+##### NeuSomatic
+NeuSomatic Source: https://github.com/bioinform/neusomatic
+Version: 0.2.1 (Released on July 11, 2019)
+Docker Image: msahraeian/neusomatic:0.2.1
 
 ## Variant Intersection
 ![alt text](intersect_chart.svg?raw=true)
