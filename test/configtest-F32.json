@@ -1,10 +1,9 @@
 {
   "nextflow_version": "23.10.0",
   "config": [
-    "test/global.config",
-    "test/config/a_mini-all-tools.config"
+    "config/template.config"
   ],
-  "params_file": "test/yaml/a_mini_n2-std-input.yaml",
+  "params_file": "input/call-sSNV-template-VCF.yaml",
   "cpus": 32,
   "memory_gb": 64,
   "nf_params": {
