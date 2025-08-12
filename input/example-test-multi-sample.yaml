@@ -3,9 +3,9 @@ patient_id: 'TWGSAMIN000001'
 # For multi samples, list the BAMs under the corresponding state (normal or tumor).
 input:
   normal:
-    - BAM: /hot/data/unregistered/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam
+    - BAM: /path/to/normal.bam
   tumor:
-    - BAM: /hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam
-      contamination_table: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table
-    - BAM: /hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n1/output/S2.T-n1.bam
-      contamination_table: /hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n1_getpileupsummaries_calculatecontamination.table
+    - BAM: /path/to/tumor_1.bam
+      contamination_table: /path/to/getpileupsummaries_calculatecontamination_1.table
+    - BAM: /path/to/tumor_2.bam
+      contamination_table: /path/to/getpileupsummaries_calculatecontamination_2.table
