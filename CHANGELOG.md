@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update BCFtools 1.17 -> 1.21
 - Update NFtest for new tool versions
 - Set VAF plot y-limit based on max adjusted VAF
+- Increase convert_BAM2Pileup memory allocation
 
 ### Fixed
 
