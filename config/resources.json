@@ -818,7 +818,7 @@
             },
             "memory": {
                 "min": "5 GB",
-                "fraction": 0.07,
+                "fraction": 0.35,
                 "max": "5 GB"
             },
             "retry_strategy": {
