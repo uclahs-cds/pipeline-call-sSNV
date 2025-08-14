@@ -1277,9 +1277,9 @@
                 "max": 1
             },
             "memory": {
-                "min": "1 GB",
-                "fraction": 0.01,
-                "max": "2 GB"
+                "min": "3 GB",
+                "fraction": 0.04,
+                "max": "8 GB"
             },
             "retry_strategy": {
                 "memory": {
