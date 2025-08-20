@@ -13,6 +13,7 @@ algorithm:
     - somaticsniper
     - strelka2
     - muse
+    - neusomatic
 reference:
   type: 'Path'
   mode: 'r'
@@ -86,6 +87,15 @@ panel_of_normals_vcf:
 dbSNP:
   type: 'Path'
   required: true
+neusomatic_model:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'NeuSomatic model to be used for inference'
+neusomatic_min_mapq:
+  type: 'Integer'
+  required: true
+  help: 'Minimum Mapping quality to consider a read for NeuSomatic'
 ncbi_build:
   type: 'String'
   required: true

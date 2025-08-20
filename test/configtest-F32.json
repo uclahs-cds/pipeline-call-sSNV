@@ -75,6 +75,10 @@
           "cpus": "1",
           "memory": "2 GB"
         },
+        "call_sSNV_NeuSomatic": {
+          "cpus": "6",
+          "memory": "10 GB"
+        },
         "call_sSNV_SomaticSniper": {
           "cpus": "1",
           "memory": "1 GB"
@@ -103,6 +107,14 @@
           "cpus": "1",
           "memory": "1 GB"
         },
+        "postprocess_calls_NeuSomatic": {
+          "cpus": "1",
+          "memory": "5 GB"
+        },
+        "preprocess_samples_NeuSomatic": {
+          "cpus": "6",
+          "memory": "10 GB"
+        },
         "run_LearnReadOrientationModel_GATK": {
           "cpus": "1",
           "memory": "12 GB"
@@ -129,6 +141,7 @@
       "docker_image_bam_readcount": "ghcr.io/uclahs-cds/bam_readcount:1.0.1",
       "docker_image_bpg": "ghcr.io/uclahs-cds/boutroslabplottinggeneral:7.1.0",
       "docker_image_manta": "ghcr.io/uclahs-cds/manta:1.6.0",
+      "docker_image_neusomatic": "msahraeian/neusomatic:0.2.1",
       "docker_image_r_VennDiagram": "ghcr.io/uclahs-cds/call-ssnv-r:dev",
       "docker_image_somaticsniper": "ghcr.io/uclahs-cds/somaticsniper:1.0.5.0",
       "docker_image_src_util": "ghcr.io/uclahs-cds/src-util:1.2.0",
@@ -169,6 +182,9 @@
       "min_time": "1s",
       "mutect2_extra_args": "",
       "ncbi_build": "GRCh38",
+      "neusomatic_min_mapq": "10",
+      "neusomatic_model": "/path/to/neusomatic_model.pth",
+      "neusomatic_version": "0.2.1",
       "normal_id": "0192847",
       "output_dir": "/tmp/outputs",
       "output_dir_base": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847",
@@ -192,6 +208,12 @@
         "call_sSNV_Mutect2": {
           "memory": {
             "operand": "2 GB",
+            "strategy": "add"
+          }
+        },
+        "call_sSNV_NeuSomatic": {
+          "memory": {
+            "operand": "10 GB",
             "strategy": "add"
           }
         },
@@ -232,6 +254,18 @@
           }
         },
         "plot_VennDiagram_R": {
+          "memory": {
+            "operand": "10 GB",
+            "strategy": "add"
+          }
+        },
+        "postprocess_calls_NeuSomatic": {
+          "memory": {
+            "operand": "10 GB",
+            "strategy": "add"
+          }
+        },
+        "preprocess_samples_NeuSomatic": {
           "memory": {
             "operand": "10 GB",
             "strategy": "add"
@@ -392,6 +426,15 @@
           "closure": "retry_updater(2 GB, add, 2 GB, $task.attempt, memory)"
         }
       },
+      "withName:call_sSNV_NeuSomatic": {
+        "cpus": "6",
+        "memory": {
+          "1": "10 GB",
+          "2": "20 GB",
+          "3": "30 GB",
+          "closure": "retry_updater(10 GB, add, 10 GB, $task.attempt, memory)"
+        }
+      },
       "withName:call_sSNV_SomaticSniper": {
         "cpus": "1",
         "memory": {
@@ -458,6 +501,24 @@
           "closure": "retry_updater(1 GB, add, 10 GB, $task.attempt, memory)"
         }
       },
+      "withName:postprocess_calls_NeuSomatic": {
+        "cpus": "1",
+        "memory": {
+          "1": "5 GB",
+          "2": "15 GB",
+          "3": "25 GB",
+          "closure": "retry_updater(5 GB, add, 10 GB, $task.attempt, memory)"
+        }
+      },
+      "withName:preprocess_samples_NeuSomatic": {
+        "cpus": "6",
+        "memory": {
+          "1": "10 GB",
+          "2": "20 GB",
+          "3": "30 GB",
+          "closure": "retry_updater(10 GB, add, 10 GB, $task.attempt, memory)"
+        }
+      },
       "withName:run_LearnReadOrientationModel_GATK": {
         "cpus": "1",
         "memory": {
@@ -504,7 +565,8 @@
       "somaticsniper",
       "strelka2",
       "mutect2",
-      "muse"
+      "muse",
+      "neusomatic"
     ],
     "workDir": "/scratch/8543"
   }

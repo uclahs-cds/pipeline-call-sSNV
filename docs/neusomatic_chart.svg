@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="678px" preserveAspectRatio="none" style="width:545px;height:678px;background:#FFFFFF;" version="1.1" viewBox="0 0 545 678" width="545px" zoomAndPan="magnify"><defs/><g><!--MD5=[7208dd2ab11e4302e615decefbd72785]
+entity normal_bam--><g id="elem_normal_bam"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="169" x="36.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="83" x="46.5" y="29.9951">Normal BAM</text><line style="stroke:#181818;stroke-width:1.0;" x1="37.5" x2="204.5" y1="33.2969" y2="33.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="37.5" x2="204.5" y1="35.2969" y2="35.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="149" x="46.5" y="50.292">Input: normal BAM file</text></g><!--MD5=[f2d67d33cd25f2be41fb883452e52018]
+entity tumor_bam--><g id="elem_tumor_bam"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="163" x="337.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80" x="347.5" y="29.9951">Tumor BAM</text><line style="stroke:#181818;stroke-width:1.0;" x1="338.5" x2="499.5" y1="33.2969" y2="33.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="338.5" x2="499.5" y1="35.2969" y2="35.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143" x="347.5" y="50.292">Input: tumor BAM file</text></g><!--MD5=[917a277aab9713d687804f4f1f3aa384]
+entity preprocess_neusomatic--><g id="elem_preprocess_neusomatic"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="228" x="7" y="128"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="166" x="17" y="150.9951">Preprocess NeuSomatic</text><line style="stroke:#181818;stroke-width:1.0;" x1="8" x2="234" y1="154.2969" y2="154.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="8" x2="234" y1="156.2969" y2="156.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="208" x="17" y="171.292">Output: candidate variant calls</text></g><!--MD5=[369def7b71650835cca03b9334e9411b]
+entity neusomatic_model--><g id="elem_neusomatic_model"><rect fill="#ADD8E6" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="193" x="270.5" y="128"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129" x="280.5" y="150.9951">NeuSomatic Model</text><line style="stroke:#181818;stroke-width:1.0;" x1="271.5" x2="462.5" y1="154.2969" y2="154.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="271.5" x2="462.5" y1="156.2969" y2="156.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173" x="280.5" y="171.292">Input: NeuSomatic Model</text></g><!--MD5=[bb3ca89c0c212214462e7ca6a2840100]
+entity call_neusomatic--><g id="elem_call_neusomatic"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="174" x="280" y="249"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="111" x="290" y="271.9951">Call NeuSomatic</text><line style="stroke:#181818;stroke-width:1.0;" x1="281" x2="453" y1="275.2969" y2="275.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="281" x2="453" y1="277.2969" y2="277.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="154" x="290" y="292.292">Output: called variants</text></g><!--MD5=[83fb1f82043d7c1a2ccf73be3386bf62]
+entity postprocess_neusomatic--><g id="elem_postprocess_neusomatic"><rect fill="#FFFFFF" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="194" x="345" y="370"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="174" x="355" y="392.9951">Postprocess NeuSomatic</text><line style="stroke:#181818;stroke-width:1.0;" x1="346" x2="538" y1="396.2969" y2="396.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="346" x2="538" y1="398.2969" y2="398.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="162" x="355" y="413.292">Output: processed VCF</text></g><!--MD5=[33d67f4a9077e9ad241bd3a12f7b8c57]
+entity filter_vcf--><g id="elem_filter_vcf"><rect fill="#90EE90" height="60.5938" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="159" x="362.5" y="491"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="372.5" y="513.9951">Filter VCF</text><line style="stroke:#181818;stroke-width:1.0;" x1="363.5" x2="520.5" y1="517.2969" y2="517.2969"/><line style="stroke:#181818;stroke-width:1.0;" x1="363.5" x2="520.5" y1="519.2969" y2="519.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="139" x="372.5" y="534.292">Output: Filtered VCF</text></g><!--MD5=[9ce4aa22f14a3f630b90f87908d49cc3]
+link tumor_bam to preprocess_neusomatic--><g id="link_tumor_bam_preprocess_neusomatic"><path codeLine="20" d="M337.3,38 C282.48,38 220.25,38 220.25,38 C220.25,38 220.25,122.78 220.25,122.78 " fill="none" id="tumor_bam-to-preprocess_neusomatic" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="220.25,127.78,224.25,118.78,220.25,122.78,216.25,118.78,220.25,127.78" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[9c5eb67ca8704d427df182715c96d50f]
+link normal_bam to preprocess_neusomatic--><g id="link_normal_bam_preprocess_neusomatic"><path codeLine="21" d="M121,68.03 C121,68.03 121,122.98 121,122.98 " fill="none" id="normal_bam-to-preprocess_neusomatic" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="121,127.98,125,118.98,121,122.98,117,118.98,121,127.98" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[5d5ee026b596353181a8212e65095a4e]
+link preprocess_neusomatic to call_neusomatic--><g id="link_preprocess_neusomatic_call_neusomatic"><path codeLine="22" d="M121,189.16 C121,225.15 121,280 121,280 C121,280 274.92,280 274.92,280 " fill="none" id="preprocess_neusomatic-to-call_neusomatic" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="279.92,280,270.92,276,274.92,280,270.92,284,279.92,280" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[5fa7036d7cae3fb6569a67fcf1e1c720]
+link neusomatic_model to call_neusomatic--><g id="link_neusomatic_model_call_neusomatic"><path codeLine="23" d="M367,189.03 C367,189.03 367,243.98 367,243.98 " fill="none" id="neusomatic_model-to-call_neusomatic" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="367,248.98,371,239.98,367,243.98,363,239.98,367,248.98" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[0da1e3ff8f1b5322e40aedf0226a6a2e]
+link call_neusomatic to postprocess_neusomatic--><g id="link_call_neusomatic_postprocess_neusomatic"><path codeLine="24" d="M399.5,310.03 C399.5,310.03 399.5,364.98 399.5,364.98 " fill="none" id="call_neusomatic-to-postprocess_neusomatic" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="399.5,369.98,403.5,360.98,399.5,364.98,395.5,360.98,399.5,369.98" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a7999481b88b44333ab27cbe8fa121f6]
+link tumor_bam to postprocess_neusomatic--><g id="link_tumor_bam_postprocess_neusomatic"><path codeLine="25" d="M482,68.14 C482,68.14 482,364.82 482,364.82 " fill="none" id="tumor_bam-to-postprocess_neusomatic" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="482,369.82,486,360.82,482,364.82,478,360.82,482,369.82" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[6324bbea070a93bc44bf18848e4d8f5a]
+link postprocess_neusomatic to filter_vcf--><g id="link_postprocess_neusomatic_filter_vcf"><path codeLine="26" d="M442,431.03 C442,431.03 442,485.98 442,485.98 " fill="none" id="postprocess_neusomatic-to-filter_vcf" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="442,490.98,446,481.98,442,485.98,438,481.98,442,490.98" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthAdjust="spacing" textLength="47" x="390" y="454.5669">raw.vcf</text></g><rect fill="#DDDDDD" height="97.4844" rx="7.5" ry="7.5" style="stroke:#000000;stroke-width:1.0;" width="154" x="8" y="564.5938"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="36" x="18" y="585.5889">Color</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94" x="62" y="585.5889">Process Type</text><rect fill="#ADD8E6" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="588.8906"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="601.8857"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="62" y="601.8857">Input</text><rect fill="#FFFFFF" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="605.1875"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="618.1826"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87" x="62" y="618.1826">Intermediate</text><rect fill="#90EE90" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="621.4844"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="634.4795"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="48" x="62" y="634.4795">Output</text><rect fill="#FFFF00" height="16.2969" style="stroke:none;stroke-width:1.0;" width="44" x="14" y="637.7813"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="14" y="650.7764"> </text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="21" x="62" y="650.7764">QC</text><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="572.5938" y2="572.5938"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="588.8906" y2="588.8906"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="605.1875" y2="605.1875"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="621.4844" y2="621.4844"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="637.7813" y2="637.7813"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="156" y1="654.0781" y2="654.0781"/><line style="stroke:#000000;stroke-width:1.0;" x1="14" x2="14" y1="572.5938" y2="654.0781"/><line style="stroke:#000000;stroke-width:1.0;" x1="58" x2="58" y1="572.5938" y2="654.0781"/><line style="stroke:#000000;stroke-width:1.0;" x1="156" x2="156" y1="572.5938" y2="654.0781"/><!--MD5=[849bffae71f38fbdc2aab255a5c6c454]
+@startuml neusomatic_chart
+
+!include pipeline_elements.iuml!string_functions
+!include pipeline_elements.iuml!input_rect
+!include pipeline_elements.iuml!output_rect
+!include pipeline_elements.iuml!intermediate_rect
+!include pipeline_elements.iuml!qc_rect
+!include pipeline_elements.iuml!process_legend
+
+skinparam linetype ortho
+
+$input_process(normal_bam, 'Normal BAM', 'Input: normal BAM file')
+$input_process(tumor_bam, 'Tumor BAM', 'Input: tumor BAM file')
+
+$intermediate_process(preprocess_neusomatic, "Preprocess NeuSomatic", "Output: candidate variant calls")
+$input_process(neusomatic_model, "NeuSomatic Model", "Input: NeuSomatic Model")
+$intermediate_process(call_neusomatic, "Call NeuSomatic", "Output: called variants")
+$intermediate_process(postprocess_neusomatic, "Postprocess NeuSomatic", "Output: processed VCF")
+$output_process(filter_vcf, "Filter VCF", "Output: Filtered VCF")
+
+tumor_bam -d-> preprocess_neusomatic
+normal_bam -d-> preprocess_neusomatic
+preprocess_neusomatic -d-> call_neusomatic
+neusomatic_model -d-> call_neusomatic
+call_neusomatic -d-> postprocess_neusomatic
+tumor_bam -d-> postprocess_neusomatic
+postprocess_neusomatic -d-> filter_vcf: // raw.vcf //
+
+$add_legend("left")
+
+@enduml
+
+@startuml neusomatic_chart
+
+
+skinparam linetype ortho
+
+rectangle normal_bam #LightBlue as "
+Normal BAM
+====
+Input: normal BAM file"
+rectangle tumor_bam #LightBlue as "
+Tumor BAM
+====
+Input: tumor BAM file"
+
+rectangle preprocess_neusomatic #White as "
+Preprocess NeuSomatic
+====
+Output: candidate variant calls"
+rectangle neusomatic_model #LightBlue as "
+NeuSomatic Model
+====
+Input: NeuSomatic Model"
+rectangle call_neusomatic #White as "
+Call NeuSomatic
+====
+Output: called variants"
+rectangle postprocess_neusomatic #White as "
+Postprocess NeuSomatic
+====
+Output: processed VCF"
+rectangle filter_vcf #LightGreen as "
+Filter VCF
+====
+Output: Filtered VCF"
+
+tumor_bam -d-> preprocess_neusomatic
+normal_bam -d-> preprocess_neusomatic
+preprocess_neusomatic -d-> call_neusomatic
+neusomatic_model -d-> call_neusomatic
+call_neusomatic -d-> postprocess_neusomatic
+tumor_bam -d-> postprocess_neusomatic
+postprocess_neusomatic -d-> filter_vcf: // raw.vcf //
+
+legend left
+  | Color | Process Type|
+  |<#LightBlue>| Input |
+  |<#White>| Intermediate |
+  |<#LightGreen>| Output |
+  |<#Yellow>| QC |
+endlegend
+
+@enduml
+
+PlantUML version 1.2022.6(Tue Jun 21 17:34:49 GMT 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
