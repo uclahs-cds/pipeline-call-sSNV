@@ -95,6 +95,12 @@ if (params.input_type == 'bam') {
             params.dataset_id,
             params.sample_id,
             [:]))
+    include { sage } from './module/sage' addParams(
+        workflow_output_dir: "${params.output_dir_base}/SAGE-${params.sage_version}",
+        output_filename: generate_standard_filename("SAGE-${params.sage_version}",
+            params.dataset_id,
+            params.sample_id,
+            [:]))
 
     Channel
         .from( params.samples_to_process )
@@ -121,11 +127,13 @@ if (params.input_type == 'bam') {
     Channel.empty().set { strelka2_gzvcf_ch }
     Channel.empty().set { muse_gzvcf_ch }
     Channel.empty().set { mutect2_gzvcf_ch }
+    Channel.empty().set { sage_gzvcf_ch }
 
     Channel.empty().set { somaticsniper_idx_ch }
     Channel.empty().set { strelka2_idx_ch }
     Channel.empty().set { muse_idx_ch }
     Channel.empty().set { mutect2_idx_ch }
+    Channel.empty().set { sage_idx_ch }
 
 } else if (params.input_type == 'vcf') {
     include { process_vcfs } from './module/process-vcfs' addParams(
@@ -232,16 +240,28 @@ workflow {
             mutect2.out.gzvcf.set { mutect2_gzvcf_ch }
             mutect2.out.idx.set { mutect2_idx_ch }
             }
+        if ('sage' in params.algorithm) {
+            sage(
+                tumor_input_chs.tumor_bam,
+                tumor_input_chs.tumor_index,
+                normal_input_chs.normal_bam,
+                normal_input_chs.normal_index
+            )
+            sage.out.gzvcf.set { sage_gzvcf_ch }
+            sage.out.idx.set { sage_idx_ch }
+            }
 
         tool_gzvcfs = (somaticsniper_gzvcf_ch
             .mix(strelka2_gzvcf_ch)
             .mix(mutect2_gzvcf_ch)
-            .mix(muse_gzvcf_ch))
+            .mix(muse_gzvcf_ch)
+            .mix(sage_gzvcf_ch))
             .collect()
         tool_indices = (somaticsniper_idx_ch
             .mix(strelka2_idx_ch)
             .mix(mutect2_idx_ch)
-            .mix(muse_idx_ch))
+            .mix(muse_idx_ch)
+            .mix(sage_idx_ch))
             .collect()
 
     } else if (params.input_type == 'vcf') {

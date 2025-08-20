@@ -242,6 +242,26 @@ base_resource_update {
 |-------------|----|--------|-------------------------------------------|
 | dbSNP | yes | path | The path to [NCBI's dbSNP database](https://www.ncbi.nlm.nih.gov/snp/) of known SNPs in VCF format, e.g. `GCF_000001405.40.gz` |
 
+#### SAGE Specific Configuration
+| Input       | Required | Type   | Description                               |
+|-------------|----|--------|-------------------------------------------|
+| redux_jitter_msi_only | no | boolean | Whether to use jitter MSI only mode in REDUX preprocessing |
+| redux_ref_genome_msi_file | yes | path | Absolute path to reference genome MSI file for REDUX preprocessing |
+| redux_unmap_regions | no | path | Absolute path to unmappable regions file for REDUX preprocessing |
+| redux_form_consensus | no | boolean | Whether to form consensus reads in REDUX preprocessing |
+| redux_additional_args | no | string | Additional arguments for the REDUX command |
+| redux_provided_ms_table_tumor | no | path | Absolute path to pre-computed tumor ms_table.tsv.gz file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
+| redux_provided_ms_table_normal | no | path | Absolute path to pre-computed normal ms_table.tsv.gz file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
+| redux_provided_jitter_params_tumor | no | path | Absolute path to pre-computed tumor jitter_params.tsv file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
+| redux_provided_jitter_params_normal | no | path | Absolute path to pre-computed normal jitter_params.tsv file from REDUX. If all four redux_provided_* parameters are provided, REDUX will be skipped entirely |
+| sage_hotspots | no | path | Absolute path to hotspots VCF file for SAGE variant calling |
+| sage_panel_bed | no | path | Absolute path to panel bed file for SAGE variant calling |
+| sage_ensembl_data_dir | no | path | Absolute path to ensembl data directory for SAGE variant calling |
+| sage_high_confidence_bed | no | path | Absolute path to high confidence bed file for SAGE variant calling |
+| sage_skip_msi_jitter | no | boolean | Whether to skip MSI jitter in SAGE variant calling |
+| sage_command_mem_diff | yes | nextflow.util.MemoryUnit | How much to subtract from the task's allocated memory where the remainder is the Java heap max for SAGE processes. (should not be changed unless task fails for memory related reasons) |
+| sage_additional_args | no | string | Additional arguments for the SAGE command |
+
 #### Variant Intersection Specific Configuration
 | Input       | Required | Type   | Description                               |
 |-------------|----|--------|-------------------------------------------|

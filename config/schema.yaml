@@ -13,11 +13,16 @@ algorithm:
     - somaticsniper
     - strelka2
     - muse
+    - sage
 reference:
   type: 'Path'
   mode: 'r'
   required: true
   help: 'Absolute path to reference directory'
+reference_version:
+  type: 'String'
+  required: true
+  help: 'Reference genome version number, e.g. 38 for GRCh38'
 intersect_regions:
   type: 'Path'
   required: true
@@ -86,10 +91,6 @@ panel_of_normals_vcf:
 dbSNP:
   type: 'Path'
   required: true
-ncbi_build:
-  type: 'String'
-  required: true
-  help: 'NCBI build version, e.g. GRCh38'
 vcf2maf_extra_args:
   type: 'String'
   required: false
@@ -99,6 +100,88 @@ patient_id:
   type: 'String'
   required: true
   help: 'Patient identifier'
+sage_hotspots:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to hotspots file for SAGE'
+sage_panel_bed:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to panel bed file for SAGE'
+sage_ensembl_data_dir:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to ensembl data directory for SAGE'
+sage_high_confidence_bed:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to high confidence bed file for SAGE'
+redux_unmap_regions:
+  type: 'Path'
+  mode: 'r'
+  required: false
+  help: 'Absolute path to unmappable regions file for REDUX'
+redux_ref_genome_msi_file:
+  type: 'Path'
+  mode: 'r'
+  required: true
+  help: 'Absolute path to reference genome MSI file for REDUX'
+redux_form_consensus:
+  type: 'Bool'
+  required: false
+  default: false
+  help: 'Whether to form consensus in REDUX preprocessing'
+redux_jitter_msi_only:
+  type: 'Bool'
+  required: false
+  default: false
+  help: 'Whether to use jitter MSI only mode in REDUX preprocessing'
+redux_skip:
+  type: 'Bool'
+  required: false
+  default: false
+  help: 'Whether to skip REDUX preprocessing entirely (runs SAGE directly on original BAM files without MSI jitter correction)'
+redux_provided_ms_table_tumor:
+  type: 'Path'
+  required: false
+  allow_empty: true
+  help: 'Absolute path to pre-computed tumor ms_table.tsv.gz file from REDUX, if provided will skip running REDUX'
+redux_provided_ms_table_normal:
+  type: 'Path'
+  required: false
+  allow_empty: true
+  help: 'Absolute path to pre-computed normal ms_table.tsv.gz file from REDUX, if provided will skip running REDUX'
+redux_provided_jitter_params_tumor:
+  type: 'Path'
+  required: false
+  allow_empty: true
+  help: 'Absolute path to pre-computed tumor jitter_params.tsv file from REDUX, if provided will skip running REDUX'
+redux_provided_jitter_params_normal:
+  type: 'Path'
+  required: false
+  allow_empty: true
+  help: 'Absolute path to pre-computed normal jitter_params.tsv file from REDUX, if provided will skip running REDUX'
+redux_additional_args:
+  type: 'String'
+  required: false
+  allow_empty: true
+  default: ''
+  help: 'Additional arguments for the REDUX command'
+sage_additional_args:
+  type: 'String'
+  required: false
+  allow_empty: true
+  default: ''
+  help: 'Additional arguments for the SAGE command'
+#sage_command_mem_diff:
+#  type: 'MemoryUnit'
+#  required: false
+#  default: '2.GB'
+#  help: 'How much to subtract from the task allocated memory where the remainder is the Java heap max for SAGE processes'
 base_resource_update:
   type: 'ResourceUpdateNamespace'
   required: false
@@ -162,6 +245,11 @@ input:
       mode: 'r'
       required: false
       help: 'Absolute path to strelka2 VCF file'
+    sage:
+      type: 'Path'
+      mode: 'r'
+      required: false
+      help: 'Absolute path to sage VCF file'
     input_normal_id:
       type: 'String'
       required: false
