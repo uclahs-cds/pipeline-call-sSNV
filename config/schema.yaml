@@ -92,6 +92,10 @@ neusomatic_model:
   mode: 'r'
   required: true
   help: 'NeuSomatic model to be used for inference'
+neusomatic_min_mapq:
+  type: 'Integer'
+  required: true
+  help: 'Minimum Mapping quality to consider a read for NeuSomatic'
 ncbi_build:
   type: 'String'
   required: true
