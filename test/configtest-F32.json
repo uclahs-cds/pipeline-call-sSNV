@@ -1,10 +1,9 @@
 {
   "nextflow_version": "23.10.0",
   "config": [
-    "test/global.config",
-    "test/config/a_mini-all-tools.config"
+    "config/template.config"
   ],
-  "params_file": "test/yaml/a_mini_n2-std-input.yaml",
+  "params_file": "input/call-sSNV-template-VCF.yaml",
   "cpus": 32,
   "memory_gb": 64,
   "nf_params": {
@@ -56,10 +55,7 @@
       "GATK_version": "4.6.1.0",
       "MuSE_version": "2.1.2",
       "algorithm": [
-        "somaticsniper",
-        "strelka2",
-        "mutect2",
-        "muse"
+        "somaticsniper"
       ],
       "bam_readcount_version": "1.0.1",
       "base_allocations": {
@@ -120,8 +116,8 @@
       "bpg_version": "7.1.0",
       "cache_intermediate_pipeline_steps": false,
       "call_ssnv_r_version": "dev",
-      "dataset_id": "TWGSAMIN",
-      "dbSNP": "/hot/resource/database/dbSNP-155/original/GRCh38/GCF_000001405.39.gz",
+      "dataset_id": "dataset_004",
+      "dbSNP": "/example/dbSNP-155/GCF_000001405.39.gz",
       "docker_container_registry": "ghcr.io/uclahs-cds",
       "docker_image_BCFtools": "ghcr.io/uclahs-cds/bcftools:1.21",
       "docker_image_GATK": "broadinstitute/gatk:4.6.1.0",
@@ -139,27 +135,20 @@
       "exome": false,
       "filter_mutect_calls_extra_args": "",
       "gatk_command_mem_diff": "500 MB",
-      "germline": true,
-      "germline_resource_gnomad_vcf": "/hot/resource/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz",
-      "germline_resource_gnomad_vcf_index": "/hot/resource/tool-specific-input/GATK/GRCh38/af-only-gnomad.hg38.vcf.gz.tbi",
+      "germline_resource_gnomad_vcf": "/example/genomics-public-data/resources/broad/hg38/v0/af-only-gnomad.hg38.vcf.gz",
       "input": {
-        "normal": [
-          {
-            "BAM": "/hot/data/unregistered/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam"
-          }
-        ],
-        "tumor": [
-          {
-            "BAM": "/hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam",
-            "contamination_table": "/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table"
-          }
-        ]
+        "muse": "/path/to/muse.vcf.gz",
+        "mutect2": "/path/to/mutect2.vcf.gz",
+        "somaticsniper": "/path/to/somaticsniper.vcf.gz",
+        "strelka2": "/path/to/strelka2.vcf.gz"
       },
-      "input_type": "bam",
-      "intersect_regions": "/hot/resource/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz",
-      "intersect_regions_index": "/hot/resource/tool-specific-input/pipeline-call-sSNV-6.0.0/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz.tbi",
+      "input_normal_id": "normal_id",
+      "input_tumor_id": "tumor_id",
+      "input_type": "vcf",
+      "intersect_regions": "/example/genome/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz",
+      "intersect_regions_index": "/example/genome/GRCh38-BI-20160721/Homo_sapiens_assembly38_no-decoy.bed.gz.tbi",
       "keep_input_prefix": false,
-      "log_output_dir": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847/log-call-sSNV-VER.SI.ON-19970704T165655Z",
+      "log_output_dir": "/tmp/outputs/call-sSNV-VER.SI.ON/tumor-id/log-call-sSNV-VER.SI.ON-19970704T165655Z",
       "manta_version": "1.6.0",
       "max_cpus": "32",
       "max_memory": "64 GB",
@@ -169,13 +158,12 @@
       "min_time": "1s",
       "mutect2_extra_args": "",
       "ncbi_build": "GRCh38",
-      "normal_id": "0192847",
+      "normal_id": "normal-id",
       "output_dir": "/tmp/outputs",
-      "output_dir_base": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847",
-      "panel_of_normals_vcf": "",
-      "patient_id": "TWGSAMIN000001",
+      "output_dir_base": "/tmp/outputs/call-sSNV-VER.SI.ON/tumor-id",
+      "patient_id": "patient_id",
       "pipeval_version": "5.1.0",
-      "reference": "/hot/resource/reference-genome/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta",
+      "reference": "/example/genome/GRCh38-BI-20160721/Homo_sapiens_assembly38.fasta",
       "retry_information": {
         "call_sIndel_Manta": {
           "memory": {
@@ -250,26 +238,24 @@
           }
         }
       },
-      "sample_id": "0192847",
+      "sample_id": "tumor-id",
       "samples_to_process": [
         {
-          "contamination_table": "null",
-          "id": "0192847",
-          "orig_id": "0192847",
-          "path": "/hot/data/unregistered/SMC-HET/normal/bams/A-mini/n2/output/HG002.N-n2.bam",
-          "sample_type": "normal"
+          "algorithm": "muse",
+          "path": "/path/to/muse.vcf.gz"
         },
-        "{orig_id=0192847, id=0192847, path=/hot/data/unregistered/SMC-HET/tumours/A-mini/bams/n2/output/S2.T-n2.bam, contamination_table=/hot/software/pipeline/pipeline-call-sSNV/Nextflow/development/input/data/A-mini/S2.T-n2_getpileupsummaries_calculatecontamination.table, sample_type=tumor}"
+        "{path=/path/to/mutect2.vcf.gz, algorithm=mutect2}",
+        "{path=/path/to/somaticsniper.vcf.gz, algorithm=somaticsniper}",
+        "{path=/path/to/strelka2.vcf.gz, algorithm=strelka2}"
       ],
       "save_intermediate_files": false,
       "scatter_count": "50",
-      "single_NT_paired": true,
       "somaticsniper_version": "1.0.5.0",
       "split_intervals_extra_args": "",
       "src_util_version": "1.2.0",
       "strelka2_version": "2.9.10",
       "tabix_extra_args": "",
-      "tumor_id": "0192847",
+      "tumor_id": "tumor-id",
       "ubuntu_version": "20.04",
       "ucla_cds": true,
       "use_intersect_regions": true,
@@ -403,9 +389,6 @@
       },
       "withName:call_sSNV_Strelka2": {
         "cpus": "8",
-        "ext": {
-          "retry_codes": []
-        },
         "memory": {
           "1": "2 GB",
           "2": "14 GB",
@@ -483,7 +466,7 @@
     },
     "report": {
       "enabled": true,
-      "file": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847/log-call-sSNV-VER.SI.ON-19970704T165655Z/nextflow-log/report.html"
+      "file": "/tmp/outputs/call-sSNV-VER.SI.ON/tumor-id/log-call-sSNV-VER.SI.ON-19970704T165655Z/nextflow-log/report.html"
     },
     "resource_handler": {
       "handle_resources": "closure()",
@@ -491,21 +474,14 @@
       "set_retry": "closure()",
       "setup_retry": "closure()"
     },
-    "sm_tag": "0192847",
     "timeline": {
       "enabled": true,
-      "file": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847/log-call-sSNV-VER.SI.ON-19970704T165655Z/nextflow-log/timeline.html"
+      "file": "/tmp/outputs/call-sSNV-VER.SI.ON/tumor-id/log-call-sSNV-VER.SI.ON-19970704T165655Z/nextflow-log/timeline.html"
     },
     "trace": {
       "enabled": true,
-      "file": "/tmp/outputs/call-sSNV-VER.SI.ON/0192847/log-call-sSNV-VER.SI.ON-19970704T165655Z/nextflow-log/trace.txt"
+      "file": "/tmp/outputs/call-sSNV-VER.SI.ON/tumor-id/log-call-sSNV-VER.SI.ON-19970704T165655Z/nextflow-log/trace.txt"
     },
-    "valid_algorithms": [
-      "somaticsniper",
-      "strelka2",
-      "mutect2",
-      "muse"
-    ],
     "workDir": "/scratch/8543"
   }
 }
